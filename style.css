@@ -1,5 +1,5 @@
 /* ============================================================
-   ECHOHEART UNIVERSE — DUAL MODE STYLESHEET
+   ECHOHEART UNIVERSE — OFFICIAL DUAL-MODE MASTER STYLESHEET
    ============================================================ */
 
 /* ------------------------------------------------------------
@@ -46,10 +46,16 @@ body.vault-mode {
 
   --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
   --glow-effect: 0 0 15px rgba(167, 139, 250, 0.3);
+
+  /* Subterranean Grid Overlay */
+  background-image: 
+    linear-gradient(rgba(35, 39, 56, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(35, 39, 56, 0.3) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 /* ------------------------------------------------------------
-   3. GENERAL STYLING
+   3. GENERAL STYLING & NAVIGATION
    ------------------------------------------------------------ */
 * {
   box-sizing: border-box;
@@ -77,6 +83,8 @@ header.navbar {
   align-items: center;
   padding: 1rem 2rem;
   z-index: 1000;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .logo-text {
@@ -91,23 +99,52 @@ header.navbar {
 nav {
   display: flex;
   align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
 }
 
 nav a {
   color: var(--text-muted);
   text-decoration: none;
-  margin-left: 1.25rem;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 nav a:hover, nav a.active {
   color: var(--text-main);
+  text-shadow: var(--glow-effect);
 }
+
+/* Status Badges */
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3125rem 0.75rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status-badge.day-status {
+  background-color: rgba(13, 148, 136, 0.15);
+  color: var(--teal-aoi);
+  border: 1px solid var(--teal-aoi);
+  display: inline-block;
+}
+
+.status-badge.vault-status {
+  background-color: rgba(244, 63, 94, 0.2);
+  color: var(--pink-sera);
+  border: 1px solid var(--pink-sera);
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
+  display: none;
+}
+
+body.vault-mode .status-badge.day-status { display: none; }
+body.vault-mode .status-badge.vault-status { display: inline-block; }
 
 /* Mode Switcher Button */
 .theme-btn {
-  margin-left: 1.5rem;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   border: 1px solid var(--border-color);
@@ -128,7 +165,9 @@ nav a:hover, nav a.active {
   transform: translateY(-2px);
 }
 
-/* Hero Section */
+/* ------------------------------------------------------------
+   4. HERO SECTION & DYNAMIC HEADERS
+   ------------------------------------------------------------ */
 .hero {
   text-align: center;
   padding: 5rem 1.5rem;
@@ -145,11 +184,28 @@ nav a:hover, nav a.active {
 .hero p {
   font-size: 1.25rem;
   color: var(--text-muted);
-  max-width: 650px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
-/* Container & Cards */
+.hero-vault-subtitle {
+  display: none;
+  color: var(--violet-nekomi);
+  font-family: monospace;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.hero-daytime-subtitle {
+  display: block;
+}
+
+body.vault-mode .hero-daytime-subtitle { display: none; }
+body.vault-mode .hero-vault-subtitle { display: block; }
+
+/* ------------------------------------------------------------
+   5. CARDS & GRID LAYOUT
+   ------------------------------------------------------------ */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -160,6 +216,17 @@ nav a:hover, nav a.active {
   font-size: 2rem;
   margin-bottom: 2rem;
   text-align: center;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(to right, var(--violet-nekomi), var(--pink-sera));
+  margin: 0.5rem auto 0 auto;
+  border-radius: 2px;
 }
 
 .grid {
@@ -186,6 +253,82 @@ nav a:hover, nav a.active {
 .card.sera { border-top: 4px solid var(--pink-sera); }
 .card.akari { border-top: 4px solid var(--crimson-akari); }
 .card.aoi { border-top: 4px solid var(--teal-aoi); }
+.card.maya { border-top: 4px solid var(--gold-maya); }
+
+.card-title {
+  font-size: 1.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.card-tag {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.nekomi .card-tag { color: var(--violet-nekomi); }
+.sera .card-tag { color: var(--pink-sera); }
+.akari .card-tag { color: var(--crimson-akari); }
+.aoi .card-tag { color: var(--teal-aoi); }
+.maya .card-tag { color: var(--gold-maya); }
+
+/* Dynamic Outfit Box & Image Placeholders */
+.portrait-container {
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background-color: rgba(11, 12, 16, 0.05);
+  border: 1px dashed var(--border-color);
+}
+
+.portrait-placeholder {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.portrait-placeholder.vault-img { display: none; }
+.portrait-placeholder.day-img { display: block; }
+
+body.vault-mode .portrait-placeholder.day-img { display: none; }
+body.vault-mode .portrait-placeholder.vault-img {
+  display: block;
+  color: var(--violet-nekomi);
+  background-color: rgba(139, 92, 246, 0.08);
+}
+
+.outfit-box {
+  background-color: rgba(11, 12, 16, 0.05);
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.outfit-label.vault-text {
+  display: none;
+  color: var(--violet-nekomi);
+}
+
+.outfit-label.daytime-text {
+  display: inline-block;
+  color: var(--pink-sera);
+}
+
+body.vault-mode .outfit-box {
+  background-color: rgba(139, 92, 246, 0.1);
+  border: 1px solid var(--violet-nekomi);
+}
+
+body.vault-mode .outfit-label.daytime-text { display: none; }
+body.vault-mode .outfit-label.vault-text { display: inline-block; }
 
 footer {
   text-align: center;
