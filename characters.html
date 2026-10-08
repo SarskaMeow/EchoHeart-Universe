@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EchoHeart — Character & Familiar Profiles</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Character Detail Styles */
+    .character-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .character-card.nekomi { border-left: 6px solid var(--violet-nekomi); }
+    .character-card.sera { border-left: 6px solid var(--pink-sera); }
+    .character-card.akari { border-left: 6px solid var(--crimson-akari); }
+    .character-card.aoi { border-left: 6px solid var(--teal-aoi); }
+    .character-card.maya { border-left: 6px solid var(--gold-maya); }
+
+    .character-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .character-title h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .badge-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .badge.cat-girl { background-color: rgba(244, 63, 94, 0.2); color: var(--pink-sera); border: 1px solid var(--pink-sera); }
+    .badge.human { background-color: rgba(20, 184, 166, 0.2); color: var(--teal-aoi); border: 1px solid var(--teal-aoi); }
+    .badge.domain-violet { background-color: rgba(139, 92, 246, 0.2); color: var(--violet-nekomi); border: 1px solid var(--violet-nekomi); }
+    .badge.domain-pink { background-color: rgba(244, 63, 94, 0.2); color: var(--pink-sera); border: 1px solid var(--pink-sera); }
+    .badge.domain-crimson { background-color: rgba(251, 113, 133, 0.2); color: var(--crimson-akari); border: 1px solid var(--crimson-akari); }
+    .badge.domain-teal { background-color: rgba(20, 184, 166, 0.2); color: var(--teal-aoi); border: 1px solid var(--teal-aoi); }
+    .badge.council { background-color: rgba(234, 179, 8, 0.2); color: var(--gold-maya); border: 1px solid var(--gold-maya); }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      background-color: rgba(11, 12, 16, 0.5);
+      padding: 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .spec-item {
+      font-size: 0.95rem;
+    }
+
+    .spec-item strong {
+      color: var(--text-main);
+      display: block;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .character-body p {
+      margin-bottom: 1rem;
+      color: #d1d5db;
+    }
+
+    .familiar-box {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .familiar-box h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo-text">ECHOHEART</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="characters.html" class="active">Core 4 Roster</a>
+      <a href="discography.html">Discography</a>
+      <a href="lore.html">Lore & Mechanics</a>
+      <a href="games.html">Games & Apps</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>BAND ROSTER & ALLIES</h1>
+    <p>The Core 4 Members of EchoHeart / Girls Phantom Dead, their Mystical Familiars, and Council Support.</p>
+  </section>
+
+  <main class="container">
+
+    <!-- ============================================================
+         SECTION 1: THE CORE 4 BAND MEMBERS
+         ============================================================ -->
+    <h2 class="section-title">THE CORE 4 BAND MEMBERS</h2>
+
+    <!-- 🎸 NEKOMI AOYAMA -->
+    <article class="character-card nekomi">
+      <div class="character-header">
+        <div class="character-title">
+          <h2>🎸 Nekomi Aoyama</h2>
+          <div class="badge-group">
+            <span class="badge cat-girl">Cat Girl</span>
+            <span class="badge domain-violet">Violet Starlight Domain</span>
+            <span class="badge">Lead Guitar / Lead Vocals</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec-grid">
+        <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
+        <div class="spec-item"><strong>Birthday</strong> October 14 (Autumn Cultural Arc)</div>
+        <div class="spec-item"><strong>Height</strong> 162 cm</div>
+        <div class="spec-item"><strong>Favorite Food</strong> Dark chocolate, iced black coffee, takoyaki</div>
+        <div class="spec-item"><strong>Primary Gear</strong> Custom Crescent-Moon Electric Guitar</div>
+        <div class="spec-item"><strong>Signal Chain</strong> High-gain distortion, analog delay, lead boost</div>
+      </div>
+
+      <div class="character-body">
+        <p>Lead guitarist and co-vocalist of the band. Shielded by a cool, sarcastic exterior, Nekomi carries heavy emotional walls that were broken open through her bond with Sera Hanibara. In daytime school settings, she performs sweet J-Pop and K-Pop hooks for EchoHeart, but down in the subterranean Sub-Stage Vaults, she steps on high-gain distortion pedals to unleash raw 180 BPM J-Rock as the frontline offensive core against Dissonance.</p>
+      </div>
+    </article>
+
+    <!-- ⌨️ SERA HANIBARA -->
+    <article class="character-card sera">
+      <div class="character-header">
+        <div class="character-title">
+          <h2>⌨️ Sera Hanibara</h2>
+          <div class="badge-group">
+            <span class="badge cat-girl">Cat Girl</span>
+            <span class="badge domain-pink">Rose-Gold Glow Domain</span>
+            <span class="badge">Synthesizer / Keytar / Co-Vocals</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec-grid">
+        <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
+        <div class="spec-item"><strong>Birthday</strong> July 7 (Tanabata Star Festival Arc)</div>
+        <div class="spec-item"><strong>Height</strong> 156 cm</div>
+        <div class="spec-item"><strong>Favorite Food</strong> Strawberry shortcake, milk tea with honey, macaroons</div>
+        <div class="spec-item"><strong>Primary Gear</strong> Workstation Synthesizer & Rose-Gold Keytar</div>
+        <div class="spec-item"><strong>Special Ability</strong> Sun Voice (Harmonic Frequency Cleanser)</div>
+      </div>
+
+      <div class="character-body">
+        <p>Synthesizer player and co-vocalist whose delicate, gentle cat-girl presence hides the <strong>Sun Voice</strong>—an extraordinary acoustic ability that acts as an emotional sponge and natural frequency cleanser. Highly vulnerable to environmental Dissonance, she relies on her 100% Heart Sync bond with Nekomi Aoyama to keep her grounded. Wears a signature pastel-pink cat hair clip given to her by Nekomi.</p>
+      </div>
+    </article>
+
+    <!-- 🥁 AKARI MINASE -->
+    <article class="character-card akari">
+      <div class="character-header">
+        <div class="character-title">
+          <h2>🥁 Akari Minase</h2>
+          <div class="badge-group">
+            <span class="badge human">Human</span>
+            <span class="badge domain-crimson">Crimson Spark Domain</span>
+            <span class="badge">Drums / Tempo Driver</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec-grid">
+        <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
+        <div class="spec-item"><strong>Birthday</strong> August 3 (Mid-Summer Beach Arc)</div>
+        <div class="spec-item"><strong>Height</strong> 165 cm</div>
+        <div class="spec-item"><strong>Favorite Food</strong> Ultra-spicy miso ramen, melon soda, candied apples</div>
+        <div class="spec-item"><strong>Primary Gear</strong> Custom Compact Hybrid Drum Kit (Crimson lacquer)</div>
+        <div class="spec-item"><strong>Performance Style</strong> High-velocity stick-spinning, double-kick 180+ BPM</div>
+      </div>
+
+      <div class="character-body">
+        <p>The explosive, high-energy drummer who provides the kinetic engine for both EchoHeart and Girls Phantom Dead. Akari’s fearless attitude and rapid 180 BPM stick-spinning performance style drive the physical pressure needed to break through dense Dissonance barriers. Outside of performances, she acts as the band's primary instigator for outings, festival exploration, and team chaos.</p>
+      </div>
+    </article>
+
+    <!-- 🎸 AOI MIZUHARA -->
+    <article class="character-card aoi">
+      <div class="character-header">
+        <div class="character-title">
+          <h2>🎸 Aoi Mizuhara</h2>
+          <div class="badge-group">
+            <span class="badge human">Human</span>
+            <span class="badge domain-teal">Mossy-Teal Wave Domain</span>
+            <span class="badge">Bassist / Tactical Strategist</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec-grid">
+        <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
+        <div class="spec-item"><strong>Birthday</strong> February 18 (Winter Finals / Valentine's Arc)</div>
+        <div class="spec-item"><strong>Height</strong> 168 cm</div>
+        <div class="spec-item"><strong>Favorite Food</strong> Matcha ice cream, salted salmon rice balls, green tea</div>
+        <div class="spec-item"><strong>Primary Gear</strong> 4-String Precision Bass (Dark Teal matte finish)</div>
+        <div class="spec-item"><strong>Tactical Role</strong> Sub-frequency dampening & subterranean vault routing</div>
+      </div>
+
+      <div class="character-body">
+        <p>The calm, analytical bassist and tactical mind of the group. Aoi oversees setlists, acoustic frequency tuning, subterranean infiltration routes, and equipment budgets. Her low-end bass frequencies create the structural container that prevents Girls Phantom Dead's high-decibel J-Rock from leaking through campus flooring or triggering faculty noise detection systems.</p>
+      </div>
+    </article>
+
+
+    <!-- ============================================================
+         SECTION 2: MYSTICAL FAMILIARS
+         ============================================================ -->
+    <h2 class="section-title">MYSTICAL FAMILIARS</h2>
+
+    <div class="grid" style="margin-bottom: 3rem;">
+      <!-- Yozora -->
+      <div class="familiar-box">
+        <h3>🐈 Yozora</h3>
+        <p><strong>Form:</strong> Shadow Black Cat (Single Tail)</p>
+        <p><strong>Partner:</strong> Nekomi Aoyama</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Perches on Nekomi's guitar amp cabinet during performances, absorbing acoustic spillover and converting raw guitar distortion into offensive Resonance pulses.</p>
+      </div>
+
+      <!-- Byakko -->
+      <div class="familiar-box">
+        <h3>🦊 Byakko</h3>
+        <p><strong>Form:</strong> Two-Tailed Divine White Fox</p>
+        <p><strong>Partner:</strong> Sera Hanibara</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Manifests alongside keytar solos when Sera activates her Sun Voice. Acts as an emotional buffer, absorbing harmful Dissonance static.</p>
+      </div>
+
+      <!-- Kagerou -->
+      <div class="familiar-box">
+        <h3>🦦 Kagerou</h3>
+        <p><strong>Form:</strong> Ember-Coated Marten</p>
+        <p><strong>Partner:</strong> Akari Minase</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Darts across drum rims and cymbals during 180 BPM solos, leaving trails of crimson sparks and amplifying physical kinetic energy.</p>
+      </div>
+
+      <!-- Komorebi -->
+      <div class="familiar-box">
+        <h3>🦝 Komorebi</h3>
+        <p><strong>Form:</strong> Wood-Grained Tanuki</p>
+        <p><strong>Partner:</strong> Aoi Mizuhara</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Rests near the sub-bass cabinet, using mossy-teal wave frequencies to dampen rogue acoustic vibrations and maintain subterranean stealth.</p>
+      </div>
+    </div>
+
+
+    <!-- ============================================================
+         SECTION 3: SUPPORTING CAST & ALLIES
+         ============================================================ -->
+    <h2 class="section-title">SUPPORTING CAST & ALLIES</h2>
+
+    <article class="character-card maya">
+      <div class="character-header">
+        <div class="character-title">
+          <h2>🏛️ Maya Chiba</h2>
+          <div class="badge-group">
+            <span class="badge human">Human</span>
+            <span class="badge council">Student Council President</span>
+            <span class="badge">Supporting Ally (Not Band Member)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec-grid">
+        <div class="spec-item"><strong>Class & Division</strong> Class 3-A (General Division)</div>
+        <div class="spec-item"><strong>Birthday</strong> November 29</div>
+        <div class="spec-item"><strong>Height</strong> 170 cm</div>
+        <div class="spec-item"><strong>Favorite Food</strong> Earl Grey tea, handmade matcha cookies</div>
+        <div class="spec-item"><strong>Case History</strong> Case 3 (Council Overload / Perfectionism)</div>
+        <div class="spec-item"><strong>Support Role</strong> Underground Vault Access & Faculty Noise Cover</div>
+      </div>
+
+      <div class="character-body">
+        <p>The sharp, authoritative Student Council President of Sakuraoka High. Driven by intense perfectionism, Maya nearly collapsed under overwhelming stress before being saved by Girls Phantom Dead during Case 3. Following her recovery, she officially granted EchoHeart protected access to the subterranean Sub-Stage Vaults and acts as their inside cover against faculty noise complaints.</p>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; EchoHeart Universe. Official Light Novel & Transmedia World Archive.</p>
+  </footer>
+
+</body>
+</html>
