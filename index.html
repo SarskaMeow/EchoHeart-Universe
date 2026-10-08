@@ -11,19 +11,35 @@
   <!-- Navigation Bar -->
   <header class="navbar">
     <div class="logo-text">ECHOHEART</div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge day-status">🟢 Prep Room B • 65 dB</span>
+      <span class="status-badge vault-status">🔴 Sub-Vault 02 • 138 dB [ACTIVE]</span>
+    </div>
+
     <nav>
       <a href="index.html" class="active">Home</a>
       <a href="characters.html">Core 4 Roster</a>
       <a href="discography.html">Discography</a>
       <a href="lore.html">Lore & Mechanics</a>
       <a href="games.html">Games & Apps</a>
+      
+      <!-- Mode Toggle Button -->
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Vault Mode
+      </button>
     </nav>
   </header>
 
   <!-- Hero Section -->
   <section class="hero">
     <h1>ECHOHEART UNIVERSE</h1>
-    <p>Daytime J-Pop Covers at Sakuraoka High. Subterranean 180 BPM J-Rock in the Sub-Stage Vaults.</p>
+    <p class="hero-daytime-subtitle">
+      🌸 Sakuraoka High Light Music Club • Official Student Activity Archive
+    </p>
+    <p class="hero-vault-subtitle">
+      ⚡ SUBTERRANEAN VAULTS 01–04 • HIGH-DECIBEL RESONANCE ZONE (180+ BPM)
+    </p>
   </section>
 
   <!-- Core 4 Teaser Section -->
@@ -33,6 +49,14 @@
     <div class="grid">
       <!-- Nekomi -->
       <div class="card nekomi">
+        <div class="portrait-container">
+          <div class="portrait-placeholder day-img">📷 [NEKOMI ARTWORK: School Uniform]</div>
+          <div class="portrait-placeholder vault-img">⚡ [NEKOMI ARTWORK: Vault Leather & Violet Aura]</div>
+        </div>
+        <div class="outfit-box">
+          <span class="outfit-label daytime-text">🌸 ATTIRE: Sakuraoka High Blazer & Thigh-Highs</span>
+          <span class="outfit-label vault-text">⚡ ATTIRE: Cropped Black Leather Jacket & Violet Choker</span>
+        </div>
         <div class="card-tag">Cat Girl • Violet Domain</div>
         <h3 class="card-title">🎸 Nekomi Aoyama</h3>
         <p>Lead Guitarist & Lead Vocalist. Frontline offensive core using high-gain distortion and Crescent-Moon lead solos.</p>
@@ -40,6 +64,14 @@
 
       <!-- Sera -->
       <div class="card sera">
+        <div class="portrait-container">
+          <div class="portrait-placeholder day-img">📷 [SERA ARTWORK: School Cardigan]</div>
+          <div class="portrait-placeholder vault-img">⚡ [SERA ARTWORK: Gothic Rose Keytar Outfit]</div>
+        </div>
+        <div class="outfit-box">
+          <span class="outfit-label daytime-text">🌸 ATTIRE: Pink Cat Clip, School Blazer & Cardigan</span>
+          <span class="outfit-label vault-text">⚡ ATTIRE: Gothic-Rose Asymmetric Lace & Combat Boots</span>
+        </div>
         <div class="card-tag">Cat Girl • Rose-Gold Domain</div>
         <h3 class="card-title">⌨️ Sera Hanibara</h3>
         <p>Synthesizer & Keytar Co-Vocalist. Wields the Sun Voice to cleanse emotional static and heal Dissonance overload.</p>
@@ -47,6 +79,14 @@
 
       <!-- Akari -->
       <div class="card akari">
+        <div class="portrait-container">
+          <div class="portrait-placeholder day-img">📷 [AKARI ARTWORK: School Vest]</div>
+          <div class="portrait-placeholder vault-img">⚡ [AKARI ARTWORK: Punk Vest & Crimson Flame]</div>
+        </div>
+        <div class="outfit-box">
+          <span class="outfit-label daytime-text">🌸 ATTIRE: Unbuttoned Vest & Vibrant Wristbands</span>
+          <span class="outfit-label vault-text">⚡ ATTIRE: Sleeveless Punk Vest & Drumstick Leg Holsters</span>
+        </div>
         <div class="card-tag">Human • Crimson Domain</div>
         <h3 class="card-title">🥁 Akari Minase</h3>
         <p>High-Velocity Drummer. Drives the explosive 180+ BPM kinetic rhythm section with double-kick precision.</p>
@@ -54,6 +94,14 @@
 
       <!-- Aoi -->
       <div class="card aoi">
+        <div class="portrait-container">
+          <div class="portrait-placeholder day-img">📷 [AOI ARTWORK: School Sweater Vest]</div>
+          <div class="portrait-placeholder vault-img">⚡ [AOI ARTWORK: Techwear Coat & Audio Meters]</div>
+        </div>
+        <div class="outfit-box">
+          <span class="outfit-label daytime-text">🌸 ATTIRE: Dark Teal Sweater Vest & Hair Ribbons</span>
+          <span class="outfit-label vault-text">⚡ ATTIRE: Techwear Trench Coat with Audio Wave Meters</span>
+        </div>
         <div class="card-tag">Human • Mossy-Teal Domain</div>
         <h3 class="card-title">🎸 Aoi Mizuhara</h3>
         <p>Tactical Bassist. Controls sub-frequency dampening to prevent subterranean acoustic leakage to faculty above.</p>
@@ -66,5 +114,26 @@
     <p>&copy; EchoHeart Universe. Official Light Novel & Transmedia World Archive.</p>
   </footer>
 
+  <!-- Mode Switcher Script -->
+  <script>
+    const savedTheme = localStorage.getItem('echoheart-theme');
+    const toggleBtn = document.getElementById('theme-toggle-btn');
+
+    if (savedTheme === 'vault') {
+      document.body.classList.add('vault-mode');
+      if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
+    }
+
+    function toggleMode() {
+      const isVault = document.body.classList.toggle('vault-mode');
+      if (isVault) {
+        localStorage.setItem('echoheart-theme', 'vault');
+        if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
+      } else {
+        localStorage.setItem('echoheart-theme', 'daytime');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Vault Mode';
+      }
+    }
+  </script>
 </body>
 </html>
