@@ -6,7 +6,7 @@
   <title>EchoHeart — Character & Familiar Profiles</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Character Detail Styles */
+    /* Character Detail Page Specifics */
     .character-card {
       background-color: var(--bg-card);
       border: 1px solid var(--border-color);
@@ -65,30 +65,21 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1rem;
-      background-color: rgba(11, 12, 16, 0.5);
+      background-color: rgba(11, 12, 16, 0.3);
       padding: 1.25rem;
       border-radius: 8px;
       margin-bottom: 1.5rem;
       border: 1px solid var(--border-color);
     }
 
-    .spec-item {
-      font-size: 0.95rem;
-    }
-
+    .spec-item { font-size: 0.95rem; }
     .spec-item strong {
-      color: var(--text-main);
       display: block;
       font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
       margin-bottom: 0.2rem;
-    }
-
-    .character-body p {
-      margin-bottom: 1rem;
-      color: #d1d5db;
     }
 
     .familiar-box {
@@ -101,9 +92,6 @@
     .familiar-box h3 {
       font-size: 1.15rem;
       margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
     }
   </style>
 </head>
@@ -112,19 +100,34 @@
   <!-- Navigation Bar -->
   <header class="navbar">
     <div class="logo-text">ECHOHEART</div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge day-status">🟢 Prep Room B • 65 dB</span>
+      <span class="status-badge vault-status">🔴 Sub-Vault 02 • 138 dB [ACTIVE]</span>
+    </div>
+
     <nav>
       <a href="index.html">Home</a>
       <a href="characters.html" class="active">Core 4 Roster</a>
       <a href="discography.html">Discography</a>
       <a href="lore.html">Lore & Mechanics</a>
       <a href="games.html">Games & Apps</a>
+      
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Vault Mode
+      </button>
     </nav>
   </header>
 
   <!-- Hero Section -->
   <section class="hero">
     <h1>BAND ROSTER & ALLIES</h1>
-    <p>The Core 4 Members of EchoHeart / Girls Phantom Dead, their Mystical Familiars, and Council Support.</p>
+    <p class="hero-daytime-subtitle">
+      🌸 The Core 4 Members of EchoHeart, their Mystical Familiars, and Council Support.
+    </p>
+    <p class="hero-vault-subtitle">
+      ⚡ GIRLS PHANTOM DEAD OPERATIONAL UNITS • SUBTERRANEAN TACTICAL SPECS
+    </p>
   </section>
 
   <main class="container">
@@ -147,11 +150,21 @@
         </div>
       </div>
 
+      <div class="portrait-container">
+        <div class="portrait-placeholder day-img">📷 [NEKOMI ARTWORK: School Blazer & Thigh-High Socks]</div>
+        <div class="portrait-placeholder vault-img">⚡ [NEKOMI ARTWORK: Black Motorcycle Jacket & Violet Starlight Aura]</div>
+      </div>
+
+      <div class="outfit-box">
+        <span class="outfit-label daytime-text">🌸 ATTIRE: Sakuraoka High Music Division Blazer & Thigh-Highs</span>
+        <span class="outfit-label vault-text">⚡ ATTIRE: Cropped Black Leather Jacket, Tactical Straps & Violet Choker</span>
+      </div>
+
       <div class="spec-grid">
         <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
         <div class="spec-item"><strong>Birthday</strong> October 14 (Autumn Cultural Arc)</div>
         <div class="spec-item"><strong>Height</strong> 162 cm</div>
-        <div class="spec-item"><strong>Favorite Food</strong> Dark chocolate, iced black coffee, takoyaki</div>
+        <div class="spec-item"><strong>Favorite Food</strong> Dark chocolate, black coffee, takoyaki</div>
         <div class="spec-item"><strong>Primary Gear</strong> Custom Crescent-Moon Electric Guitar</div>
         <div class="spec-item"><strong>Signal Chain</strong> High-gain distortion, analog delay, lead boost</div>
       </div>
@@ -172,6 +185,16 @@
             <span class="badge">Synthesizer / Keytar / Co-Vocals</span>
           </div>
         </div>
+      </div>
+
+      <div class="portrait-container">
+        <div class="portrait-placeholder day-img">📷 [SERA ARTWORK: School Blazer, Cardigan & Pink Hair Clip]</div>
+        <div class="portrait-placeholder vault-img">⚡ [SERA ARTWORK: Gothic Rose Keytar Dress & Combat Boots]</div>
+      </div>
+
+      <div class="outfit-box">
+        <span class="outfit-label daytime-text">🌸 ATTIRE: Pink Cat Clip, School Blazer & White Knee Socks</span>
+        <span class="outfit-label vault-text">⚡ ATTIRE: Gothic-Rose Asymmetric Lace Dress & Dark Leather Sleeves</span>
       </div>
 
       <div class="spec-grid">
@@ -201,6 +224,16 @@
         </div>
       </div>
 
+      <div class="portrait-container">
+        <div class="portrait-placeholder day-img">📷 [AKARI ARTWORK: Unbuttoned Vest & Rolled Sleeves]</div>
+        <div class="portrait-placeholder vault-img">⚡ [AKARI ARTWORK: Sleeveless Punk Vest & Flame Accents]</div>
+      </div>
+
+      <div class="outfit-box">
+        <span class="outfit-label daytime-text">🌸 ATTIRE: Unbuttoned Vest & Bright Colored Wristbands</span>
+        <span class="outfit-label vault-text">⚡ ATTIRE: Sleeveless Punk Vest & Drumstick Leg Holsters</span>
+      </div>
+
       <div class="spec-grid">
         <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
         <div class="spec-item"><strong>Birthday</strong> August 3 (Mid-Summer Beach Arc)</div>
@@ -228,6 +261,16 @@
         </div>
       </div>
 
+      <div class="portrait-container">
+        <div class="portrait-placeholder day-img">📷 [AOI ARTWORK: Buttoned Blazer & Dark Teal Sweater Vest]</div>
+        <div class="portrait-placeholder vault-img">⚡ [AOI ARTWORK: Techwear Trench Coat & Audio Meters]</div>
+      </div>
+
+      <div class="outfit-box">
+        <span class="outfit-label daytime-text">🌸 ATTIRE: Dark Teal Sweater Vest & Neat Hair Ribbons</span>
+        <span class="outfit-label vault-text">⚡ ATTIRE: Techwear Trench Coat with Audio Wave Meters</span>
+      </div>
+
       <div class="spec-grid">
         <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
         <div class="spec-item"><strong>Birthday</strong> February 18 (Winter Finals / Valentine's Arc)</div>
@@ -242,14 +285,12 @@
       </div>
     </article>
 
-
     <!-- ============================================================
          SECTION 2: MYSTICAL FAMILIARS
          ============================================================ -->
     <h2 class="section-title">MYSTICAL FAMILIARS</h2>
 
     <div class="grid" style="margin-bottom: 3rem;">
-      <!-- Yozora -->
       <div class="familiar-box">
         <h3>🐈 Yozora</h3>
         <p><strong>Form:</strong> Shadow Black Cat (Single Tail)</p>
@@ -257,15 +298,13 @@
         <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Perches on Nekomi's guitar amp cabinet during performances, absorbing acoustic spillover and converting raw guitar distortion into offensive Resonance pulses.</p>
       </div>
 
-      <!-- Byakko -->
       <div class="familiar-box">
         <h3>🦊 Byakko</h3>
         <p><strong>Form:</strong> Two-Tailed Divine White Fox</p>
         <p><strong>Partner:</strong> Sera Hanibara</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Manifests alongside keytar solos when Sera activates her Sun Voice. Acts as an emotional buffer, absorbing harmful Dissonance static.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Manifests alongside keytar solos when Sera activates her Sun Voice. Wears a tiny star-ribbon on Sera's July 7 Tanabata birthday and demands fried tofu offerings.</p>
       </div>
 
-      <!-- Kagerou -->
       <div class="familiar-box">
         <h3>🦦 Kagerou</h3>
         <p><strong>Form:</strong> Ember-Coated Marten</p>
@@ -273,7 +312,6 @@
         <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Darts across drum rims and cymbals during 180 BPM solos, leaving trails of crimson sparks and amplifying physical kinetic energy.</p>
       </div>
 
-      <!-- Komorebi -->
       <div class="familiar-box">
         <h3>🦝 Komorebi</h3>
         <p><strong>Form:</strong> Wood-Grained Tanuki</p>
@@ -281,7 +319,6 @@
         <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Rests near the sub-bass cabinet, using mossy-teal wave frequencies to dampen rogue acoustic vibrations and maintain subterranean stealth.</p>
       </div>
     </div>
-
 
     <!-- ============================================================
          SECTION 3: SUPPORTING CAST & ALLIES
@@ -321,5 +358,26 @@
     <p>&copy; EchoHeart Universe. Official Light Novel & Transmedia World Archive.</p>
   </footer>
 
+  <!-- Mode Switcher Script -->
+  <script>
+    const savedTheme = localStorage.getItem('echoheart-theme');
+    const toggleBtn = document.getElementById('theme-toggle-btn');
+
+    if (savedTheme === 'vault') {
+      document.body.classList.add('vault-mode');
+      if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
+    }
+
+    function toggleMode() {
+      const isVault = document.body.classList.toggle('vault-mode');
+      if (isVault) {
+        localStorage.setItem('echoheart-theme', 'vault');
+        if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
+      } else {
+        localStorage.setItem('echoheart-theme', 'daytime');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Vault Mode';
+      }
+    }
+  </script>
 </body>
 </html>
