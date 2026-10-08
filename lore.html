@@ -6,13 +6,13 @@
   <title>EchoHeart — Lore & World Mechanics</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Lore Specific Styling */
     .lore-section {
       background-color: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 2rem;
       margin-bottom: 2.5rem;
+      box-shadow: var(--card-shadow);
     }
 
     .lore-grid {
@@ -23,7 +23,7 @@
     }
 
     .lore-card {
-      background-color: rgba(11, 12, 16, 0.6);
+      background-color: rgba(11, 12, 16, 0.2);
       border: 1px solid var(--border-color);
       border-radius: 10px;
       padding: 1.5rem;
@@ -36,7 +36,7 @@
       border-radius: 10px;
       padding: 1.5rem;
       border: 1px solid var(--border-color);
-      background-color: rgba(11, 12, 16, 0.5);
+      background-color: rgba(11, 12, 16, 0.2);
     }
 
     .domain-box.violet { border-left: 5px solid var(--violet-nekomi); }
@@ -53,7 +53,6 @@
       align-items: center;
     }
 
-    /* Decibel Scale Table */
     .db-table {
       width: 100%;
       border-collapse: collapse;
@@ -67,7 +66,7 @@
     }
 
     .db-table th {
-      background-color: rgba(11, 12, 16, 0.8);
+      background-color: rgba(11, 12, 16, 0.2);
       color: var(--text-muted);
       font-size: 0.85rem;
       text-transform: uppercase;
@@ -87,26 +86,39 @@
   <!-- Navigation Bar -->
   <header class="navbar">
     <div class="logo-text">ECHOHEART</div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge day-status">🟢 Prep Room B • 65 dB</span>
+      <span class="status-badge vault-status">🔴 Sub-Vault 02 • 138 dB [ACTIVE]</span>
+    </div>
+
     <nav>
       <a href="index.html">Home</a>
       <a href="characters.html">Core 4 Roster</a>
       <a href="discography.html">Discography</a>
       <a href="lore.html" class="active">Lore & Mechanics</a>
       <a href="games.html">Games & Apps</a>
+      
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Vault Mode
+      </button>
     </nav>
   </header>
 
   <!-- Hero Section -->
   <section class="hero">
     <h1>LORE & WORLD MECHANICS</h1>
-    <p>The dual identities, sanctuary domains, and acoustic physics governing Sakuraoka High and the subterranean vaults.</p>
+    <p class="hero-daytime-subtitle">
+      🌸 Official World Rules & Acoustic Physics of Sakuraoka High
+    </p>
+    <p class="hero-vault-subtitle">
+      ⚡ SUBTERRANEAN DISSONANCE PHYSICS & SANCTUARY DOMAIN PROTOCOLS
+    </p>
   </section>
 
   <main class="container">
 
-    <!-- ============================================================
-         1. DUAL IDENTITY: ECHOHEART VS GIRLS PHANTOM DEAD
-         ============================================================ -->
+    <!-- 1. DUAL IDENTITY SYSTEM -->
     <section class="lore-section">
       <h2 class="section-title">DUAL IDENTITY SYSTEM</h2>
       <p style="color: var(--text-muted); text-align: center; max-width: 800px; margin: 0 auto 1.5rem auto;">
@@ -130,10 +142,7 @@
       </div>
     </section>
 
-
-    <!-- ============================================================
-         2. DISSONANCE VS RESONANCE
-         ============================================================ -->
+    <!-- 2. DISSONANCE VS RESONANCE -->
     <section class="lore-section">
       <h2 class="section-title">ACOUSTIC PHYSICS: DISSONANCE & RESONANCE</h2>
 
@@ -150,18 +159,11 @@
       </div>
     </section>
 
-
-    <!-- ============================================================
-         3. THE 4 SANCTUARY DOMAINS
-         ============================================================ -->
+    <!-- 3. THE 4 SANCTUARY DOMAINS -->
     <section class="lore-section">
       <h2 class="section-title">THE 4 SANCTUARY DOMAINS</h2>
-      <p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">
-        Each Core 4 band member anchors a distinct Sanctuary Domain corresponding to her element, instrument, and familiar.
-      </p>
 
       <div class="grid">
-        <!-- Violet Starlight -->
         <div class="domain-box violet">
           <div class="domain-title">
             <span style="color: var(--violet-nekomi);">Violet Starlight Domain</span>
@@ -171,7 +173,6 @@
           <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Cuts through Dissonance barriers using high-gain Crescent-Moon guitar leads and raw distortion pulses backed by Yozora's shadow cat manifestation.</p>
         </div>
 
-        <!-- Rose-Gold Glow -->
         <div class="domain-box pink">
           <div class="domain-title">
             <span style="color: var(--pink-sera);">Rose-Gold Glow Domain</span>
@@ -181,17 +182,15 @@
           <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Uses the high-frequency <em>Sun Voice</em> and keytar synth pads to soothe acute psychological trauma, supported by Byakko's two-tailed fox light.</p>
         </div>
 
-        <!-- Crimson Spark -->
         <div class="domain-box crimson">
           <div class="domain-title">
             <span style="color: var(--crimson-akari);">Crimson Spark Domain</span>
             <span>🥁 Akari Minase</span>
           </div>
           <p><strong>Role:</strong> Kinetic Energy & 180+ BPM Rhythm Engine</p>
-          <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Provides physical impact through rapid double-kick drumming and stick-spinning fills, amplified by Kagerou's ember ember trails.</p>
+          <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Provides physical impact through rapid double-kick drumming and stick-spinning fills, amplified by Kagerou's ember trails.</p>
         </div>
 
-        <!-- Mossy-Teal Wave -->
         <div class="domain-box teal">
           <div class="domain-title">
             <span style="color: var(--teal-aoi);">Mossy-Teal Wave Domain</span>
@@ -203,10 +202,7 @@
       </div>
     </section>
 
-
-    <!-- ============================================================
-         4. DECIBEL SCALE RULES & VAULT CONTAINMENT
-         ============================================================ -->
+    <!-- 4. DECIBEL SCALE RULES -->
     <section class="lore-section">
       <h2 class="section-title">THE DECIBEL SCALE & ACOUSTIC LIMITS</h2>
 
@@ -245,5 +241,26 @@
     <p>&copy; EchoHeart Universe. Official Light Novel & Transmedia World Archive.</p>
   </footer>
 
+  <!-- Mode Switcher Script -->
+  <script>
+    const savedTheme = localStorage.getItem('echoheart-theme');
+    const toggleBtn = document.getElementById('theme-toggle-btn');
+
+    if (savedTheme === 'vault') {
+      document.body.classList.add('vault-mode');
+      if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
+    }
+
+    function toggleMode() {
+      const isVault = document.body.classList.toggle('vault-mode');
+      if (isVault) {
+        localStorage.setItem('echoheart-theme', 'vault');
+        if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
+      } else {
+        localStorage.setItem('echoheart-theme', 'daytime');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Vault Mode';
+      }
+    }
+  </script>
 </body>
 </html>
