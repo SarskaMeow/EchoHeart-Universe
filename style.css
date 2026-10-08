@@ -1,0 +1,164 @@
+/* ============================================================
+   ECHOHEART UNIVERSE — OFFICIAL ANIME DARK-MODE STYLESHEET
+   ============================================================ */
+
+:root {
+  --bg-dark: #0b0c10;
+  --bg-card: #13151f;
+  --bg-nav: rgba(11, 12, 16, 0.92);
+  --border-color: #242736;
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  
+  /* Domain Color Accents */
+  --violet-nekomi: #8b5cf6;
+  --pink-sera: #f43f5e;
+  --crimson-akari: #fb7185;
+  --teal-aoi: #14b8a6;
+  --gold-maya: #eab308;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+/* Navigation Bar */
+header.navbar {
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-nav);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  z-index: 1000;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: linear-gradient(45deg, var(--violet-nekomi), var(--pink-sera));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+nav a:hover, nav a.active {
+  color: var(--text-main);
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 5rem 1.5rem;
+  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  max-width: 650px;
+  margin: 0 auto 2rem auto;
+}
+
+/* Core Roster Grid */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(to right, var(--violet-nekomi), var(--pink-sera));
+  margin: 0.5rem auto 0 auto;
+  border-radius: 2px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card.nekomi { border-top: 4px solid var(--violet-nekomi); }
+.card.sera { border-top: 4px solid var(--pink-sera); }
+.card.akari { border-top: 4px solid var(--crimson-akari); }
+.card.aoi { border-top: 4px solid var(--teal-aoi); }
+
+.card-title {
+  font-size: 1.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.card-tag {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.nekomi .card-tag { color: var(--violet-nekomi); }
+.sera .card-tag { color: var(--pink-sera); }
+.akari .card-tag { color: var(--crimson-akari); }
+.aoi .card-tag { color: var(--teal-aoi); }
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
