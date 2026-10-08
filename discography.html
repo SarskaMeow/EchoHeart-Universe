@@ -8,12 +8,12 @@
   <style>
     /* Audio Player Widget Styles */
     .player-container {
-      background: linear-gradient(135deg, var(--bg-card) 0%, rgba(139, 92, 246, 0.1) 100%);
+      background: var(--bg-card);
       border: 1px solid var(--violet-nekomi);
       border-radius: 16px;
       padding: 2rem;
       margin-bottom: 3rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: var(--card-shadow);
     }
 
     .player-header {
@@ -77,7 +77,6 @@
       border-radius: 4px;
       overflow: hidden;
       cursor: pointer;
-      position: relative;
     }
 
     .progress-fill {
@@ -85,7 +84,6 @@
       height: 100%;
       background: linear-gradient(to right, var(--violet-nekomi), var(--pink-sera));
       border-radius: 4px;
-      transition: width 0.1s linear;
     }
 
     .time-display {
@@ -95,7 +93,6 @@
       color: var(--text-muted);
     }
 
-    /* Tracklist Table Styles */
     .track-table-container {
       overflow-x: auto;
       background-color: var(--bg-card);
@@ -110,7 +107,7 @@
     }
 
     table.track-table th {
-      background-color: rgba(11, 12, 16, 0.8);
+      background-color: rgba(11, 12, 16, 0.2);
       color: var(--text-muted);
       font-size: 0.85rem;
       text-transform: uppercase;
@@ -139,7 +136,6 @@
       border-left: 4px solid var(--violet-nekomi);
     }
 
-    /* Persona Badges */
     .persona-badge {
       font-size: 0.75rem;
       font-weight: 700;
@@ -173,26 +169,39 @@
   <!-- Navigation Bar -->
   <header class="navbar">
     <div class="logo-text">ECHOHEART</div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge day-status">🟢 Prep Room B • 65 dB</span>
+      <span class="status-badge vault-status">🔴 Sub-Vault 02 • 138 dB [ACTIVE]</span>
+    </div>
+
     <nav>
       <a href="index.html">Home</a>
       <a href="characters.html">Core 4 Roster</a>
       <a href="discography.html" class="active">Discography</a>
       <a href="lore.html">Lore & Mechanics</a>
       <a href="games.html">Games & Apps</a>
+      
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Vault Mode
+      </button>
     </nav>
   </header>
 
   <!-- Hero Section -->
   <section class="hero">
     <h1>OFFICIAL DISCOGRAPHY</h1>
-    <p>Explore BPM specs, lead vocalists, and high-decibel setlists from EchoHeart & Girls Phantom Dead.</p>
+    <p class="hero-daytime-subtitle">
+      🌸 Acoustic Demos & J-Pop Covers from Sakuraoka High Music Prep Room B
+    </p>
+    <p class="hero-vault-subtitle">
+      ⚡ HIGH-DECIBEL SUBTERRANEAN SETLISTS & 180+ BPM HEAVY J-ROCK
+    </p>
   </section>
 
   <main class="container">
 
-    <!-- ============================================================
-         INTERACTIVE AUDIO PLAYER WIDGET
-         ============================================================ -->
+    <!-- Interactive Audio Player Widget -->
     <div class="player-container">
       <div class="player-header">
         <div>
@@ -219,10 +228,7 @@
       </div>
     </div>
 
-
-    <!-- ============================================================
-         VOLUME 1 DISCOGRAPHY TRACKLIST
-         ============================================================ -->
+    <!-- Tracklist Table -->
     <h2 class="section-title">VOLUME 1 TRACKLIST</h2>
 
     <div class="track-table-container">
@@ -238,7 +244,6 @@
           </tr>
         </thead>
         <tbody id="tracklist-body">
-          <!-- Track 1 -->
           <tr onclick="selectTrack(1, 'EchoHeart (Rooftop Demo)', 'EchoHeart', 'Acoustic Ballad', '120 BPM', 'Nekomi & Sera', 'Music Prep Room B Rooftop', '3:12')" class="active-track">
             <td>01</td>
             <td><strong>EchoHeart (Rooftop Demo)</strong></td>
@@ -248,7 +253,6 @@
             <td>Ch. 3 — Music Prep Room B Rooftop</td>
           </tr>
 
-          <!-- Track 2 -->
           <tr onclick="selectTrack(2, 'Phantom Pulse', 'Girls Phantom Dead', 'Heavy Post-Rock', '175 BPM', 'Nekomi Aoyama', 'Sub-Stage Vault 01 (Case 1)', '3:30')">
             <td>02</td>
             <td><strong>Phantom Pulse</strong></td>
@@ -258,7 +262,6 @@
             <td>Ch. 6 — Sub-Stage Vault 01</td>
           </tr>
 
-          <!-- Track 3 -->
           <tr onclick="selectTrack(3, 'Starlight Dissonance', 'EchoHeart', 'Synth-Pop Rock', '165 BPM', 'Sera Hanibara', '2nd Floor Hallway Nook', '3:05')">
             <td>03</td>
             <td><strong>Starlight Dissonance</strong></td>
@@ -268,7 +271,6 @@
             <td>Ch. 11 — 2nd Floor Hallway Nook</td>
           </tr>
 
-          <!-- Track 4 -->
           <tr onclick="selectTrack(4, 'Crimson Overdrive', 'Girls Phantom Dead', 'High-Velocity J-Rock', '180 BPM', 'Nekomi & Akari', 'Sub-Stage Vault 02 (Case 2)', '3:40')">
             <td>04</td>
             <td><strong>Crimson Overdrive</strong></td>
@@ -278,7 +280,6 @@
             <td>Ch. 16 — Sub-Stage Vault 02</td>
           </tr>
 
-          <!-- Track 5 -->
           <tr onclick="selectTrack(5, 'Resonance Breakdown', 'Girls Phantom Dead', 'Progressive Alternative', '185 BPM', 'Nekomi & Sera', 'Student Council Sub-Vault (Case 3)', '4:02')">
             <td>05</td>
             <td><strong>Resonance Breakdown</strong></td>
@@ -288,7 +289,6 @@
             <td>Ch. 20 — Student Council Sub-Vault</td>
           </tr>
 
-          <!-- Track 6 -->
           <tr onclick="selectTrack(6, 'EchoHeart (Full Anthem)', 'EchoHeart x Girls Phantom Dead', 'Symphonic J-Rock', '178 BPM', 'Nekomi & Sera (Dual Lead)', 'Courtyard Outdoor Night Stage', '3:45')">
             <td>06</td>
             <td><strong>EchoHeart (Full Anthem)</strong></td>
@@ -303,10 +303,9 @@
 
   </main>
 
-  <!-- Interactive Player Script -->
+  <!-- Interactive Player & Mode Script -->
   <script>
     let isPlaying = false;
-    let currentProgress = 35;
 
     function togglePlay() {
       const btn = document.getElementById('play-pause-btn');
@@ -321,13 +320,11 @@
       document.getElementById('track-details').innerText = `${bpm} • Vocals: ${vocals}`;
       document.getElementById('time-duration').innerText = duration;
 
-      // Reset playback state
       isPlaying = true;
       document.getElementById('play-pause-btn').innerText = '❚❚';
       document.getElementById('progress-fill').style.width = '0%';
       document.getElementById('time-current').innerText = '0:00';
 
-      // Highlight selected row in table
       const rows = document.querySelectorAll('#tracklist-body tr');
       rows.forEach(r => r.classList.remove('active-track'));
       rows[id - 1].classList.add('active-track');
@@ -339,6 +336,26 @@
       const clickX = event.clientX - rect.left;
       const percentage = (clickX / rect.width) * 100;
       document.getElementById('progress-fill').style.width = percentage + '%';
+    }
+
+    // Theme Toggle
+    const savedTheme = localStorage.getItem('echoheart-theme');
+    const toggleBtn = document.getElementById('theme-toggle-btn');
+
+    if (savedTheme === 'vault') {
+      document.body.classList.add('vault-mode');
+      if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
+    }
+
+    function toggleMode() {
+      const isVault = document.body.classList.toggle('vault-mode');
+      if (isVault) {
+        localStorage.setItem('echoheart-theme', 'vault');
+        if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
+      } else {
+        localStorage.setItem('echoheart-theme', 'daytime');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Vault Mode';
+      }
     }
   </script>
 
