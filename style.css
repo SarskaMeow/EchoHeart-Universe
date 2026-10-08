@@ -1,28 +1,62 @@
 /* ============================================================
-   ECHOHEART UNIVERSE — OFFICIAL ANIME DARK-MODE STYLESHEET
+   ECHOHEART UNIVERSE — DUAL MODE STYLESHEET
    ============================================================ */
 
+/* ------------------------------------------------------------
+   1. DAYTIME MODE (DEFAULT / ECHOHEART PREP ROOM)
+   ------------------------------------------------------------ */
 :root {
-  --bg-dark: #0b0c10;
-  --bg-card: #13151f;
-  --bg-nav: rgba(11, 12, 16, 0.92);
-  --border-color: #242736;
-  --text-main: #f3f4f6;
-  --text-muted: #9ca3af;
+  --bg-dark: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-nav: rgba(255, 255, 255, 0.92);
+  --border-color: #e2e8f0;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --hero-bg: radial-gradient(circle at center, rgba(244, 63, 94, 0.1) 0%, transparent 70%);
   
-  /* Domain Color Accents */
-  --violet-nekomi: #8b5cf6;
-  --pink-sera: #f43f5e;
-  --crimson-akari: #fb7185;
-  --teal-aoi: #14b8a6;
-  --gold-maya: #eab308;
+  /* Domain Color Accents (Soft Version) */
+  --violet-nekomi: #7c3aed;
+  --pink-sera: #e11d48;
+  --crimson-akari: #e11d48;
+  --teal-aoi: #0d9488;
+  --gold-maya: #d97706;
+
+  --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --glow-effect: none;
 }
 
+/* ------------------------------------------------------------
+   2. UNDERGROUND VAULT MODE (GIRLS PHANTOM DEAD)
+   ------------------------------------------------------------ */
+body.vault-mode {
+  --bg-dark: #090a0f;
+  --bg-card: #12141f;
+  --bg-nav: rgba(9, 10, 15, 0.95);
+  --border-color: #232738;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --hero-bg: radial-gradient(circle at center, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+  
+  /* Domain Color Accents (Neon Version) */
+  --violet-nekomi: #a78bfa;
+  --pink-sera: #fb7185;
+  --crimson-akari: #f87171;
+  --teal-aoi: #2dd4bf;
+  --gold-maya: #facc15;
+
+  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  --glow-effect: 0 0 15px rgba(167, 139, 250, 0.3);
+}
+
+/* ------------------------------------------------------------
+   3. GENERAL STYLING
+   ------------------------------------------------------------ */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
 body {
@@ -54,24 +88,51 @@ header.navbar {
   -webkit-text-fill-color: transparent;
 }
 
+nav {
+  display: flex;
+  align-items: center;
+}
+
 nav a {
   color: var(--text-muted);
   text-decoration: none;
-  margin-left: 1.5rem;
+  margin-left: 1.25rem;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 nav a:hover, nav a.active {
   color: var(--text-main);
-  text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+/* Mode Switcher Button */
+.theme-btn {
+  margin-left: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.3s ease;
+}
+
+.theme-btn:hover {
+  border-color: var(--violet-nekomi);
+  box-shadow: var(--glow-effect);
+  transform: translateY(-2px);
 }
 
 /* Hero Section */
 .hero {
   text-align: center;
   padding: 5rem 1.5rem;
-  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+  background: var(--hero-bg);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -85,10 +146,10 @@ nav a:hover, nav a.active {
   font-size: 1.25rem;
   color: var(--text-muted);
   max-width: 650px;
-  margin: 0 auto 2rem auto;
+  margin: 0 auto;
 }
 
-/* Core Roster Grid */
+/* Container & Cards */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -99,17 +160,6 @@ nav a:hover, nav a.active {
   font-size: 2rem;
   margin-bottom: 2rem;
   text-align: center;
-  position: relative;
-}
-
-.section-title::after {
-  content: '';
-  display: block;
-  width: 60px;
-  height: 4px;
-  background: linear-gradient(to right, var(--violet-nekomi), var(--pink-sera));
-  margin: 0.5rem auto 0 auto;
-  border-radius: 2px;
 }
 
 .grid {
@@ -123,11 +173,13 @@ nav a:hover, nav a.active {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
+  box-shadow: var(--card-shadow);
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-5px);
+  box-shadow: var(--glow-effect);
 }
 
 .card.nekomi { border-top: 4px solid var(--violet-nekomi); }
@@ -135,26 +187,6 @@ nav a:hover, nav a.active {
 .card.akari { border-top: 4px solid var(--crimson-akari); }
 .card.aoi { border-top: 4px solid var(--teal-aoi); }
 
-.card-title {
-  font-size: 1.35rem;
-  margin-bottom: 0.25rem;
-}
-
-.card-tag {
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 1rem;
-  display: inline-block;
-}
-
-.nekomi .card-tag { color: var(--violet-nekomi); }
-.sera .card-tag { color: var(--pink-sera); }
-.akari .card-tag { color: var(--crimson-akari); }
-.aoi .card-tag { color: var(--teal-aoi); }
-
-/* Footer */
 footer {
   text-align: center;
   padding: 2rem;
