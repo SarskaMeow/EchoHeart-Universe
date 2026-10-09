@@ -38,7 +38,7 @@
         <button class="dropdown-btn">Music ▾</button>
         <div class="dropdown-content">
           <a href="discography.html">Discography & Deck</a>
-           <a href="mixer.html" class="active">Stem Mixer console</a>
+          <a href="mixer.html">Stem Mixer Console</a>
         </div>
       </div>
 
@@ -51,14 +51,14 @@
         </div>
       </div>
 
-            <!-- Neko Lounge Dropdown -->
+      <!-- Neko Lounge Dropdown -->
       <div class="dropdown">
         <button class="dropdown-btn">Neko Lounge ▾</button>
         <div class="dropdown-content">
           <a href="neko-lounge.html">Tea Room & Creator</a>
           <a href="atelier.html">Resonance Atelier</a>
           <a href="neko-fm.html">Whisper Radio / Neko FM</a>
-          <a href="neko-maker.html" class="active">Neko Avatar Maker</a>
+          <a href="neko-maker.html">Neko Avatar Maker</a>
         </div>
       </div>
       
@@ -151,6 +151,9 @@
     <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
+  <!-- Global Live Radio Audio Element -->
+  <audio id="global-live-radio" style="display:none;"></audio>
+
   <script>
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
@@ -171,9 +174,38 @@
       updateThemeUI(isBasement);
     }
 
+    /* Global Radio Persistence & Sound Conflict Manager */
+    function initGlobalRadioSync() {
+      const globalPlayer = document.getElementById('global-live-radio');
+      const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
+      const savedUrl = localStorage.getItem('echoheart_radio_url');
+
+      // 1. Resume background stream if active
+      if (globalPlayer && savedUrl && isPlaying) {
+        globalPlayer.src = savedUrl;
+        globalPlayer.play().catch(e => {
+          console.log("Radio stream queued — click anywhere on page to enable audio.");
+        });
+      }
+
+      // 2. Pause radio when playing other audio on the page (like Stem Mixer or Discography)
+      const pageAudioElements = document.querySelectorAll('audio, video');
+      pageAudioElements.forEach(media => {
+        if (media !== globalPlayer) {
+          media.addEventListener('play', () => {
+            if (globalPlayer && !globalPlayer.paused) {
+              globalPlayer.pause();
+            }
+            localStorage.setItem('echoheart_radio_playing', 'false');
+          });
+        }
+      });
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('echoheart-theme');
       updateThemeUI(savedTheme === 'basement');
+      initGlobalRadioSync();
     });
   </script>
 </body>
