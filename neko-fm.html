@@ -14,7 +14,7 @@
       margin-top: 20px;
     }
 
-    @media (max-width: 850px) {
+    @media (max-width: 900px) {
       .radio-grid { grid-template-columns: 1fr; }
     }
 
@@ -27,68 +27,119 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
-    /* Player Interface */
-    .radio-player-deck {
-      background: rgba(12, 8, 25, 0.9);
+    /* Podcast Studio Stage */
+    .podcast-stage {
+      background: rgba(12, 8, 25, 0.95);
       border: 2px solid #f4b8c4;
       border-radius: 16px;
       padding: 24px;
-      text-align: center;
-      box-shadow: 0 0 20px rgba(244, 184, 196, 0.25);
+      box-shadow: 0 0 25px rgba(244, 184, 196, 0.25);
       margin-bottom: 20px;
     }
 
-    .frequency-display {
-      font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 2.2rem;
-      color: #f4b8c4;
-      margin: 10px 0 4px;
-      text-shadow: 0 0 12px rgba(244, 184, 196, 0.5);
+    .speaker-booth {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px dashed rgba(168, 139, 235, 0.3);
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .station-name {
-      font-size: 0.85rem;
-      color: #a88beb;
+    .speaker-avatar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.4;
+      transform: scale(0.92);
+      transition: all 0.3s ease;
+    }
+
+    .speaker-avatar.speaking {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+
+    .speaker-icon-box {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background: rgba(30, 22, 54, 0.9);
+      border: 2px solid rgba(168, 139, 235, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .speaker-avatar.speaking .speaker-icon-box {
+      border-color: #f4b8c4;
+      box-shadow: 0 0 18px rgba(244, 184, 196, 0.6);
+    }
+
+    .speaker-name {
+      font-size: 0.78rem;
       font-weight: 700;
+      color: #cbb8f6;
+    }
+
+    .script-transcript-box {
+      background: rgba(20, 14, 38, 0.85);
+      border-left: 4px solid #a88beb;
+      padding: 16px;
+      border-radius: 0 12px 12px 0;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .current-speaker-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #f4b8c4;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      margin-bottom: 16px;
+      margin-bottom: 6px;
     }
 
-    .channel-buttons {
+    .current-dialogue-line {
+      font-size: 0.95rem;
+      color: #e2daf8;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .episode-select-row {
       display: flex;
       gap: 10px;
-      justify-content: center;
+      margin-bottom: 16px;
       flex-wrap: wrap;
-      margin-bottom: 20px;
     }
 
-    .channel-btn {
+    .episode-btn {
+      flex: 1;
+      min-width: 140px;
       background: rgba(45, 34, 80, 0.8);
       border: 1px solid rgba(168, 139, 235, 0.4);
       color: #cbb8f6;
-      padding: 8px 16px;
-      border-radius: 20px;
+      padding: 10px;
+      border-radius: 10px;
       font-size: 0.82rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    .channel-btn:hover, .channel-btn.active-channel {
+    .episode-btn:hover, .episode-btn.active-ep {
       background: linear-gradient(135deg, #a88beb, #f4b8c4);
       color: #0d0b18;
       border-color: #f4b8c4;
-    }
-
-    .broadcast-status {
-      font-size: 0.88rem;
-      color: #e2daf8;
-      font-style: italic;
-      background: rgba(168, 139, 235, 0.1);
-      padding: 10px;
-      border-radius: 8px;
-      border-left: 3px solid #a88beb;
     }
 
     /* Mailbox & Submissions */
@@ -228,39 +279,61 @@
 
   <!-- Hero Section -->
   <section class="hero">
-    <h1>WHISPER RADIO / NEKO FM</h1>
+    <h1>WHISPER RADIO / NEKO FM PODCAST</h1>
     <p class="hero-subtitle hero-twilight-subtitle">
-      🌸 Late-night tea broadcasts, ambient purr lo-fi, and student locker letters
+      🌸 Live after-school audio drama broadcasts, guest interviews, and locker notes
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
-      ⚡ Subterranean Rehearsal Tapes & Secret Signal Transmissions
+      ⚡ Subterranean Broadcasts & Special Guest Intermissions
     </p>
   </section>
 
   <main class="container">
     <div class="radio-grid">
 
-      <!-- LEFT COLUMN: RADIO PLAYER DECK -->
+      <!-- LEFT COLUMN: INTERACTIVE PODCAST STUDIO PLAYER -->
       <div class="radio-box">
-        <h3 class="content-title">📻 Prep Room B Broadcast Deck</h3>
-        <p style="font-size:0.88rem; margin-bottom:16px;">Select a frequency channel to stream ambient study loops and radio broadcasts!</p>
+        <h3 class="content-title">🎙️ Prep Room B Podcast Studio</h3>
+        <p style="font-size:0.88rem; margin-bottom:16px;">Select an episode below and hit Play to watch the band members and guest students record live on air!</p>
 
-        <div class="radio-player-deck">
-          <div style="font-size:2.5rem;">🎙️</div>
-          <div id="freq-num" class="frequency-display">98.4 FM</div>
-          <div id="freq-title" class="station-name">Tea-Time Lo-Fi & Warm Chords</div>
-
-          <div class="channel-buttons">
-            <button class="channel-btn active-channel" onclick="setChannel(98.4, 'Tea-Time Lo-Fi & Warm Chords', 'lofi')">98.4 FM • Tea Lo-Fi</button>
-            <button class="channel-btn" onclick="setChannel(104.2, 'Rain & Purr Study Sanctuary', 'rain')">104.2 FM • Rain & Purr</button>
-            <button class="channel-btn" onclick="setChannel(88.0, 'Subterranean Rehearsal Tapes', 'rock')">88.0 FM • Rehearsal Tape</button>
-          </div>
-
-          <button id="broadcast-btn" class="action-btn" onclick="toggleRadioStream()">▶ Tune Into Broadcast</button>
+        <div class="episode-select-row">
+          <button class="episode-btn active-ep" onclick="selectEpisode(0)">Ep 1: Welcome to Neko FM</button>
+          <button class="episode-btn" onclick="selectEpisode(1)">Ep 2: Guest Yumi (Art Club)</button>
+          <button class="episode-btn" onclick="selectEpisode(2)">Ep 3: 180 BPM Drum Talk</button>
         </div>
 
-        <div class="broadcast-status">
-          💬 <span id="radio-host-text">Nekomi: "Welcome to Neko FM! Grab some warm barley tea and let the music settle your thoughts."</span>
+        <div class="podcast-stage">
+          <!-- Active Speaker Avatars Stage -->
+          <div class="speaker-booth">
+            <div id="spk-nekomi" class="speaker-avatar">
+              <div class="speaker-icon-box">🎸</div>
+              <span class="speaker-name">Nekomi</span>
+            </div>
+            <div id="spk-sera" class="speaker-avatar">
+              <div class="speaker-icon-box">⌨️</div>
+              <span class="speaker-name">Sera</span>
+            </div>
+            <div id="spk-akari" class="speaker-avatar">
+              <div class="speaker-icon-box">🥁</div>
+              <span class="speaker-name">Akari</span>
+            </div>
+            <div id="spk-aoi" class="speaker-avatar">
+              <div class="speaker-icon-box">🎸</div>
+              <span class="speaker-name">Aoi</span>
+            </div>
+            <div id="spk-guest" class="speaker-avatar" style="display:none;">
+              <div class="speaker-icon-box" style="border-color:#ffd700;">🎨</div>
+              <span class="speaker-name" id="guest-name-tag">Guest</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Dialogue Script Box -->
+          <div class="script-transcript-box">
+            <div id="speaker-title-display" class="current-speaker-title">Prep Room B Mic • Standby</div>
+            <div id="dialogue-line-display" class="current-dialogue-line">Select an episode and press Play Episode to start the broadcast...</div>
+          </div>
+
+          <button id="podcast-play-btn" class="action-btn" onclick="togglePodcastPlayback()">▶ Play Episode Broadcast</button>
         </div>
       </div>
 
@@ -313,83 +386,146 @@
     <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
-  <!-- Web Audio Stream Scripts -->
+  <!-- Web Audio Synthesizer & Podcast Script Engine -->
   <script>
     let audioCtx = null;
-    let isPlaying = false;
-    let streamInterval = null;
-    let currentMode = 'lofi';
+    let podcastInterval = null;
+    let isPodcastPlaying = false;
+    let currentLineIdx = 0;
+    let selectedEpIdx = 0;
 
-    function initAudio() {
+    // Distinct voice frequencies for each girl & guest
+    const voicePitch = {
+      nekomi: { freq: 329.63, type: 'sawtooth' }, // E4 Guitar tone
+      sera:   { freq: 523.25, type: 'triangle' }, // C5 Keytar chime
+      akari:  { freq: 440.00, type: 'square' },   // A4 Drum pulse
+      aoi:    { freq: 146.83, type: 'sine' },     // D3 Deep Bass
+      guest:  { freq: 659.25, type: 'sine' }      // E5 Soft Chime
+    };
+
+    // Podcast Episode Scripts
+    const episodes = [
+      {
+        title: "Ep 1: Welcome to Neko FM",
+        hasGuest: false,
+        script: [
+          { speaker: 'nekomi', text: "Welcome everyone to Whisper Radio on Neko FM! We're recording live from Music Prep Room B after practice." },
+          { speaker: 'sera', text: "I just poured four fresh cups of warm barley tea. The rain outside makes the room feel so cozy today." },
+          { speaker: 'akari', text: "And I just finished my 180 BPM drum pad drill! My sticks are practically sparking!" },
+          { speaker: 'aoi', text: "Let's keep the noise level reasonable, Akari. Student council patrols are still walking the 3rd floor hallway." },
+          { speaker: 'nekomi', text: "Hehe. Don't worry, Aoi. If anyone drops a shadow ticket into locker 102 tonight, we'll be ready beneath the floorboards." }
+        ]
+      },
+      {
+        title: "Ep 2: Guest Yumi (Art Club)",
+        hasGuest: true,
+        guestName: "Yumi (Art)",
+        guestIcon: "🎨",
+        script: [
+          { speaker: 'nekomi', text: "Tonight on Neko FM, we have our very first studio guest! Welcome Yumi Takahashi from the Sakuraoka Art Club!" },
+          { speaker: 'guest', text: "Thank you for having me! I still remember finding that black cardstock ticket stamped with a hollow heart in my locker..." },
+          { speaker: 'sera', text: "Your gallery canvas was so beautiful, Yumi. We played Crescent Resonance just for you that evening." },
+          { speaker: 'guest', text: "Listening to the music echo through stone walls in The Basement gave me my paintbrush back. I'll never forget it." },
+          { speaker: 'aoi', text: "That is why EchoHeart exists. To remind everyone that no one in these hallways has to face the dark alone." }
+        ]
+      },
+      {
+        title: "Ep 3: 180 BPM Drum Talk",
+        hasGuest: false,
+        script: [
+          { speaker: 'akari', text: "Okay, topic of the day: tempo! Everyone thinks 180 BPM is fast, but it's really about the steady heartbeat!" },
+          { speaker: 'nekomi', text: "When Akari drives the tempo behind my guitar riffs, the energy in the room completely shifts." },
+          { speaker: 'sera', text: "My fingers have to fly across the keytar keys to match her speed, but it feels like floating!" },
+          { speaker: 'aoi', text: "And my bassline grounds the entire pulse so the rhythm stays clear and deep." },
+          { speaker: 'akari', text: "That's team resonance right there! Now who's ready for another tea break?" }
+        ]
+      }
+    ];
+
+    function playVoiceChime(speakerKey) {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
-    }
 
-    function setChannel(freq, name, mode) {
-      currentMode = mode;
-      document.getElementById('freq-num').innerText = `${freq} FM`;
-      document.getElementById('freq-title').innerText = name;
-
-      document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active-channel'));
-      event.target.classList.add('active-channel');
-
-      const hostText = document.getElementById('radio-host-text');
-      if (mode === 'lofi') {
-        hostText.innerText = 'Sera: "Playing soft keytar chords and gentle tea-time ambient beats..."';
-      } else if (mode === 'rain') {
-        hostText.innerText = 'Nekomi: "Rain tapping against Prep Room B windows while Yozora purrs on the piano lid..."';
-      } else if (mode === 'rock') {
-        hostText.innerText = 'Akari: "Broadcasting fresh 180 BPM rehearsal tapes straight from The Basement!"';
-      }
-
-      if (isPlaying) {
-        clearInterval(streamInterval);
-        startStreamLoop();
-      }
-    }
-
-    function toggleRadioStream() {
-      initAudio();
-      isPlaying = !isPlaying;
-      const btn = document.getElementById('broadcast-btn');
-
-      if (isPlaying) {
-        btn.innerText = '⏸ Pause Stream';
-        startStreamLoop();
-      } else {
-        btn.innerText = '▶ Tune Into Broadcast';
-        clearInterval(streamInterval);
-      }
-    }
-
-    function startStreamLoop() {
-      streamInterval = setInterval(() => {
-        if (!isPlaying) return;
+      try {
+        const config = voicePitch[speakerKey] || voicePitch.nekomi;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
 
-        if (currentMode === 'lofi') {
-          osc.type = 'triangle';
-          osc.frequency.value = [261.63, 329.63, 392.00, 440.00][Math.floor(Math.random() * 4)];
-          gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
-        } else if (currentMode === 'rain') {
-          osc.type = 'sine';
-          osc.frequency.value = 180 + Math.random() * 80;
-          gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
-        } else if (currentMode === 'rock') {
-          osc.type = 'sawtooth';
-          osc.frequency.value = [146.83, 220.00, 329.63][Math.floor(Math.random() * 3)];
-          gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
-        }
+        osc.type = config.type;
+        osc.frequency.setValueAtTime(config.freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
 
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.5);
-      }, 500);
+        osc.stop(audioCtx.currentTime + 0.25);
+      } catch(e){}
+    }
+
+    function selectEpisode(idx) {
+      selectedEpIdx = idx;
+      currentLineIdx = 0;
+      if (isPodcastPlaying) togglePodcastPlayback();
+
+      document.querySelectorAll('.episode-btn').forEach((btn, i) => {
+        btn.classList.toggle('active-ep', i === idx);
+      });
+
+      const ep = episodes[idx];
+      const guestBox = document.getElementById('spk-guest');
+      if (ep.hasGuest) {
+        guestBox.style.display = 'flex';
+        document.getElementById('guest-name-tag').innerText = ep.guestName;
+        guestBox.querySelector('.speaker-icon-box').innerText = ep.guestIcon;
+      } else {
+        guestBox.style.display = 'none';
+      }
+
+      document.getElementById('speaker-title-display').innerText = `${ep.title} • Ready`;
+      document.getElementById('dialogue-line-display').innerText = "Click Play Episode Broadcast to start listening...";
+      resetSpeakerHighlights();
+    }
+
+    function togglePodcastPlayback() {
+      const btn = document.getElementById('podcast-play-btn');
+      if (isPodcastPlaying) {
+        isPodcastPlaying = false;
+        clearInterval(podcastInterval);
+        btn.innerText = "▶ Resume Episode Broadcast";
+      } else {
+        isPodcastPlaying = true;
+        btn.innerText = "⏸ Pause Episode Broadcast";
+        playScriptStep();
+        podcastInterval = setInterval(playScriptStep, 4200); // 4.2s per line
+      }
+    }
+
+    function playScriptStep() {
+      const ep = episodes[selectedEpIdx];
+      if (currentLineIdx >= ep.script.length) {
+        currentLineIdx = 0; // Loop back to start
+      }
+
+      const line = ep.script[currentLineIdx];
+      playVoiceChime(line.speaker);
+
+      // Highlight active speaker
+      resetSpeakerHighlights();
+      const activeEl = document.getElementById(`spk-${line.speaker}`);
+      if (activeEl) activeEl.classList.add('speaking');
+
+      // Update text
+      const speakerDisplayName = line.speaker === 'guest' ? (ep.guestName || 'Guest') : line.speaker.toUpperCase();
+      document.getElementById('speaker-title-display').innerText = `🎙️ ${speakerDisplayName} ON AIR:`;
+      document.getElementById('dialogue-line-display').innerText = `"${line.text}"`;
+
+      currentLineIdx++;
+    }
+
+    function resetSpeakerHighlights() {
+      document.querySelectorAll('.speaker-avatar').forEach(el => el.classList.remove('speaking'));
     }
 
     function postNote() {
