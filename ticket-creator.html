@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    /* Creator Page Grid Layout */
     .creator-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -76,7 +75,6 @@
       color: #ffffff;
     }
 
-    /* Ticket Card Stage */
     .ticket-stage {
       display: flex;
       flex-direction: column;
@@ -95,7 +93,6 @@
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    /* Border Trim Variations */
     .ticket-card.glow-rosegold {
       border-color: #f4b8c4;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(244, 184, 196, 0.3);
@@ -168,7 +165,7 @@
 </head>
 <body class="twilight-mode">
 
-  <!-- Navigation Bar -->
+  <!-- Navigation Bar with Mini-Games and Familiars Tabs Included -->
   <header class="navbar">
     <div class="logo-container">
       <span class="logo-echoheart">ECHOHEART</span>
@@ -186,6 +183,8 @@
       <a href="discography.html">Music & Songs</a>
       <a href="lore.html">Our Story</a>
       <a href="ticket-creator.html" class="active">Ticket Creator</a>
+      <a href="games.html">Mini-Games</a>
+      <a href="familiars.html">Familiars</a>
       
       <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
         ⚡ Secret Concert Mode
@@ -208,7 +207,6 @@
   <main class="container">
     <div class="creator-grid">
       
-      <!-- Controls Form -->
       <div class="content-card">
         <h3 class="content-title">Customize Ticket Artifact</h3>
         
@@ -270,7 +268,6 @@
         </div>
       </div>
 
-      <!-- Ticket Card Display -->
       <div class="ticket-stage">
         <div id="ticket-export" class="ticket-card glow-rosegold">
           <div class="ticket-header">
@@ -305,12 +302,10 @@
     </div>
   </main>
 
-  <!-- Footer -->
   <footer>
     <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
-  <!-- Scripts -->
   <script>
     function updateTicket() {
       const typeVal = document.getElementById('input-type').value;
