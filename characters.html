@@ -337,3 +337,46 @@
   </script>
 </body>
 </html>
+
+<!-- Global Background Radio Sync Engine -->
+<audio id="global-live-radio" style="display:none;"></audio>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    // 1. Initialize persistent radio state
+    const globalPlayer = document.getElementById('global-live-radio');
+    const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
+    const savedUrl = localStorage.getItem('echoheart_radio_url');
+
+    // Only run persistent player on pages OTHER than neko-fm.html (neko-fm handles its own local element)
+    if (!window.location.pathname.includes('neko-fm.html') && globalPlayer && savedUrl) {
+      globalPlayer.src = savedUrl;
+      if (isPlaying) {
+        globalPlayer.play().catch(e => {
+          console.log("Autoplay waiting for user interaction on this tab.");
+        });
+      }
+    }
+
+    // 2. Pause Radio automatically when playing audio anywhere else on the site (Discography, Mixer, etc.)
+    const pageAudioElements = document.querySelectorAll('audio, video');
+    pageAudioElements.forEach(media => {
+      if (media !== globalPlayer && media.id !== 'live-audio-player') {
+        media.addEventListener('play', () => {
+          // Pause local background player if active
+          if (globalPlayer && !globalPlayer.paused) {
+            globalPlayer.pause();
+          }
+          // Pause radio on neko-fm page if present
+          const localRadio = document.getElementById('live-audio-player');
+          if (localRadio && !localRadio.paused) {
+            localRadio.pause();
+          }
+          // Update global state
+          localStorage.setItem('echoheart_radio_playing', 'false');
+          const tunerBtn = document.getElementById('radio-tuner-play-btn');
+          if (tunerBtn) tunerBtn.innerText = "▶ Tune Into Live Stream";
+        });
+      }
+    });
+  });
+</script>
