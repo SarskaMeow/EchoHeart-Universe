@@ -6,7 +6,7 @@
   <title>Whisper Radio / Neko FM Podcast — EchoHeart & Girls Phantom Dead</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Dashboard & Studio Styling */
+    /* Studio Dashboard Container */
     .studio-dashboard {
       background: rgba(22, 15, 42, 0.92);
       border: 2px solid rgba(168, 139, 235, 0.35);
@@ -15,8 +15,15 @@
       backdrop-filter: blur(14px);
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
       margin-top: 20px;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
+    body.basement-mode .studio-dashboard {
+      border-color: rgba(255, 77, 109, 0.5);
+      box-shadow: 0 12px 40px rgba(255, 51, 85, 0.25);
+    }
+
+    /* Dashboard Tabs */
     .dashboard-tabs {
       display: flex;
       gap: 12px;
@@ -48,9 +55,18 @@
       box-shadow: 0 4px 15px rgba(244, 184, 196, 0.3);
     }
 
+    body.basement-mode .tab-btn:hover, 
+    body.basement-mode .tab-btn.active-tab {
+      background: linear-gradient(135deg, #ff4d6d, #a88beb);
+      color: #ffffff;
+      border-color: #ff4d6d;
+      box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+    }
+
     .tab-content { display: none; }
     .tab-content.active-content { display: block; }
 
+    /* Wide Studio Stage */
     .wide-stage {
       background: linear-gradient(145deg, #120924, #080412);
       border: 2px solid #f4b8c4;
@@ -58,6 +74,12 @@
       padding: 30px;
       box-shadow: 0 0 30px rgba(244, 184, 196, 0.25);
       margin-bottom: 24px;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    body.basement-mode .wide-stage {
+      border-color: #ff4d6d;
+      box-shadow: 0 0 35px rgba(255, 77, 109, 0.35);
     }
 
     .booth-header {
@@ -130,6 +152,11 @@
       box-shadow: 0 0 22px rgba(244, 184, 196, 0.7);
     }
 
+    body.basement-mode .speaker-avatar.speaking .speaker-icon-box {
+      border-color: #ff4d6d;
+      box-shadow: 0 0 25px rgba(255, 77, 109, 0.8);
+    }
+
     .speaker-name {
       font-size: 0.85rem;
       font-weight: 700;
@@ -152,6 +179,11 @@
       flex-direction: column;
       justify-content: center;
       margin-bottom: 20px;
+      transition: border-color 0.4s ease;
+    }
+
+    body.basement-mode .script-transcript-box {
+      border-left-color: #ff4d6d;
     }
 
     .current-speaker-title {
@@ -161,6 +193,10 @@
       text-transform: uppercase;
       letter-spacing: 1.5px;
       margin-bottom: 8px;
+    }
+
+    body.basement-mode .current-speaker-title {
+      color: #ff4d6d;
     }
 
     .current-dialogue-line {
@@ -184,6 +220,10 @@
       width: 0%;
       background: linear-gradient(90deg, #a88beb, #f4b8c4);
       transition: width 0.3s ease;
+    }
+
+    body.basement-mode .progress-bar-fill {
+      background: linear-gradient(90deg, #ff4d6d, #a88beb);
     }
 
     .episode-select-row {
@@ -211,6 +251,13 @@
       background: linear-gradient(135deg, #a88beb, #f4b8c4);
       color: #0d0b18;
       border-color: #f4b8c4;
+    }
+
+    body.basement-mode .episode-btn:hover, 
+    body.basement-mode .episode-btn.active-ep {
+      background: linear-gradient(135deg, #ff4d6d, #a88beb);
+      color: #ffffff;
+      border-color: #ff4d6d;
     }
 
     .mail-grid {
@@ -348,6 +395,12 @@
       transition: transform 0.2s ease;
     }
 
+    body.basement-mode .action-btn {
+      background: linear-gradient(135deg, #ff4d6d, #a88beb);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+    }
+
     .action-btn:hover { transform: translateY(-2px); }
 
     .mode-indicator-chip {
@@ -445,7 +498,7 @@
       🌸 Live after-school audio drama broadcasts, school rumors, and live locker messages
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
-      ⚡ Subterranean Broadcasts & Special Secret Transmissions
+      ⚡ Subterranean Broadcasts, Dark Mythology & Phantom Laws
     </p>
   </section>
 
@@ -465,9 +518,9 @@
           <div class="booth-header">
             <div>
               <h3 id="ep-main-title" class="content-title" style="margin:0;">Ep 1: Hallway Rumors & Shadow Tickets</h3>
-              <span style="font-size:0.85rem; color:#a88beb;">Recorded live in Music Prep Room B</span>
+              <span id="studio-location-tag" style="font-size:0.85rem; color:#a88beb;">Recorded live in Music Prep Room B</span>
             </div>
-            <span class="on-air-badge">LIVE ON AIR</span>
+            <span id="on-air-tag" class="on-air-badge">LIVE ON AIR</span>
           </div>
 
           <div class="speaker-booth-wide">
@@ -505,24 +558,20 @@
           <button id="podcast-play-btn" class="action-btn" onclick="togglePodcastPlayback()">▶ Play Episode Broadcast</button>
         </div>
 
-        <h4 style="color:#f4b8c4; margin-bottom:12px;">Select Podcast Topic:</h4>
-        <div class="episode-select-row">
-          <button class="episode-btn active-ep" onclick="selectEpisode(0)">Ep 1: Hallway Rumors</button>
-          <button class="episode-btn" onclick="selectEpisode(1)">Ep 2: Ancient Lore & Cavern</button>
-          <button class="episode-btn" onclick="selectEpisode(2)">Ep 3: Shopping Street Fest</button>
+        <h4 id="topic-heading" style="color:#f4b8c4; margin-bottom:12px;">Select Podcast Topic:</h4>
+        <div id="episode-select-container" class="episode-select-row">
+          <!-- Dynamically populated by JS based on Twilight vs Basement mode -->
         </div>
       </div>
 
-      <!-- TAB 2: LIVE LOCKER MAILBOX (SFW REAL-TIME BOARD + BOTS) -->
+      <!-- TAB 2: LIVE LOCKER MAILBOX -->
       <div id="mailbox-tab" class="tab-content">
         <div class="mail-grid">
           <div>
             <h3 class="content-title">📬 Sakuraoka High Live Mailbox</h3>
             <p style="font-size:0.88rem; margin-bottom:12px;">Live messages from students and radio listeners! (Automatically moderated for SFW content).</p>
 
-            <div class="mailbox-scroll-container" id="mailbox-list">
-              <!-- Initial default notes loaded by JavaScript -->
-            </div>
+            <div class="mailbox-scroll-container" id="mailbox-list"></div>
           </div>
 
           <div>
@@ -581,7 +630,6 @@
     let isStreamPlaying = false;
     const liveAudioPlayer = document.getElementById('live-audio-player');
 
-    // Radio Streams Database by Mode
     const radioStations = {
       twilight: [
         { freq: "98.4 FM", name: "Lofi Girl / Chillhop Stream", url: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
@@ -597,20 +645,16 @@
 
     let currentStationIdx = 0;
 
-    // SFW Profanity Filter Dictionary
-    const forbiddenWords = ['fuck', 'shit', 'asshole', 'bitch', 'cunt', 'dick', 'bastard', 'slut', 'whore', 'nigger', 'fag'];
+    const forbiddenWords = ['fuck', 'shit', 'asshole', 'bitch', 'cunt', 'dick', 'bastard', 'slut', 'whore'];
 
     function sanitizeInput(text) {
       let lower = text.toLowerCase();
       for (let word of forbiddenWords) {
-        if (lower.includes(word)) {
-          return false; // Violates SFW policy
-        }
+        if (lower.includes(word)) return false;
       }
       return true;
     }
 
-    // Student NPC Bot Generator Pools
     const studentBotNames = [
       "Track Club Runner (Locker #108)",
       "Art Club Member (Locker #204)",
@@ -645,7 +689,8 @@
       aoi:    { freq: 146.83, type: 'sine' }
     };
 
-    const episodes = [
+    /* TWILIGHT MODE EPISODES (ECHOHEART) */
+    const twilightEpisodes = [
       {
         title: "Ep 1: Hallway Rumors & Shadow Tickets",
         script: [
@@ -690,6 +735,73 @@
       }
     ];
 
+    /* BASEMENT MODE EPISODES (GIRLS PHANTOM DEAD AFTER HOURS) */
+    const basementEpisodes = [
+      {
+        title: "After Hours Ep 1: The Shadow Ticket Protocol & Forgotten Souls",
+        script: [
+          { speaker: 'nekomi', text: "Welcome to Girls Phantom Dead: After Hours. The campus gates are locked, Prep Room B is pitch black, and the subterranean amps are live." },
+          { speaker: 'sera', text: "Late tonight we're opening Case File #009... the heavy emotional ruptures across Sakuraoka High that trigger the Shadow Ticket protocol." },
+          { speaker: 'aoi', text: "A lot of listeners wonder how we decide which shoe locker receives a ticket. It isn't random. The ancient cavern stone beneath us acts as a resonance sensor." },
+          { speaker: 'akari', text: "When a student reaches their breaking point—whether it's overwhelming exam failure, feeling invisible, or losing their passion—the cavern picks up that static frequency!" },
+          { speaker: 'nekomi', text: "I can literally feel it in my feline ears. It feels like a high-pitched distortion chord ringing through my Crescent guitar pickups." },
+          { speaker: 'sera', text: "When that happens, I slip out during 7th period twilight, slip past the hall monitors, and drop a matte-black ticket stamped with a rose-gold hollow heart into locker 102." },
+          { speaker: 'aoi', text: "It's a heavy responsibility. If a student rejects the ticket or doesn't follow the sound down past the piano trapdoor... the static burden remains trapped in their heart." },
+          { speaker: 'akari', text: "That's why when they finally step into The Basement, we give everything we have! 180 BPM drum hits to shatter that silence completely!" },
+          { speaker: 'nekomi', text: "We don't play for applause down here. We play to rescue souls from the dark before dusk settles permanently." }
+        ]
+      },
+      {
+        title: "After Hours Ep 2: The Subterranean Cavern & The Spectral Resonance",
+        script: [
+          { speaker: 'sera', text: "After Hours Episode 2. Tonight we're diving deep into the dark lore of the stone cavern carved beneath the school 80 years ago." },
+          { speaker: 'aoi', text: "Before Sakuraoka High was built, this site was an ancient sanctuary where cat-girl priestesses guarded emotional resonance lines." },
+          { speaker: 'nekomi', text: "Our ancestors discovered that emotional pain, grief, and unsaid words don't disappear into thin air. They sink into the earth and form acoustic static." },
+          { speaker: 'akari', text: "And if that static builds up too long without an outlet... it distorts into phantom echoes that haunt people!" },
+          { speaker: 'sera', text: "That's why Yozora, Byakko, and Kagerou exist. Our spirit familiars aren't just pets; they're spirit conduits that absorb raw emotional energy during live sets." },
+          { speaker: 'aoi', text: "When my bassline hits the lowest octave, the natural cavern walls vibrate at exactly 432 Hz—the natural pitch of stone and earth." },
+          { speaker: 'nekomi', text: "It converts that heavy suppressed static into pure, roaring J-Rock power. You can feel the room temperature drop 10 degrees during the final solo." },
+          { speaker: 'akari', text: "It's terrifying and incredible at the same time. You're standing in the dark, wood smoke in the air, and the whole cavern is glowing violet!" },
+          { speaker: 'sera', text: "That is the true secret of Girls Phantom Dead. We are the bridge between ancient spirits and modern hearts." }
+        ]
+      },
+      {
+        title: "After Hours Ep 3: The Phantom Laws & The Masked Identity",
+        script: [
+          { speaker: 'aoi', text: "This is After Hours Episode 3: The Unspoken Phantom Laws. As Student Council President, this is the rulebook I strictly enforce." },
+          { speaker: 'nekomi', text: "Rule Number 1: Girls Phantom Dead can never perform for public gain, fame, or ticket sales. The sound belongs solely to the target soul in need." },
+          { speaker: 'sera', text: "Rule Number 2: Absolute anonymity. During basement sets, we wear gothic leather gear and veil our faces in twilight shadow. Faculty must never connect us to Prep Room B." },
+          { speaker: 'akari', text: "If the Principal or Disciplinary Board found out we unlocked the trapdoor beneath the grand piano... they'd seal the cavern in concrete forever!" },
+          { speaker: 'aoi', text: "And Rule Number 3: The 30-Minute Resonance Limit. Humans aren't built to withstand raw subterranean spirit frequencies for too long." },
+          { speaker: 'nekomi', text: "If we play past 30 minutes, the feline spirit energy begins consuming our own stamina. My ears start burning and Akari's drumsticks literally smoke." },
+          { speaker: 'sera', text: "That's why every secret set is a race against time. One setlist, 180 BPM, total emotional catharsis... then we vanish before the night guard comes." },
+          { speaker: 'akari', text: "When the lights come back on in Prep Room B the next morning, we're just four regular girls drinking tea again." },
+          { speaker: 'aoi', text: "That concludes tonight's After Hours broadcast. Keep your eyes open in the hallways... and protect your heart." }
+        ]
+      }
+    ];
+
+    function getActiveEpisodes() {
+      return document.body.classList.contains('basement-mode') ? basementEpisodes : twilightEpisodes;
+    }
+
+    function renderEpisodeButtons() {
+      const epList = getActiveEpisodes();
+      const container = document.getElementById('episode-select-container');
+      container.innerHTML = '';
+
+      epList.forEach((ep, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `episode-btn ${idx === selectedEpIdx ? 'active-ep' : ''}`;
+        btn.innerText = document.body.classList.contains('basement-mode') ? `After Hours Ep ${idx + 1}` : `Ep ${idx + 1}`;
+        btn.onclick = () => selectEpisode(idx);
+        container.appendChild(btn);
+      });
+
+      const activeEp = epList[selectedEpIdx] || epList[0];
+      document.getElementById('ep-main-title').innerText = activeEp.title;
+    }
+
     function switchStudioTab(tabId) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
       event.target.classList.add('active-tab');
@@ -725,11 +837,10 @@
       currentLineIdx = 0;
       if (isPodcastPlaying) togglePodcastPlayback();
 
-      document.querySelectorAll('.episode-btn').forEach((btn, i) => {
-        btn.classList.toggle('active-ep', i === idx);
-      });
+      renderEpisodeButtons();
 
-      const ep = episodes[idx];
+      const epList = getActiveEpisodes();
+      const ep = epList[idx];
       document.getElementById('ep-main-title').innerText = ep.title;
       document.getElementById('speaker-title-display').innerText = `${ep.title} • Ready`;
       document.getElementById('dialogue-line-display').innerText = "Click Play Episode Broadcast to start listening...";
@@ -747,12 +858,13 @@
         isPodcastPlaying = true;
         btn.innerText = "⏸ Pause Episode Broadcast";
         playScriptStep();
-        podcastInterval = setInterval(playScriptStep, 4500);
+        podcastInterval = setInterval(playScriptStep, 4800); // 4.8s per turn for deeper reading
       }
     }
 
     function playScriptStep() {
-      const ep = episodes[selectedEpIdx];
+      const epList = getActiveEpisodes();
+      const ep = epList[selectedEpIdx];
       if (currentLineIdx >= ep.script.length) {
         currentLineIdx = 0;
       }
@@ -777,12 +889,9 @@
       document.querySelectorAll('.speaker-avatar').forEach(el => el.classList.remove('speaking'));
     }
 
-    /* Mailbox & Live Bot Engine */
+    /* Mailbox Engine */
     function loadSavedNotes() {
       const saved = JSON.parse(localStorage.getItem('echoheart_mailbox') || '[]');
-      const container = document.getElementById('mailbox-list');
-
-      // Default notes if empty
       if (saved.length === 0) {
         const defaults = [
           { sender: "Anonymous 2nd-Year (Locker #104)", time: "10 mins ago", body: "How do you stay focused when studying for exams gets too stressful?", reply: "Sera: Take short tea breaks every 25 minutes! Aoi always reminds us that rest is part of practice." },
@@ -822,7 +931,6 @@
         return;
       }
 
-      // Check SFW Safety
       if (!sanitizeInput(sender) || !sanitizeInput(msg)) {
         alert("🌸 Student Council Notice: Please keep all messages friendly and strictly SFW!");
         return;
@@ -846,7 +954,6 @@
       document.getElementById('user-msg').value = '';
     }
 
-    // Automated Student NPC Bot Timer (Posts a random student note every 45 seconds)
     function startStudentBotTimer() {
       setInterval(() => {
         const botName = studentBotNames[Math.floor(Math.random() * studentBotNames.length)];
@@ -862,17 +969,16 @@
 
         const saved = JSON.parse(localStorage.getItem('echoheart_mailbox') || '[]');
         saved.unshift(botNote);
-        if (saved.length > 20) saved.pop(); // Keep top 20 notes
+        if (saved.length > 20) saved.pop();
         localStorage.setItem('echoheart_mailbox', JSON.stringify(saved));
 
-        // If user is currently looking at mailbox tab, re-render
         if (document.getElementById('mailbox-tab').classList.contains('active-content')) {
           renderNotes(saved);
         }
-      }, 45000); // 45 seconds
+      }, 45000);
     }
 
-    /* Live Radio Stream Engine */
+    /* Live Stream Engine */
     function renderPresets() {
       const isBasement = document.body.classList.contains('basement-mode');
       const list = isBasement ? radioStations.basement : radioStations.twilight;
@@ -926,25 +1032,35 @@
       }
     }
 
-    // Dynamic Theme Switcher Sync
+    /* Dynamic Theme Switcher Sync */
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
       const modeChip = document.getElementById('mode-chip');
+      const locTag = document.getElementById('studio-location-tag');
+      const topicHeading = document.getElementById('topic-heading');
 
       if (isBasement) {
         document.body.classList.remove('twilight-mode');
         document.body.classList.add('basement-mode');
         if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
         if (modeChip) modeChip.innerText = '⚡ Secret Concert Mode Active';
+        if (locTag) locTag.innerText = 'Recorded live in The Basement (Subterranean Cavern)';
+        if (topicHeading) topicHeading.innerText = 'Select After Hours Topic:';
       } else {
         document.body.classList.remove('basement-mode');
         document.body.classList.add('twilight-mode');
         if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
         if (modeChip) modeChip.innerText = '🌸 Prep Room B Mode Active';
+        if (locTag) locTag.innerText = 'Recorded live in Music Prep Room B';
+        if (topicHeading) topicHeading.innerText = 'Select Podcast Topic:';
       }
 
+      selectedEpIdx = 0;
       currentStationIdx = 0;
+      renderEpisodeButtons();
       renderPresets();
+
+      if (isPodcastPlaying) togglePodcastPlayback();
 
       if (isStreamPlaying) {
         const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[0];
