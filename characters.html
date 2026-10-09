@@ -3,381 +3,431 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EchoHeart — Character & Familiar Profiles</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Band Members & Allies — Girls Phantom Dead</title>
   <style>
-    /* Character Detail Page Specifics */
-    .character-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      transition: transform 0.3s ease, border-color 0.3s ease;
+    /* ============================================================
+       ECHOHEART & GIRLS PHANTOM DEAD — GLOBAL TWILIGHT STYLES
+       ============================================================ */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .character-card.nekomi { border-left: 6px solid var(--violet-nekomi); }
-    .character-card.sera { border-left: 6px solid var(--pink-sera); }
-    .character-card.akari { border-left: 6px solid var(--crimson-akari); }
-    .character-card.aoi { border-left: 6px solid var(--teal-aoi); }
-    .character-card.maya { border-left: 6px solid var(--gold-maya); }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      transition: background-color 0.4s ease, color 0.4s ease;
+      min-height: 100vh;
+    }
 
-    .character-header {
+    /* 🌙 Mode 1: Twilight HQ (Prep Room B) - Soft Dark Lavender/Violet */
+    body.twilight-mode {
+      background-color: #130f26;
+      color: #e2daf8;
+    }
+
+    /* ⚡ Mode 2: Secret Concert (The Basement) - Deep Midnight & Rose Gold */
+    body.basement-mode {
+      background-color: #070510;
+      color: #f4b8c4;
+    }
+
+    /* Navigation Bar */
+    .navbar {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 1rem;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 1rem;
-      margin-bottom: 1.5rem;
+      align-items: center;
+      padding: 16px 28px;
+      background: rgba(28, 20, 52, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(168, 139, 235, 0.25);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    .character-title h2 {
-      font-size: 1.8rem;
-      margin-bottom: 0.25rem;
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #a88beb;
     }
 
-    .badge-group {
+    .logo-subtext {
+      font-size: 0.85rem;
+      color: #f4b8c4;
+      margin-left: 6px;
+      font-weight: 600;
+    }
+
+    .status-badge-container {
       display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .badge {
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .badge.cat-girl { background-color: rgba(244, 63, 94, 0.2); color: var(--pink-sera); border: 1px solid var(--pink-sera); }
-    .badge.human { background-color: rgba(20, 184, 166, 0.2); color: var(--teal-aoi); border: 1px solid var(--teal-aoi); }
-    .badge.domain-violet { background-color: rgba(139, 92, 246, 0.2); color: var(--violet-nekomi); border: 1px solid var(--violet-nekomi); }
-    .badge.domain-pink { background-color: rgba(244, 63, 94, 0.2); color: var(--pink-sera); border: 1px solid var(--pink-sera); }
-    .badge.domain-crimson { background-color: rgba(251, 113, 133, 0.2); color: var(--crimson-akari); border: 1px solid var(--crimson-akari); }
-    .badge.domain-teal { background-color: rgba(20, 184, 166, 0.2); color: var(--teal-aoi); border: 1px solid var(--teal-aoi); }
-    .badge.council { background-color: rgba(234, 179, 8, 0.2); color: var(--gold-maya); border: 1px solid var(--gold-maya); }
-
-    .spec-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      background-color: rgba(11, 12, 16, 0.3);
-      padding: 1.25rem;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-      border: 1px solid var(--border-color);
-    }
-
-    .spec-item { font-size: 0.95rem; }
-    .spec-item strong {
-      display: block;
+    .status-badge {
       font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      margin-bottom: 0.2rem;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      background: rgba(45, 34, 80, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.3);
     }
 
-    .familiar-box {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 1.25rem;
+    .room-status { color: #b5ebb5; }
+    .basement-status { color: #f4b8c4; }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
     }
 
-    .familiar-box h3 {
-      font-size: 1.15rem;
-      margin-bottom: 0.5rem;
+    nav a {
+      color: #cbb8f6;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover, nav a.active {
+      color: #f4b8c4;
+    }
+
+    /* Theme Toggle Button */
+    .theme-btn {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border: none;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      box-shadow: 0 4px 12px rgba(168, 139, 235, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .theme-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 6px 18px rgba(244, 184, 196, 0.5);
+    }
+
+    /* Hero Header */
+    .hero {
+      text-align: center;
+      padding: 40px 20px 20px;
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      letter-spacing: 2px;
+      color: #f4b8c4;
+      text-shadow: 0 0 15px rgba(244, 184, 196, 0.3);
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+      color: #cbb8f6;
+    }
+
+    /* Layout Container */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+    }
+
+    .section-title {
+      color: #a88beb;
+      margin: 30px 0 16px;
+      font-size: 1.4rem;
+      border-bottom: 1px solid rgba(168, 139, 235, 0.2);
+      padding-bottom: 8px;
+    }
+
+    /* Detailed Character Cards */
+    .member-card {
+      background: rgba(38, 28, 68, 0.65);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .member-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .member-name {
+      font-size: 1.4rem;
+      color: #ffffff;
+    }
+
+    .member-role {
+      background: rgba(244, 184, 196, 0.15);
+      color: #f4b8c4;
+      border: 1px solid rgba(244, 184, 196, 0.3);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .member-grid {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 650px) {
+      .member-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .portrait-box {
+      width: 100%;
+      height: 180px;
+      background: rgba(15, 10, 30, 0.6);
+      border-radius: 12px;
+      border: 1px dashed rgba(168, 139, 235, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 12px;
+      color: #a88beb;
+      font-size: 0.85rem;
+    }
+
+    .member-details p {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: #d1c5ed;
+      margin-bottom: 12px;
+    }
+
+    .info-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .info-chip {
+      background: rgba(15, 10, 30, 0.5);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: #cbb8f6;
+    }
+
+    /* Mode Toggles */
+    body.twilight-mode .hero-basement-subtitle,
+    body.twilight-mode .basement-text,
+    body.twilight-mode .basement-img,
+    body.twilight-mode .basement-status {
+      display: none !important;
+    }
+
+    body.basement-mode .hero-twilight-subtitle,
+    body.basement-mode .twilight-text,
+    body.basement-mode .twilight-img,
+    body.basement-mode .room-status {
+      display: none !important;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.85rem;
+      color: #8b7cb6;
+      border-top: 1px solid rgba(168, 139, 235, 0.15);
+      background: rgba(15, 10, 30, 0.8);
     }
   </style>
 </head>
-<body>
+<body class="twilight-mode">
 
   <!-- Navigation Bar -->
   <header class="navbar">
-    <div class="logo-text">ECHOHEART</div>
+    <div class="logo-text">
+      ECHOHEART <span class="logo-subtext">✦ GIRLS PHANTOM DEAD</span>
+    </div>
     
     <div class="status-badge-container">
-      <span class="status-badge day-status">🟢 Prep Room B • 65 dB</span>
-      <span class="status-badge vault-status">🔴 Sub-Vault 02 • 138 dB [ACTIVE]</span>
+      <span class="status-badge room-status">🌸 Prep Room B • After-School Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Secret Concert</span>
     </div>
 
     <nav>
       <a href="index.html">Home</a>
-      <a href="characters.html" class="active">Core 4 Roster</a>
-      <a href="discography.html">Discography</a>
-      <a href="lore.html">Lore & Mechanics</a>
-      <a href="games.html">Games & Apps</a>
+      <a href="characters.html" class="active">Band Members</a>
+      <a href="discography.html">Music & Songs</a>
+      <a href="lore.html">Our Story</a>
+      <a href="ticket-creator.html">Ticket Creator</a>
       
+      <!-- Theme Switcher Button -->
       <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
-        ⚡ Vault Mode
+        ⚡ Secret Concert Mode
       </button>
     </nav>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Hero Header -->
   <section class="hero">
-    <h1>BAND ROSTER & ALLIES</h1>
-    <p class="hero-daytime-subtitle">
-      🌸 The Core 4 Members of EchoHeart, their Mystical Familiars, and Council Support.
+    <h1>BAND MEMBERS & ALLIES</h1>
+    <p class="hero-subtitle hero-twilight-subtitle">
+      🌸 The members of EchoHeart and their animal companions
     </p>
-    <p class="hero-vault-subtitle">
-      ⚡ GIRLS PHANTOM DEAD OPERATIONAL UNITS • SUBTERRANEAN TACTICAL SPECS
+    <p class="hero-subtitle hero-basement-subtitle">
+      ⚡ Girls Phantom Dead • Performing Live in the Basement
     </p>
   </section>
 
   <main class="container">
+    <h2 class="section-title">THE BAND</h2>
 
-    <!-- ============================================================
-         SECTION 1: THE CORE 4 BAND MEMBERS
-         ============================================================ -->
-    <h2 class="section-title">THE CORE 4 BAND MEMBERS</h2>
-
-    <!-- 🎸 NEKOMI AOYAMA -->
-    <article class="character-card nekomi">
-      <div class="character-header">
-        <div class="character-title">
-          <h2>🎸 Nekomi Aoyama</h2>
-          <div class="badge-group">
-            <span class="badge cat-girl">Cat Girl</span>
-            <span class="badge domain-violet">Violet Starlight Domain</span>
-            <span class="badge">Lead Guitar / Lead Vocals</span>
+    <!-- Nekomi -->
+    <div class="member-card">
+      <div class="member-header">
+        <h3 class="member-name">🎸 Nekomi Aoyama</h3>
+        <span class="member-role">Lead Guitarist & Main Vocalist</span>
+      </div>
+      <div class="member-grid">
+        <div class="portrait-box">
+          <span class="twilight-img">📷 [NEKOMI: School Uniform & Cardigan]</span>
+          <span class="basement-img">⚡ [NEKOMI: Dark Leather Jacket]</span>
+        </div>
+        <div class="member-details">
+          <p>A quiet cat girl who pours all her unspoken feelings into her guitar solos. She plays with absolute passion to connect with anyone struggling in silence.</p>
+          <div class="info-list">
+            <span class="info-chip">Instrument: Fender Jazz Bass & Crescent Guitar</span>
+            <span class="info-chip">Aura: Deep Violet</span>
+            <span class="info-chip">Companion: Yozora (Black Cat)</span>
           </div>
         </div>
-      </div>
-
-      <div class="portrait-container">
-        <div class="portrait-placeholder day-img">📷 [NEKOMI ARTWORK: School Blazer & Thigh-High Socks]</div>
-        <div class="portrait-placeholder vault-img">⚡ [NEKOMI ARTWORK: Black Motorcycle Jacket & Violet Starlight Aura]</div>
-      </div>
-
-      <div class="outfit-box">
-        <span class="outfit-label daytime-text">🌸 ATTIRE: Sakuraoka High Music Division Blazer & Thigh-Highs</span>
-        <span class="outfit-label vault-text">⚡ ATTIRE: Cropped Black Leather Jacket, Tactical Straps & Violet Choker</span>
-      </div>
-
-      <div class="spec-grid">
-        <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
-        <div class="spec-item"><strong>Birthday</strong> October 14 (Autumn Cultural Arc)</div>
-        <div class="spec-item"><strong>Height</strong> 162 cm</div>
-        <div class="spec-item"><strong>Favorite Food</strong> Dark chocolate, black coffee, takoyaki</div>
-        <div class="spec-item"><strong>Primary Gear</strong> Custom Crescent-Moon Electric Guitar</div>
-        <div class="spec-item"><strong>Signal Chain</strong> High-gain distortion, analog delay, lead boost</div>
-      </div>
-
-      <div class="character-body">
-        <p>Lead guitarist and co-vocalist of the band. Shielded by a cool, sarcastic exterior, Nekomi carries heavy emotional walls that were broken open through her bond with Sera Hanibara. In daytime school settings, she performs sweet J-Pop and K-Pop hooks for EchoHeart, but down in the subterranean Sub-Stage Vaults, she steps on high-gain distortion pedals to unleash raw 180 BPM J-Rock as the frontline offensive core against Dissonance.</p>
-      </div>
-    </article>
-
-    <!-- ⌨️ SERA HANIBARA -->
-    <article class="character-card sera">
-      <div class="character-header">
-        <div class="character-title">
-          <h2>⌨️ Sera Hanibara</h2>
-          <div class="badge-group">
-            <span class="badge cat-girl">Cat Girl</span>
-            <span class="badge domain-pink">Rose-Gold Glow Domain</span>
-            <span class="badge">Synthesizer / Keytar / Co-Vocals</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="portrait-container">
-        <div class="portrait-placeholder day-img">📷 [SERA ARTWORK: School Blazer, Cardigan & Pink Hair Clip]</div>
-        <div class="portrait-placeholder vault-img">⚡ [SERA ARTWORK: Gothic Rose Keytar Dress & Combat Boots]</div>
-      </div>
-
-      <div class="outfit-box">
-        <span class="outfit-label daytime-text">🌸 ATTIRE: Pink Cat Clip, School Blazer & White Knee Socks</span>
-        <span class="outfit-label vault-text">⚡ ATTIRE: Gothic-Rose Asymmetric Lace Dress & Dark Leather Sleeves</span>
-      </div>
-
-      <div class="spec-grid">
-        <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
-        <div class="spec-item"><strong>Birthday</strong> July 7 (Tanabata Star Festival Arc)</div>
-        <div class="spec-item"><strong>Height</strong> 156 cm</div>
-        <div class="spec-item"><strong>Favorite Food</strong> Strawberry shortcake, milk tea with honey, macaroons</div>
-        <div class="spec-item"><strong>Primary Gear</strong> Workstation Synthesizer & Rose-Gold Keytar</div>
-        <div class="spec-item"><strong>Special Ability</strong> Sun Voice (Harmonic Frequency Cleanser)</div>
-      </div>
-
-      <div class="character-body">
-        <p>Synthesizer player and co-vocalist whose delicate, gentle cat-girl presence hides the <strong>Sun Voice</strong>—an extraordinary acoustic ability that acts as an emotional sponge and natural frequency cleanser. Highly vulnerable to environmental Dissonance, she relies on her 100% Heart Sync bond with Nekomi Aoyama to keep her grounded. Wears a signature pastel-pink cat hair clip given to her by Nekomi.</p>
-      </div>
-    </article>
-
-    <!-- 🥁 AKARI MINASE -->
-    <article class="character-card akari">
-      <div class="character-header">
-        <div class="character-title">
-          <h2>🥁 Akari Minase</h2>
-          <div class="badge-group">
-            <span class="badge human">Human</span>
-            <span class="badge domain-crimson">Crimson Spark Domain</span>
-            <span class="badge">Drums / Tempo Driver</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="portrait-container">
-        <div class="portrait-placeholder day-img">📷 [AKARI ARTWORK: Unbuttoned Vest & Rolled Sleeves]</div>
-        <div class="portrait-placeholder vault-img">⚡ [AKARI ARTWORK: Sleeveless Punk Vest & Flame Accents]</div>
-      </div>
-
-      <div class="outfit-box">
-        <span class="outfit-label daytime-text">🌸 ATTIRE: Unbuttoned Vest & Bright Colored Wristbands</span>
-        <span class="outfit-label vault-text">⚡ ATTIRE: Sleeveless Punk Vest & Drumstick Leg Holsters</span>
-      </div>
-
-      <div class="spec-grid">
-        <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
-        <div class="spec-item"><strong>Birthday</strong> August 3 (Mid-Summer Beach Arc)</div>
-        <div class="spec-item"><strong>Height</strong> 165 cm</div>
-        <div class="spec-item"><strong>Favorite Food</strong> Ultra-spicy miso ramen, melon soda, candied apples</div>
-        <div class="spec-item"><strong>Primary Gear</strong> Custom Compact Hybrid Drum Kit (Crimson lacquer)</div>
-        <div class="spec-item"><strong>Performance Style</strong> High-velocity stick-spinning, double-kick 180+ BPM</div>
-      </div>
-
-      <div class="character-body">
-        <p>The explosive, high-energy drummer who provides the kinetic engine for both EchoHeart and Girls Phantom Dead. Akari’s fearless attitude and rapid 180 BPM stick-spinning performance style drive the physical pressure needed to break through dense Dissonance barriers. Outside of performances, she acts as the band's primary instigator for outings, festival exploration, and team chaos.</p>
-      </div>
-    </article>
-
-    <!-- 🎸 AOI MIZUHARA -->
-    <article class="character-card aoi">
-      <div class="character-header">
-        <div class="character-title">
-          <h2>🎸 Aoi Mizuhara</h2>
-          <div class="badge-group">
-            <span class="badge human">Human</span>
-            <span class="badge domain-teal">Mossy-Teal Wave Domain</span>
-            <span class="badge">Bassist / Tactical Strategist</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="portrait-container">
-        <div class="portrait-placeholder day-img">📷 [AOI ARTWORK: Buttoned Blazer & Dark Teal Sweater Vest]</div>
-        <div class="portrait-placeholder vault-img">⚡ [AOI ARTWORK: Techwear Trench Coat & Audio Meters]</div>
-      </div>
-
-      <div class="outfit-box">
-        <span class="outfit-label daytime-text">🌸 ATTIRE: Dark Teal Sweater Vest & Neat Hair Ribbons</span>
-        <span class="outfit-label vault-text">⚡ ATTIRE: Techwear Trench Coat with Audio Wave Meters</span>
-      </div>
-
-      <div class="spec-grid">
-        <div class="spec-item"><strong>Class & Division</strong> Class 3-A (Music Division)</div>
-        <div class="spec-item"><strong>Birthday</strong> February 18 (Winter Finals / Valentine's Arc)</div>
-        <div class="spec-item"><strong>Height</strong> 168 cm</div>
-        <div class="spec-item"><strong>Favorite Food</strong> Matcha ice cream, salted salmon rice balls, green tea</div>
-        <div class="spec-item"><strong>Primary Gear</strong> 4-String Precision Bass (Dark Teal matte finish)</div>
-        <div class="spec-item"><strong>Tactical Role</strong> Sub-frequency dampening & subterranean vault routing</div>
-      </div>
-
-      <div class="character-body">
-        <p>The calm, analytical bassist and tactical mind of the group. Aoi oversees setlists, acoustic frequency tuning, subterranean infiltration routes, and equipment budgets. Her low-end bass frequencies create the structural container that prevents Girls Phantom Dead's high-decibel J-Rock from leaking through campus flooring or triggering faculty noise detection systems.</p>
-      </div>
-    </article>
-
-    <!-- ============================================================
-         SECTION 2: MYSTICAL FAMILIARS
-         ============================================================ -->
-    <h2 class="section-title">MYSTICAL FAMILIARS</h2>
-
-    <div class="grid" style="margin-bottom: 3rem;">
-      <div class="familiar-box">
-        <h3>🐈 Yozora</h3>
-        <p><strong>Form:</strong> Shadow Black Cat (Single Tail)</p>
-        <p><strong>Partner:</strong> Nekomi Aoyama</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Perches on Nekomi's guitar amp cabinet during performances, absorbing acoustic spillover and converting raw guitar distortion into offensive Resonance pulses.</p>
-      </div>
-
-      <div class="familiar-box">
-        <h3>🦊 Byakko</h3>
-        <p><strong>Form:</strong> Two-Tailed Divine White Fox</p>
-        <p><strong>Partner:</strong> Sera Hanibara</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Manifests alongside keytar solos when Sera activates her Sun Voice. Wears a tiny star-ribbon on Sera's July 7 Tanabata birthday and demands fried tofu offerings.</p>
-      </div>
-
-      <div class="familiar-box">
-        <h3>🦦 Kagerou</h3>
-        <p><strong>Form:</strong> Ember-Coated Marten</p>
-        <p><strong>Partner:</strong> Akari Minase</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Darts across drum rims and cymbals during 180 BPM solos, leaving trails of crimson sparks and amplifying physical kinetic energy.</p>
-      </div>
-
-      <div class="familiar-box">
-        <h3>🦝 Komorebi</h3>
-        <p><strong>Form:</strong> Wood-Grained Tanuki</p>
-        <p><strong>Partner:</strong> Aoi Mizuhara</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Rests near the sub-bass cabinet, using mossy-teal wave frequencies to dampen rogue acoustic vibrations and maintain subterranean stealth.</p>
       </div>
     </div>
 
-    <!-- ============================================================
-         SECTION 3: SUPPORTING CAST & ALLIES
-         ============================================================ -->
-    <h2 class="section-title">SUPPORTING CAST & ALLIES</h2>
-
-    <article class="character-card maya">
-      <div class="character-header">
-        <div class="character-title">
-          <h2>🏛️ Maya Chiba</h2>
-          <div class="badge-group">
-            <span class="badge human">Human</span>
-            <span class="badge council">Student Council President</span>
-            <span class="badge">Supporting Ally (Not Band Member)</span>
+    <!-- Sera -->
+    <div class="member-card">
+      <div class="member-header">
+        <h3 class="member-name">⌨️ Sera Hanibara</h3>
+        <span class="member-role">Keyboardist & Harmony Vocals</span>
+      </div>
+      <div class="member-grid">
+        <div class="portrait-box">
+          <span class="twilight-img">📷 [SERA: Pink Cardigan]</span>
+          <span class="basement-img">⚡ [SERA: Rose-Gold Synth Outfit]</span>
+        </div>
+        <div class="member-details">
+          <p>A gentle cat girl with pastel pink hair and a sweet, uplifting singing voice. Her bright synth chords bring warmth and comfort whenever the room feels heavy.</p>
+          <div class="info-list">
+            <span class="info-chip">Instrument: Keytar & Synthesizer</span>
+            <span class="info-chip">Aura: Warm Rose-Gold</span>
+            <span class="info-chip">Companion: Byakko (Two-Tailed Fox)</span>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="spec-grid">
-        <div class="spec-item"><strong>Class & Division</strong> Class 3-A (General Division)</div>
-        <div class="spec-item"><strong>Birthday</strong> November 29</div>
-        <div class="spec-item"><strong>Height</strong> 170 cm</div>
-        <div class="spec-item"><strong>Favorite Food</strong> Earl Grey tea, handmade matcha cookies</div>
-        <div class="spec-item"><strong>Case History</strong> Case 3 (Council Overload / Perfectionism)</div>
-        <div class="spec-item"><strong>Support Role</strong> Underground Vault Access & Faculty Noise Cover</div>
+    <!-- Akari -->
+    <div class="member-card">
+      <div class="member-header">
+        <h3 class="member-name">🥁 Akari Minase</h3>
+        <span class="member-role">High-Energy Drummer</span>
       </div>
-
-      <div class="character-body">
-        <p>The sharp, authoritative Student Council President of Sakuraoka High. Driven by intense perfectionism, Maya nearly collapsed under overwhelming stress before being saved by Girls Phantom Dead during Case 3. Following her recovery, she officially granted EchoHeart protected access to the subterranean Sub-Stage Vaults and acts as their inside cover against faculty noise complaints.</p>
+      <div class="member-grid">
+        <div class="portrait-box">
+          <span class="twilight-img">📷 [AKARI: School Vest]</span>
+          <span class="basement-img">⚡ [AKARI: Punk Drumming Vest]</span>
+        </div>
+        <div class="member-details">
+          <p>Unstoppable and energetic, Akari is the emotional spark plug of the group. Her fast, powerful drumming drives the music forward and keeps everyone smiling.</p>
+          <div class="info-list">
+            <span class="info-chip">Instrument: Custom Drum Set</span>
+            <span class="info-chip">Aura: Vibrant Crimson</span>
+            <span class="info-chip">Companion: Kagerou (Ember Marten)</span>
+          </div>
+        </div>
       </div>
-    </article>
+    </div>
 
+    <!-- Aoi -->
+    <div class="member-card">
+      <div class="member-header">
+        <h3 class="member-name">🎸 Aoi Mizuhara</h3>
+        <span class="member-role">Bassist & Student Council Member</span>
+      </div>
+      <div class="member-grid">
+        <div class="portrait-box">
+          <span class="twilight-img">📷 [AOI: Sweater Vest & Glasses]</span>
+          <span class="basement-img">⚡ [AOI: Long Techwear Coat]</span>
+        </div>
+        <div class="member-details">
+          <p>Calm, organized, and deeply thoughtful. Aoi manages the club paperwork, keeps practice runs on schedule, and provides rich, grounding basslines for every song.</p>
+          <div class="info-list">
+            <span class="info-chip">Instrument: Electric Bass Guitar</span>
+            <span class="info-chip">Aura: Calm Teal</span>
+            <span class="info-chip">Companion: Komorebi (Tanuki)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">ANIMAL COMPANIONS</h2>
+    <div class="member-card">
+      <div class="member-details">
+        <p><strong>Yozora:</strong> A wise black cat with a crescent moon mark who lounges on the piano during practice.</p>
+        <p><strong>Byakko:</strong> A gentle white two-tailed fox that rests near Sera's synthesizer station.</p>
+        <p><strong>Kagerou:</strong> A playful marten with ember sparks on its tail that rides on Akari's shoulder.</p>
+        <p><strong>Komorebi:</strong> A calm tanuki with mossy ears that sits on Aoi's desk during study sessions.</p>
+      </div>
+    </div>
   </main>
 
   <!-- Footer -->
   <footer>
-    <p>&copy; EchoHeart Universe. Official Light Novel & Transmedia World Archive.</p>
+    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
-  <!-- Mode Switcher Script -->
+  <!-- Theme Toggle Script -->
   <script>
-    const savedTheme = localStorage.getItem('echoheart-theme');
-    const toggleBtn = document.getElementById('theme-toggle-btn');
-
-    if (savedTheme === 'vault') {
-      document.body.classList.add('vault-mode');
-      if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isBasement) {
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+      } else {
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+      }
     }
 
     function toggleMode() {
-      const isVault = document.body.classList.toggle('vault-mode');
-      if (isVault) {
-        localStorage.setItem('echoheart-theme', 'vault');
-        if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
-      } else {
-        localStorage.setItem('echoheart-theme', 'daytime');
-        if (toggleBtn) toggleBtn.innerText = '⚡ Vault Mode';
-      }
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
     }
+
+    // Initialize Theme on Page Load
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
   </script>
 </body>
 </html>
