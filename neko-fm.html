@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Whisper Radio / Neko FM Podcast — EchoHeart</title>
+  <title>Whisper Radio / Neko FM Podcast — EchoHeart & Girls Phantom Dead</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Full Studio Dashboard Container */
+    /* Dashboard & Studio Styling */
     .studio-dashboard {
       background: rgba(22, 15, 42, 0.92);
       border: 2px solid rgba(168, 139, 235, 0.35);
@@ -17,7 +17,6 @@
       margin-top: 20px;
     }
 
-    /* Dashboard Tab Bar */
     .dashboard-tabs {
       display: flex;
       gap: 12px;
@@ -52,7 +51,6 @@
     .tab-content { display: none; }
     .tab-content.active-content { display: block; }
 
-    /* Wide Studio Stage */
     .wide-stage {
       background: linear-gradient(145deg, #120924, #080412);
       border: 2px solid #f4b8c4;
@@ -215,7 +213,6 @@
       border-color: #f4b8c4;
     }
 
-    /* Mailbox Styles */
     .mail-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -260,14 +257,13 @@
       border-left: 3px solid #f4b8c4;
     }
 
-    /* Radio Tuner Deck */
     .tuner-card {
       background: rgba(15, 10, 30, 0.8);
       border: 1px solid rgba(168, 139, 235, 0.3);
       border-radius: 16px;
-      padding: 24px;
+      padding: 26px;
       text-align: center;
-      max-width: 500px;
+      max-width: 550px;
       margin: 0 auto;
     }
 
@@ -277,6 +273,32 @@
       color: #f4b8c4;
       margin: 10px 0 4px;
       text-shadow: 0 0 14px rgba(244, 184, 196, 0.5);
+    }
+
+    .station-preset-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .preset-btn {
+      background: rgba(45, 34, 80, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      color: #cbb8f6;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .preset-btn:hover, .preset-btn.active-preset {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border-color: #f4b8c4;
     }
 
     .form-group { margin-bottom: 14px; }
@@ -315,6 +337,29 @@
     }
 
     .action-btn:hover { transform: translateY(-2px); }
+
+    .mode-indicator-chip {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    body.twilight-mode .mode-indicator-chip {
+      background: rgba(168, 139, 235, 0.2);
+      color: #cbb8f6;
+      border: 1px solid rgba(168, 139, 235, 0.4);
+    }
+
+    body.basement-mode .mode-indicator-chip {
+      background: rgba(255, 77, 109, 0.2);
+      color: #ff4d6d;
+      border: 1px solid rgba(255, 77, 109, 0.4);
+    }
   </style>
 </head>
 <body class="twilight-mode">
@@ -398,10 +443,10 @@
       <div class="dashboard-tabs">
         <button class="tab-btn active-tab" onclick="switchStudioTab('broadcast-tab')">🎙️ Podcast Studio Stage</button>
         <button class="tab-btn" onclick="switchStudioTab('mailbox-tab')">📬 Locker Mailbox</button>
-        <button class="tab-btn" onclick="switchStudioTab('tuner-tab')">📻 EchoHeart Lo-Fi Tuner</button>
+        <button class="tab-btn" onclick="switchStudioTab('tuner-tab')">📻 Mode-Reactive Live Stream Tuner</button>
       </div>
 
-      <!-- TAB 1: PODCAST STUDIO STAGE (FULL WIDE VIEW) -->
+      <!-- TAB 1: PODCAST STUDIO STAGE -->
       <div id="broadcast-tab" class="tab-content active-content">
         <div class="wide-stage">
           
@@ -413,7 +458,6 @@
             <span class="on-air-badge">LIVE ON AIR</span>
           </div>
 
-          <!-- Wide Speaker Booth -->
           <div class="speaker-booth-wide">
             <div id="spk-nekomi" class="speaker-avatar">
               <div class="speaker-icon-box">🎸</div>
@@ -437,12 +481,10 @@
             </div>
           </div>
 
-          <!-- Progress Bar -->
           <div class="progress-bar-container">
             <div id="ep-progress-fill" class="progress-bar-fill"></div>
           </div>
 
-          <!-- Dynamic Transcript Display -->
           <div class="script-transcript-box">
             <div id="speaker-title-display" class="current-speaker-title">Prep Room B Mic • Standby</div>
             <div id="dialogue-line-display" class="current-dialogue-line">Select an episode topic below and press Play Episode Broadcast to begin...</div>
@@ -451,7 +493,6 @@
           <button id="podcast-play-btn" class="action-btn" onclick="togglePodcastPlayback()">▶ Play Episode Broadcast</button>
         </div>
 
-        <!-- Episode Selector Cards -->
         <h4 style="color:#f4b8c4; margin-bottom:12px;">Select Podcast Topic:</h4>
         <div class="episode-select-row">
           <button class="episode-btn active-ep" onclick="selectEpisode(0)">Ep 1: Hallway Rumors</button>
@@ -509,20 +550,27 @@
         </div>
       </div>
 
-      <!-- TAB 3: AMBIENT RADIO TUNER -->
+      <!-- TAB 3: LIVE INTERNET STREAM RADIO TUNER -->
       <div id="tuner-tab" class="tab-content">
         <div class="tuner-card">
+          <span id="mode-chip" class="mode-indicator-chip">🌸 Prep Room B Mode Active</span>
           <div style="font-size:2.8rem;">📻</div>
           <div id="freq-num" class="frequency-display">98.4 FM</div>
-          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:18px;">EchoHeart Prep Room Lo-Fi Chords</div>
+          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:18px;">Lofi Girl / Chillhop 24/7 Stream</div>
 
-          <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:20px;">
-            <button class="tab-btn" onclick="setChannel(98.4, 'EchoHeart Prep Room Lo-Fi Chords', 'lofi')">98.4 FM • EchoHeart Lo-Fi</button>
-            <button class="tab-btn" onclick="setChannel(104.2, 'Rain & Purr Study Sanctuary', 'rain')">104.2 FM • Rain & Purr</button>
-            <button class="tab-btn" onclick="setChannel(88.0, 'Subterranean Rehearsal Tapes', 'rock')">88.0 FM • Rehearsal Tape</button>
+          <!-- Interactive Station Preset Selector -->
+          <div id="preset-container" class="station-preset-bar">
+            <!-- Buttons generated dynamically by mode -->
           </div>
 
-          <button id="radio-tuner-play-btn" class="action-btn" onclick="toggleRadioTuner()">▶ Start EchoHeart Lo-Fi Stream</button>
+          <p style="font-size:0.88rem; color:#e2daf8; margin-bottom:20px;">
+            Switching between <strong>Prep Room B Mode</strong> and <strong>Secret Concert Mode</strong> at the top right automatically changes the live radio frequencies between 24/7 Lo-Fi Chill streams and 24/7 J-Rock streams!
+          </p>
+
+          <button id="radio-tuner-play-btn" class="action-btn" onclick="toggleLiveRadioStream()">▶ Tune Into Live Stream</button>
+
+          <!-- Hidden Native HTML5 Audio Element for Internet Stream -->
+          <audio id="live-audio-player" style="display:none;"></audio>
         </div>
       </div>
 
@@ -533,7 +581,6 @@
     <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
-  <!-- Web Audio Synthesizer & Extended Multi-Turn Podcast Script Engine -->
   <script>
     let audioCtx = null;
     let podcastInterval = null;
@@ -541,19 +588,33 @@
     let currentLineIdx = 0;
     let selectedEpIdx = 0;
 
-    // Ambient Radio Tuner States
-    let isTunerPlaying = false;
-    let lofiLoopTimer = null;
-    let currentTunerMode = 'lofi';
+    // Live Radio Stream State
+    let isStreamPlaying = false;
+    const liveAudioPlayer = document.getElementById('live-audio-player');
 
-    const voicePitch = {
-      nekomi: { freq: 329.63, type: 'sawtooth' }, // E4 Guitar tone
-      sera:   { freq: 523.25, type: 'triangle' }, // C5 Keytar chime
-      akari:  { freq: 440.00, type: 'square' },   // A4 Drum pulse
-      aoi:    { freq: 146.83, type: 'sine' }      // D3 Deep Bass
+    // Radio Streams Database by Mode
+    const radioStations = {
+      twilight: [
+        { freq: "98.4 FM", name: "Lofi Girl / Chillhop Stream", url: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
+        { freq: "104.2 FM", name: "Gensokyo Radio / Anime Chill", url: "https://stream.gensokyoradio.net/1" },
+        { freq: "91.5 FM", name: "Asia DREAM Radio (Japan Lofi)", url: "https://stream.zeno.fm/65y77e113a0uv" }
+      ],
+      basement: [
+        { freq: "88.0 FM", name: "J-Rock Power Stream 24/7", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
+        { freq: "101.3 FM", name: "Subterranean J-Rock & Metal", url: "https://stream.zeno.fm/h234858p388uv" },
+        { freq: "95.7 FM", name: "Shibuya Cyber Rock", url: "https://stream.zeno.fm/7x316k895h8uv" }
+      ]
     };
 
-    // Extended Multi-Turn Episode Discussions
+    let currentStationIdx = 0;
+
+    const voicePitch = {
+      nekomi: { freq: 329.63, type: 'sawtooth' },
+      sera:   { freq: 523.25, type: 'triangle' },
+      akari:  { freq: 440.00, type: 'square' },
+      aoi:    { freq: 146.83, type: 'sine' }
+    };
+
     const episodes = [
       {
         title: "Ep 1: Hallway Rumors & Shadow Tickets",
@@ -656,29 +717,26 @@
         isPodcastPlaying = true;
         btn.innerText = "⏸ Pause Episode Broadcast";
         playScriptStep();
-        podcastInterval = setInterval(playScriptStep, 4500); // 4.5s per turn
+        podcastInterval = setInterval(playScriptStep, 4500);
       }
     }
 
     function playScriptStep() {
       const ep = episodes[selectedEpIdx];
       if (currentLineIdx >= ep.script.length) {
-        currentLineIdx = 0; // Loop back to start
+        currentLineIdx = 0;
       }
 
       const line = ep.script[currentLineIdx];
       playVoiceChime(line.speaker);
 
-      // Highlight active speaker
       resetSpeakerHighlights();
       const activeEl = document.getElementById(`spk-${line.speaker}`);
       if (activeEl) activeEl.classList.add('speaking');
 
-      // Update progress bar
       const progressPercent = ((currentLineIdx + 1) / ep.script.length) * 100;
       document.getElementById('ep-progress-fill').style.width = `${progressPercent}%`;
 
-      // Update text
       document.getElementById('speaker-title-display').innerText = `🎙️ ${line.speaker.toUpperCase()} ON AIR:`;
       document.getElementById('dialogue-line-display').innerText = `"${line.text}"`;
 
@@ -689,81 +747,57 @@
       document.querySelectorAll('.speaker-avatar').forEach(el => el.classList.remove('speaking'));
     }
 
-    /* EchoHeart Algorithmic Lo-Fi Engine */
-    function setChannel(freq, name, mode) {
-      currentTunerMode = mode;
-      document.getElementById('freq-num').innerText = `${freq} FM`;
-      document.getElementById('freq-title').innerText = name;
-    }
+    /* Live Radio Stream Engine */
+    function renderPresets() {
+      const isBasement = document.body.classList.contains('basement-mode');
+      const list = isBasement ? radioStations.basement : radioStations.twilight;
+      const container = document.getElementById('preset-container');
 
-    // EchoHeart Jazz/Lo-Fi Chord Progressions (Filtered Frequencies in Hz)
-    const lofiChords = [
-      [261.63, 329.63, 392.00, 493.88], // Cmaj7
-      [220.00, 261.63, 329.63, 392.00], // Am7
-      [174.61, 220.00, 261.63, 329.63], // Fmaj7
-      [196.00, 246.94, 293.66, 349.23]  // G7
-    ];
-    let chordIndex = 0;
-
-    function playLofiBeatStep() {
-      if (!isTunerPlaying || !audioCtx) return;
-
-      const now = audioCtx.currentTime;
-
-      // 1. Warm Muffled EchoHeart Chord (Low-pass filtered synth/guitar)
-      const chord = lofiChords[chordIndex % lofiChords.length];
-      chord.forEach(freq => {
-        const osc = audioCtx.createOscillator();
-        const filter = audioCtx.createBiquadFilter();
-        const gain = audioCtx.createGain();
-
-        osc.type = currentTunerMode === 'rock' ? 'sawtooth' : 'triangle';
-        osc.frequency.setValueAtTime(freq, now);
-
-        // Low-pass filter for cozy muffled Lo-Fi aesthetic
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(currentTunerMode === 'rain' ? 350 : 650, now);
-
-        gain.gain.setValueAtTime(0.04, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
-
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start(now);
-        osc.stop(now + 1.8);
+      container.innerHTML = '';
+      list.forEach((st, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `preset-btn ${idx === currentStationIdx ? 'active-preset' : ''}`;
+        btn.innerText = `${st.freq} • ${st.name.split(' ')[0]}`;
+        btn.onclick = () => selectStationPreset(idx);
+        container.appendChild(btn);
       });
 
-      // 2. Soft Brushed Lo-Fi Kick & Snare
-      const kickOsc = audioCtx.createOscillator();
-      const kickGain = audioCtx.createGain();
-      kickOsc.frequency.setValueAtTime(90, now);
-      kickOsc.frequency.exponentialRampToValueAtTime(30, now + 0.15);
-      kickGain.gain.setValueAtTime(0.12, now);
-      kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-      kickOsc.connect(kickGain);
-      kickGain.connect(audioCtx.destination);
-      kickOsc.start(now);
-      kickOsc.stop(now + 0.15);
-
-      chordIndex++;
+      const activeSt = list[currentStationIdx] || list[0];
+      document.getElementById('freq-num').innerText = activeSt.freq;
+      document.getElementById('freq-title').innerText = activeSt.name;
     }
 
-    function toggleRadioTuner() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+    function selectStationPreset(idx) {
+      currentStationIdx = idx;
+      renderPresets();
 
-      isTunerPlaying = !isTunerPlaying;
+      const isBasement = document.body.classList.contains('basement-mode');
+      const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[idx];
+
+      liveAudioPlayer.src = activeSt.url;
+      if (isStreamPlaying) {
+        liveAudioPlayer.play().catch(e => console.error("Stream play error:", e));
+      }
+    }
+
+    function toggleLiveRadioStream() {
       const btn = document.getElementById('radio-tuner-play-btn');
+      const isBasement = document.body.classList.contains('basement-mode');
+      const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[currentStationIdx];
 
-      if (isTunerPlaying) {
-        btn.innerText = "⏸ Pause EchoHeart Lo-Fi Stream";
-        playLofiBeatStep();
-        lofiLoopTimer = setInterval(playLofiBeatStep, 1800); // Relaxed Lo-Fi tempo
+      if (!isStreamPlaying) {
+        liveAudioPlayer.src = activeSt.url;
+        liveAudioPlayer.play().then(() => {
+          isStreamPlaying = true;
+          btn.innerText = "⏸ Pause Live Stream";
+        }).catch(err => {
+          console.error("Stream error:", err);
+          btn.innerText = "▶ Start Live Stream (Retrying...)";
+        });
       } else {
-        btn.innerText = "▶ Start EchoHeart Lo-Fi Stream";
-        clearInterval(lofiLoopTimer);
+        liveAudioPlayer.pause();
+        isStreamPlaying = false;
+        btn.innerText = "▶ Tune Into Live Stream";
       }
     }
 
@@ -796,17 +830,30 @@
       alert("Your letter has been posted to Prep Room B!");
     }
 
-    // Theme Switcher Logic
+    // Dynamic Theme Switcher Sync
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
+      const modeChip = document.getElementById('mode-chip');
+
       if (isBasement) {
         document.body.classList.remove('twilight-mode');
         document.body.classList.add('basement-mode');
         if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+        if (modeChip) modeChip.innerText = '⚡ Secret Concert Mode Active';
       } else {
         document.body.classList.remove('basement-mode');
         document.body.classList.add('twilight-mode');
         if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+        if (modeChip) modeChip.innerText = '🌸 Prep Room B Mode Active';
+      }
+
+      currentStationIdx = 0;
+      renderPresets();
+
+      if (isStreamPlaying) {
+        const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[0];
+        liveAudioPlayer.src = activeSt.url;
+        liveAudioPlayer.play().catch(e => console.error(e));
       }
     }
 
