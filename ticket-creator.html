@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
+    /* Creator Page Grid Layout */
     .creator-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -28,7 +29,7 @@
       font-weight: 600;
     }
 
-    .form-control {
+    .form-control, select.form-control {
       width: 100%;
       padding: 10px 14px;
       background: rgba(15, 10, 30, 0.7);
@@ -38,6 +39,16 @@
       font-family: inherit;
       font-size: 0.92rem;
       outline: none;
+    }
+
+    .form-control:focus, select.form-control:focus {
+      border-color: #f4b8c4;
+      box-shadow: 0 0 8px rgba(244, 184, 196, 0.3);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
     }
 
     .preset-container {
@@ -56,8 +67,16 @@
       font-size: 0.82rem;
       cursor: pointer;
       font-weight: 600;
+      transition: all 0.2s ease;
     }
 
+    .preset-btn:hover {
+      background: rgba(244, 184, 196, 0.2);
+      border-color: #f4b8c4;
+      color: #ffffff;
+    }
+
+    /* Ticket Card Stage */
     .ticket-stage {
       display: flex;
       flex-direction: column;
@@ -70,9 +89,31 @@
       max-width: 380px;
       background: linear-gradient(145deg, #18122b, #0a0714);
       border: 2px solid #f4b8c4;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 24px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(244, 184, 196, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(244, 184, 196, 0.25);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Border Trim Variations */
+    .ticket-card.glow-rosegold {
+      border-color: #f4b8c4;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(244, 184, 196, 0.3);
+    }
+
+    .ticket-card.glow-crimson {
+      border-color: #ff3355;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(255, 51, 85, 0.4);
+    }
+
+    .ticket-card.glow-violet {
+      border-color: #a88beb;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(168, 139, 235, 0.4);
+    }
+
+    .ticket-card.glow-teal {
+      border-color: #20b2aa;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(32, 178, 170, 0.4);
     }
 
     .ticket-header {
@@ -88,9 +129,18 @@
       text-shadow: 0 0 10px rgba(244, 184, 196, 0.6);
     }
 
+    .ticket-type-tag {
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      color: #a88beb;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
     .ticket-band-title {
       font-family: 'Pirata One', cursive, serif;
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       letter-spacing: 2px;
       color: #ff3355;
       text-shadow: 0 0 8px rgba(255, 51, 85, 0.6);
@@ -106,11 +156,19 @@
       color: #0d0b18;
       font-weight: 800;
       cursor: pointer;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
     }
   </style>
 </head>
 <body class="twilight-mode">
 
+  <!-- Navigation Bar -->
   <header class="navbar">
     <div class="logo-container">
       <span class="logo-echoheart">ECHOHEART</span>
@@ -135,86 +193,136 @@
     </nav>
   </header>
 
+  <!-- Hero Section -->
   <section class="hero">
-    <h1>SHOE-LOCKER TICKET CREATOR</h1>
+    <h1>CUSTOM TICKET & PASS CREATOR</h1>
     <p class="hero-subtitle hero-twilight-subtitle">
-      🌸 Create customized shadow concert tickets dropped into student shoe lockers
+      🌸 Design personalized tickets, backstage passes, and shoe-locker notes
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
-      ⚡ Stamped tickets granting access to secret concerts in The Basement
+      ⚡ Underground Stamped Stubs for Secret Concerts in The Basement
     </p>
   </section>
 
+  <!-- Ticket Creator Generator -->
   <main class="container">
     <div class="creator-grid">
+      
+      <!-- Controls Form -->
       <div class="content-card">
-        <h3 class="content-title">Customize Ticket Details</h3>
+        <h3 class="content-title">Customize Ticket Artifact</h3>
         
         <div class="preset-container">
-          <button class="preset-btn" onclick="loadPreset('yumi')">Load Case 1 (Yumi)</button>
-          <button class="preset-btn" onclick="loadPreset('ren')">Load Case 2 (Ren)</button>
+          <button class="preset-btn" onclick="loadPreset('yumi')">Case 1 Ticket (Yumi)</button>
+          <button class="preset-btn" onclick="loadPreset('ren')">Case 2 Ticket (Ren)</button>
+          <button class="preset-btn" onclick="loadPreset('vip')">VIP Backstage Pass</button>
+          <button class="preset-btn" onclick="loadPreset('festival')">Festival Commemorative</button>
         </div>
 
         <div class="form-group">
-          <label>Target Student</label>
+          <label for="input-type">Ticket / Pass Purpose</label>
+          <select id="input-type" class="form-control" onchange="updateTicket()">
+            <option value="Shadow Shoe-Locker Ticket">Shadow Shoe-Locker Ticket</option>
+            <option value="VIP Basement Backstage Pass">VIP Basement Backstage Pass</option>
+            <option value="Cultural Festival Commemorative Stub">Cultural Festival Commemorative Stub</option>
+            <option value="Personal Whisper Note">Personal Whisper Note</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="input-stamp">Emblem Stamp Symbol</label>
+          <select id="input-stamp" class="form-control" onchange="updateTicket()">
+            <option value="[ ♡ ]">[ ♡ ] Hollow Heart (Phantom Signature)</option>
+            <option value="[ ✦ ]">[ ✦ ] Echo Starlight</option>
+            <option value="[ 🌙 ]">[ 🌙 ] Crescent Moon</option>
+            <option value="[ 🌸 ]">[ 🌸 ] Sakuraoka Crest</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="input-glow">Border & Foil Trim</label>
+          <select id="input-glow" class="form-control" onchange="updateTicket()">
+            <option value="glow-rosegold">Rose-Gold Foil</option>
+            <option value="glow-crimson">Crimson Phantom Flame</option>
+            <option value="glow-violet">Violet Moonlight</option>
+            <option value="glow-teal">Teal Bass Wave</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="input-target">Target Student / Pass Holder</label>
           <input type="text" id="input-target" class="form-control" value="Yumi Takahashi" oninput="updateTicket()">
         </div>
 
         <div class="form-group">
-          <label>Concert Location</label>
+          <label for="input-location">Location / Access Area</label>
           <input type="text" id="input-location" class="form-control" value="The Basement (Trapdoor in Prep Room B)" oninput="updateTicket()">
         </div>
 
         <div class="form-group">
-          <label>Time & Schedule</label>
+          <label for="input-time">Time & Access Schedule</label>
           <input type="text" id="input-time" class="form-control" value="6:30 PM • After Club Practice" oninput="updateTicket()">
         </div>
 
         <div class="form-group">
-          <label>Personal Message / Note</label>
+          <label for="input-note">Personal Handwritten Note</label>
           <textarea id="input-note" class="form-control" oninput="updateTicket()">Your paintbrush hasn't lost its voice. Come listen beneath the floorboards.</textarea>
         </div>
       </div>
 
+      <!-- Ticket Card Display -->
       <div class="ticket-stage">
-        <div id="ticket-export" class="ticket-card">
+        <div id="ticket-export" class="ticket-card glow-rosegold">
           <div class="ticket-header">
-            <div class="ticket-stamp">[ ♡ ]</div>
+            <div id="card-stamp" class="ticket-stamp">[ ♡ ]</div>
             <div class="ticket-band-title">GIRLS PHANTOM DEAD</div>
-            <div style="font-size:0.75rem; color:#a88beb;">Sakuraoka High Underground Ticket</div>
+            <div id="card-type-tag" class="ticket-type-tag">Shadow Shoe-Locker Ticket</div>
           </div>
 
-          <div style="margin-bottom:10px;">
-            <div style="font-size:0.7rem; color:#8b7cb6;">INVITATION FOR</div>
-            <div id="card-target" style="font-weight:600; color:#e2daf8;">Yumi Takahashi</div>
+          <div style="margin-bottom: 10px;">
+            <div style="font-size: 0.7rem; color: #8b7cb6; letter-spacing: 1px;">INVITATION / PASS FOR</div>
+            <div id="card-target" style="font-weight: 600; color: #e2daf8; font-size: 0.95rem;">Yumi Takahashi</div>
           </div>
 
-          <div style="margin-bottom:10px;">
-            <div style="font-size:0.7rem; color:#8b7cb6;">LOCATION</div>
-            <div id="card-location" style="font-weight:600; color:#e2daf8;">The Basement (Trapdoor in Prep Room B)</div>
+          <div style="margin-bottom: 10px;">
+            <div style="font-size: 0.7rem; color: #8b7cb6; letter-spacing: 1px;">LOCATION</div>
+            <div id="card-location" style="font-weight: 600; color: #e2daf8; font-size: 0.95rem;">The Basement (Trapdoor in Prep Room B)</div>
           </div>
 
-          <div style="margin-bottom:10px;">
-            <div style="font-size:0.7rem; color:#8b7cb6;">TIME</div>
-            <div id="card-time" style="font-weight:600; color:#e2daf8;">6:30 PM • After Club Practice</div>
+          <div style="margin-bottom: 10px;">
+            <div style="font-size: 0.7rem; color: #8b7cb6; letter-spacing: 1px;">TIME</div>
+            <div id="card-time" style="font-weight: 600; color: #e2daf8; font-size: 0.95rem;">6:30 PM • After Club Practice</div>
           </div>
 
-          <div style="margin-top:14px; padding:10px; background:rgba(244,184,196,0.05); border-left:2px solid #f4b8c4; font-style:italic; font-size:0.88rem; color:#f4b8c4;">
+          <div style="margin-top: 14px; padding: 10px 12px; background: rgba(244, 184, 196, 0.05); border-left: 2px solid #f4b8c4; font-style: italic; font-size: 0.88rem; color: #f4b8c4;">
             "<span id="card-note">Your paintbrush hasn't lost its voice. Come listen beneath the floorboards.</span>"
           </div>
         </div>
 
-        <button class="action-btn" onclick="downloadTicket()">📷 Download Ticket Image</button>
+        <button class="action-btn" onclick="downloadTicket()">📷 Download Custom Ticket Image</button>
       </div>
+
     </div>
   </main>
 
+  <!-- Footer -->
   <footer>
     <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
+  <!-- Scripts -->
   <script>
     function updateTicket() {
+      const typeVal = document.getElementById('input-type').value;
+      const stampVal = document.getElementById('input-stamp').value;
+      const glowVal = document.getElementById('input-glow').value;
+
+      document.getElementById('card-type-tag').innerText = typeVal;
+      document.getElementById('card-stamp').innerText = stampVal;
+      
+      const ticketCard = document.getElementById('ticket-export');
+      ticketCard.className = `ticket-card ${glowVal}`;
+
       document.getElementById('card-target').innerText = document.getElementById('input-target').value || 'Student Name';
       document.getElementById('card-location').innerText = document.getElementById('input-location').value || 'The Basement';
       document.getElementById('card-time').innerText = document.getElementById('input-time').value || 'Twilight';
@@ -223,15 +331,37 @@
 
     function loadPreset(caseName) {
       if (caseName === 'yumi') {
+        document.getElementById('input-type').value = 'Shadow Shoe-Locker Ticket';
+        document.getElementById('input-stamp').value = '[ ♡ ]';
+        document.getElementById('input-glow').value = 'glow-rosegold';
         document.getElementById('input-target').value = 'Yumi Takahashi';
         document.getElementById('input-location').value = 'The Basement (Trapdoor in Prep Room B)';
         document.getElementById('input-time').value = '6:30 PM • After Club Practice';
         document.getElementById('input-note').value = "Your paintbrush hasn't lost its voice. Come listen beneath the floorboards.";
       } else if (caseName === 'ren') {
+        document.getElementById('input-type').value = 'Shadow Shoe-Locker Ticket';
+        document.getElementById('input-stamp').value = '[ ✦ ]';
+        document.getElementById('input-glow').value = 'glow-crimson';
         document.getElementById('input-target').value = 'Ren Tachibana';
         document.getElementById('input-location').value = 'Athletic Stadium Finish Line';
         document.getElementById('input-time').value = '5:45 PM • Evening Time Trials';
         document.getElementById('input-note').value = "Your legs aren't broken. Run toward the sound when the track goes dark.";
+      } else if (caseName === 'vip') {
+        document.getElementById('input-type').value = 'VIP Basement Backstage Pass';
+        document.getElementById('input-stamp').value = '[ 🌙 ]';
+        document.getElementById('input-glow').value = 'glow-violet';
+        document.getElementById('input-target').value = 'Honorary Member';
+        document.getElementById('input-location').value = 'Music Prep Room B & Sub-Levels';
+        document.getElementById('input-time').value = 'Unrestricted Access • After-School';
+        document.getElementById('input-note').value = "Granted all-access entry to quiet practice sessions and tea breaks with the band.";
+      } else if (caseName === 'festival') {
+        document.getElementById('input-type').value = 'Cultural Festival Commemorative Stub';
+        document.getElementById('input-stamp').value = '[ 🌸 ]';
+        document.getElementById('input-glow').value = 'glow-teal';
+        document.getElementById('input-target').value = 'Sakuraoka High Student Body';
+        document.getElementById('input-location').value = 'Main Auditorium Stage';
+        document.getElementById('input-time').value = 'Festival Climax • 4:00 PM';
+        document.getElementById('input-note').value = "EchoHeart takes the stage publicly. Experience the official festival performance live!";
       }
       updateTicket();
     }
@@ -240,7 +370,7 @@
       const ticketElement = document.getElementById('ticket-export');
       html2canvas(ticketElement, { backgroundColor: null }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `GirlsPhantomDead_Ticket.png`;
+        link.download = `GirlsPhantomDead_Artifact.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
