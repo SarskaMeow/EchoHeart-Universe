@@ -668,12 +668,12 @@
           <span id="mode-chip" class="mode-indicator-chip">🌸 Prep Room B Mode Active</span>
           <div style="font-size:2.8rem;">📻</div>
           <div id="freq-num" class="frequency-display">98.4 FM</div>
-          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:18px;">Lofi Girl / Chillhop 24/7 Stream</div>
+          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:18px;">J-Pop Powerplay Kawaii</div>
 
           <div id="preset-container" class="station-preset-bar"></div>
 
           <p style="font-size:0.88rem; color:#e2daf8; margin-bottom:20px;">
-            Switching modes at the top right changes the live radio stream between 24/7 Lo-Fi Chill streams and 24/7 J-Rock streams!
+            Switching modes at the top right changes the live radio stream between 24/7 J-Pop/Kawaii streams and 24/7 J-Rock/Vocaloid streams!
           </p>
 
           <button id="radio-tuner-play-btn" class="action-btn" onclick="toggleLiveRadioStream()">▶ Tune Into Live Stream</button>
@@ -740,21 +740,19 @@
 
     const liveAudioPlayer = document.getElementById('live-audio-player');
 
-    /* High-Uptime Stream Roster */
+    /* Curated & HTTPS-Bypassed Stream Roster */
     const radioStations = {
       twilight: [
-        { freq: "98.4 FM", name: "Lofi Girl / Chillhop 24/7", url: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
-        { freq: "104.2 FM", name: "Gensokyo Radio / Anime & Touhou", url: "https://stream.gensokyoradio.net/1" },
-        { freq: "91.5 FM", name: "AnimeRadio Official (OST/Chill)", url: "https://stream.animeradio.de/animeradio.mp3" },
-        { freq: "106.8 FM", name: "J-Pop Project Radio 24/7", url: "https://stream.zeno.fm/36y0be0zya0uv" }
+        { freq: "98.4 FM", name: "J-Pop Powerplay Kawaii", url: "https://149.56.23.7:20002/stream" },
+        { freq: "104.2 FM", name: "Asia DREAM Radio Japan", url: "https://stream.zeno.fm/65y77e113a0uv" },
+        { freq: "91.5 FM", name: "Tokyo FM World", url: "https://tokyofmworld.leanstream.co/JOAUFM-MP3?args=tunein" },
+        { freq: "106.8 FM", name: "Ghost Anime Radio", url: "https://animeradio.su:8000/;" }
       ],
       basement: [
-        { freq: "88.0 FM", name: "J-Rock Power Stream 24/7", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
-        { freq: "101.3 FM", name: "Hotmix Japan (Tokyo Pop/Dance)", url: "https://hotmixradio-japan.ice.infomaniak.ch/hotmixradio-japan-128.mp3" },
-        { freq: "95.7 FM", name: "Japanimradio Official", url: "https://stream.zeno.fm/6qvh0mbf41zuv" },
-              { <name>J-Pop Powerplay Kawaii</name>    
-        <location>Online</location>
-        <url>http://149.56.23.7:20002/stream</url>" },
+        { freq: "88.0 FM", name: "J-Rock Powerplay", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
+        { freq: "101.3 FM", name: "Hotmix Radio Japan", url: "https://hotmixradio-japan.ice.infomaniak.ch/hotmixradio-japan-128.mp3" },
+        { freq: "95.7 FM", name: "Japan-a-Radio", url: "https://audio.misproductions.com/japan48k" },
+        { freq: "108.5 FM", name: "Vocaloid Radio 24/7", url: "https://vocaloid.radioca.st/stream" }
       ]
     };
 
@@ -826,6 +824,84 @@
 
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active-content'));
       document.getElementById(tabId).classList.add('active-content');
+    }
+
+    /* Tab 3: Station Switcher UI Render */
+    function renderPresets() {
+      const isBasement = document.body.classList.contains('basement-mode');
+      const list = isBasement ? radioStations.basement : radioStations.twilight;
+      const container = document.getElementById('preset-container');
+
+      if (!container) return;
+      container.innerHTML = '';
+      list.forEach((st, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `preset-btn ${idx === currentStationIdx ? 'active-preset' : ''}`;
+        btn.innerText = `${st.freq} • ${st.name.split(' ')[0]}`;
+        btn.onclick = () => selectStationPreset(idx);
+        container.appendChild(btn);
+      });
+
+      const activeSt = list[currentStationIdx] || list[0];
+      document.getElementById('freq-num').innerText = activeSt.freq;
+      document.getElementById('freq-title').innerText = activeSt.name;
+    }
+
+    function selectStationPreset(idx) {
+      currentStationIdx = idx;
+      renderPresets();
+
+      const isBasement = document.body.classList.contains('basement-mode');
+      const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[idx];
+
+      liveAudioPlayer.src = activeSt.url;
+      localStorage.setItem('echoheart_radio_url', activeSt.url);
+      localStorage.setItem('echoheart_radio_freq', activeSt.freq);
+      localStorage.setItem('echoheart_radio_title', activeSt.name);
+
+      const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
+      if (isPlaying) {
+        liveAudioPlayer.play().catch(e => console.error("Stream play error:", e));
+      }
+    }
+
+    function toggleLiveRadioStream() {
+      const btn = document.getElementById('radio-tuner-play-btn');
+      const isBasement = document.body.classList.contains('basement-mode');
+      const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[currentStationIdx];
+
+      const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
+
+      if (!isPlaying) {
+        btn.innerText = "⏳ Connecting to Station...";
+        liveAudioPlayer.src = activeSt.url;
+        
+        // Timeout check: Auto-retry connection if buffer stalls
+        const connectionTimeout = setTimeout(() => {
+          if (liveAudioPlayer.readyState < 2) {
+            console.warn("Stream delayed, forcing reconnect...");
+            liveAudioPlayer.load();
+            liveAudioPlayer.play().catch(e => console.error("Retry failed:", e));
+          }
+        }, 4000);
+
+        liveAudioPlayer.play().then(() => {
+          clearTimeout(connectionTimeout);
+          localStorage.setItem('echoheart_radio_playing', 'true');
+          localStorage.setItem('echoheart_radio_url', activeSt.url);
+          localStorage.setItem('echoheart_radio_freq', activeSt.freq);
+          localStorage.setItem('echoheart_radio_title', activeSt.name);
+          btn.innerText = "⏸ Pause Live Stream";
+        }).catch(err => {
+          clearTimeout(connectionTimeout);
+          console.error("Stream error:", err);
+          btn.innerText = "⚠️ Station Offline — Click to Retry";
+        });
+      } else {
+        liveAudioPlayer.pause();
+        localStorage.setItem('echoheart_radio_playing', 'false');
+        btn.innerText = "▶ Tune Into Live Stream";
+      }
     }
 
     /* Tab 4: Interactive Polls & Countdown Engine */
@@ -933,22 +1009,57 @@
       }, 1000);
     }
 
-    /* Theme & UI Sync */
+    /* Sync Persistent State Across Navigation */
+    function syncPersistentRadioState() {
+      const savedPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
+      const savedUrl = localStorage.getItem('echoheart_radio_url');
+      const btn = document.getElementById('radio-tuner-play-btn');
+
+      if (savedUrl) {
+        liveAudioPlayer.src = savedUrl;
+      }
+
+      if (savedPlaying) {
+        liveAudioPlayer.play().then(() => {
+          if (btn) btn.innerText = "⏸ Pause Live Stream";
+        }).catch(() => {
+          localStorage.setItem('echoheart_radio_playing', 'false');
+        });
+      }
+    }
+
+    /* Dynamic Theme Switcher Sync */
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
+      const modeChip = document.getElementById('mode-chip');
+      const locTag = document.getElementById('studio-location-tag');
+      const topicHeading = document.getElementById('topic-heading');
       const countLabel = document.getElementById('countdown-label');
 
       if (isBasement) {
         document.body.classList.remove('twilight-mode');
         document.body.classList.add('basement-mode');
         if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+        if (modeChip) modeChip.innerText = '⚡ Secret Concert Mode Active';
+        if (locTag) locTag.innerText = 'Recorded live in The Basement (Subterranean Cavern)';
+        if (topicHeading) topicHeading.innerText = 'Select After Hours Topic:';
         if (countLabel) countLabel.innerText = '⚡ Next Subterranean Concert Set Countdown:';
       } else {
         document.body.classList.remove('basement-mode');
         document.body.classList.add('twilight-mode');
         if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+        if (modeChip) modeChip.innerText = '🌸 Prep Room B Mode Active';
+        if (locTag) locTag.innerText = 'Recorded live in Music Prep Room B';
+        if (topicHeading) topicHeading.innerText = 'Select Podcast Topic:';
         if (countLabel) countLabel.innerText = '🌸 Next Prep Room B Rehearsal Countdown:';
       }
+
+      selectedEpIdx = 0;
+      currentStationIdx = 0;
+      renderEpisodeButtons();
+      renderPresets();
+
+      if (isPodcastPlaying) togglePodcastPlayback();
     }
 
     function toggleMode() {
@@ -960,6 +1071,8 @@
     window.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('echoheart-theme');
       updateThemeUI(savedTheme === 'basement');
+      renderPresets();
+      syncPersistentRadioState();
       loadPollData();
       startCountdownTimer();
     });
