@@ -634,21 +634,21 @@
 
     const liveAudioPlayer = document.getElementById('live-audio-player');
 
-    /* Upgraded High-Uptime Japanese & Anime Stream Roster */
-    const radioStations = {
-      twilight: [
-        { freq: "98.4 FM", name: "Lofi Girl / Chillhop 24/7", url: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
-        { freq: "104.2 FM", name: "Gensokyo Radio / Anime & Touhou", url: "https://stream.gensokyoradio.net/1" },
-        { freq: "91.5 FM", name: "AnimeRadio Official (OST/Chill)", url: "https://stream.animeradio.de/animeradio.mp3" },
-        { freq: "106.8 FM", name: "J-Pop Project Radio 24/7", url: "https://stream.zeno.fm/36y0be0zya0uv" }
-      ],
-      basement: [
-        { freq: "88.0 FM", name: "J-Rock Power Stream 24/7", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
-        { freq: "101.3 FM", name: "Hotmix Japan (Tokyo Pop/Dance)", url: "https://hotmixradio-japan.ice.infomaniak.ch/hotmixradio-japan-128.mp3" },
-        { freq: "95.7 FM", name: "Japanimradio Official", url: "https://stream.zeno.fm/6qvh0mbf41zuv" },
-        { freq: "108.5 FM", name: "Vocaloid Radio 24/7", url: "https://vocaloid.radioca.st/stream" }
-      ]
-    };
+/* High-Uptime, CORS-Bypassed Japanese Streams */
+const radioStations = {
+  twilight: [
+    { freq: "98.4 FM", name: "Lofi Girl / Chillhop 24/7", url: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
+    { freq: "104.2 FM", name: "Gensokyo Radio (Touhou/Anime)", url: "https://stream.gensokyoradio.net/1" },
+    { freq: "91.5 FM", name: "Asia DREAM Radio (Japan Hits)", url: "https://stream.zeno.fm/65y77e113a0uv" },
+    { freq: "106.8 FM", name: "LISTEN.moe J-Pop Stream", url: "https://listen.moe/fallback" }
+  ],
+  basement: [
+    { freq: "88.0 FM", name: "J-Rock Power Stream", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
+    { freq: "101.3 FM", name: "Hotmix Radio Japan", url: "https://hotmixradio-japan.ice.infomaniak.ch/hotmixradio-japan-128.mp3" },
+    { freq: "95.7 FM", name: "Japanimradio Official", url: "https://stream.zeno.fm/6qvh0mbf41zuv" },
+    { freq: "108.5 FM", name: "Vocaloid Stream 24/7", url: "https://stream.zeno.fm/w2m40x633a0uv" }
+  ]
+};
 
     let currentStationIdx = 0;
 
