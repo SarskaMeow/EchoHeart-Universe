@@ -576,10 +576,10 @@
 
       <!-- Navigation Tabs -->
       <div class="dashboard-tabs">
-        <button class="tab-btn active-tab" onclick="switchStudioTab('broadcast-tab')">🎙️ Podcast Studio Stage</button>
-        <button class="tab-btn" onclick="switchStudioTab('mailbox-tab')">📬 Live Locker Mailbox</button>
-        <button class="tab-btn" onclick="switchStudioTab('tuner-tab')">📻 Mode-Reactive Radio Tuner</button>
-        <button class="tab-btn" onclick="switchStudioTab('board-tab')">📊 Prep Room Board & Polls</button>
+        <button class="tab-btn active-tab" onclick="switchStudioTab('broadcast-tab', event)">🎙️ Podcast Studio Stage</button>
+        <button class="tab-btn" onclick="switchStudioTab('mailbox-tab', event)">📬 Live Locker Mailbox</button>
+        <button class="tab-btn" onclick="switchStudioTab('tuner-tab', event)">📻 Mode-Reactive Radio Tuner</button>
+        <button class="tab-btn" onclick="switchStudioTab('board-tab', event)">📊 Prep Room Board & Polls</button>
       </div>
 
       <!-- TAB 1: PODCAST STUDIO STAGE -->
@@ -753,7 +753,7 @@
       ],
       basement: [
         { freq: "88.0 FM", name: "J-Rock Powerplay Underground", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
-        { freq: "108.5 FM", name: "Vocaloid Radio 24/7", url: "https://vocaloid.radioca.st/stream" }
+        { freq: "108.5 FM", name: "Vocaloid Radio 24/7", url: "https://vocaloid.radioca.st/stream" },
         { freq: "95.7 FM", name: "Japan-a-Radio Vocaloid Set", url: "https://audio.misproductions.com/japan48k" },
         { freq: "108.5 FM", name: "Stereo Anime 24/7", url: "https://radio.stereoanime.com/listen/stereoanime/128" }
       ]
@@ -1136,12 +1136,17 @@
       document.getElementById('ep-main-title').innerText = activeEp.title;
     }
 
-    function switchStudioTab(tabId) {
+    function switchStudioTab(tabId, evt) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
-      if (event && event.target) event.target.classList.add('active-tab');
+      const e = evt || window.event;
+      if (e && e.target) {
+        const clickedBtn = e.target.closest ? e.target.closest('.tab-btn') : e.target;
+        if (clickedBtn && clickedBtn.classList) clickedBtn.classList.add('active-tab');
+      }
 
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active-content'));
-      document.getElementById(tabId).classList.add('active-content');
+      const targetEl = document.getElementById(tabId);
+      if (targetEl) targetEl.classList.add('active-content');
     }
 
     /* Distinct Sound Chime Engine */
