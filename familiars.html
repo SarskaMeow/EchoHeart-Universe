@@ -150,7 +150,7 @@
 </head>
 <body class="twilight-mode">
 
-  <!-- Navigation Bar -->
+  <!-- Navigation Bar with Dropdown Menus -->
   <header class="navbar">
     <div class="logo-container">
       <span class="logo-echoheart">ECHOHEART</span>
@@ -163,55 +163,36 @@
     </div>
 
     <nav>
-<!-- Navigation Bar with Dropdown Menus -->
-<header class="navbar">
-  <div class="logo-container">
-    <span class="logo-echoheart">ECHOHEART</span>
-    <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
-  </div>
-  
-  <div class="status-badge-container">
-    <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
-    <span class="status-badge basement-status">💜 The Basement • Live Set</span>
-  </div>
+      <a href="index.html">Home</a>
 
-  <nav>
-    <a href="index.html">Home</a>
-
-    <!-- Story & Lore Dropdown -->
-    <div class="dropdown">
-      <button class="dropdown-btn">Story & Lore ▾</button>
-      <div class="dropdown-content">
-        <a href="characters.html">Band Members</a>
-        <a href="lore.html">Our Story</a>
-        <a href="familiars.html">The Familiar Nook</a>
+      <!-- Story & Lore Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Story & Lore ▾</button>
+        <div class="dropdown-content">
+          <a href="characters.html">Band Members</a>
+          <a href="lore.html">Our Story</a>
+          <a href="familiars.html">The Familiar Nook</a>
+        </div>
       </div>
-    </div>
 
-    <!-- Music Dropdown -->
-    <div class="dropdown">
-      <button class="dropdown-btn">Music ▾</button>
-      <div class="dropdown-content">
-        <a href="discography.html">Discography & Deck</a>
+      <!-- Music Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Music ▾</button>
+        <div class="dropdown-content">
+          <a href="discography.html">Discography & Deck</a>
+        </div>
       </div>
-    </div>
 
-    <!-- Interactive Arcade Dropdown -->
-    <div class="dropdown">
-      <button class="dropdown-btn">Interactive Arcade ▾</button>
-      <div class="dropdown-content">
-        <a href="ticket-creator.html">Ticket Creator</a>
-        <a href="games.html">Mini-Games</a>
+      <!-- Interactive Arcade Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Interactive Arcade ▾</button>
+        <div class="dropdown-content">
+          <a href="ticket-creator.html">Ticket Creator</a>
+          <a href="games.html">Mini-Games</a>
+        </div>
       </div>
-    </div>
-    
-    <!-- Mode Switcher -->
-    <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
-      ⚡ Secret Concert Mode
-    </button>
- 
-</header>
       
+      <!-- Mode Switcher -->
       <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
         ⚡ Secret Concert Mode
       </button>
@@ -323,30 +304,26 @@
         const gain = audioCtx.createGain();
 
         if (type === 'yozora') {
-          // Deep soft cat purr & gentle moon tone
           osc.type = 'sine';
           osc.frequency.setValueAtTime(220, audioCtx.currentTime);
           osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.4);
           gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
         } else if (type === 'byakko') {
-          // Ethereal fox chime pad
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
           osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15);
           gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
         } else if (type === 'kagerou') {
-          // Energetic ember spark pulse
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(329.63, audioCtx.currentTime);
           osc.frequency.setValueAtTime(493.88, audioCtx.currentTime + 0.1);
           gain.gain.setValueAtTime(0.07, audioCtx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
         } else if (type === 'komorebi') {
-          // Calm grounding bass chord
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(146.83, audioCtx.currentTime); // D3
+          osc.frequency.setValueAtTime(146.83, audioCtx.currentTime);
           gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.7);
         }
@@ -397,18 +374,15 @@
     function openVignette(key) {
       playFamiliarChime(key);
 
-      // Highlight active card
       document.querySelectorAll('.familiar-nook-card').forEach(card => card.classList.remove('active-reading'));
       const activeCard = document.getElementById(`card-${key}`);
       if (activeCard) activeCard.classList.add('active-reading');
 
-      // Populate vignette display
       const data = vignettes[key];
       document.getElementById('vignette-title').innerText = data.title;
       document.getElementById('vignette-author').innerText = data.author;
       document.getElementById('vignette-body').innerHTML = data.body;
 
-      // Show panel
       const panel = document.getElementById('vignette-panel');
       panel.classList.add('open');
       panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
