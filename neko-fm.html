@@ -3,56 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Whisper Radio / Neko FM — EchoHeart</title>
+  <title>Whisper Radio / Neko FM Podcast — EchoHeart</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Radio Console Layout */
-    .radio-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
+    /* Full Studio Dashboard Container */
+    .studio-dashboard {
+      background: rgba(22, 15, 42, 0.92);
+      border: 2px solid rgba(168, 139, 235, 0.35);
+      border-radius: 20px;
+      padding: 28px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
       margin-top: 20px;
     }
 
-    @media (max-width: 900px) {
-      .radio-grid { grid-template-columns: 1fr; }
-    }
-
-    .radio-box {
-      background: rgba(30, 22, 54, 0.85);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 18px;
-      padding: 26px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    /* Podcast Studio Stage */
-    .podcast-stage {
-      background: rgba(12, 8, 25, 0.95);
-      border: 2px solid #f4b8c4;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 0 25px rgba(244, 184, 196, 0.25);
-      margin-bottom: 20px;
-    }
-
-    .speaker-booth {
+    /* Dashboard Tab Bar */
+    .dashboard-tabs {
       display: flex;
-      justify-content: space-around;
+      gap: 12px;
+      border-bottom: 2px solid rgba(168, 139, 235, 0.25);
+      padding-bottom: 14px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: rgba(35, 25, 65, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      color: #cbb8f6;
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover, .tab-btn.active-tab {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border-color: #f4b8c4;
+      box-shadow: 0 4px 15px rgba(244, 184, 196, 0.3);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active-content { display: block; }
+
+    /* Wide Studio Stage */
+    .wide-stage {
+      background: linear-gradient(145deg, #120924, #080412);
+      border: 2px solid #f4b8c4;
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(244, 184, 196, 0.25);
+      margin-bottom: 24px;
+    }
+
+    .booth-header {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-      padding-bottom: 16px;
-      border-bottom: 1px dashed rgba(168, 139, 235, 0.3);
       flex-wrap: wrap;
       gap: 12px;
+    }
+
+    .on-air-badge {
+      background: #ff3355;
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      box-shadow: 0 0 12px rgba(255, 51, 85, 0.6);
+      animation: pulseOnAir 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseOnAir {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .speaker-booth-wide {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 20px 10px;
+      background: rgba(20, 14, 38, 0.6);
+      border-radius: 14px;
+      border: 1px solid rgba(168, 139, 235, 0.2);
     }
 
     .speaker-avatar {
       display: flex;
       flex-direction: column;
       align-items: center;
-      opacity: 0.4;
+      opacity: 0.45;
       transform: scale(0.92);
       transition: all 0.3s ease;
     }
@@ -63,53 +114,59 @@
     }
 
     .speaker-icon-box {
-      width: 65px;
-      height: 65px;
+      width: 75px;
+      height: 75px;
       border-radius: 50%;
       background: rgba(30, 22, 54, 0.9);
-      border: 2px solid rgba(168, 139, 235, 0.4);
+      border: 3px solid rgba(168, 139, 235, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
-      margin-bottom: 6px;
+      font-size: 2.2rem;
+      margin-bottom: 8px;
       transition: all 0.3s ease;
     }
 
     .speaker-avatar.speaking .speaker-icon-box {
       border-color: #f4b8c4;
-      box-shadow: 0 0 18px rgba(244, 184, 196, 0.6);
+      box-shadow: 0 0 22px rgba(244, 184, 196, 0.7);
     }
 
     .speaker-name {
-      font-size: 0.78rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: #cbb8f6;
     }
 
+    .speaker-role {
+      font-size: 0.7rem;
+      color: #8b7cb6;
+      font-weight: 600;
+    }
+
     .script-transcript-box {
-      background: rgba(20, 14, 38, 0.85);
-      border-left: 4px solid #a88beb;
-      padding: 16px;
-      border-radius: 0 12px 12px 0;
+      background: rgba(15, 10, 30, 0.9);
+      border-left: 5px solid #a88beb;
+      padding: 20px;
+      border-radius: 0 14px 14px 0;
       min-height: 120px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
     .current-speaker-title {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 800;
       color: #f4b8c4;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .current-dialogue-line {
-      font-size: 0.95rem;
+      font-size: 1.05rem;
       color: #e2daf8;
       line-height: 1.6;
       font-style: italic;
@@ -117,10 +174,10 @@
 
     .progress-bar-container {
       width: 100%;
-      height: 6px;
+      height: 8px;
       background: rgba(168, 139, 235, 0.2);
-      border-radius: 3px;
-      margin-bottom: 16px;
+      border-radius: 4px;
+      margin-bottom: 20px;
       overflow: hidden;
     }
 
@@ -133,20 +190,20 @@
 
     .episode-select-row {
       display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
     }
 
     .episode-btn {
       flex: 1;
-      min-width: 140px;
+      min-width: 160px;
       background: rgba(45, 34, 80, 0.8);
       border: 1px solid rgba(168, 139, 235, 0.4);
       color: #cbb8f6;
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 0.82rem;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -158,42 +215,71 @@
       border-color: #f4b8c4;
     }
 
-    /* Mailbox & Submissions */
+    /* Mailbox Styles */
+    .mail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 850px) {
+      .mail-grid { grid-template-columns: 1fr; }
+    }
+
     .mail-card {
       background: rgba(15, 10, 30, 0.7);
       border: 1px solid rgba(168, 139, 235, 0.25);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 14px;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
     }
 
     .mail-header {
       display: flex;
       justify-content: space-between;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: #f4b8c4;
       font-weight: 700;
       margin-bottom: 8px;
     }
 
     .mail-body {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: #e2daf8;
       line-height: 1.5;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .mail-reply {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: #cbb8f6;
       font-style: italic;
       background: rgba(244, 184, 196, 0.08);
-      padding: 8px 12px;
-      border-radius: 6px;
-      border-left: 2px solid #f4b8c4;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border-left: 3px solid #f4b8c4;
     }
 
-    .form-group { margin-bottom: 12px; }
+    /* Radio Tuner Deck */
+    .tuner-card {
+      background: rgba(15, 10, 30, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .frequency-display {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 2.5rem;
+      color: #f4b8c4;
+      margin: 10px 0 4px;
+      text-shadow: 0 0 14px rgba(244, 184, 196, 0.5);
+    }
+
+    .form-group { margin-bottom: 14px; }
 
     .form-group label {
       display: block;
@@ -216,14 +302,14 @@
 
     .action-btn {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background: linear-gradient(135deg, #a88beb, #f4b8c4);
       border: none;
       border-radius: 12px;
       color: #0d0b18;
       font-weight: 800;
       cursor: pointer;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
       transition: transform 0.2s ease;
     }
@@ -306,37 +392,48 @@
   </section>
 
   <main class="container">
-    <div class="radio-grid">
+    <div class="studio-dashboard">
 
-      <!-- LEFT COLUMN: INTERACTIVE PODCAST STUDIO PLAYER -->
-      <div class="radio-box">
-        <h3 class="content-title">🎙️ Prep Room B Podcast Studio</h3>
-        <p style="font-size:0.88rem; margin-bottom:16px;">Select an episode topic below and press Play to hear Nekomi, Sera, Akari, and Aoi discuss school life live on air!</p>
+      <!-- Navigation Tabs for Podcast Studio -->
+      <div class="dashboard-tabs">
+        <button class="tab-btn active-tab" onclick="switchStudioTab('broadcast-tab')">🎙️ Podcast Studio Stage</button>
+        <button class="tab-btn" onclick="switchStudioTab('mailbox-tab')">📬 Locker Mailbox</button>
+        <button class="tab-btn" onclick="switchStudioTab('tuner-tab')">📻 Ambient Radio Tuner</button>
+      </div>
 
-        <div class="episode-select-row">
-          <button class="episode-btn active-ep" onclick="selectEpisode(0)">Ep 1: Hallway Rumors</button>
-          <button class="episode-btn" onclick="selectEpisode(1)">Ep 2: Ancient Lore</button>
-          <button class="episode-btn" onclick="selectEpisode(2)">Ep 3: Shopping Street Fest</button>
-        </div>
+      <!-- TAB 1: PODCAST STUDIO STAGE (FULL WIDE VIEW) -->
+      <div id="broadcast-tab" class="tab-content active-content">
+        <div class="wide-stage">
+          
+          <div class="booth-header">
+            <div>
+              <h3 id="ep-main-title" class="content-title" style="margin:0;">Ep 1: Hallway Rumors & Shadow Tickets</h3>
+              <span style="font-size:0.85rem; color:#a88beb;">Recorded live in Music Prep Room B</span>
+            </div>
+            <span class="on-air-badge">LIVE ON AIR</span>
+          </div>
 
-        <div class="podcast-stage">
-          <!-- Active Speaker Avatars Stage -->
-          <div class="speaker-booth">
+          <!-- Wide Speaker Booth -->
+          <div class="speaker-booth-wide">
             <div id="spk-nekomi" class="speaker-avatar">
               <div class="speaker-icon-box">🎸</div>
               <span class="speaker-name">Nekomi</span>
+              <span class="speaker-role">Lead Guitar</span>
             </div>
             <div id="spk-sera" class="speaker-avatar">
               <div class="speaker-icon-box">⌨️</div>
               <span class="speaker-name">Sera</span>
+              <span class="speaker-role">Keytar / Synth</span>
             </div>
             <div id="spk-akari" class="speaker-avatar">
               <div class="speaker-icon-box">🥁</div>
               <span class="speaker-name">Akari</span>
+              <span class="speaker-role">Drums</span>
             </div>
             <div id="spk-aoi" class="speaker-avatar">
               <div class="speaker-icon-box">🎸</div>
               <span class="speaker-name">Aoi</span>
+              <span class="speaker-role">Bass / Council</span>
             </div>
           </div>
 
@@ -345,56 +442,88 @@
             <div id="ep-progress-fill" class="progress-bar-fill"></div>
           </div>
 
-          <!-- Dynamic Dialogue Script Box -->
+          <!-- Dynamic Transcript Display -->
           <div class="script-transcript-box">
             <div id="speaker-title-display" class="current-speaker-title">Prep Room B Mic • Standby</div>
-            <div id="dialogue-line-display" class="current-dialogue-line">Select an episode topic and press Play Episode Broadcast to begin...</div>
+            <div id="dialogue-line-display" class="current-dialogue-line">Select an episode topic below and press Play Episode Broadcast to begin...</div>
           </div>
 
           <button id="podcast-play-btn" class="action-btn" onclick="togglePodcastPlayback()">▶ Play Episode Broadcast</button>
         </div>
+
+        <!-- Episode Selector Cards -->
+        <h4 style="color:#f4b8c4; margin-bottom:12px;">Select Podcast Topic:</h4>
+        <div class="episode-select-row">
+          <button class="episode-btn active-ep" onclick="selectEpisode(0)">Ep 1: Hallway Rumors</button>
+          <button class="episode-btn" onclick="selectEpisode(1)">Ep 2: Ancient Lore & Cavern</button>
+          <button class="episode-btn" onclick="selectEpisode(2)">Ep 3: Shopping Street Fest</button>
+        </div>
       </div>
 
-      <!-- RIGHT COLUMN: LOCKER MAILBOX & SUBMISSIONS -->
-      <div class="radio-box">
-        <h3 class="content-title">📬 Locker Note Mailbox</h3>
-        <p style="font-size:0.88rem; margin-bottom:16px;">Anonymous student letters dropped into Prep Room B for radio read-outs!</p>
+      <!-- TAB 2: LOCKER MAILBOX -->
+      <div id="mailbox-tab" class="tab-content">
+        <div class="mail-grid">
+          <div>
+            <h3 class="content-title">📬 Locker Note Mailbox</h3>
+            <p style="font-size:0.88rem; margin-bottom:16px;">Anonymous student letters dropped into Prep Room B for radio read-outs!</p>
 
-        <div id="mailbox-list">
-          <div class="mail-card">
-            <div class="mail-header">
-              <span>From: Anonymous 2nd-Year</span>
-              <span>Locker #104</span>
-            </div>
-            <div class="mail-body">"How do you stay focused when studying for exams gets too stressful?"</div>
-            <div class="mail-reply">
-              <strong>Sera:</strong> "Take short tea breaks every 25 minutes! Aoi always reminds us that rest is part of practice."
+            <div id="mailbox-list">
+              <div class="mail-card">
+                <div class="mail-header">
+                  <span>From: Anonymous 2nd-Year</span>
+                  <span>Locker #104</span>
+                </div>
+                <div class="mail-body">"How do you stay focused when studying for exams gets too stressful?"</div>
+                <div class="mail-reply">
+                  <strong>Sera:</strong> "Take short tea breaks every 25 minutes! Aoi always reminds us that rest is part of practice."
+                </div>
+              </div>
+
+              <div class="mail-card">
+                <div class="mail-header">
+                  <span>From: Anonymous Track Runner</span>
+                  <span>Locker #108</span>
+                </div>
+                <div class="mail-body">"Can you play something fast to help me pace my morning runs?"</div>
+                <div class="mail-reply">
+                  <strong>Akari:</strong> "Tuned in 180 BPM drum beats! Sprinting to rhythm makes the track feel weightless!"
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="mail-card">
-            <div class="mail-header">
-              <span>From: Anonymous Track Runner</span>
-              <span>Locker #108</span>
+          <div>
+            <h3 class="content-title">📨 Submit Note to Neko FM</h3>
+            <p style="font-size:0.88rem; margin-bottom:16px;">Type a custom letter or question to broadcast onto the prep room radio board!</p>
+
+            <div class="form-group">
+              <label for="user-sender">Your Name / Locker ID</label>
+              <input type="text" id="user-sender" class="form-control" placeholder="e.g. Locker #201 or Quiet Listener">
             </div>
-            <div class="mail-body">"Can you play something fast to help me pace my morning runs?"</div>
-            <div class="mail-reply">
-              <strong>Akari:</strong> "Tuned in 180 BPM drum beats! Sprinting to rhythm makes the track feel weightless!"
+            <div class="form-group">
+              <label for="user-msg">Your Message / Request</label>
+              <textarea id="user-msg" class="form-control" style="min-height:90px;" placeholder="Type your letter for Nekomi & Sera..."></textarea>
             </div>
+            <button class="action-btn" onclick="postNote()">📨 Send Letter to Prep Room B</button>
           </div>
         </div>
+      </div>
 
-        <!-- Submit Form -->
-        <h4 style="color:#f4b8c4; margin:16px 0 8px; font-size:1rem;">Submit Note to Neko FM</h4>
-        <div class="form-group">
-          <label for="user-sender">Your Name / Locker ID</label>
-          <input type="text" id="user-sender" class="form-control" placeholder="e.g. Locker #201 or Quiet Listener">
+      <!-- TAB 3: AMBIENT RADIO TUNER -->
+      <div id="tuner-tab" class="tab-content">
+        <div class="tuner-card">
+          <div style="font-size:2.8rem;">📻</div>
+          <div id="freq-num" class="frequency-display">98.4 FM</div>
+          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:18px;">Tea-Time Lo-Fi & Warm Chords</div>
+
+          <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:20px;">
+            <button class="tab-btn" onclick="setChannel(98.4, 'Tea-Time Lo-Fi & Warm Chords', 'lofi')">98.4 FM • Tea Lo-Fi</button>
+            <button class="tab-btn" onclick="setChannel(104.2, 'Rain & Purr Study Sanctuary', 'rain')">104.2 FM • Rain & Purr</button>
+            <button class="tab-btn" onclick="setChannel(88.0, 'Subterranean Rehearsal Tapes', 'rock')">88.0 FM • Rehearsal Tape</button>
+          </div>
+
+          <button id="radio-tuner-play-btn" class="action-btn" onclick="toggleRadioTuner()">▶ Start Ambient Radio Loop</button>
         </div>
-        <div class="form-group">
-          <label for="user-msg">Your Message / Request</label>
-          <textarea id="user-msg" class="form-control" style="min-height:60px;" placeholder="Type your letter for Nekomi & Sera..."></textarea>
-        </div>
-        <button class="action-btn" onclick="postNote()">📨 Send Letter to Prep Room B</button>
       </div>
 
     </div>
@@ -411,6 +540,11 @@
     let isPodcastPlaying = false;
     let currentLineIdx = 0;
     let selectedEpIdx = 0;
+
+    // Ambient Radio Tuner States
+    let isTunerPlaying = false;
+    let tunerInterval = null;
+    let currentTunerMode = 'lofi';
 
     const voicePitch = {
       nekomi: { freq: 329.63, type: 'sawtooth' }, // E4 Guitar tone
@@ -465,6 +599,14 @@
       }
     ];
 
+    function switchStudioTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+      event.target.classList.add('active-tab');
+
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active-content'));
+      document.getElementById(tabId).classList.add('active-content');
+    }
+
     function playVoiceChime(speakerKey) {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -497,6 +639,7 @@
       });
 
       const ep = episodes[idx];
+      document.getElementById('ep-main-title').innerText = ep.title;
       document.getElementById('speaker-title-display').innerText = `${ep.title} • Ready`;
       document.getElementById('dialogue-line-display').innerText = "Click Play Episode Broadcast to start listening...";
       document.getElementById('ep-progress-fill').style.width = '0%';
@@ -544,6 +687,41 @@
 
     function resetSpeakerHighlights() {
       document.querySelectorAll('.speaker-avatar').forEach(el => el.classList.remove('speaking'));
+    }
+
+    /* Ambient Radio Tuner Logic */
+    function setChannel(freq, name, mode) {
+      currentTunerMode = mode;
+      document.getElementById('freq-num').innerText = `${freq} FM`;
+      document.getElementById('freq-title').innerText = name;
+    }
+
+    function toggleRadioTuner() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      isTunerPlaying = !isTunerPlaying;
+      const btn = document.getElementById('radio-tuner-play-btn');
+
+      if (isTunerPlaying) {
+        btn.innerText = "⏸ Pause Ambient Loop";
+        tunerInterval = setInterval(() => {
+          if (!isTunerPlaying) return;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = currentTunerMode === 'rock' ? 'sawtooth' : 'triangle';
+          osc.frequency.value = [220, 261.63, 329.63, 392.00][Math.floor(Math.random() * 4)];
+          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.5);
+        }, 600);
+      } else {
+        btn.innerText = "▶ Start Ambient Radio Loop";
+        clearInterval(tunerInterval);
+      }
     }
 
     function postNote() {
