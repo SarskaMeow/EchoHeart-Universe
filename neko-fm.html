@@ -92,7 +92,7 @@
       border-left: 4px solid #a88beb;
       padding: 16px;
       border-radius: 0 12px 12px 0;
-      min-height: 110px;
+      min-height: 120px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -113,6 +113,22 @@
       color: #e2daf8;
       line-height: 1.6;
       font-style: italic;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(168, 139, 235, 0.2);
+      border-radius: 3px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #a88beb, #f4b8c4);
+      transition: width 0.3s ease;
     }
 
     .episode-select-row {
@@ -267,6 +283,7 @@
           <a href="neko-lounge.html">Tea Room & Creator</a>
           <a href="atelier.html">Resonance Atelier</a>
           <a href="neko-fm.html" class="active">Whisper Radio / Neko FM</a>
+          <a href="neko-maker.html">Neko Avatar Maker</a>
         </div>
       </div>
 
@@ -281,10 +298,10 @@
   <section class="hero">
     <h1>WHISPER RADIO / NEKO FM PODCAST</h1>
     <p class="hero-subtitle hero-twilight-subtitle">
-      🌸 Live after-school audio drama broadcasts, guest interviews, and locker notes
+      🌸 Live after-school audio drama broadcasts, school rumors, and ancient lore
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
-      ⚡ Subterranean Broadcasts & Special Guest Intermissions
+      ⚡ Subterranean Broadcasts & Special Secret Transmissions
     </p>
   </section>
 
@@ -294,12 +311,12 @@
       <!-- LEFT COLUMN: INTERACTIVE PODCAST STUDIO PLAYER -->
       <div class="radio-box">
         <h3 class="content-title">🎙️ Prep Room B Podcast Studio</h3>
-        <p style="font-size:0.88rem; margin-bottom:16px;">Select an episode below and hit Play to watch the band members and guest students record live on air!</p>
+        <p style="font-size:0.88rem; margin-bottom:16px;">Select an episode topic below and press Play to hear Nekomi, Sera, Akari, and Aoi discuss school life live on air!</p>
 
         <div class="episode-select-row">
-          <button class="episode-btn active-ep" onclick="selectEpisode(0)">Ep 1: Welcome to Neko FM</button>
-          <button class="episode-btn" onclick="selectEpisode(1)">Ep 2: Guest Yumi (Art Club)</button>
-          <button class="episode-btn" onclick="selectEpisode(2)">Ep 3: 180 BPM Drum Talk</button>
+          <button class="episode-btn active-ep" onclick="selectEpisode(0)">Ep 1: Hallway Rumors</button>
+          <button class="episode-btn" onclick="selectEpisode(1)">Ep 2: Ancient Lore</button>
+          <button class="episode-btn" onclick="selectEpisode(2)">Ep 3: Shopping Street Fest</button>
         </div>
 
         <div class="podcast-stage">
@@ -321,16 +338,17 @@
               <div class="speaker-icon-box">🎸</div>
               <span class="speaker-name">Aoi</span>
             </div>
-            <div id="spk-guest" class="speaker-avatar" style="display:none;">
-              <div class="speaker-icon-box" style="border-color:#ffd700;">🎨</div>
-              <span class="speaker-name" id="guest-name-tag">Guest</span>
-            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="progress-bar-container">
+            <div id="ep-progress-fill" class="progress-bar-fill"></div>
           </div>
 
           <!-- Dynamic Dialogue Script Box -->
           <div class="script-transcript-box">
             <div id="speaker-title-display" class="current-speaker-title">Prep Room B Mic • Standby</div>
-            <div id="dialogue-line-display" class="current-dialogue-line">Select an episode and press Play Episode to start the broadcast...</div>
+            <div id="dialogue-line-display" class="current-dialogue-line">Select an episode topic and press Play Episode Broadcast to begin...</div>
           </div>
 
           <button id="podcast-play-btn" class="action-btn" onclick="togglePodcastPlayback()">▶ Play Episode Broadcast</button>
@@ -386,7 +404,7 @@
     <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
-  <!-- Web Audio Synthesizer & Podcast Script Engine -->
+  <!-- Web Audio Synthesizer & Extended Multi-Turn Podcast Script Engine -->
   <script>
     let audioCtx = null;
     let podcastInterval = null;
@@ -394,50 +412,55 @@
     let currentLineIdx = 0;
     let selectedEpIdx = 0;
 
-    // Distinct voice frequencies for each girl & guest
     const voicePitch = {
       nekomi: { freq: 329.63, type: 'sawtooth' }, // E4 Guitar tone
       sera:   { freq: 523.25, type: 'triangle' }, // C5 Keytar chime
       akari:  { freq: 440.00, type: 'square' },   // A4 Drum pulse
-      aoi:    { freq: 146.83, type: 'sine' },     // D3 Deep Bass
-      guest:  { freq: 659.25, type: 'sine' }      // E5 Soft Chime
+      aoi:    { freq: 146.83, type: 'sine' }      // D3 Deep Bass
     };
 
-    // Podcast Episode Scripts
+    // Extended Multi-Turn Episode Discussions
     const episodes = [
       {
-        title: "Ep 1: Welcome to Neko FM",
-        hasGuest: false,
+        title: "Ep 1: Hallway Rumors & Shadow Tickets",
         script: [
-          { speaker: 'nekomi', text: "Welcome everyone to Whisper Radio on Neko FM! We're recording live from Music Prep Room B after practice." },
-          { speaker: 'sera', text: "I just poured four fresh cups of warm barley tea. The rain outside makes the room feel so cozy today." },
-          { speaker: 'akari', text: "And I just finished my 180 BPM drum pad drill! My sticks are practically sparking!" },
-          { speaker: 'aoi', text: "Let's keep the noise level reasonable, Akari. Student council patrols are still walking the 3rd floor hallway." },
-          { speaker: 'nekomi', text: "Hehe. Don't worry, Aoi. If anyone drops a shadow ticket into locker 102 tonight, we'll be ready beneath the floorboards." }
+          { speaker: 'nekomi', text: "Welcome back to Neko FM! We're sitting around the tea table in Prep Room B after a long afternoon practice." },
+          { speaker: 'sera', text: "Sipping warm barley tea while looking over student council locker notes... it's so quiet up here on the 3rd floor." },
+          { speaker: 'akari', text: "Quiet? Speak for yourself! I heard three students near the gym talking about 'vibrations' coming from under the floorboards!" },
+          { speaker: 'aoi', text: "Akari, I told you to use the rubber mute pads during daytime drum drills! The student council desk was rattling." },
+          { speaker: 'nekomi', text: "Hehe. But those vibrations are how students know Girls Phantom Dead is active." },
+          { speaker: 'sera', text: "That's true! Someone dropped a note in Locker 102 today saying they heard a bass line echoing through the vents during 5th period." },
+          { speaker: 'akari', text: "That was Aoi practicing her bass run for Crescent Resonance! It sounded so cool!" },
+          { speaker: 'aoi', text: "Regardless... as long as faculty thinks it's just old plumbing pipes in the west wing, our secret venue remains safe." },
+          { speaker: 'nekomi', text: "If anyone listening feels overwhelmed by school stress... check your shoe locker tonight. You might find a black cardstock ticket." },
+          { speaker: 'sera', text: "And if you do... follow the sound of keytar chords down past the piano." }
         ]
       },
       {
-        title: "Ep 2: Guest Yumi (Art Club)",
-        hasGuest: true,
-        guestName: "Yumi (Art)",
-        guestIcon: "🎨",
+        title: "Ep 2: Ancient Lore & The Cavern",
         script: [
-          { speaker: 'nekomi', text: "Tonight on Neko FM, we have our very first studio guest! Welcome Yumi Takahashi from the Sakuraoka Art Club!" },
-          { speaker: 'guest', text: "Thank you for having me! I still remember finding that black cardstock ticket stamped with a hollow heart in my locker..." },
-          { speaker: 'sera', text: "Your gallery canvas was so beautiful, Yumi. We played Crescent Resonance just for you that evening." },
-          { speaker: 'guest', text: "Listening to the music echo through stone walls in The Basement gave me my paintbrush back. I'll never forget it." },
-          { speaker: 'aoi', text: "That is why EchoHeart exists. To remind everyone that no one in these hallways has to face the dark alone." }
+          { speaker: 'sera', text: "Welcome to Episode 2! Today we're answering a question about the history of Sakuraoka High." },
+          { speaker: 'nekomi', text: "A lot of students ask why the acoustic resonance in The Basement feels so different from regular music rooms." },
+          { speaker: 'aoi', text: "According to old school archives from 80 years ago, the foundation was built over an ancient natural stone cavern." },
+          { speaker: 'akari', text: "A natural cavern! That explains why my drum kick echoes for three full seconds down there!" },
+          { speaker: 'sera', text: "It's also where the moonlit cat-girl lineage originally bonded with spirit guardians like Yozora and Byakko." },
+          { speaker: 'nekomi', text: "Yozora is curled up on top of my guitar amplifier right now. Her tail twitches every time Sera plays a chord in C major." },
+          { speaker: 'akari', text: "And Kagerou always perches on my snare drum rim when I hit 180 BPM! Spirit familiars love fast tempos!" },
+          { speaker: 'aoi', text: "The cavern absorbs heavy emotional weight from the campus above and turns it into musical harmony. It's a special sanctuary." },
+          { speaker: 'sera', text: "That's why playing down there heals heavy hearts. The stone itself remembers the music." }
         ]
       },
       {
-        title: "Ep 3: 180 BPM Drum Talk",
-        hasGuest: false,
+        title: "Ep 3: The Town Shopping Street Festival",
         script: [
-          { speaker: 'akari', text: "Okay, topic of the day: tempo! Everyone thinks 180 BPM is fast, but it's really about the steady heartbeat!" },
-          { speaker: 'nekomi', text: "When Akari drives the tempo behind my guitar riffs, the energy in the room completely shifts." },
-          { speaker: 'sera', text: "My fingers have to fly across the keytar keys to match her speed, but it feels like floating!" },
-          { speaker: 'aoi', text: "And my bassline grounds the entire pulse so the rhythm stays clear and deep." },
-          { speaker: 'akari', text: "That's team resonance right there! Now who's ready for another tea break?" }
+          { speaker: 'akari', text: "Episode 3 is live! Who's excited for the upcoming Sakuraoka Shopping Street Cultural Festival?!" },
+          { speaker: 'sera', text: "I saw the paper lanterns being hung along the arcade street this morning. The tea shops are setting up special stalls." },
+          { speaker: 'nekomi', text: "We're planning a secret pop-up set near the old arcade clock tower right as the sun sets." },
+          { speaker: 'aoi', text: "I've secured the official permit under the Light Music Club name, so student council patrols won't interfere." },
+          { speaker: 'akari', text: "Aoi is the ultimate manager-bassist! No one manages logistics like her!" },
+          { speaker: 'sera', text: "We'll be premiering a brand new synth-pad arrangement of EchoHeart's main motif." },
+          { speaker: 'nekomi', text: "Bring your friends and warm tea cups. When the street lanterns light up, listen closely for the lead guitar." },
+          { speaker: 'aoi', text: "That concludes today's broadcast. Thank you for tuning into Neko FM, everyone!" }
         ]
       }
     ];
@@ -474,17 +497,9 @@
       });
 
       const ep = episodes[idx];
-      const guestBox = document.getElementById('spk-guest');
-      if (ep.hasGuest) {
-        guestBox.style.display = 'flex';
-        document.getElementById('guest-name-tag').innerText = ep.guestName;
-        guestBox.querySelector('.speaker-icon-box').innerText = ep.guestIcon;
-      } else {
-        guestBox.style.display = 'none';
-      }
-
       document.getElementById('speaker-title-display').innerText = `${ep.title} • Ready`;
       document.getElementById('dialogue-line-display').innerText = "Click Play Episode Broadcast to start listening...";
+      document.getElementById('ep-progress-fill').style.width = '0%';
       resetSpeakerHighlights();
     }
 
@@ -498,7 +513,7 @@
         isPodcastPlaying = true;
         btn.innerText = "⏸ Pause Episode Broadcast";
         playScriptStep();
-        podcastInterval = setInterval(playScriptStep, 4200); // 4.2s per line
+        podcastInterval = setInterval(playScriptStep, 4500); // 4.5s per turn
       }
     }
 
@@ -516,9 +531,12 @@
       const activeEl = document.getElementById(`spk-${line.speaker}`);
       if (activeEl) activeEl.classList.add('speaking');
 
+      // Update progress bar
+      const progressPercent = ((currentLineIdx + 1) / ep.script.length) * 100;
+      document.getElementById('ep-progress-fill').style.width = `${progressPercent}%`;
+
       // Update text
-      const speakerDisplayName = line.speaker === 'guest' ? (ep.guestName || 'Guest') : line.speaker.toUpperCase();
-      document.getElementById('speaker-title-display').innerText = `🎙️ ${speakerDisplayName} ON AIR:`;
+      document.getElementById('speaker-title-display').innerText = `🎙️ ${line.speaker.toUpperCase()} ON AIR:`;
       document.getElementById('dialogue-line-display').innerText = `"${line.text}"`;
 
       currentLineIdx++;
