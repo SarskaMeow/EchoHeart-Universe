@@ -398,7 +398,7 @@
       <div class="dashboard-tabs">
         <button class="tab-btn active-tab" onclick="switchStudioTab('broadcast-tab')">🎙️ Podcast Studio Stage</button>
         <button class="tab-btn" onclick="switchStudioTab('mailbox-tab')">📬 Locker Mailbox</button>
-        <button class="tab-btn" onclick="switchStudioTab('tuner-tab')">📻 Ambient Radio Tuner</button>
+        <button class="tab-btn" onclick="switchStudioTab('tuner-tab')">📻 EchoHeart Lo-Fi Tuner</button>
       </div>
 
       <!-- TAB 1: PODCAST STUDIO STAGE (FULL WIDE VIEW) -->
@@ -514,15 +514,15 @@
         <div class="tuner-card">
           <div style="font-size:2.8rem;">📻</div>
           <div id="freq-num" class="frequency-display">98.4 FM</div>
-          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:18px;">Tea-Time Lo-Fi & Warm Chords</div>
+          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:18px;">EchoHeart Prep Room Lo-Fi Chords</div>
 
           <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:20px;">
-            <button class="tab-btn" onclick="setChannel(98.4, 'Tea-Time Lo-Fi & Warm Chords', 'lofi')">98.4 FM • Tea Lo-Fi</button>
+            <button class="tab-btn" onclick="setChannel(98.4, 'EchoHeart Prep Room Lo-Fi Chords', 'lofi')">98.4 FM • EchoHeart Lo-Fi</button>
             <button class="tab-btn" onclick="setChannel(104.2, 'Rain & Purr Study Sanctuary', 'rain')">104.2 FM • Rain & Purr</button>
             <button class="tab-btn" onclick="setChannel(88.0, 'Subterranean Rehearsal Tapes', 'rock')">88.0 FM • Rehearsal Tape</button>
           </div>
 
-          <button id="radio-tuner-play-btn" class="action-btn" onclick="toggleRadioTuner()">▶ Start Ambient Radio Loop</button>
+          <button id="radio-tuner-play-btn" class="action-btn" onclick="toggleRadioTuner()">▶ Start EchoHeart Lo-Fi Stream</button>
         </div>
       </div>
 
@@ -543,7 +543,7 @@
 
     // Ambient Radio Tuner States
     let isTunerPlaying = false;
-    let tunerInterval = null;
+    let lofiLoopTimer = null;
     let currentTunerMode = 'lofi';
 
     const voicePitch = {
@@ -689,11 +689,65 @@
       document.querySelectorAll('.speaker-avatar').forEach(el => el.classList.remove('speaking'));
     }
 
-    /* Ambient Radio Tuner Logic */
+    /* EchoHeart Algorithmic Lo-Fi Engine */
     function setChannel(freq, name, mode) {
       currentTunerMode = mode;
       document.getElementById('freq-num').innerText = `${freq} FM`;
       document.getElementById('freq-title').innerText = name;
+    }
+
+    // EchoHeart Jazz/Lo-Fi Chord Progressions (Filtered Frequencies in Hz)
+    const lofiChords = [
+      [261.63, 329.63, 392.00, 493.88], // Cmaj7
+      [220.00, 261.63, 329.63, 392.00], // Am7
+      [174.61, 220.00, 261.63, 329.63], // Fmaj7
+      [196.00, 246.94, 293.66, 349.23]  // G7
+    ];
+    let chordIndex = 0;
+
+    function playLofiBeatStep() {
+      if (!isTunerPlaying || !audioCtx) return;
+
+      const now = audioCtx.currentTime;
+
+      // 1. Warm Muffled EchoHeart Chord (Low-pass filtered synth/guitar)
+      const chord = lofiChords[chordIndex % lofiChords.length];
+      chord.forEach(freq => {
+        const osc = audioCtx.createOscillator();
+        const filter = audioCtx.createBiquadFilter();
+        const gain = audioCtx.createGain();
+
+        osc.type = currentTunerMode === 'rock' ? 'sawtooth' : 'triangle';
+        osc.frequency.setValueAtTime(freq, now);
+
+        // Low-pass filter for cozy muffled Lo-Fi aesthetic
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(currentTunerMode === 'rain' ? 350 : 650, now);
+
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 1.8);
+      });
+
+      // 2. Soft Brushed Lo-Fi Kick & Snare
+      const kickOsc = audioCtx.createOscillator();
+      const kickGain = audioCtx.createGain();
+      kickOsc.frequency.setValueAtTime(90, now);
+      kickOsc.frequency.exponentialRampToValueAtTime(30, now + 0.15);
+      kickGain.gain.setValueAtTime(0.12, now);
+      kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      kickOsc.connect(kickGain);
+      kickGain.connect(audioCtx.destination);
+      kickOsc.start(now);
+      kickOsc.stop(now + 0.15);
+
+      chordIndex++;
     }
 
     function toggleRadioTuner() {
@@ -704,23 +758,12 @@
       const btn = document.getElementById('radio-tuner-play-btn');
 
       if (isTunerPlaying) {
-        btn.innerText = "⏸ Pause Ambient Loop";
-        tunerInterval = setInterval(() => {
-          if (!isTunerPlaying) return;
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = currentTunerMode === 'rock' ? 'sawtooth' : 'triangle';
-          osc.frequency.value = [220, 261.63, 329.63, 392.00][Math.floor(Math.random() * 4)];
-          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.5);
-        }, 600);
+        btn.innerText = "⏸ Pause EchoHeart Lo-Fi Stream";
+        playLofiBeatStep();
+        lofiLoopTimer = setInterval(playLofiBeatStep, 1800); // Relaxed Lo-Fi tempo
       } else {
-        btn.innerText = "▶ Start Ambient Radio Loop";
-        clearInterval(tunerInterval);
+        btn.innerText = "▶ Start EchoHeart Lo-Fi Stream";
+        clearInterval(lofiLoopTimer);
       }
     }
 
