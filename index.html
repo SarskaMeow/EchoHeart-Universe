@@ -4,7 +4,240 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Girls Phantom Dead & EchoHeart — Official Archive</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ============================================================
+       ECHOHEART & GIRLS PHANTOM DEAD — GLOBAL TWILIGHT STYLES
+       ============================================================ */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      transition: background-color 0.4s ease, color 0.4s ease;
+      min-height: 100vh;
+    }
+
+    /* 🌙 Mode 1: Twilight HQ (Prep Room B) - Soft Dark Lavender/Violet */
+    body.twilight-mode {
+      background-color: #130f26;
+      color: #e2daf8;
+    }
+
+    /* ⚡ Mode 2: Secret Concert (The Basement) - Deep Midnight & Rose Gold */
+    body.basement-mode {
+      background-color: #070510;
+      color: #f4b8c4;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 28px;
+      background: rgba(28, 20, 52, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(168, 139, 235, 0.25);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #a88beb;
+    }
+
+    .logo-subtext {
+      font-size: 0.85rem;
+      color: #f4b8c4;
+      margin-left: 6px;
+      font-weight: 600;
+    }
+
+    .status-badge-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .status-badge {
+      font-size: 0.8rem;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      background: rgba(45, 34, 80, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+    }
+
+    .room-status { color: #b5ebb5; }
+    .basement-status { color: #f4b8c4; }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    nav a {
+      color: #cbb8f6;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover, nav a.active {
+      color: #f4b8c4;
+    }
+
+    /* Theme Toggle Button */
+    .theme-btn {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border: none;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      box-shadow: 0 4px 12px rgba(168, 139, 235, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .theme-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 6px 18px rgba(244, 184, 196, 0.5);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 50px 20px 30px;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      letter-spacing: 3px;
+      color: #f4b8c4;
+      text-shadow: 0 0 20px rgba(244, 184, 196, 0.3);
+      margin-bottom: 12px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: #cbb8f6;
+      font-weight: 500;
+    }
+
+    /* Main Container & Cards Grid */
+    .container {
+      max-width: 1120px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+    }
+
+    .section-title {
+      text-align: center;
+      color: #a88beb;
+      letter-spacing: 2px;
+      margin-bottom: 30px;
+      font-size: 1.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: rgba(38, 28, 68, 0.65);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 16px;
+      padding: 20px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(244, 184, 196, 0.5);
+    }
+
+    .portrait-container {
+      width: 100%;
+      height: 150px;
+      border-radius: 10px;
+      background: rgba(15, 10, 30, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 12px;
+      border: 1px dashed rgba(168, 139, 235, 0.3);
+      margin-bottom: 14px;
+      color: #a88beb;
+      font-size: 0.85rem;
+    }
+
+    .outfit-box {
+      font-size: 0.82rem;
+      padding: 8px 12px;
+      background: rgba(15, 10, 30, 0.5);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      border-left: 3px solid #f4b8c4;
+    }
+
+    .card-tag {
+      font-size: 0.8rem;
+      color: #a88beb;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+
+    .card-title {
+      margin: 6px 0 10px;
+      color: #ffffff;
+      font-size: 1.15rem;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #d1c5ed;
+    }
+
+    /* Mode-Specific Element Toggle Classes */
+    body.twilight-mode .hero-basement-subtitle,
+    body.twilight-mode .basement-text,
+    body.twilight-mode .basement-img,
+    body.twilight-mode .basement-status {
+      display: none !important;
+    }
+
+    body.basement-mode .hero-twilight-subtitle,
+    body.basement-mode .twilight-text,
+    body.basement-mode .twilight-img,
+    body.basement-mode .room-status {
+      display: none !important;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.85rem;
+      color: #8b7cb6;
+      border-top: 1px solid rgba(168, 139, 235, 0.15);
+      background: rgba(15, 10, 30, 0.8);
+    }
+  </style>
 </head>
 <body class="twilight-mode">
 
@@ -24,7 +257,7 @@
       <a href="characters.html">Band Members</a>
       <a href="discography.html">Music & Songs</a>
       <a href="lore.html">Our Story</a>
-      <a href="cases.html">Student Stories</a>
+      <a href="ticket-creator.html">Ticket Creator</a>
       
       <!-- Theme Switcher Button -->
       <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
@@ -36,10 +269,10 @@
   <!-- Hero Section -->
   <section class="hero">
     <h1>GIRLS PHANTOM DEAD</h1>
-    <p class="hero-twilight-subtitle">
+    <p class="hero-subtitle hero-twilight-subtitle">
       🌸 Sakuraoka High Light Music Research Group • EchoHeart Soul Link
     </p>
-    <p class="hero-basement-subtitle">
+    <p class="hero-subtitle hero-basement-subtitle">
       ⚡ THE BASEMENT • SECRET UNDERGROUND CONCERTS & SHADOW TICKETS
     </p>
   </section>
@@ -52,8 +285,8 @@
       <!-- Nekomi -->
       <div class="card nekomi">
         <div class="portrait-container">
-          <div class="portrait-placeholder twilight-img">📷 [NEKOMI: School Uniform & Cardigan]</div>
-          <div class="portrait-placeholder basement-img">⚡ [NEKOMI: Dark Jacket & Violet Glow]</div>
+          <span class="twilight-img">📷 [NEKOMI: School Uniform & Cardigan]</span>
+          <span class="basement-img">⚡ [NEKOMI: Dark Leather Jacket & Violet Glow]</span>
         </div>
         <div class="outfit-box">
           <span class="outfit-label twilight-text">🌸 LOOK: School Blazer & Thigh-High Stockings</span>
@@ -67,8 +300,8 @@
       <!-- Sera -->
       <div class="card sera">
         <div class="portrait-container">
-          <div class="portrait-placeholder twilight-img">📷 [SERA: School Cardigan & Cat Clip]</div>
-          <div class="portrait-placeholder basement-img">⚡ [SERA: Soft Rose-Gold Outfit]</div>
+          <span class="twilight-img">📷 [SERA: School Cardigan & Cat Clip]</span>
+          <span class="basement-img">⚡ [SERA: Soft Rose-Gold Synth Outfit]</span>
         </div>
         <div class="outfit-box">
           <span class="outfit-label twilight-text">🌸 LOOK: Pastel Pink Hair & School Cardigan</span>
@@ -82,8 +315,8 @@
       <!-- Akari -->
       <div class="card akari">
         <div class="portrait-container">
-          <div class="portrait-placeholder twilight-img">📷 [AKARI: School Vest & Ponytail]</div>
-          <div class="portrait-placeholder basement-img">⚡ [AKARI: Sleeveless Vest & Drumsticks]</div>
+          <span class="twilight-img">📷 [AKARI: School Vest & Ponytail]</span>
+          <span class="basement-img">⚡ [AKARI: Sleeveless Vest & Drumsticks]</span>
         </div>
         <div class="outfit-box">
           <span class="outfit-label twilight-text">🌸 LOOK: Open Vest & Vibrant Wristbands</span>
@@ -97,8 +330,8 @@
       <!-- Aoi -->
       <div class="card aoi">
         <div class="portrait-container">
-          <div class="portrait-placeholder twilight-img">📷 [AOI: Sweater Vest & Glasses]</div>
-          <div class="portrait-placeholder basement-img">⚡ [AOI: Dark Coat & Bass Rig]</div>
+          <span class="twilight-img">📷 [AOI: Sweater Vest & Glasses]</span>
+          <span class="basement-img">⚡ [AOI: Dark Coat & Bass Rig]</span>
         </div>
         <div class="outfit-box">
           <span class="outfit-label twilight-text">🌸 LOOK: Teal Sweater Vest & Neat Glasses</span>
@@ -116,29 +349,32 @@
     <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
-  <!-- Mode Switcher Script -->
+  <!-- Theme Toggle Script -->
   <script>
-    const savedTheme = localStorage.getItem('echoheart-theme');
-    const toggleBtn = document.getElementById('theme-toggle-btn');
-
-    if (savedTheme === 'basement') {
-      document.body.classList.remove('twilight-mode');
-      document.body.classList.add('basement-mode');
-      if (toggleBtn) toggleBtn.innerText = '🌙 Quiet Practice Mode';
-    }
-
-    function toggleMode() {
-      const isBasement = document.body.classList.toggle('basement-mode');
-      document.body.classList.toggle('twilight-mode', !isBasement);
-
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
       if (isBasement) {
-        localStorage.setItem('echoheart-theme', 'basement');
-        if (toggleBtn) toggleBtn.innerText = '🌙 Quiet Practice Mode';
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
       } else {
-        localStorage.setItem('echoheart-theme', 'twilight');
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
         if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
       }
     }
+
+    function toggleMode() {
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
+    }
+
+    // Initialize Theme on Page Load
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
   </script>
 </body>
 </html>
