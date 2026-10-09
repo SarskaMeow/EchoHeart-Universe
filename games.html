@@ -128,7 +128,7 @@
       box-shadow: 0 0 40px rgba(244, 184, 196, 0.8);
     }
 
-    /* NEW GAME: Stealth Ticket Drop Locker Grid */
+    /* Stealth Ticket Drop Locker Grid */
     .locker-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -241,7 +241,7 @@
     </div>
 
     <nav>
-      <a href="index.html" class="active">Home</a>
+      <a href="index.html">Home</a>
 
       <!-- Story & Lore Dropdown -->
       <div class="dropdown">
@@ -266,9 +266,16 @@
         <button class="dropdown-btn">Interactive Arcade ▾</button>
         <div class="dropdown-content">
           <a href="ticket-creator.html">Ticket Creator</a>
-          <a href="games.html">Mini-Games</a>
+          <a href="games.html" class="active">Mini-Games</a>
         </div>
       </div>
+
+      <!-- Mode Switcher -->
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Secret Concert Mode
+      </button>
+    </nav>
+  </header>
 
   <!-- Hero Header -->
   <section class="hero">
@@ -437,9 +444,7 @@
       } catch(e){}
     }
 
-    // ============================================================
     // GAME 1: SHOE-LOCKER TICKET STEALTH DROP LOGIC
-    // ============================================================
     let stealthScore = 0;
     let stealthTimer = 30;
     let stealthHealth = 100;
@@ -473,17 +478,16 @@
         return;
       }
 
-      // Randomize lockers
       const lockerElements = document.querySelectorAll('.locker-slot');
       for (let i = 0; i < 6; i++) {
         let rand = Math.random();
         if (rand < 0.35) {
-          lockerStates[i] = 'target'; // Open Target Locker
+          lockerStates[i] = 'target';
           lockerElements[i].className = 'locker-slot target';
           lockerElements[i].querySelector('.locker-icon').innerText = '♡';
           lockerElements[i].querySelector('.locker-label').innerText = 'Drop Ticket';
         } else if (rand < 0.52) {
-          lockerStates[i] = 'patrol'; // Teacher / Patrol
+          lockerStates[i] = 'patrol';
           lockerElements[i].className = 'locker-slot patrol';
           lockerElements[i].querySelector('.locker-icon').innerText = '🚨';
           lockerElements[i].querySelector('.locker-label').innerText = 'Patrol!';
@@ -504,7 +508,7 @@
 
       if (state === 'target') {
         stealthScore += 100;
-        playNote(523.25, 0.15); // Success note
+        playNote(523.25, 0.15);
         document.getElementById('stealth-score').innerText = stealthScore;
         lockerStates[idx] = 'closed';
         lockerElements[idx].className = 'locker-slot closed';
@@ -512,7 +516,7 @@
         lockerElements[idx].querySelector('.locker-label').innerText = 'Dropped!';
       } else if (state === 'patrol') {
         stealthHealth -= 25;
-        playNote(120, 0.3); // Warning buzz
+        playNote(120, 0.3);
         document.getElementById('stealth-meter').innerText = `${Math.max(0, stealthHealth)}%`;
         if (stealthHealth <= 0) {
           endStealthGame();
@@ -535,9 +539,7 @@
       document.getElementById('stealth-start-btn').innerText = '▶ Start Stealth Drop';
     }
 
-    // ============================================================
     // GAME 2: SERA'S KEYTAR MEMORY ECHO LOGIC
-    // ============================================================
     const padNotes = [220, 261.63, 329.63, 392.00];
     let simonSequence = [];
     let playerSequence = [];
@@ -609,9 +611,7 @@
       }
     }
 
-    // ============================================================
     // GAME 3: AKARI'S TEMPO TAPPER LOGIC
-    // ============================================================
     let tapTimes = [];
 
     function registerDrumTap() {
@@ -657,9 +657,7 @@
       document.getElementById('tap-feedback').style.color = "#a88beb";
     }
 
-    // ============================================================
     // GAME 4: YOZORA'S FORTUNE LOGIC
-    // ============================================================
     const fortunes = [
       "Nekomi left her favorite Crescent pick on the piano—a sign that your creative spark is close by today.",
       "Sera says: 'When your thoughts get noisy, take a slow breath and listen to warm keytar chords.'",
@@ -675,9 +673,7 @@
       document.getElementById('fortune-text').innerText = fortunes[randIdx];
     }
 
-    // ============================================================
     // THEME SWITCHER LOGIC
-    // ============================================================
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
       if (isBasement) {
