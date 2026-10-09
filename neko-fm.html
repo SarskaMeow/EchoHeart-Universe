@@ -223,12 +223,24 @@
       .mail-grid { grid-template-columns: 1fr; }
     }
 
+    .mailbox-scroll-container {
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
     .mail-card {
       background: rgba(15, 10, 30, 0.7);
       border: 1px solid rgba(168, 139, 235, 0.25);
       border-radius: 14px;
       padding: 18px;
       margin-bottom: 16px;
+      animation: fadeInNote 0.4s ease;
+    }
+
+    @keyframes fadeInNote {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .mail-header {
@@ -360,6 +372,13 @@
       color: #ff4d6d;
       border: 1px solid rgba(255, 77, 109, 0.4);
     }
+
+    .bot-notice {
+      font-size: 0.78rem;
+      color: #a88beb;
+      margin-top: 6px;
+      font-style: italic;
+    }
   </style>
 </head>
 <body class="twilight-mode">
@@ -379,7 +398,6 @@
     <nav>
       <a href="index.html">Home</a>
 
-      <!-- Story & Lore Dropdown -->
       <div class="dropdown">
         <button class="dropdown-btn">Story & Lore ▾</button>
         <div class="dropdown-content">
@@ -389,7 +407,6 @@
         </div>
       </div>
 
-      <!-- Music Dropdown -->
       <div class="dropdown">
         <button class="dropdown-btn">Music ▾</button>
         <div class="dropdown-content">
@@ -398,7 +415,6 @@
         </div>
       </div>
 
-      <!-- Interactive Arcade Dropdown -->
       <div class="dropdown">
         <button class="dropdown-btn">Interactive Arcade ▾</button>
         <div class="dropdown-content">
@@ -407,7 +423,6 @@
         </div>
       </div>
 
-      <!-- Neko Lounge Dropdown -->
       <div class="dropdown">
         <button class="dropdown-btn">Neko Lounge ▾</button>
         <div class="dropdown-content">
@@ -418,18 +433,16 @@
         </div>
       </div>
 
-      <!-- Mode Switcher -->
       <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
         ⚡ Secret Concert Mode
       </button>
     </nav>
   </header>
 
-  <!-- Hero Section -->
   <section class="hero">
     <h1>WHISPER RADIO / NEKO FM PODCAST</h1>
     <p class="hero-subtitle hero-twilight-subtitle">
-      🌸 Live after-school audio drama broadcasts, school rumors, and ancient lore
+      🌸 Live after-school audio drama broadcasts, school rumors, and live locker messages
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
       ⚡ Subterranean Broadcasts & Special Secret Transmissions
@@ -439,10 +452,9 @@
   <main class="container">
     <div class="studio-dashboard">
 
-      <!-- Navigation Tabs for Podcast Studio -->
       <div class="dashboard-tabs">
         <button class="tab-btn active-tab" onclick="switchStudioTab('broadcast-tab')">🎙️ Podcast Studio Stage</button>
-        <button class="tab-btn" onclick="switchStudioTab('mailbox-tab')">📬 Locker Mailbox</button>
+        <button class="tab-btn" onclick="switchStudioTab('mailbox-tab')">📬 Live Locker Mailbox</button>
         <button class="tab-btn" onclick="switchStudioTab('tuner-tab')">📻 Mode-Reactive Live Stream Tuner</button>
       </div>
 
@@ -501,51 +513,33 @@
         </div>
       </div>
 
-      <!-- TAB 2: LOCKER MAILBOX -->
+      <!-- TAB 2: LIVE LOCKER MAILBOX (SFW REAL-TIME BOARD + BOTS) -->
       <div id="mailbox-tab" class="tab-content">
         <div class="mail-grid">
           <div>
-            <h3 class="content-title">📬 Locker Note Mailbox</h3>
-            <p style="font-size:0.88rem; margin-bottom:16px;">Anonymous student letters dropped into Prep Room B for radio read-outs!</p>
+            <h3 class="content-title">📬 Sakuraoka High Live Mailbox</h3>
+            <p style="font-size:0.88rem; margin-bottom:12px;">Live messages from students and radio listeners! (Automatically moderated for SFW content).</p>
 
-            <div id="mailbox-list">
-              <div class="mail-card">
-                <div class="mail-header">
-                  <span>From: Anonymous 2nd-Year</span>
-                  <span>Locker #104</span>
-                </div>
-                <div class="mail-body">"How do you stay focused when studying for exams gets too stressful?"</div>
-                <div class="mail-reply">
-                  <strong>Sera:</strong> "Take short tea breaks every 25 minutes! Aoi always reminds us that rest is part of practice."
-                </div>
-              </div>
-
-              <div class="mail-card">
-                <div class="mail-header">
-                  <span>From: Anonymous Track Runner</span>
-                  <span>Locker #108</span>
-                </div>
-                <div class="mail-body">"Can you play something fast to help me pace my morning runs?"</div>
-                <div class="mail-reply">
-                  <strong>Akari:</strong> "Tuned in 180 BPM drum beats! Sprinting to rhythm makes the track feel weightless!"
-                </div>
-              </div>
+            <div class="mailbox-scroll-container" id="mailbox-list">
+              <!-- Initial default notes loaded by JavaScript -->
             </div>
           </div>
 
           <div>
-            <h3 class="content-title">📨 Submit Note to Neko FM</h3>
-            <p style="font-size:0.88rem; margin-bottom:16px;">Type a custom letter or question to broadcast onto the prep room radio board!</p>
+            <h3 class="content-title">📨 Drop a Note into Locker 102</h3>
+            <p style="font-size:0.88rem; margin-bottom:16px;">Post a message to the prep room board! Keep all submissions friendly and SFW.</p>
 
             <div class="form-group">
-              <label for="user-sender">Your Name / Locker ID</label>
+              <label for="user-sender">Your Name / Student ID</label>
               <input type="text" id="user-sender" class="form-control" placeholder="e.g. Locker #201 or Quiet Listener">
             </div>
             <div class="form-group">
-              <label for="user-msg">Your Message / Request</label>
-              <textarea id="user-msg" class="form-control" style="min-height:90px;" placeholder="Type your letter for Nekomi & Sera..."></textarea>
+              <label for="user-msg">Your Message</label>
+              <textarea id="user-msg" class="form-control" style="min-height:90px;" placeholder="Type your letter for Nekomi, Sera, Akari & Aoi..."></textarea>
             </div>
-            <button class="action-btn" onclick="postNote()">📨 Send Letter to Prep Room B</button>
+            <button class="action-btn" onclick="postNote()">📨 Send Live Letter to Prep Room B</button>
+
+            <div class="bot-notice">🤖 Sakuraoka Student NPC Bots are active and periodically posting notes!</div>
           </div>
         </div>
       </div>
@@ -558,18 +552,14 @@
           <div id="freq-num" class="frequency-display">98.4 FM</div>
           <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:18px;">Lofi Girl / Chillhop 24/7 Stream</div>
 
-          <!-- Interactive Station Preset Selector -->
-          <div id="preset-container" class="station-preset-bar">
-            <!-- Buttons generated dynamically by mode -->
-          </div>
+          <div id="preset-container" class="station-preset-bar"></div>
 
           <p style="font-size:0.88rem; color:#e2daf8; margin-bottom:20px;">
-            Switching between <strong>Prep Room B Mode</strong> and <strong>Secret Concert Mode</strong> at the top right automatically changes the live radio frequencies between 24/7 Lo-Fi Chill streams and 24/7 J-Rock streams!
+            Switching modes at the top right changes the live radio stream between 24/7 Lo-Fi Chill streams and 24/7 J-Rock streams!
           </p>
 
           <button id="radio-tuner-play-btn" class="action-btn" onclick="toggleLiveRadioStream()">▶ Tune Into Live Stream</button>
 
-          <!-- Hidden Native HTML5 Audio Element for Internet Stream -->
           <audio id="live-audio-player" style="display:none;"></audio>
         </div>
       </div>
@@ -588,7 +578,6 @@
     let currentLineIdx = 0;
     let selectedEpIdx = 0;
 
-    // Live Radio Stream State
     let isStreamPlaying = false;
     const liveAudioPlayer = document.getElementById('live-audio-player');
 
@@ -607,6 +596,47 @@
     };
 
     let currentStationIdx = 0;
+
+    // SFW Profanity Filter Dictionary
+    const forbiddenWords = ['fuck', 'shit', 'asshole', 'bitch', 'cunt', 'dick', 'bastard', 'slut', 'whore', 'nigger', 'fag'];
+
+    function sanitizeInput(text) {
+      let lower = text.toLowerCase();
+      for (let word of forbiddenWords) {
+        if (lower.includes(word)) {
+          return false; // Violates SFW policy
+        }
+      }
+      return true;
+    }
+
+    // Student NPC Bot Generator Pools
+    const studentBotNames = [
+      "Track Club Runner (Locker #108)",
+      "Art Club Member (Locker #204)",
+      "Library Aide (Locker #112)",
+      "3rd-Year Student Council Rep",
+      "Kendo Club Captain",
+      "Astronomy Club Listener",
+      "Prep Room B Neighbor"
+    ];
+
+    const studentBotMessages = [
+      "Did anyone else hear lead guitar riffs echoing through the courtyard during lunch break?",
+      "Sending warm barley tea energy to everyone studying for upcoming exams!",
+      "I found a black cardstock ticket in locker 102... is it real? Can't wait for dusk!",
+      "Akari's 180 BPM drum drills inspired my sprint practice this morning!",
+      "Who keeps leaving sweet potato biscuits on the music room table? They're delicious!",
+      "Listening to Neko FM while drawing manga panels in the art room...",
+      "The acoustic echo in the west wing stairwell sounded amazing today."
+    ];
+
+    const hostReplies = [
+      "Nekomi: Thanks for tuning in! Keep listening for secret venue announcements!",
+      "Sera: Have a cup of warm tea and enjoy your study session!",
+      "Akari: Keep that high energy going! 180 BPM all day!",
+      "Aoi: Remember to keep hallway noise under control during classes!"
+    ];
 
     const voicePitch = {
       nekomi: { freq: 329.63, type: 'sawtooth' },
@@ -747,6 +777,101 @@
       document.querySelectorAll('.speaker-avatar').forEach(el => el.classList.remove('speaking'));
     }
 
+    /* Mailbox & Live Bot Engine */
+    function loadSavedNotes() {
+      const saved = JSON.parse(localStorage.getItem('echoheart_mailbox') || '[]');
+      const container = document.getElementById('mailbox-list');
+
+      // Default notes if empty
+      if (saved.length === 0) {
+        const defaults = [
+          { sender: "Anonymous 2nd-Year (Locker #104)", time: "10 mins ago", body: "How do you stay focused when studying for exams gets too stressful?", reply: "Sera: Take short tea breaks every 25 minutes! Aoi always reminds us that rest is part of practice." },
+          { sender: "Anonymous Track Runner (Locker #108)", time: "1 hour ago", body: "Can you play something fast to help me pace my morning runs?", reply: "Akari: Tuned in 180 BPM drum beats! Sprinting to rhythm makes the track feel weightless!" }
+        ];
+        localStorage.setItem('echoheart_mailbox', JSON.stringify(defaults));
+        renderNotes(defaults);
+      } else {
+        renderNotes(saved);
+      }
+    }
+
+    function renderNotes(notes) {
+      const container = document.getElementById('mailbox-list');
+      container.innerHTML = '';
+      notes.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'mail-card';
+        card.innerHTML = `
+          <div class="mail-header">
+            <span>From: ${item.sender}</span>
+            <span>${item.time}</span>
+          </div>
+          <div class="mail-body">"${item.body}"</div>
+          <div class="mail-reply"><strong>${item.reply.split(':')[0]}:</strong> ${item.reply.split(':')[1] || ''}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function postNote() {
+      const sender = document.getElementById('user-sender').value.trim() || 'Anonymous Student';
+      const msg = document.getElementById('user-msg').value.trim();
+
+      if (!msg) {
+        alert("Please write a message before dropping it into Locker 102!");
+        return;
+      }
+
+      // Check SFW Safety
+      if (!sanitizeInput(sender) || !sanitizeInput(msg)) {
+        alert("🌸 Student Council Notice: Please keep all messages friendly and strictly SFW!");
+        return;
+      }
+
+      const randomReply = hostReplies[Math.floor(Math.random() * hostReplies.length)];
+      const newNote = {
+        sender: `${sender}`,
+        time: "Just Now",
+        body: msg,
+        reply: randomReply
+      };
+
+      const saved = JSON.parse(localStorage.getItem('echoheart_mailbox') || '[]');
+      saved.unshift(newNote);
+      localStorage.setItem('echoheart_mailbox', JSON.stringify(saved));
+
+      renderNotes(saved);
+
+      document.getElementById('user-sender').value = '';
+      document.getElementById('user-msg').value = '';
+    }
+
+    // Automated Student NPC Bot Timer (Posts a random student note every 45 seconds)
+    function startStudentBotTimer() {
+      setInterval(() => {
+        const botName = studentBotNames[Math.floor(Math.random() * studentBotNames.length)];
+        const botMsg = studentBotMessages[Math.floor(Math.random() * studentBotMessages.length)];
+        const randomReply = hostReplies[Math.floor(Math.random() * hostReplies.length)];
+
+        const botNote = {
+          sender: botName,
+          time: "Just Now (Live NPC)",
+          body: botMsg,
+          reply: randomReply
+        };
+
+        const saved = JSON.parse(localStorage.getItem('echoheart_mailbox') || '[]');
+        saved.unshift(botNote);
+        if (saved.length > 20) saved.pop(); // Keep top 20 notes
+        localStorage.setItem('echoheart_mailbox', JSON.stringify(saved));
+
+        // If user is currently looking at mailbox tab, re-render
+        if (document.getElementById('mailbox-tab').classList.contains('active-content')) {
+          renderNotes(saved);
+        }
+      }, 45000); // 45 seconds
+    }
+
     /* Live Radio Stream Engine */
     function renderPresets() {
       const isBasement = document.body.classList.contains('basement-mode');
@@ -801,35 +926,6 @@
       }
     }
 
-    function postNote() {
-      const sender = document.getElementById('user-sender').value || 'Anonymous Student';
-      const msg = document.getElementById('user-msg').value;
-
-      if (!msg) {
-        alert("Please write a note before sending!");
-        return;
-      }
-
-      const list = document.getElementById('mailbox-list');
-      const newCard = document.createElement('div');
-      newCard.className = 'mail-card';
-      newCard.innerHTML = `
-        <div class="mail-header">
-          <span>From: ${sender}</span>
-          <span>Just Now</span>
-        </div>
-        <div class="mail-body">"${msg}"</div>
-        <div class="mail-reply">
-          <strong>Nekomi:</strong> "Thanks for your note! We'll dedicate our next rehearsal chord to you!"
-        </div>
-      `;
-      list.prepend(newCard);
-
-      document.getElementById('user-sender').value = '';
-      document.getElementById('user-msg').value = '';
-      alert("Your letter has been posted to Prep Room B!");
-    }
-
     // Dynamic Theme Switcher Sync
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
@@ -866,6 +962,8 @@
     window.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('echoheart-theme');
       updateThemeUI(savedTheme === 'basement');
+      loadSavedNotes();
+      startStudentBotTimer();
     });
   </script>
 </body>
