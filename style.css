@@ -1,7 +1,5 @@
 /* ============================================================
    GOOGLE FONTS IMPORT
-   - Fredoka: Friendly Manga / Anime Title Font (Twilight HQ Mode)
-   - Pirata One: Spooky / Gothic Underground Font (Basement Mode)
    ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Pirata+One&display=swap');
 
@@ -15,6 +13,7 @@ body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   transition: background-color 0.4s ease, color 0.4s ease;
   min-height: 100vh;
+  width: 100%;
 }
 
 /* ============================================================
@@ -43,6 +42,7 @@ body.basement-mode {
   border-bottom: 1px solid rgba(168, 139, 235, 0.25);
   position: sticky;
   top: 0;
+  width: 100%;
   z-index: 1000;
 }
 
@@ -110,7 +110,7 @@ nav a:hover, nav a.active {
   color: #f4b8c4;
 }
 
-/* Dropdown Menu Container */
+/* Dropdown Menu Styling */
 .dropdown {
   position: relative;
   display: inline-block;
@@ -194,36 +194,12 @@ nav a:hover, nav a.active {
 }
 
 /* ============================================================
-   DYNAMIC MODE TYPOGRAPHY & HEADINGS
+   PAGE LAYOUT & GRID CONTROLS
    ============================================================ */
-body.twilight-mode h1,
-body.twilight-mode .hero h1,
-body.twilight-mode .section-title,
-body.twilight-mode .content-title,
-body.twilight-mode .member-name,
-body.twilight-mode .card-title {
-  font-family: 'Fredoka', cursive, sans-serif;
-  color: #f4b8c4;
-  text-shadow: 0 0 12px rgba(168, 139, 235, 0.4);
-}
-
-body.basement-mode h1,
-body.basement-mode .hero h1,
-body.basement-mode .section-title,
-body.basement-mode .content-title,
-body.basement-mode .member-name,
-body.basement-mode .card-title {
-  font-family: 'Pirata One', cursive, serif;
-  letter-spacing: 2px;
-  background: linear-gradient(90deg, #ff1a1a 0%, #d8004e 50%, #990026 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 10px rgba(230, 0, 30, 0.85));
-}
-
 .hero {
   text-align: center;
-  padding: 40px 20px 20px;
+  padding: 50px 20px 30px;
+  width: 100%;
 }
 
 .hero h1 {
@@ -237,26 +213,77 @@ body.basement-mode .card-title {
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto 60px;
   padding: 0 20px;
+  width: 100%;
 }
 
 .section-title {
-  margin: 30px 0 16px;
+  margin: 30px 0 20px;
   font-size: 1.6rem;
   border-bottom: 1px solid rgba(168, 139, 235, 0.2);
   padding-bottom: 8px;
+  text-align: center;
 }
 
-.card, .content-card, .member-card {
+/* MAIN CARD GRID SYSTEM */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
+}
+
+.card {
   background: rgba(38, 28, 68, 0.65);
   border: 1px solid rgba(168, 139, 235, 0.25);
   border-radius: 16px;
   padding: 24px;
-  margin-bottom: 20px;
   backdrop-filter: blur(8px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(244, 184, 196, 0.5);
+}
+
+.portrait-container {
+  width: 100%;
+  height: 160px;
+  background: rgba(15, 10, 30, 0.7);
+  border-radius: 12px;
+  border: 1px dashed rgba(168, 139, 235, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.outfit-box {
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  color: #cbb8f6;
+}
+
+.card-tag {
+  display: inline-block;
+  background: rgba(244, 184, 196, 0.15);
+  color: #f4b8c4;
+  border: 1px solid rgba(244, 184, 196, 0.3);
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  align-self: flex-start;
 }
 
 p {
@@ -266,16 +293,26 @@ p {
   margin-bottom: 12px;
 }
 
-.tag-badge {
-  display: inline-block;
-  background: rgba(244, 184, 196, 0.15);
+/* Dynamic Mode Typography */
+body.twilight-mode h1,
+body.twilight-mode .hero h1,
+body.twilight-mode .section-title,
+body.twilight-mode .card-title {
+  font-family: 'Fredoka', cursive, sans-serif;
   color: #f4b8c4;
-  border: 1px solid rgba(244, 184, 196, 0.3);
-  padding: 4px 10px;
-  border-radius: 10px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: 10px;
+  text-shadow: 0 0 12px rgba(168, 139, 235, 0.4);
+}
+
+body.basement-mode h1,
+body.basement-mode .hero h1,
+body.basement-mode .section-title,
+body.basement-mode .card-title {
+  font-family: 'Pirata One', cursive, serif;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #ff1a1a 0%, #d8004e 50%, #990026 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(230, 0, 30, 0.85));
 }
 
 body.twilight-mode .hero-basement-subtitle,
