@@ -165,7 +165,7 @@
 </head>
 <body class="twilight-mode">
 
- <!-- Navigation Bar with Dropdown Menus -->
+  <!-- Navigation Bar with Dropdown Menus -->
   <header class="navbar">
     <div class="logo-container">
       <span class="logo-echoheart">ECHOHEART</span>
@@ -178,7 +178,7 @@
     </div>
 
     <nav>
-      <a href="index.html" class="active">Home</a>
+      <a href="index.html">Home</a>
 
       <!-- Story & Lore Dropdown -->
       <div class="dropdown">
@@ -202,10 +202,17 @@
       <div class="dropdown">
         <button class="dropdown-btn">Interactive Arcade ▾</button>
         <div class="dropdown-content">
-          <a href="ticket-creator.html">Ticket Creator</a>
+          <a href="ticket-creator.html" class="active">Ticket Creator</a>
           <a href="games.html">Mini-Games</a>
         </div>
       </div>
+
+      <!-- Mode Switcher -->
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Secret Concert Mode
+      </button>
+    </nav>
+  </header>
 
   <!-- Hero Section -->
   <section class="hero">
