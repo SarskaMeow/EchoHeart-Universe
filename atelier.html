@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resonance Atelier & Outfit Closet — EchoHeart</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Atelier Grid & Outfit Styling */
+    .atelier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      margin-top: 20px;
+    }
+
+    .closet-card {
+      background: rgba(30, 22, 54, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 18px;
+      padding: 26px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .outfit-display-box {
+      width: 100%;
+      height: 220px;
+      background: rgba(15, 10, 30, 0.8);
+      border: 2px dashed rgba(168, 139, 235, 0.35);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      padding: 16px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .outfit-icon {
+      font-size: 4rem;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 12px rgba(168, 139, 235, 0.6));
+    }
+
+    .outfit-tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #f4b8c4;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .outfit-controls {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .style-select-btn {
+      width: 100%;
+      padding: 10px;
+      background: rgba(45, 34, 80, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      color: #cbb8f6;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .style-select-btn:hover, .style-select-btn.active-style {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border-color: #f4b8c4;
+      font-weight: 800;
+    }
+
+    .accessory-box {
+      background: rgba(15, 10, 30, 0.7);
+      border-left: 3px solid #f4b8c4;
+      padding: 12px;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.85rem;
+      color: #e2daf8;
+      text-align: left;
+      margin-top: 14px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="twilight-mode">
+
+  <!-- Universal Header Navigation -->
+  <header class="navbar">
+    <div class="logo-container">
+      <span class="logo-echoheart">ECHOHEART</span>
+      <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
+    </div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Live Set</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+
+      <!-- Story & Lore Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Story & Lore ▾</button>
+        <div class="dropdown-content">
+          <a href="characters.html">Band Members</a>
+          <a href="lore.html">Our Story & Ancient Lore</a>
+          <a href="familiars.html">The Familiar Nook</a>
+        </div>
+      </div>
+
+      <!-- Music Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Music ▾</button>
+        <div class="dropdown-content">
+          <a href="discography.html">Discography & Deck</a>
+          <a href="mixer.html">Stem Mixer Console</a>
+        </div>
+      </div>
+
+      <!-- Interactive Arcade Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Interactive Arcade ▾</button>
+        <div class="dropdown-content">
+          <a href="ticket-creator.html">Ticket Creator</a>
+          <a href="games.html">Mini-Games</a>
+        </div>
+      </div>
+
+      <!-- Neko Lounge Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Neko Lounge ▾</button>
+        <div class="dropdown-content">
+          <a href="neko-lounge.html">Tea Room & Creator</a>
+          <a href="atelier.html" class="active">Resonance Atelier</a>
+        </div>
+      </div>
+
+      <!-- Mode Switcher -->
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Secret Concert Mode
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>RESONANCE ATELIER & WARDROBE</h1>
+    <p class="hero-subtitle hero-twilight-subtitle">
+      🌸 Explore Nekomi & Sera's school cardigans, concert gear, and feline spirit forms
+    </p>
+    <p class="hero-subtitle hero-basement-subtitle">
+      ⚡ Dark Leather Jackets, Rose-Gold Synth Harnesses & Spirit Aura Toggles
+    </p>
+  </section>
+
+  <main class="container">
+    <div class="atelier-grid">
+
+      <!-- NEKOMI CLOSET CARD -->
+      <div class="closet-card">
+        <h3 class="card-title">🎸 Nekomi's Style Studio</h3>
+        <p style="font-size:0.88rem; margin-bottom:16px;">Lead Guitarist • Crescent Resonance</p>
+
+        <div id="nekomi-display" class="outfit-display-box" style="border-color: #a88beb;">
+          <div id="nekomi-icon" class="outfit-icon">🐱</div>
+          <div id="nekomi-tag" class="outfit-tag">School Blazer & Cardigan</div>
+        </div>
+
+        <div class="outfit-controls">
+          <button class="style-select-btn active-style" onclick="setNekomiOutfit('twilight')">🌸 Twilight: School Blazer & Thigh-Highs</button>
+          <button class="style-select-btn" onclick="setNekomiOutfit('basement')">⚡ Basement: Leather Jacket & Violet Glow</button>
+          <button class="style-select-btn" onclick="setNekomiOutfit('spirit')">🐾 Spirit Form: Moonlit Cat Guardian</button>
+        </div>
+
+        <div class="accessory-box">
+          <strong>Pinned Accessory:</strong> <span id="nekomi-acc">Crescent Guitar Pick & Silver Cat Clip</span>
+        </div>
+      </div>
+
+      <!-- SERA CLOSET CARD -->
+      <div class="closet-card">
+        <h3 class="card-title">⌨️ Sera's Style Studio</h3>
+        <p style="font-size:0.88rem; margin-bottom:16px;">Keyboard / Synth • Rose-Gold Pad</p>
+
+        <div id="sera-display" class="outfit-display-box" style="border-color: #f4b8c4;">
+          <div id="sera-icon" class="outfit-icon">😸</div>
+          <div id="sera-tag" class="outfit-tag">Pastel Pink Cardigan</div>
+        </div>
+
+        <div class="outfit-controls">
+          <button class="style-select-btn active-style" onclick="setSeraOutfit('twilight')">🌸 Twilight: Pastel Cardigan & Soft Ribbon</button>
+          <button class="style-select-btn" onclick="setSeraOutfit('basement')">⚡ Basement: Rose-Gold Lace Synth Outfit</button>
+          <button class="style-select-btn" onclick="setSeraOutfit('spirit')">🦊 Spirit Form: Two-Tailed Fox Guardian</button>
+        </div>
+
+        <div class="accessory-box">
+          <strong>Pinned Accessory:</strong> <span id="sera-acc">Pastel Hair Ribbon & Keytar Strap</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    let audioCtx = null;
+
+    function playChime(freq) {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+      } catch(e){}
+    }
+
+    function setNekomiOutfit(mode) {
+      playChime(329.63);
+      const display = document.getElementById('nekomi-display');
+      const icon = document.getElementById('nekomi-icon');
+      const tag = document.getElementById('nekomi-tag');
+      const acc = document.getElementById('nekomi-acc');
+
+      if (mode === 'twilight') {
+        icon.innerText = '🐱';
+        tag.innerText = 'School Blazer & Cardigan';
+        acc.innerText = 'Crescent Guitar Pick & Silver Cat Clip';
+        display.style.boxShadow = '0 0 15px rgba(168, 139, 235, 0.4)';
+      } else if (mode === 'basement') {
+        icon.innerText = '⚡';
+        tag.innerText = 'Dark Leather Jacket & Violet Ribbon';
+        acc.innerText = 'Gothic Choker & Distorted Riff Strap';
+        display.style.boxShadow = '0 0 25px rgba(255, 51, 85, 0.6)';
+      } else if (mode === 'spirit') {
+        icon.innerText = '🐾';
+        tag.innerText = 'Moonlit Spirit Feline';
+        acc.innerText = 'Glowing Crescent Mark & Yozora Aura';
+        display.style.boxShadow = '0 0 30px rgba(168, 139, 235, 0.8)';
+      }
+    }
+
+    function setSeraOutfit(mode) {
+      playChime(523.25);
+      const display = document.getElementById('sera-display');
+      const icon = document.getElementById('sera-icon');
+      const tag = document.getElementById('sera-tag');
+      const acc = document.getElementById('sera-acc');
+
+      if (mode === 'twilight') {
+        icon.innerText = '😸';
+        tag.innerText = 'Pastel Pink Cardigan';
+        acc.innerText = 'Pastel Hair Ribbon & Keytar Strap';
+        display.style.boxShadow = '0 0 15px rgba(244, 184, 196, 0.4)';
+      } else if (mode === 'basement') {
+        icon.innerText = '✨';
+        tag.innerText = 'Rose-Gold Synth Lace Outfit';
+        acc.innerText = 'Light-Up Synth Harness & Tea Charm';
+        display.style.boxShadow = '0 0 25px rgba(244, 184, 196, 0.7)';
+      } else if (mode === 'spirit') {
+        icon.innerText = '🦊';
+        tag.innerText = 'Two-Tailed Fox Guardian';
+        acc.innerText = 'Byakko Spirit Tail & Tea Cup Charm';
+        display.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.8)';
+      }
+    }
+
+    // Theme Switcher Logic
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isBasement) {
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+      } else {
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+      }
+    }
+
+    function toggleMode() {
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
+  </script>
+</body>
+</html>
