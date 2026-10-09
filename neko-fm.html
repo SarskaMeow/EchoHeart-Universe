@@ -632,19 +632,21 @@
     let currentLineIdx = 0;
     let selectedEpIdx = 0;
 
-    let isStreamPlaying = false;
     const liveAudioPlayer = document.getElementById('live-audio-player');
 
+    /* Upgraded 4-Station Roster */
     const radioStations = {
       twilight: [
         { freq: "98.4 FM", name: "Lofi Girl / Chillhop Stream", url: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
         { freq: "104.2 FM", name: "Gensokyo Radio / Anime Chill", url: "https://stream.gensokyoradio.net/1" },
-        { freq: "91.5 FM", name: "Asia DREAM Radio (Japan Lofi)", url: "https://stream.zeno.fm/65y77e113a0uv" }
+        { freq: "91.5 FM", name: "Anime Lo-Fi Room 24/7", url: "https://stream.zeno.fm/43475uh4598uv" },
+        { freq: "106.8 FM", name: "J-Pop Project Radio (Japan Idol)", url: "https://stream.zeno.fm/36y0be0zya0uv" }
       ],
       basement: [
         { freq: "88.0 FM", name: "J-Rock Power Stream 24/7", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
-        { freq: "101.3 FM", name: "Subterranean J-Rock & Metal", url: "https://stream.zeno.fm/h234858p388uv" },
-        { freq: "95.7 FM", name: "Shibuya Cyber Rock", url: "https://stream.zeno.fm/7x316k895h8uv" }
+        { freq: "101.3 FM", name: "J-Pop & Vocaloid Wave", url: "https://stream.zeno.fm/w2m40x633a0uv" },
+        { freq: "95.7 FM", name: "Japanimradio Official", url: "https://stream.zeno.fm/6qvh0mbf41zuv" },
+        { freq: "108.5 FM", name: "Shibuya Cyber Rock & Metal", url: "https://stream.zeno.fm/7x316k895h8uv" }
       ]
     };
 
@@ -660,7 +662,7 @@
       return true;
     }
 
-    /* Distinct Audio Synthesizer Profiles for Each Girl */
+    /* Voice Synthesizer Profiles */
     const voiceProfiles = {
       nekomi: { freq: 329.63, type: 'sawtooth', duration: 0.35, gain: 0.08 },
       sera:   { freq: 523.25, type: 'triangle', duration: 0.40, gain: 0.07 },
@@ -1094,7 +1096,7 @@
       }, 30000);
     }
 
-    /* Live Stream Engine */
+    /* Live Stream Engine with Cross-Page Persistence */
     function renderPresets() {
       const isBasement = document.body.classList.contains('basement-mode');
       const list = isBasement ? radioStations.basement : radioStations.twilight;
@@ -1122,7 +1124,12 @@
       const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[idx];
 
       liveAudioPlayer.src = activeSt.url;
-      if (isStreamPlaying) {
+      localStorage.setItem('echoheart_radio_url', activeSt.url);
+      localStorage.setItem('echoheart_radio_freq', activeSt.freq);
+      localStorage.setItem('echoheart_radio_title', activeSt.name);
+
+      const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
+      if (isPlaying) {
         liveAudioPlayer.play().catch(e => console.error("Stream play error:", e));
       }
     }
@@ -1132,10 +1139,17 @@
       const isBasement = document.body.classList.contains('basement-mode');
       const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[currentStationIdx];
 
-      if (!isStreamPlaying) {
-        liveAudioPlayer.src = activeSt.url;
+      const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
+
+      if (!isPlaying) {
+        if (!liveAudioPlayer.src || liveAudioPlayer.src !== activeSt.url) {
+          liveAudioPlayer.src = activeSt.url;
+        }
         liveAudioPlayer.play().then(() => {
-          isStreamPlaying = true;
+          localStorage.setItem('echoheart_radio_playing', 'true');
+          localStorage.setItem('echoheart_radio_url', activeSt.url);
+          localStorage.setItem('echoheart_radio_freq', activeSt.freq);
+          localStorage.setItem('echoheart_radio_title', activeSt.name);
           btn.innerText = "⏸ Pause Live Stream";
         }).catch(err => {
           console.error("Stream error:", err);
@@ -1143,8 +1157,27 @@
         });
       } else {
         liveAudioPlayer.pause();
-        isStreamPlaying = false;
+        localStorage.setItem('echoheart_radio_playing', 'false');
         btn.innerText = "▶ Tune Into Live Stream";
+      }
+    }
+
+    /* Sync Radio Audio State across Navigation */
+    function syncPersistentRadioState() {
+      const savedPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
+      const savedUrl = localStorage.getItem('echoheart_radio_url');
+      const btn = document.getElementById('radio-tuner-play-btn');
+
+      if (savedUrl) {
+        liveAudioPlayer.src = savedUrl;
+      }
+
+      if (savedPlaying) {
+        liveAudioPlayer.play().then(() => {
+          if (btn) btn.innerText = "⏸ Pause Live Stream";
+        }).catch(() => {
+          localStorage.setItem('echoheart_radio_playing', 'false');
+        });
       }
     }
 
@@ -1177,12 +1210,6 @@
       renderPresets();
 
       if (isPodcastPlaying) togglePodcastPlayback();
-
-      if (isStreamPlaying) {
-        const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[0];
-        liveAudioPlayer.src = activeSt.url;
-        liveAudioPlayer.play().catch(e => console.error(e));
-      }
     }
 
     function toggleMode() {
@@ -1196,6 +1223,7 @@
       updateThemeUI(savedTheme === 'basement');
       loadSavedNotes();
       startContinuousMailboxLoop();
+      syncPersistentRadioState();
     });
   </script>
 </body>
