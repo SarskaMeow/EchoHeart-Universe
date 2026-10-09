@@ -668,7 +668,8 @@
           <span id="mode-chip" class="mode-indicator-chip">🌸 Prep Room B Mode Active</span>
           <div style="font-size:2.8rem;">📻</div>
           <div id="freq-num" class="frequency-display">98.4 FM</div>
-          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:18px;">J-Pop Powerplay Kawaii</div>
+          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:8px;">J-Pop Powerplay Kawaii</div>
+          <div id="radio-status-tag" style="font-size:0.85rem; color:#f4b8c4; font-weight:800; margin-bottom:18px;">📻 Station Standby</div>
 
           <div id="preset-container" class="station-preset-bar"></div>
 
@@ -740,22 +741,163 @@
 
     const liveAudioPlayer = document.getElementById('live-audio-player');
 
-   /* 100% Verified Secure & HTTPS-Bypassed Japanese Streams */
+    /* -------------------------------------------------------------
+       TAB 3: RADIO TUNER & WEBAUDIO BACKUP ENGINE
+       ------------------------------------------------------------- */
     const radioStations = {
       twilight: [
         { freq: "98.4 FM", name: "J-Pop Powerplay Kawaii", url: "https://stream.zeno.fm/36y0be0zya0uv" },
         { freq: "104.2 FM", name: "Asia DREAM Radio Japan", url: "https://stream.zeno.fm/65y77e113a0uv" },
-        { freq: "91.5 FM", name: "Tokyo FM World", url: "https://tokyofmworld.leanstream.co/JOAUFM-MP3?args=tunein" },
-        { freq: "106.8 FM", name: "Ghost Anime Radio", url: "https://animeradio.su:8000/;" }
+        { freq: "91.5 FM", name: "Radio Animu 24/7 J-Pop", url: "https://stream.animu.moe/192" },
+        { freq: "106.8 FM", name: "animePOP! Kawaii Beats", url: "https://stream.zeno.fm/1peyavabbl1tv" }
       ],
       basement: [
-        { freq: "88.0 FM", name: "J-Rock Powerplay", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
-        { freq: "101.3 FM", name: "Hotmix Radio Japan", url: "https://hotmixradio-japan.ice.infomaniak.ch/hotmixradio-japan-128.mp3" },
-        { freq: "95.7 FM", name: "Japan-a-Radio", url: "https://audio.misproductions.com/japan48k" },
-        { freq: "108.5 FM", name: "Vocaloid Radio 24/7", url: "https://vocaloid.radioca.st/stream" }
+        { freq: "88.0 FM", name: "J-Rock Powerplay Underground", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
+        { freq: "101.3 FM", name: "Hotmix Radio Japan J-Rock", url: "https://hotmixradio-japan.ice.infomaniak.ch/hotmixradio-japan-128.mp3" },
+        { freq: "95.7 FM", name: "Japan-a-Radio Vocaloid Set", url: "https://audio.misproductions.com/japan48k" },
+        { freq: "108.5 FM", name: "Stereo Anime 24/7", url: "https://radio.stereoanime.com/listen/stereoanime/128" }
       ]
     };
+
     let currentStationIdx = 0;
+    let isRadioPlaying = false;
+    let backupSynthInterval = null;
+    let backupSynthActive = false;
+
+    /* Web Audio API Fallback Generator (Plays ambient chill synth chords if web stream blocked) */
+    function startBackupSynthRadio() {
+      if (backupSynthActive) return;
+      backupSynthActive = true;
+      
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const chords = [
+        [261.63, 329.63, 392.00, 493.88], // Cmaj7
+        [220.00, 261.63, 329.63, 392.00], // Am7
+        [174.61, 220.00, 261.63, 329.63], // Fmaj7
+        [196.00, 246.94, 293.66, 349.23]  // G7
+      ];
+      let chordIdx = 0;
+
+      function playChordStep() {
+        if (!backupSynthActive) return;
+        const currentNotes = chords[chordIdx];
+        chordIdx = (chordIdx + 1) % chords.length;
+
+        currentNotes.forEach((freq, i) => {
+          try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = i === 0 ? 'sine' : 'triangle';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+            gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.04, audioCtx.currentTime + 0.8);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.8);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 4.0);
+          } catch(e){}
+        });
+      }
+
+      playChordStep();
+      backupSynthInterval = setInterval(playChordStep, 4000);
+    }
+
+    function stopBackupSynthRadio() {
+      backupSynthActive = false;
+      if (backupSynthInterval) {
+        clearInterval(backupSynthInterval);
+        backupSynthInterval = null;
+      }
+    }
+
+    function renderPresets() {
+      const isBasement = document.body.classList.contains('basement-mode');
+      const list = isBasement ? radioStations.basement : radioStations.twilight;
+      const container = document.getElementById('preset-container');
+
+      if (!container) return;
+      container.innerHTML = '';
+      list.forEach((st, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `preset-btn ${idx === currentStationIdx ? 'active-preset' : ''}`;
+        btn.innerText = `${st.freq} • ${st.name.split(' ')[0]}`;
+        btn.onclick = () => selectStationPreset(idx);
+        container.appendChild(btn);
+      });
+
+      const activeSt = list[currentStationIdx] || list[0];
+      document.getElementById('freq-num').innerText = activeSt.freq;
+      document.getElementById('freq-title').innerText = activeSt.name;
+    }
+
+    function selectStationPreset(idx) {
+      currentStationIdx = idx;
+      renderPresets();
+
+      const isBasement = document.body.classList.contains('basement-mode');
+      const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[idx];
+
+      localStorage.setItem('echoheart_radio_url', activeSt.url);
+      localStorage.setItem('echoheart_radio_freq', activeSt.freq);
+      localStorage.setItem('echoheart_radio_title', activeSt.name);
+
+      if (isRadioPlaying) {
+        stopBackupSynthRadio();
+        liveAudioPlayer.src = activeSt.url;
+        liveAudioPlayer.play().catch(() => {
+          startBackupSynthRadio();
+          const statusEl = document.getElementById('radio-status-tag');
+          if (statusEl) statusEl.innerText = '📡 Neko FM Satellite Backup (Synthesizer FM)';
+        });
+      }
+    }
+
+    function toggleLiveRadioStream() {
+      const btn = document.getElementById('radio-tuner-play-btn');
+      const statusEl = document.getElementById('radio-status-tag');
+      const isBasement = document.body.classList.contains('basement-mode');
+      const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[currentStationIdx];
+
+      if (isRadioPlaying) {
+        isRadioPlaying = false;
+        liveAudioPlayer.pause();
+        stopBackupSynthRadio();
+        localStorage.setItem('echoheart_radio_playing', 'false');
+        if (btn) btn.innerText = "▶ Tune Into Live Stream";
+        if (statusEl) statusEl.innerText = "📻 Station Standby";
+      } else {
+        isRadioPlaying = true;
+        if (btn) btn.innerText = "⏳ Connecting to Station...";
+        if (statusEl) statusEl.innerText = "📡 Tuning Frequency...";
+
+        liveAudioPlayer.src = activeSt.url;
+        let playPromise = liveAudioPlayer.play();
+
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            stopBackupSynthRadio();
+            localStorage.setItem('echoheart_radio_playing', 'true');
+            localStorage.setItem('echoheart_radio_url', activeSt.url);
+            localStorage.setItem('echoheart_radio_freq', activeSt.freq);
+            localStorage.setItem('echoheart_radio_title', activeSt.name);
+            if (btn) btn.innerText = "⏸ Pause Live Stream";
+            if (statusEl) statusEl.innerText = "⚡ BROADCAST LIVE & ONLINE";
+          }).catch(err => {
+            console.warn("Live stream blocked or unreachable. Engaging Neko FM Backup Satellite...", err);
+            startBackupSynthRadio();
+            localStorage.setItem('echoheart_radio_playing', 'true');
+            if (btn) btn.innerText = "⏸ Pause Live Stream";
+            if (statusEl) statusEl.innerText = "📡 Neko FM Satellite Backup (Synthesizer FM)";
+          });
+        }
+      }
+    }
 
     const forbiddenWords = ['fuck', 'shit', 'asshole', 'bitch', 'cunt', 'dick', 'bastard', 'slut', 'whore'];
 
@@ -1202,84 +1344,6 @@
       }, 30000);
     }
 
-    /* Tab 3: Station Switcher UI Render */
-    function renderPresets() {
-      const isBasement = document.body.classList.contains('basement-mode');
-      const list = isBasement ? radioStations.basement : radioStations.twilight;
-      const container = document.getElementById('preset-container');
-
-      if (!container) return;
-      container.innerHTML = '';
-      list.forEach((st, idx) => {
-        const btn = document.createElement('button');
-        btn.className = `preset-btn ${idx === currentStationIdx ? 'active-preset' : ''}`;
-        btn.innerText = `${st.freq} • ${st.name.split(' ')[0]}`;
-        btn.onclick = () => selectStationPreset(idx);
-        container.appendChild(btn);
-      });
-
-      const activeSt = list[currentStationIdx] || list[0];
-      document.getElementById('freq-num').innerText = activeSt.freq;
-      document.getElementById('freq-title').innerText = activeSt.name;
-    }
-
-    function selectStationPreset(idx) {
-      currentStationIdx = idx;
-      renderPresets();
-
-      const isBasement = document.body.classList.contains('basement-mode');
-      const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[idx];
-
-      liveAudioPlayer.src = activeSt.url;
-      localStorage.setItem('echoheart_radio_url', activeSt.url);
-      localStorage.setItem('echoheart_radio_freq', activeSt.freq);
-      localStorage.setItem('echoheart_radio_title', activeSt.name);
-
-      const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
-      if (isPlaying) {
-        liveAudioPlayer.play().catch(e => console.error("Stream play error:", e));
-      }
-    }
-
-    function toggleLiveRadioStream() {
-      const btn = document.getElementById('radio-tuner-play-btn');
-      const isBasement = document.body.classList.contains('basement-mode');
-      const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[currentStationIdx];
-
-      const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
-
-      if (!isPlaying) {
-        btn.innerText = "⏳ Connecting to Station...";
-        liveAudioPlayer.src = activeSt.url;
-        
-        // Timeout check: Auto-retry connection if buffer stalls
-        const connectionTimeout = setTimeout(() => {
-          if (liveAudioPlayer.readyState < 2) {
-            console.warn("Stream delayed, forcing reconnect...");
-            liveAudioPlayer.load();
-            liveAudioPlayer.play().catch(e => console.error("Retry failed:", e));
-          }
-        }, 4000);
-
-        liveAudioPlayer.play().then(() => {
-          clearTimeout(connectionTimeout);
-          localStorage.setItem('echoheart_radio_playing', 'true');
-          localStorage.setItem('echoheart_radio_url', activeSt.url);
-          localStorage.setItem('echoheart_radio_freq', activeSt.freq);
-          localStorage.setItem('echoheart_radio_title', activeSt.name);
-          btn.innerText = "⏸ Pause Live Stream";
-        }).catch(err => {
-          clearTimeout(connectionTimeout);
-          console.error("Stream error:", err);
-          btn.innerText = "⚠️ Station Offline — Click to Retry";
-        });
-      } else {
-        liveAudioPlayer.pause();
-        localStorage.setItem('echoheart_radio_playing', 'false');
-        btn.innerText = "▶ Tune Into Live Stream";
-      }
-    }
-
     /* Tab 4: Interactive Polls & Countdown Engine */
     let defaultPolls = [
       { id: 'track1', title: '🎸 Crescent Resonance (Original J-Rock)', votes: 42 },
@@ -1397,6 +1461,7 @@
 
       if (savedPlaying) {
         liveAudioPlayer.play().then(() => {
+          isRadioPlaying = true;
           if (btn) btn.innerText = "⏸ Pause Live Stream";
         }).catch(() => {
           localStorage.setItem('echoheart_radio_playing', 'false');
