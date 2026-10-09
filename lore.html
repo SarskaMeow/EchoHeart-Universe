@@ -3,8 +3,130 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Story — EchoHeart & Girls Phantom Dead</title>
+  <title>Our Story & Ancient Lore Archives — EchoHeart & Girls Phantom Dead</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Filter Bar for Lore Categories */
+    .lore-filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0 30px;
+      flex-wrap: wrap;
+    }
+
+    .lore-filter-btn {
+      background: rgba(30, 22, 54, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      color: #cbb8f6;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .lore-filter-btn:hover, .lore-filter-btn.active-filter {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border-color: #f4b8c4;
+      box-shadow: 0 4px 15px rgba(244, 184, 196, 0.3);
+    }
+
+    /* Grid & Cards for Lore Sections */
+    .lore-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .lore-card {
+      background: rgba(30, 22, 54, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 18px;
+      padding: 26px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .lore-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(244, 184, 196, 0.5);
+    }
+
+    .case-status-chip {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      align-self: flex-start;
+    }
+
+    .chip-ancient {
+      background: rgba(255, 215, 0, 0.2);
+      color: #ffd700;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+    }
+
+    .chip-resolved {
+      background: rgba(32, 178, 170, 0.2);
+      color: #20b2aa;
+      border: 1px solid rgba(32, 178, 170, 0.4);
+    }
+
+    .chip-lore {
+      background: rgba(168, 139, 235, 0.2);
+      color: #cbb8f6;
+      border: 1px solid rgba(168, 139, 235, 0.4);
+    }
+
+    .chip-rule {
+      background: rgba(255, 77, 109, 0.2);
+      color: #ff4d6d;
+      border: 1px solid rgba(255, 77, 109, 0.4);
+    }
+
+    .case-quote-box {
+      background: rgba(15, 10, 30, 0.7);
+      border-left: 3px solid #f4b8c4;
+      padding: 12px 16px;
+      border-radius: 0 10px 10px 0;
+      font-style: italic;
+      color: #f4b8c4;
+      font-size: 0.88rem;
+      margin-top: 14px;
+    }
+
+    .rules-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+
+    .rules-list li {
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(168, 139, 235, 0.2);
+      font-size: 0.92rem;
+      color: #d1c5ed;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .rules-list li strong {
+      color: #f4b8c4;
+    }
+  </style>
 </head>
 <body class="twilight-mode">
 
@@ -38,7 +160,7 @@
         <button class="dropdown-btn">Music ▾</button>
         <div class="dropdown-content">
           <a href="discography.html">Discography & Deck</a>
-           <a href="mixer.html" class="active">Stem Mixer console</a>
+          <a href="mixer.html">Stem Mixer Console</a>
         </div>
       </div>
 
@@ -58,45 +180,113 @@
     </nav>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Hero Header -->
   <section class="hero">
-    <h1>OUR STORY & LOCATIONS</h1>
+    <h1>ANCIENT LORE & STORY ARCHIVES</h1>
     <p class="hero-subtitle hero-twilight-subtitle">
-      🌸 The private bond and secret music of Sakuraoka High
+      🌸 The Cat-Girl Lineage, Spirit Companions, and the Echo of Sakuraoka High
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
-      ⚡ How a phantom band reached students who felt lost in the dark
+      ⚡ Subterranean Records, Ancient Bonds, and the Phantom Laws
     </p>
   </section>
 
-  <!-- Lore Content Cards -->
   <main class="container">
-    <h2 class="section-title">THE DUAL IDENTITY</h2>
 
-    <div class="content-card">
-      <span class="tag-badge">Campus Urban Legend</span>
-      <h3 class="content-title">Girls Phantom Dead</h3>
-      <p>To the students of Sakuraoka High, "Girls Phantom Dead" is a mysterious phantom band whispered about in hallway rumors. They drop black cardstock tickets stamped with a hollow heart into shoe lockers, inviting students dealing with heavy stress to secret underground performances.</p>
+    <!-- Interactive Filter Buttons -->
+    <div class="lore-filter-bar">
+      <button class="lore-filter-btn active-filter" onclick="filterLore('all')">✦ View All Story Files</button>
+      <button class="lore-filter-btn" onclick="filterLore('ancient')">📜 Ancient Mythology</button>
+      <button class="lore-filter-btn" onclick="filterLore('familiars')">🐾 Familiars & Bonds</button>
+      <button class="lore-filter-btn" onclick="filterLore('cases')">📂 Case Archives</button>
+      <button class="lore-filter-btn" onclick="filterLore('rules')">🚨 The Phantom Laws</button>
     </div>
 
-    <div class="content-card">
-      <span class="tag-badge">Private Inner Core</span>
-      <h3 class="content-title">EchoHeart</h3>
-      <p>Behind closed doors in Music Prep Room B, "EchoHeart" is the true name of the four girls' connection. It represents their shared heartbeats bouncing back and forth—an echo of genuine friendship, warmth, and trust that holds Nekomi, Sera, Akari, and Aoi together.</p>
-    </div>
+    <!-- Lore Content Cards Grid -->
+    <div class="lore-grid">
 
-    <h2 class="section-title">KEY LOCATIONS</h2>
+      <!-- Ancient Mythology 1: The Cat-Girl Lineage -->
+      <div class="lore-card lore-item-ancient">
+        <div>
+          <span class="case-status-chip chip-ancient">Ancient Heritage</span>
+          <h3 class="content-title">The Moonlit Feline Lineage</h3>
+          <p>Long before Sakuraoka High was built, an ancient sanctuary stood on these grounds where spirit guardians bonded with chosen mortal bloodlines. Cat-girls like <strong>Nekomi</strong> and <strong>Sera</strong> carry this inherited resonance—granting them heightened intuitive perception for emotional frequencies, pitch perfection, and natural aura-weaving through musical chords.</p>
+        </div>
+      </div>
 
-    <div class="content-card">
-      <span class="tag-badge">3rd Floor West Wing</span>
-      <h3 class="content-title">Music Prep Room B</h3>
-      <p>The quiet home base where the girls drink warm barley tea, write song lyrics, and plan their after-school rehearsals. A secret trapdoor hidden behind the piano leads down to their live performance space.</p>
-    </div>
+      <!-- Ancient Mythology 2: The Foundation Sound -->
+      <div class="lore-card lore-item-ancient">
+        <div>
+          <span class="case-status-chip chip-ancient">Subterranean Origin</span>
+          <h3 class="content-title">The Acoustic Cavern Beneath the Earth</h3>
+          <p>The Basement isn't merely an empty cellar; it is a natural stone chamber carved over centuries. The stone acts as a natural acoustic amplifier that traps suppressed emotional energy from the school grounds above. When EchoHeart plays, the cavern converts those hidden burdens into resonant J-Rock waves that clear the heavy static from listeners' hearts.</p>
+        </div>
+      </div>
 
-    <div class="content-card">
-      <span class="tag-badge">Underground Secret Venue</span>
-      <h3 class="content-title">The Basement</h3>
-      <p>A cavernous stone space directly beneath the music prep room. Away from teachers and campus noise, this is where the band plugs in their amplifiers and performs high-energy J-Rock sets to lift heavy burdens from fellow students.</p>
+      <!-- Familiars Lore: Yozora & Byakko -->
+      <div class="lore-card lore-item-familiars">
+        <div>
+          <span class="case-status-chip chip-lore">Spirit Bond • Feline</span>
+          <h3 class="content-title">Yozora & Byakko (The Moon & Dawn)</h3>
+          <p><strong>Yozora</strong> (bonded with Nekomi) is a crescent-marked black spirit cat who judges acoustic resonance and keeps the band's focus sharp. <strong>Byakko</strong> (bonded with Sera) is a two-tailed white spirit fox who embodies peace and warmth, often resting beneath Sera's keytar stand while tea steams nearby.</p>
+        </div>
+      </div>
+
+      <!-- Familiars Lore: Kagerou & Komorebi -->
+      <div class="lore-card lore-item-familiars">
+        <div>
+          <span class="case-status-chip chip-lore">Spirit Bond • Earth & Ember</span>
+          <h3 class="content-title">Kagerou & Komorebi (Ember & Earth)</h3>
+          <p><strong>Kagerou</strong> (bonded with Akari) is a crimson ember marten whose tail sparks in time with 180 BPM drum tempos. <strong>Komorebi</strong> (bonded with Aoi) is a moss-eared tanuki spirit who stays grounded beside Aoi's bass amplifier and paperwork stacks, ensuring the band's foundation never wavers.</p>
+        </div>
+      </div>
+
+      <!-- Origin File -->
+      <div class="lore-card lore-item-ancient">
+        <div>
+          <span class="case-status-chip chip-lore">Modern Beginning</span>
+          <h3 class="content-title">The Meeting in Prep Room B</h3>
+          <p>The modern chapter began on a rainy Tuesday when Nekomi sat alone in the abandoned 3rd Floor Music Prep Room tuning her Crescent guitar. Sera arrived with warm barley tea, Akari followed with her stick bag, and Aoi stepped in with student council papers. Their voices and instruments aligned instantly, unlocking the trapdoor behind the piano for the first time in decades.</p>
+        </div>
+      </div>
+
+      <!-- Case 1: Yumi Takahashi -->
+      <div class="lore-card lore-item-cases">
+        <div>
+          <span class="case-status-chip chip-resolved">Case Log #001 • Resolved</span>
+          <h3 class="content-title">The Silent Paintbrush (Yumi Takahashi)</h3>
+          <p>Yumi, a 2nd-year art student, lost her passion for painting after a gallery rejection. Nekomi dropped a shadow ticket stamped <code>[ ♡ ]</code> into locker 102. During a private performance in The Basement, the band played <em>Crescent Resonance</em>, rekindling her artistic spirit.</p>
+          <div class="case-quote-box">
+            "Your paintbrush hasn't lost its voice. Come listen beneath the floorboards."
+          </div>
+        </div>
+      </div>
+
+      <!-- Case 2: Ren Tachibana -->
+      <div class="lore-card lore-item-cases">
+        <div>
+          <span class="case-status-chip chip-resolved">Case Log #002 • Resolved</span>
+          <h3 class="content-title">The Stalled Runner (Ren Tachibana)</h3>
+          <p>Ren, a track athlete, was paralyzed by doubt after an ankle injury. Akari matched his heartbeat with a fast-tempo drum drill as the band played at the stadium finish line as dusk settled, restoring his confidence to run again.</p>
+          <div class="case-quote-box">
+            "Your legs aren't broken. Run toward the sound when the track goes dark."
+          </div>
+        </div>
+      </div>
+
+      <!-- Phantom Laws File -->
+      <div class="lore-card lore-item-rules">
+        <div>
+          <span class="case-status-chip chip-rule">Unspoken Protocol</span>
+          <h3 class="content-title">The Three Laws of the Shadow Ticket</h3>
+          <ul class="rules-list">
+            <li><strong>1. No Public Sales:</strong> Shadow tickets can never be bought or sold. They are dropped into lockers only when true emotional distress is felt.</li>
+            <li><strong>2. Absolute Secrecy:</strong> The trapdoor location remains hidden from faculty and student council patrols.</li>
+            <li><strong>3. One Ticket, One Soul:</strong> Every concert setlist is customized specifically for the target student in need.</li>
+          </ul>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -104,7 +294,46 @@
     <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
+  <!-- Filter & Mode Scripts -->
   <script>
+    function filterLore(category) {
+      const buttons = document.querySelectorAll('.lore-filter-btn');
+      buttons.forEach(btn => btn.classList.remove('active-filter'));
+      event.target.classList.add('active-filter');
+
+      const itemsAncient   = document.querySelectorAll('.lore-item-ancient');
+      const itemsFamiliars = document.querySelectorAll('.lore-item-familiars');
+      const itemsCases     = document.querySelectorAll('.lore-item-cases');
+      const itemsRules     = document.querySelectorAll('.lore-item-rules');
+
+      if (category === 'all') {
+        itemsAncient.forEach(el => el.style.display = 'flex');
+        itemsFamiliars.forEach(el => el.style.display = 'flex');
+        itemsCases.forEach(el => el.style.display = 'flex');
+        itemsRules.forEach(el => el.style.display = 'flex');
+      } else if (category === 'ancient') {
+        itemsAncient.forEach(el => el.style.display = 'flex');
+        itemsFamiliars.forEach(el => el.style.display = 'none');
+        itemsCases.forEach(el => el.style.display = 'none');
+        itemsRules.forEach(el => el.style.display = 'none');
+      } else if (category === 'familiars') {
+        itemsAncient.forEach(el => el.style.display = 'none');
+        itemsFamiliars.forEach(el => el.style.display = 'flex');
+        itemsCases.forEach(el => el.style.display = 'none');
+        itemsRules.forEach(el => el.style.display = 'none');
+      } else if (category === 'cases') {
+        itemsAncient.forEach(el => el.style.display = 'none');
+        itemsFamiliars.forEach(el => el.style.display = 'none');
+        itemsCases.forEach(el => el.style.display = 'flex');
+        itemsRules.forEach(el => el.style.display = 'none');
+      } else if (category === 'rules') {
+        itemsAncient.forEach(el => el.style.display = 'none');
+        itemsFamiliars.forEach(el => el.style.display = 'none');
+        itemsCases.forEach(el => el.style.display = 'none');
+        itemsRules.forEach(el => el.style.display = 'flex');
+      }
+    }
+
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
       if (isBasement) {
