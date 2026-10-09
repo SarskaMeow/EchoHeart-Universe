@@ -3,8 +3,178 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music & Songs — Girls Phantom Dead</title>
+  <title>Discography & Music — Girls Phantom Dead & EchoHeart</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Discography Specific Layout & Player */
+    .featured-player-card {
+      background: rgba(38, 28, 68, 0.75);
+      border: 2px solid rgba(244, 184, 196, 0.35);
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 36px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .player-title-box h2 {
+      font-size: 1.6rem;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .player-sub {
+      font-size: 0.88rem;
+      color: #f4b8c4;
+      font-weight: 600;
+    }
+
+    .visualizer-container {
+      width: 100%;
+      height: 120px;
+      background: rgba(12, 8, 24, 0.85);
+      border-radius: 12px;
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      overflow: hidden;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    canvas#visualizer {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .play-btn {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none;
+      color: #0d0b18;
+      font-weight: 800;
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 15px rgba(244, 184, 196, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 6px 20px rgba(244, 184, 196, 0.6);
+    }
+
+    .track-status-text {
+      font-size: 0.88rem;
+      color: #cbb8f6;
+      font-style: italic;
+    }
+
+    /* Tracklist Cards Grid */
+    .track-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .track-card {
+      background: rgba(30, 22, 54, 0.65);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 16px;
+      padding: 22px;
+      backdrop-filter: blur(8px);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .track-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(244, 184, 196, 0.5);
+    }
+
+    .album-art-placeholder {
+      width: 100%;
+      height: 160px;
+      background: rgba(15, 10, 30, 0.7);
+      border-radius: 10px;
+      border: 1px dashed rgba(168, 139, 235, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 12px;
+      color: #f4b8c4;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .track-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .track-number {
+      font-size: 0.8rem;
+      color: #a88beb;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .bpm-badge {
+      background: rgba(244, 184, 196, 0.15);
+      color: #f4b8c4;
+      border: 1px solid rgba(244, 184, 196, 0.3);
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .track-title {
+      font-size: 1.2rem;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .lyric-box {
+      background: rgba(12, 8, 24, 0.5);
+      border-left: 3px solid #a88beb;
+      padding: 10px 12px;
+      border-radius: 0 8px 8px 0;
+      margin: 12px 0;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: #e2daf8;
+    }
+
+    .lineup-icons {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(168, 139, 235, 0.15);
+      font-size: 0.8rem;
+      color: #cbb8f6;
+    }
+  </style>
 </head>
 <body class="twilight-mode">
 
@@ -32,38 +202,141 @@
     </nav>
   </header>
 
+  <!-- Hero Header -->
   <section class="hero">
-    <h1>MUSIC & SONGS</h1>
+    <h1>DISCOGRAPHY & SETLISTS</h1>
     <p class="hero-subtitle hero-twilight-subtitle">
-      🌸 Original tracks composed during quiet practice in Music Prep Room B
+      🌸 Compositions born in Music Prep Room B & performed in secret
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
-      ⚡ Live High-Energy J-Rock Setlist performed in The Basement
+      ⚡ High-Decibel Live Performances by Girls Phantom Dead
     </p>
   </section>
 
   <main class="container">
-    <h2 class="section-title">ORIGINAL TRACKS</h2>
+    
+    <!-- Interactive Audio Player & Frequency Visualizer -->
+    <div class="featured-player-card">
+      <div class="player-header">
+        <div class="player-title-box">
+          <h2>🎵 Live Synth Preview Player</h2>
+          <div class="player-sub">Girls Phantom Dead — Acoustic Frequency Preview</div>
+        </div>
+        <span class="bpm-badge">180 BPM J-ROCK SET</span>
+      </div>
 
-    <!-- Song 1 -->
-    <div class="content-card">
-      <span class="tag-badge">Case 1 Performance • Fast J-Rock</span>
-      <h3 class="content-title">🎵 Phantom Resonance</h3>
-      <p>A fast, driving J-Rock song featuring heavy bass lines from Nekomi and warm synth layers from Sera. Composed specifically to reach Yumi Takahashi during their secret concert down in the basement, helping her rediscover her passion for painting.</p>
+      <div class="visualizer-container">
+        <canvas id="visualizer"></canvas>
+      </div>
+
+      <div class="player-controls">
+        <button id="audio-play-btn" class="play-btn" onclick="toggleAudioPreview()">
+          ▶ Play Ambient Riffs
+        </button>
+        <span id="player-status" class="track-status-text">Click play to listen to synthesized J-Rock ambient riffs...</span>
+      </div>
     </div>
 
-    <!-- Song 2 -->
-    <div class="content-card">
-      <span class="tag-badge">Case 2 Performance • High Tempo</span>
-      <h3 class="content-title">🎵 Running on Silence</h3>
-      <p>An uplifting, high-tempo track driven by Akari's rapid drumming and Nekomi's energetic guitar riffs. Played at the athletic stadium finish line to give Ren Tachibana the courage to run past his fears.</p>
-    </div>
+    <h2 class="section-title">ORIGINAL TRACKS & CASE SETLISTS</h2>
 
-    <!-- Song 3 -->
-    <div class="content-card">
-      <span class="tag-badge">Quiet Ballad • Prep Room B</span>
-      <h3 class="content-title">🎵 Echoes in the Dark</h3>
-      <p>A gentle, heartfelt song written quietly after school. Sera's warm keytar melody and Nekomi's soft vocals capture the unbreakable bond shared by the four girls.</p>
+    <div class="track-grid">
+      
+      <!-- Track 1: Case 1 -->
+      <div class="track-card">
+        <div class="album-art-placeholder">
+          📷 [SINGLE ARTWORK: Crimson Painting & Midnight Crescent]
+        </div>
+        <div class="track-meta">
+          <span class="track-number">TRACK 01 • CASE 1</span>
+          <span class="bpm-badge">180 BPM</span>
+        </div>
+        <h3 class="track-title">Phantom Resonance</h3>
+        <p>Performed live down in <strong>The Basement</strong> during their first secret concert for Yumi Takahashi. Nekomi's high-gain bass riff shatters frozen static, allowing Yumi to paint with vivid color once again.</p>
+
+        <div class="lyric-box">
+          "Wake up the color hiding under the gray, let the floorboards hum until the silence breaks away..."
+        </div>
+
+        <div class="lineup-icons">
+          <span>🎸 Nekomi</span>
+          <span>⌨️ Sera</span>
+          <span>🥁 Akari</span>
+          <span>🎸 Aoi</span>
+        </div>
+      </div>
+
+      <!-- Track 2: Case 2 -->
+      <div class="track-card">
+        <div class="album-art-placeholder">
+          📷 [SINGLE ARTWORK: Athletic Track at Dusk & Golden Sparks]
+        </div>
+        <div class="track-meta">
+          <span class="track-number">TRACK 02 • CASE 2</span>
+          <span class="bpm-badge">190 BPM</span>
+        </div>
+        <h3 class="track-title">Running on Silence</h3>
+        <p>A fast, open-air J-Rock song set up right at the finish line of the athletic stadium for Ren Tachibana. Akari's rapid double-kick drums push past his anxiety before his mind can doubt his sprint.</p>
+
+        <div class="lyric-box">
+          "Your feet already know the way, don't stop running just because the finish line moved away..."
+        </div>
+
+        <div class="lineup-icons">
+          <span>🎸 Nekomi</span>
+          <span>⌨️ Sera</span>
+          <span>🥁 Akari</span>
+          <span>🎸 Aoi</span>
+        </div>
+      </div>
+
+      <!-- Track 3: Prep Room B Ballad -->
+      <div class="track-card">
+        <div class="album-art-placeholder">
+          📷 [SINGLE ARTWORK: Soft Afternoon Tea & Piano Keys]
+        </div>
+        <div class="track-meta">
+          <span class="track-number">TRACK 03 • HQ BALLAD</span>
+          <span class="bpm-badge">120 BPM</span>
+        </div>
+        <h3 class="track-title">Echoes in the Dark</h3>
+        <p>A gentle, heartfelt song written quietly after school in Music Prep Room B. Sera's warm keytar melody and Nekomi's soft voice capture the private, unbreakable bond shared by the four girls.</p>
+
+        <div class="lyric-box">
+          "Four heartbeats bouncing back to where we started, keeping us warm when the room grows cold..."
+        </div>
+
+        <div class="lineup-icons">
+          <span>🎸 Nekomi</span>
+          <span>⌨️ Sera</span>
+          <span>🥁 Akari</span>
+          <span>🎸 Aoi</span>
+        </div>
+      </div>
+
+      <!-- Track 4: Cultural Festival Main Stage Climax -->
+      <div class="track-card">
+        <div class="album-art-placeholder">
+          📷 [ALBUM ARTWORK: Cultural Festival Main Stage & Spotlight]
+        </div>
+        <div class="track-meta">
+          <span class="track-number">TRACK 04 • CLIMAX ANTHEM</span>
+          <span class="bpm-badge">185 BPM</span>
+        </div>
+        <h3 class="track-title">EchoHeart (Unbroken Pulse)</h3>
+        <p>The headline song performed on the main festival stage under their official band banner. Every student saved in the dark realizes that the legendary phantom band was EchoHeart all along.</p>
+
+        <div class="lyric-box">
+          "This isn't a ghost story or a phantom sound... this is our heart echoing for the whole school now!"
+        </div>
+
+        <div class="lineup-icons">
+          <span>🎸 Nekomi</span>
+          <span>⌨️ Sera</span>
+          <span>🥁 Akari</span>
+          <span>🎸 Aoi</span>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -71,7 +344,9 @@
     <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
+  <!-- Theme Toggle & Web Audio Synth Script -->
   <script>
+    // Theme Management
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
       if (isBasement) {
@@ -91,9 +366,103 @@
       updateThemeUI(isBasement);
     }
 
+    // Web Audio Synthesizer & Canvas Visualizer
+    let audioCtx = null;
+    let isPlaying = false;
+    let timerId = null;
+    let animId = null;
+    let visualData = new Uint8Array(32);
+
+    function initVisualizer() {
+      const canvas = document.getElementById('visualizer');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function render() {
+        animId = requestAnimationFrame(render);
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const barCount = 28;
+        const barWidth = (canvas.width / barCount) - 4;
+
+        for (let i = 0; i < barCount; i++) {
+          let value = isPlaying ? Math.sin(Date.now() * 0.005 + i * 0.4) * 40 + 50 : 8;
+          let barHeight = (value / 100) * (canvas.height * 0.7);
+          let x = i * (barWidth + 4) + 6;
+          let y = canvas.height - barHeight - 10;
+
+          let gradient = ctx.createLinearGradient(0, y, 0, canvas.height);
+          gradient.addColorStop(0, '#f4b8c4');
+          gradient.addColorStop(1, '#a88beb');
+
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.roundRect(x, y, barWidth, barHeight, [4, 4, 0, 0]);
+          ctx.fill();
+        }
+      }
+      render();
+    }
+
+    function playNote(freq, type = 'sawtooth', duration = 0.3) {
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function toggleAudioPreview() {
+      const btn = document.getElementById('audio-play-btn');
+      const status = document.getElementById('player-status');
+
+      if (!isPlaying) {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        isPlaying = true;
+        btn.innerText = '⏸ Pause Ambient Riffs';
+        status.innerText = '♪ Playing synthesized J-Rock ambient riff sequence...';
+
+        const notes = [220, 261.63, 293.66, 329.63, 392.00, 440.00]; // A minor pentatonic
+        let step = 0;
+
+        timerId = setInterval(() => {
+          let note = notes[step % notes.length];
+          playNote(note, 'triangle', 0.25);
+          if (step % 2 === 0) playNote(note / 2, 'sawtooth', 0.4); // Bass pulse
+          step++;
+        }, 220);
+
+      } else {
+        isPlaying = false;
+        clearInterval(timerId);
+        btn.innerText = '▶ Play Ambient Riffs';
+        status.innerText = 'Audio paused. Click play to resume ambient riffs.';
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('echoheart-theme');
       updateThemeUI(savedTheme === 'basement');
+      initVisualizer();
     });
   </script>
 </body>
