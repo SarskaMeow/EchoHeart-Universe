@@ -5,68 +5,351 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Girls Phantom Dead & EchoHeart — Official Archive</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ==========================================================================
+       OTAKU NEKO LOUNGE & ECHOHEART UNIVERSE - MOBILE-FRIENDLY NAVBAR STYLES
+       ========================================================================== */
+    :root {
+      --nav-bg-twilight: rgba(18, 12, 36, 0.94);
+      --nav-bg-basement: rgba(15, 8, 22, 0.96);
+      --nav-border-twilight: rgba(168, 139, 235, 0.35);
+      --nav-border-basement: rgba(255, 77, 109, 0.45);
+      --accent-pink: #f4b8c4;
+      --accent-purple: #a88beb;
+      --accent-red: #ff4d6d;
+      --text-light: #e2daf8;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: var(--nav-bg-twilight);
+      border-bottom: 2px solid var(--nav-border-twilight);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    body.basement-mode .navbar {
+      background: var(--nav-bg-basement);
+      border-bottom-color: var(--nav-border-basement);
+    }
+
+    .nav-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-link {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-main {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body.basement-mode .logo-main {
+      background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-sub {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--accent-pink);
+      opacity: 0.9;
+    }
+
+    body.basement-mode .logo-sub {
+      color: var(--accent-red);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .nav-item, .dropdown-btn {
+      background: transparent;
+      border: none;
+      color: #cbb8f6;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .nav-item:hover, .dropdown-btn:hover, .nav-item.active {
+      background: rgba(168, 139, 235, 0.18);
+      color: #ffffff;
+    }
+
+    .highlight-brand {
+      background: rgba(168, 139, 235, 0.15);
+      border: 1px solid rgba(244, 184, 196, 0.4);
+      color: #f4b8c4;
+    }
+
+    .highlight-brand:hover {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      color: #0d0b18;
+      border-color: #f4b8c4;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 240px;
+      background: rgba(20, 13, 38, 0.97);
+      border: 1px solid var(--nav-border-twilight);
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(18px);
+      margin-top: 6px;
+      z-index: 1001;
+    }
+
+    body.basement-mode .dropdown-content {
+      border-color: var(--nav-border-basement);
+      background: rgba(16, 8, 26, 0.98);
+    }
+
+    .dropdown:hover .dropdown-content,
+    .dropdown.active-mobile .dropdown-content {
+      display: block;
+      animation: fadeInDown 0.25s ease;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dropdown-content a {
+      color: #e2daf8;
+      padding: 10px 12px;
+      text-decoration: none;
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .dropdown-content a:hover {
+      background: rgba(168, 139, 235, 0.25);
+      color: #ffffff;
+    }
+
+    .theme-btn {
+      background: linear-gradient(135deg, rgba(255, 77, 109, 0.2), rgba(168, 139, 235, 0.2));
+      border: 1px solid var(--accent-pink);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .theme-btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 15px rgba(244, 184, 196, 0.5);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .hamburger-bar {
+      width: 26px;
+      height: 3px;
+      background: var(--accent-pink);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 992px) {
+      .mobile-menu-btn {
+        display: flex;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(16, 10, 32, 0.98);
+        border-bottom: 2px solid var(--nav-border-twilight);
+        flex-direction: column;
+        align-items: stretch;
+        padding: 20px;
+        gap: 10px;
+        display: none;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-item, .dropdown-btn {
+        width: 100%;
+        justify-content: space-between;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+      }
+
+      .dropdown-content {
+        position: static;
+        display: none;
+        box-shadow: none;
+        background: rgba(28, 18, 54, 0.6);
+        margin-top: 6px;
+        padding-left: 14px;
+      }
+
+      .dropdown.active-mobile .dropdown-content {
+        display: block;
+      }
+
+      .theme-btn {
+        margin-top: 10px;
+        text-align: center;
+        padding: 12px;
+      }
+    }
+  </style>
 </head>
 <body class="twilight-mode">
 
-  <!-- Navigation Bar with Dropdown Menus -->
+  <!-- Universal Header Navigation -->
   <header class="navbar">
-    <div class="logo-container">
-      <span class="logo-echoheart">ECHOHEART</span>
-      <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
-    </div>
-    
-    <div class="status-badge-container">
-      <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
-      <span class="status-badge basement-status">💜 The Basement • Live Set</span>
-    </div>
-
-    <nav>
-      <a href="index.html" class="active">Home</a>
-
-      <!-- Story & Lore Dropdown -->
-      <div class="dropdown">
-        <button class="dropdown-btn">Story & Lore ▾</button>
-        <div class="dropdown-content">
-          <a href="characters.html">Band Members</a>
-          <a href="lore.html">Our Story</a>
-          <a href="familiars.html">The Familiar Nook</a>
-        </div>
-      </div>
-
-      <!-- Music Dropdown -->
-      <div class="dropdown">
-        <button class="dropdown-btn">Music ▾</button>
-        <div class="dropdown-content">
-          <a href="discography.html">Discography & Deck</a>
-          <a href="mixer.html">Stem Mixer Console</a>
-        </div>
-      </div>
-
-      <!-- Interactive Arcade Dropdown -->
-      <div class="dropdown">
-        <button class="dropdown-btn">Interactive Arcade ▾</button>
-        <div class="dropdown-content">
-          <a href="ticket-creator.html">Ticket Creator</a>
-          <a href="games.html">Mini-Games</a>
-        </div>
-      </div>
-
-      <!-- Neko Lounge Dropdown -->
-      <div class="dropdown">
-        <button class="dropdown-btn">Neko Lounge ▾</button>
-        <div class="dropdown-content">
-          <a href="neko-lounge.html">Tea Room & Creator</a>
-          <a href="atelier.html">Resonance Atelier</a>
-          <a href="neko-fm.html">Whisper Radio / Neko FM</a>
-          <a href="neko-maker.html">Neko Avatar Maker</a>
-        </div>
-      </div>
+    <div class="nav-container">
       
-      <!-- Mode Switcher -->
-      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
-        ⚡ Secret Concert Mode
+      <!-- Site Logo / Branding -->
+      <div class="logo-container">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
+          <span class="logo-sub">✦ ECHOHEART UNIVERSE</span>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Menu Button -->
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle navigation menu" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
       </button>
-    </nav>
+
+      <!-- Navigation Links -->
+      <nav class="nav-links" id="nav-menu">
+        
+        <a href="index.html" class="nav-item active">🏠 Home</a>
+
+        <!-- 🌸 1. Neko Lounge & 24/7 Radio -->
+        <div class="dropdown">
+          <button class="dropdown-btn" onclick="toggleMobileDropdown(event, this)">
+            🌸 Neko Lounge ▾
+          </button>
+          <div class="dropdown-content">
+            <a href="neko-fm.html#tuner-tab">📻 24/7 Radio Tuner (J-Pop / J-Rock)</a>
+            <a href="neko-fm.html#mailbox-tab">📬 Locker 102 Mailbox & Live Chat Zone</a>
+            <a href="neko-lounge.html">☕ Tea Room & Hangout Creator</a>
+            <a href="neko-maker.html">🐱 Neko Avatar Maker</a>
+          </div>
+        </div>
+
+        <!-- 🎮 2. Neko Arcade & Mini-Games -->
+        <div class="dropdown">
+          <button class="dropdown-btn" onclick="toggleMobileDropdown(event, this)">
+            🎮 Neko Arcade ▾
+          </button>
+          <div class="dropdown-content">
+            <a href="games.html">🏃 Neko Dash & Mini-Games</a>
+            <a href="ticket-creator.html">🎟️ Pass & Ticket Pass Creator</a>
+          </div>
+        </div>
+
+        <!-- ✦ 3. EchoHeart Universe (Flagship Branded Hub) -->
+        <div class="dropdown">
+          <button class="dropdown-btn highlight-brand" onclick="toggleMobileDropdown(event, this)">
+            ✦ EchoHeart Universe ▾
+          </button>
+          <div class="dropdown-content">
+            <a href="lore.html">📖 Light Novel & Ancient Cavern Lore</a>
+            <a href="characters.html">🎸 Band Members (Akari Minase, Nekomi, Sera, Aoi)</a>
+            <a href="neko-fm.html#broadcast-tab">🎙️ Whisper Radio Audio Drama Podcasts</a>
+            <a href="discography.html">🎶 Discography & Music Deck</a>
+            <a href="mixer.html">🎛️ Stem Mixer Console</a>
+            <a href="familiars.html">🐾 The Familiar Nook</a>
+          </div>
+        </div>
+
+        <!-- 🎨 4. Atelier & Board -->
+        <div class="dropdown">
+          <button class="dropdown-btn" onclick="toggleMobileDropdown(event, this)">
+            🎨 Atelier & Board ▾
+          </button>
+          <div class="dropdown-content">
+            <a href="atelier.html">🖼️ Resonance Atelier & Asset Downloads</a>
+            <a href="neko-fm.html#board-tab">📊 Setlist Voting & Song Requests</a>
+          </div>
+        </div>
+
+        <!-- Mode Switcher -->
+        <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+          ⚡ Secret Concert Mode
+        </button>
+
+      </nav>
+    </div>
   </header>
 
   <!-- Hero Section -->
@@ -155,6 +438,43 @@
   <audio id="global-live-radio" style="display:none;"></audio>
 
   <script>
+    /* Mobile Navbar & Dropdown Toggle Mechanics */
+    function toggleMobileMenu() {
+      const navMenu = document.getElementById('nav-menu');
+      if (navMenu) {
+        navMenu.classList.toggle('open');
+      }
+    }
+
+    function toggleMobileDropdown(event, element) {
+      if (window.innerWidth <= 992) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const parentDropdown = element.closest('.dropdown');
+        document.querySelectorAll('.dropdown').forEach(drop => {
+          if (drop !== parentDropdown) {
+            drop.classList.remove('active-mobile');
+          }
+        });
+
+        if (parentDropdown) {
+          parentDropdown.classList.toggle('active-mobile');
+        }
+      }
+    }
+
+    document.addEventListener('click', (event) => {
+      const navMenu = document.getElementById('nav-menu');
+      const menuBtn = document.getElementById('mobile-menu-toggle');
+
+      if (navMenu && navMenu.classList.contains('open')) {
+        if (!navMenu.contains(event.target) && !menuBtn.contains(event.target)) {
+          navMenu.classList.remove('open');
+        }
+      }
+    });
+
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
       if (isBasement) {
