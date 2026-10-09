@@ -360,6 +360,69 @@
       border-color: #f4b8c4;
     }
 
+    /* Tab 4: Prep Room Board Styles */
+    .countdown-card {
+      background: rgba(15, 10, 30, 0.85);
+      border: 2px dashed rgba(244, 184, 196, 0.5);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    body.basement-mode .countdown-card {
+      border-color: rgba(255, 77, 109, 0.6);
+    }
+
+    .timer-clock {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #f4b8c4;
+      letter-spacing: 2px;
+      margin: 8px 0;
+    }
+
+    body.basement-mode .timer-clock {
+      color: #ff4d6d;
+    }
+
+    .poll-item-card {
+      background: rgba(20, 14, 38, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .vote-count-chip {
+      background: rgba(168, 139, 235, 0.2);
+      color: #f4b8c4;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .vote-action-btn {
+      background: rgba(168, 139, 235, 0.3);
+      border: 1px solid #f4b8c4;
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.8rem;
+      margin-left: 10px;
+    }
+
+    .vote-action-btn:hover {
+      background: #f4b8c4;
+      color: #0d0b18;
+    }
+
     .form-group { margin-bottom: 14px; }
 
     .form-group label {
@@ -515,7 +578,8 @@
       <div class="dashboard-tabs">
         <button class="tab-btn active-tab" onclick="switchStudioTab('broadcast-tab')">🎙️ Podcast Studio Stage</button>
         <button class="tab-btn" onclick="switchStudioTab('mailbox-tab')">📬 Live Locker Mailbox</button>
-        <button class="tab-btn" onclick="switchStudioTab('tuner-tab')">📻 Mode-Reactive Live Stream Tuner</button>
+        <button class="tab-btn" onclick="switchStudioTab('tuner-tab')">📻 Mode-Reactive Radio Tuner</button>
+        <button class="tab-btn" onclick="switchStudioTab('board-tab')">📊 Prep Room Board & Polls</button>
       </div>
 
       <!-- TAB 1: PODCAST STUDIO STAGE -->
@@ -618,6 +682,48 @@
         </div>
       </div>
 
+      <!-- TAB 4: PREP ROOM BOARD & SONG REQUEST POLLS -->
+      <div id="board-tab" class="tab-content">
+        <!-- Rehearsal / Set Countdown Banner -->
+        <div class="countdown-card">
+          <span id="countdown-label" style="font-size:0.85rem; font-weight:800; color:#a88beb; text-transform:uppercase;">🌸 Next Prep Room B Rehearsal Countdown:</span>
+          <div id="rehearsal-timer" class="timer-clock">02d : 04h : 18m : 42s</div>
+          <p style="font-size:0.82rem; color:#e2daf8; margin:0;">Target Venue: Music Prep Room B • Acoustic & Keytar Rehearsal</p>
+        </div>
+
+        <div class="mail-grid">
+          <!-- Weekly Setlist Voting Section -->
+          <div>
+            <h3 class="content-title">📊 Vote On This Weekend's Setlist</h3>
+            <p style="font-size:0.88rem; margin-bottom:16px;">Help Nekomi, Sera, Akari & Aoi pick the opening tracks for the upcoming weekend set!</p>
+
+            <div id="poll-list-container"></div>
+          </div>
+
+          <!-- Song Request Ticket Slip Section -->
+          <div>
+            <h3 class="content-title">🎟️ Drop a Radio Station Song Request</h3>
+            <p style="font-size:0.88rem; margin-bottom:16px;">Request J-Rock, Vocaloid, or Anime OST tracks for Neko FM broadcast rotation!</p>
+
+            <div class="form-group">
+              <label for="req-student">Student Name / Locker #</label>
+              <input type="text" id="req-student" class="form-control" placeholder="e.g. 2nd-Year Class B or Quiet Listener">
+            </div>
+            <div class="form-group">
+              <label for="req-song">Song Title & Artist / Anime Source</label>
+              <input type="text" id="req-song" class="form-control" placeholder="e.g. Kessoku Band - Seishun Complex or Vocaloid OST">
+            </div>
+            <div class="form-group">
+              <label for="req-note">Dedication Note (Optional)</label>
+              <textarea id="req-note" class="form-control" style="min-height:70px;" placeholder="Write a short message for the band or radio broadcast..."></textarea>
+            </div>
+            <button class="action-btn" onclick="submitSongRequest()">🎟️ Submit Song Request Ticket</button>
+
+            <div id="request-badge-board" style="margin-top:16px;"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -634,21 +740,21 @@
 
     const liveAudioPlayer = document.getElementById('live-audio-player');
 
-/* High-Uptime, CORS-Bypassed Japanese Streams */
-const radioStations = {
-  twilight: [
-    { freq: "98.4 FM", name: "Lofi Girl / Chillhop 24/7", url: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
-    { freq: "104.2 FM", name: "Gensokyo Radio (Touhou/Anime)", url: "https://stream.gensokyoradio.net/1" },
-    { freq: "91.5 FM", name: "Asia DREAM Radio (Japan Hits)", url: "https://stream.zeno.fm/65y77e113a0uv" },
-    { freq: "106.8 FM", name: "LISTEN.moe J-Pop Stream", url: "https://listen.moe/fallback" }
-  ],
-  basement: [
-    { freq: "88.0 FM", name: "J-Rock Power Stream", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
-    { freq: "101.3 FM", name: "Hotmix Radio Japan", url: "https://hotmixradio-japan.ice.infomaniak.ch/hotmixradio-japan-128.mp3" },
-    { freq: "95.7 FM", name: "Japanimradio Official", url: "https://stream.zeno.fm/6qvh0mbf41zuv" },
-    { freq: "108.5 FM", name: "Vocaloid Stream 24/7", url: "https://stream.zeno.fm/w2m40x633a0uv" }
-  ]
-};
+    /* High-Uptime Stream Roster */
+    const radioStations = {
+      twilight: [
+        { freq: "98.4 FM", name: "Lofi Girl / Chillhop 24/7", url: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
+        { freq: "104.2 FM", name: "Gensokyo Radio / Anime & Touhou", url: "https://stream.gensokyoradio.net/1" },
+        { freq: "91.5 FM", name: "AnimeRadio Official (OST/Chill)", url: "https://stream.animeradio.de/animeradio.mp3" },
+        { freq: "106.8 FM", name: "J-Pop Project Radio 24/7", url: "https://stream.zeno.fm/36y0be0zya0uv" }
+      ],
+      basement: [
+        { freq: "88.0 FM", name: "J-Rock Power Stream 24/7", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
+        { freq: "101.3 FM", name: "Hotmix Japan (Tokyo Pop/Dance)", url: "https://hotmixradio-japan.ice.infomaniak.ch/hotmixradio-japan-128.mp3" },
+        { freq: "95.7 FM", name: "Japanimradio Official", url: "https://stream.zeno.fm/6qvh0mbf41zuv" },
+        { freq: "108.5 FM", name: "Vocaloid Radio 24/7", url: "https://vocaloid.radioca.st/stream" }
+      ]
+    };
 
     let currentStationIdx = 0;
 
@@ -662,7 +768,7 @@ const radioStations = {
       return true;
     }
 
-    /* Voice Synthesizer Profiles */
+    /* Voice Profiles */
     const voiceProfiles = {
       nekomi: { freq: 329.63, type: 'sawtooth', duration: 0.35, gain: 0.08 },
       sera:   { freq: 523.25, type: 'triangle', duration: 0.40, gain: 0.07 },
@@ -670,136 +776,25 @@ const radioStations = {
       aoi:    { freq: 146.83, type: 'sine',     duration: 0.50, gain: 0.10 }
     };
 
-    /* EXTENDED TWILIGHT EPISODES */
+    /* Podcast Episodes Data */
     const twilightEpisodes = [
       {
-        title: "Ep 1: Hallway Rumors & Shadow Tickets (Full Broadcast)",
+        title: "Ep 1: Hallway Rumors & Shadow Tickets",
         script: [
-          { speaker: 'nekomi', text: "Welcome back to Neko FM! We're sitting around the tea table in Prep Room B after a long afternoon practice." },
-          { speaker: 'sera', text: "Sipping warm barley tea while looking over student council locker notes... it's so quiet up here on the 3rd floor." },
-          { speaker: 'akari', text: "Quiet? Speak for yourself! I heard three students near the gym talking about 'vibrations' coming from under the floorboards!" },
-          { speaker: 'aoi', text: "Akari, I told you to use the rubber mute pads during daytime drum drills! The student council desk was rattling." },
-          { speaker: 'nekomi', text: "Hehe. But those vibrations are how students know Girls Phantom Dead is active." },
-          { speaker: 'sera', text: "That's true! Someone dropped a note in Locker 102 today saying they heard a bass line echoing through the vents during 5th period." },
-          { speaker: 'akari', text: "That was Aoi practicing her bass run for Crescent Resonance! It sounded so cool!" },
-          { speaker: 'aoi', text: "Regardless... as long as faculty thinks it's just old plumbing pipes in the west wing, our secret venue remains safe." },
-          { speaker: 'nekomi', text: "Speaking of rumors... did anyone hear what happened near the east courtyard during 3rd period?" },
-          { speaker: 'sera', text: "Oh, the Art Club exhibition announcement? Yumi Takahashi was setting up her canvas frames when her easel almost tipped over." },
-          { speaker: 'akari', text: "I ran over and caught it right before it hit the floor! Fast drum reflexes come in handy everywhere!" },
-          { speaker: 'aoi', text: "Yumi dropped a handwritten note in Locker 102 later expressing her gratitude. She said our music gave her back her inspiration." },
-          { speaker: 'nekomi', text: "That's what EchoHeart is all about. Turning heavy days into shared light." },
-          { speaker: 'sera', text: "If anyone listening feels overwhelmed by school stress... check your shoe locker tonight. You might find a black cardstock ticket." },
-          { speaker: 'akari', text: "And when dusk falls... follow the sound of keytar chords down past the grand piano!" },
-          { speaker: 'aoi', text: "We'll be waiting in the cavern beneath. Stay safe until then, everyone." }
-        ]
-      },
-      {
-        title: "Ep 2: Ancient Lore & The Cavern (Extended History)",
-        script: [
-          { speaker: 'sera', text: "Welcome to Episode 2! Today we're answering a question from Locker 115 about the ancient history of Sakuraoka High." },
-          { speaker: 'nekomi', text: "A lot of students ask why the acoustic resonance in The Basement feels so different from regular music rooms." },
-          { speaker: 'aoi', text: "According to old school archives from 80 years ago, the school foundation was built over an ancient natural stone cavern." },
-          { speaker: 'akari', text: "A natural cavern! That explains why my drum kick echoes for three full seconds down there!" },
-          { speaker: 'sera', text: "It's also where the moonlit cat-girl lineage originally bonded with spirit guardians like Yozora and Byakko." },
-          { speaker: 'nekomi', text: "Yozora is curled up on top of my guitar amplifier right now. Her tail twitches every time Sera plays a chord in C major." },
-          { speaker: 'akari', text: "And Kagerou always perches on my snare drum rim when I hit 180 BPM! Spirit familiars love fast tempos!" },
-          { speaker: 'aoi', text: "The cavern stone possesses a unique piezo-electric quality. It absorbs heavy emotional weight from the campus above and converts it into sound waves." },
-          { speaker: 'sera', text: "That's why when someone enters The Basement with a heavy heart, the ambient room air feels charged with static." },
-          { speaker: 'nekomi', text: "When we play our instruments, that static gets transformed into musical harmony. It's like emotional alchemy." },
-          { speaker: 'akari', text: "I remember the first time I hit my crash cymbal down there! The whole cavern ceiling glowed violet for a split second!" },
-          { speaker: 'aoi', text: "We must respect the cavern's history. It isn't just a rehearsal space; it's a sanctuary built to protect students from despair." },
-          { speaker: 'sera', text: "Every time we strike a chord, we honor the moonlit cat-girl guardians who kept watch here long before us." },
-          { speaker: 'nekomi', text: "So whenever you feel lost in these long hallways... remember that the stone beneath your feet remembers your voice." },
-          { speaker: 'akari', text: "We're always here playing for you!" },
-          { speaker: 'aoi', text: "Keep your chin up, everyone." }
-        ]
-      },
-      {
-        title: "Ep 3: Shopping Street Festival & Secret Set",
-        script: [
-          { speaker: 'akari', text: "Episode 3 is live! Who's excited for the upcoming Sakuraoka Shopping Street Cultural Festival?!" },
-          { speaker: 'sera', text: "I saw the paper lanterns being hung along the arcade street this morning. The tea shops are setting up special stalls!" },
-          { speaker: 'nekomi', text: "We're planning a secret pop-up set near the old arcade clock tower right as the sun sets." },
-          { speaker: 'aoi', text: "I've secured the official permit under the Light Music Club name, so student council patrols won't interfere." },
-          { speaker: 'akari', text: "Aoi is the ultimate manager-bassist! No one manages festival logistics like her!" },
-          { speaker: 'sera', text: "We'll be premiering a brand new synth-pad arrangement of EchoHeart's main motif!" },
-          { speaker: 'nekomi', text: "I've been tweaking my distortion pedal all week specifically for this performance. The lead riffs are going to sound so crisp." },
-          { speaker: 'akari', text: "And I added double-stick rolls to the chorus! It's going to make everyone want to jump!" },
-          { speaker: 'aoi', text: "Remember to keep the performance within our allotted 20-minute window so we don't draw unnecessary faculty attention." },
-          { speaker: 'sera', text: "Sipping sweet matcha tea while playing open-air music under street lanterns... it's going to be magical." },
-          { speaker: 'nekomi', text: "Bring your friends and warm tea cups. When the street lanterns light up, listen closely for the lead guitar." },
-          { speaker: 'akari', text: "Look out for the black cardstock posters pinned near the clock tower for exact set times!" },
-          { speaker: 'aoi', text: "That concludes today's broadcast. Thank you for tuning into Neko FM, everyone!" },
-          { speaker: 'sera', text: "See you at the festival!" },
-          { speaker: 'nekomi', text: "Keep listening!" },
-          { speaker: 'akari', text: "180 BPM forever!" }
+          { speaker: 'nekomi', text: "Welcome back to Neko FM! We're sitting around the tea table in Prep Room B after a long practice." },
+          { speaker: 'sera', text: "Sipping warm barley tea while looking over student council locker notes..." },
+          { speaker: 'akari', text: "I heard three students near the gym talking about 'vibrations' coming from under the floorboards!" },
+          { speaker: 'aoi', text: "Akari, I told you to use the rubber mute pads during daytime drum drills." }
         ]
       }
     ];
 
-    /* EXTENDED BASEMENT EPISODES */
     const basementEpisodes = [
       {
-        title: "After Hours Ep 1: The Shadow Ticket Protocol & Ruptures",
+        title: "After Hours Ep 1: The Shadow Ticket Protocol",
         script: [
-          { speaker: 'nekomi', text: "Welcome to Girls Phantom Dead: After Hours. The campus gates are locked, Prep Room B is pitch black, and the subterranean amps are live." },
-          { speaker: 'sera', text: "Late tonight we're opening Case File #009... the heavy emotional ruptures across Sakuraoka High that trigger the Shadow Ticket protocol." },
-          { speaker: 'aoi', text: "A lot of listeners wonder how we decide which shoe locker receives a ticket. It isn't random. The ancient cavern stone beneath us acts as a resonance sensor." },
-          { speaker: 'akari', text: "When a student reaches their breaking point—whether it's overwhelming exam failure, feeling invisible, or losing their passion—the cavern picks up that static frequency!" },
-          { speaker: 'nekomi', text: "I can literally feel it in my feline ears. It feels like a high-pitched distortion chord ringing through my Crescent guitar pickups." },
-          { speaker: 'sera', text: "When that happens, I slip out during 7th period twilight, slip past the hall monitors, and drop a matte-black ticket stamped with a rose-gold hollow heart into locker 102." },
-          { speaker: 'aoi', text: "It's a heavy responsibility. If a student rejects the ticket or doesn't follow the sound down past the piano trapdoor... the static burden remains trapped in their heart." },
-          { speaker: 'akari', text: "That's why when they finally step into The Basement, we give everything we have! 180 BPM drum hits to shatter that silence completely!" },
-          { speaker: 'nekomi', text: "We don't play for applause down here. We play to rescue souls from the dark before dusk settles permanently." },
-          { speaker: 'sera', text: "I remember Case File #004... a quiet girl from 2nd-Year Class B who hadn't spoken a word in weeks." },
-          { speaker: 'aoi', text: "When she entered the cavern, her static frequency was so dense it almost muted my bass amp output." },
-          { speaker: 'akari', text: "We opened with Crescent Resonance at full blast. By the second chorus, you could see the shadows lifting off her shoulders!" },
-          { speaker: 'nekomi', text: "She didn't have to say anything. Music speaks directly to the parts of the heart that words can't reach." },
-          { speaker: 'sera', text: "That's the true weight of the Shadow Ticket. It's a lifeline extended in the dark." },
-          { speaker: 'aoi', text: "If you ever find that black card in your locker... don't be afraid. Follow the sound down." },
-          { speaker: 'akari', text: "We're always ready for you!" }
-        ]
-      },
-      {
-        title: "After Hours Ep 2: The Subterranean Cavern & Spectral Lore",
-        script: [
-          { speaker: 'sera', text: "After Hours Episode 2. Tonight we're diving deep into the dark lore of the stone cavern carved beneath the school 80 years ago." },
-          { speaker: 'aoi', text: "Before Sakuraoka High was built, this site was an ancient sanctuary where cat-girl priestesses guarded emotional resonance lines." },
-          { speaker: 'nekomi', text: "Our ancestors discovered that emotional pain, grief, and unsaid words don't disappear into thin air. They sink into the earth and form acoustic static." },
-          { speaker: 'akari', text: "And if that static builds up too long without an outlet... it distorts into phantom echoes that haunt people!" },
-          { speaker: 'sera', text: "That's why Yozora, Byakko, and Kagerou exist. Our spirit familiars aren't just pets; they're spirit conduits that absorb raw emotional energy during live sets." },
-          { speaker: 'aoi', text: "When my bassline hits the lowest octave, the natural cavern walls vibrate at exactly 432 Hz—the natural pitch of stone and earth." },
-          { speaker: 'nekomi', text: "It converts that heavy suppressed static into pure, roaring J-Rock power. You can feel the room temperature drop 10 degrees during the final solo." },
-          { speaker: 'akari', text: "It's terrifying and incredible at the same time. You're standing in the dark, wood smoke in the air, and the whole cavern is glowing violet!" },
-          { speaker: 'sera', text: "That is the true secret of Girls Phantom Dead. We are the bridge between ancient spirits and modern hearts." },
-          { speaker: 'aoi', text: "The ancient inscriptions carved into the cavern's north pillar warn of 'The Great Muting'—what happens when a community loses all emotional resonance." },
-          { speaker: 'nekomi', text: "When people stop expressing their true feelings, the world turns grey and quiet. That's why J-Rock is our weapon." },
-          { speaker: 'akari', text: "Fast tempos, heavy riffs, and unyielding energy! We fight the silence every single night!" },
-          { speaker: 'sera', text: "The familiars channel the cavern's aura directly into our gear. My keytar keys literally glow rose-gold under pressure." },
-          { speaker: 'aoi', text: "We are custodians of an ancient sacred duty. As long as Sakuraoka High stands, the music will echo beneath it." },
-          { speaker: 'nekomi', text: "Never forget why we play." },
-          { speaker: 'akari', text: "Louder than the darkness!" }
-        ]
-      },
-      {
-        title: "After Hours Ep 3: The Phantom Laws & The Masked Identity",
-        script: [
-          { speaker: 'aoi', text: "This is After Hours Episode 3: The Unspoken Phantom Laws. As Student Council President, this is the rulebook I strictly enforce." },
-          { speaker: 'nekomi', text: "Rule Number 1: Girls Phantom Dead can never perform for public gain, fame, or ticket sales. The sound belongs solely to the target soul in need." },
-          { speaker: 'sera', text: "Rule Number 2: Absolute anonymity. During basement sets, we wear gothic leather gear and veil our faces in twilight shadow. Faculty must never connect us to Prep Room B." },
-          { speaker: 'akari', text: "If the Principal or Disciplinary Board found out we unlocked the trapdoor beneath the grand piano... they'd seal the cavern in concrete forever!" },
-          { speaker: 'aoi', text: "And Rule Number 3: The 30-Minute Resonance Limit. Humans aren't built to withstand raw subterranean spirit frequencies for too long." },
-          { speaker: 'nekomi', text: "If we play past 30 minutes, the feline spirit energy begins consuming our own stamina. My ears start burning and Akari's drumsticks literally smoke." },
-          { speaker: 'sera', text: "That's why every secret set is a race against time. One setlist, 180 BPM, total emotional catharsis... then we vanish before the night guard comes." },
-          { speaker: 'akari', text: "When the lights come back on in Prep Room B the next morning, we're just four regular girls drinking tea again." },
-          { speaker: 'aoi', text: "Rule Number 4: Never leave a familiar behind. Yozora, Byakko, and Kagerou must return to the Nook before midnight bell strikes." },
-          { speaker: 'nekomi', text: "If a spirit familiar remains above ground past midnight, their form disperses into ambient mist." },
-          { speaker: 'sera', text: "That's why Aoi keeps strict time with her pocket watch during every set." },
-          { speaker: 'akari', text: "Double-time drumming until the 29th minute, then instant blackout and escape!" },
-          { speaker: 'aoi', text: "That concludes tonight's After Hours broadcast. Keep your eyes open in the hallways... and protect your heart." },
-          { speaker: 'nekomi', text: "Whisper Radio out." },
-          { speaker: 'sera', text: "Goodnight, listeners." },
-          { speaker: 'akari', text: "See ya in the dark!" }
+          { speaker: 'nekomi', text: "Welcome to Girls Phantom Dead: After Hours. The subterranean amps are live." },
+          { speaker: 'sera', text: "Tonight we're opening Case File #009... the heavy emotional ruptures." }
         ]
       }
     ];
@@ -811,6 +806,7 @@ const radioStations = {
     function renderEpisodeButtons() {
       const epList = getActiveEpisodes();
       const container = document.getElementById('episode-select-container');
+      if (!container) return;
       container.innerHTML = '';
 
       epList.forEach((ep, idx) => {
@@ -820,9 +816,6 @@ const radioStations = {
         btn.onclick = () => selectEpisode(idx);
         container.appendChild(btn);
       });
-
-      const activeEp = epList[selectedEpIdx] || epList[0];
-      document.getElementById('ep-main-title').innerText = activeEp.title;
     }
 
     function switchStudioTab(tabId) {
@@ -833,394 +826,127 @@ const radioStations = {
       document.getElementById(tabId).classList.add('active-content');
     }
 
-    /* Distinct Sound Chime Engine */
-    function playVoiceChime(speakerKey) {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-
-      try {
-        const profile = voiceProfiles[speakerKey] || voiceProfiles.nekomi;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = profile.type;
-        osc.frequency.setValueAtTime(profile.freq, audioCtx.currentTime);
-
-        gain.gain.setValueAtTime(profile.gain, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + profile.duration);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + profile.duration);
-      } catch(e){}
-    }
-
-    function selectEpisode(idx) {
-      selectedEpIdx = idx;
-      currentLineIdx = 0;
-      if (isPodcastPlaying) togglePodcastPlayback();
-
-      renderEpisodeButtons();
-
-      const epList = getActiveEpisodes();
-      const ep = epList[idx];
-      document.getElementById('ep-main-title').innerText = ep.title;
-      document.getElementById('speaker-title-display').innerText = `${ep.title} • Ready`;
-      document.getElementById('dialogue-line-display').innerText = "Click Play Episode Broadcast to start listening...";
-      document.getElementById('ep-progress-fill').style.width = '0%';
-      resetSpeakerHighlights();
-    }
-
-    function togglePodcastPlayback() {
-      const btn = document.getElementById('podcast-play-btn');
-      if (isPodcastPlaying) {
-        isPodcastPlaying = false;
-        clearInterval(podcastInterval);
-        btn.innerText = "▶ Resume Episode Broadcast";
-      } else {
-        isPodcastPlaying = true;
-        btn.innerText = "⏸ Pause Episode Broadcast";
-        playScriptStep();
-        podcastInterval = setInterval(playScriptStep, 4600);
-      }
-    }
-
-    function playScriptStep() {
-      const epList = getActiveEpisodes();
-      const ep = epList[selectedEpIdx];
-      if (currentLineIdx >= ep.script.length) {
-        currentLineIdx = 0;
-      }
-
-      const line = ep.script[currentLineIdx];
-      playVoiceChime(line.speaker);
-
-      resetSpeakerHighlights();
-      const activeEl = document.getElementById(`spk-${line.speaker}`);
-      if (activeEl) activeEl.classList.add('speaking');
-
-      const progressPercent = ((currentLineIdx + 1) / ep.script.length) * 100;
-      document.getElementById('ep-progress-fill').style.width = `${progressPercent}%`;
-
-      document.getElementById('speaker-title-display').innerText = `🎙️ ${line.speaker.toUpperCase()} ON AIR:`;
-      document.getElementById('dialogue-line-display').innerText = `"${line.text}"`;
-
-      currentLineIdx++;
-    }
-
-    function resetSpeakerHighlights() {
-      document.querySelectorAll('.speaker-avatar').forEach(el => el.classList.remove('speaking'));
-    }
-
-    /* Massive Campus Mailbox Engine */
-    const MAX_MAILBOX_CAPACITY = 30;
-
-    const featuredStudents = [
-      {
-        name: "Yumi Takahashi (Art Club • Locker #204)",
-        msg: "I was painting the dusk sky near the west wing window and heard keytar notes floating up from the vents... my paintbrush didn't feel heavy anymore.",
-        reply: "Sera: Your gallery canvas last week was breathtaking, Yumi! Keep painting that dusk light!"
-      },
-      {
-        name: "Ren Tachibana (Track Team • Locker #108)",
-        msg: "Akari! Can you post a 180 BPM drum track to the mixer tab? I need it to pace my morning 400m hurdles!",
-        reply: "Akari: You got it, Ren! Double-bass kick at full speed! Sprint right through that finish line!"
-      },
-      {
-        name: "Maya Kozuki (Library Aide • Locker #312)",
-        msg: "I was reorganizing the historical archives in the basement annex and found a 50-year-old record with a crescent mark... does Prep Room B know about this?",
-        reply: "Aoi: Please keep that file on reserve in the archive room, Maya. I'll drop by after student council hours to inspect it."
-      },
-      {
-        name: "Kaito Sato (Kendo Captain • Locker #220)",
-        msg: "Does rhythm practice really help with sword swing timing? The tempo from your daytime rehearsals makes my practice footwork so much sharper.",
-        reply: "Nekomi: Rhythm is everything in a set and a duel, Kaito! Keep swinging to the beat!"
-      }
+    /* Tab 4: Interactive Polls & Countdown Engine */
+    let defaultPolls = [
+      { id: 'track1', title: '🎸 Crescent Resonance (Original J-Rock)', votes: 42 },
+      { id: 'track2', title: '⌨️ Rose-Gold Dusk (Acoustic & Keytar)', votes: 31 },
+      { id: 'track3', title: '🥁 180 BPM Subterranean Rush (High-Energy)', votes: 58 },
+      { id: 'track4', title: '🌸 After-School Barley Tea Motif', votes: 24 }
     ];
 
-    const grades = ["1st-Year", "2nd-Year", "3rd-Year"];
-    const traits = ["Quiet", "Late-Night", "Sleepy", "Studious", "Anxious", "Energetic", "Mysterious"];
-    const locations = ["Courtyard", "East Wing", "West Wing Annex", "Library Corner", "Rooftop Bench", "Gym Stairwell"];
-
-    const genericStudentMessages = [
-      "How do you keep your tea warm during long late-night study sessions?",
-      "I dropped a sweet potato biscuit near Locker 102 as a thank you for last night's radio broadcast!",
-      "Did anyone else see two glowing violet eyes near the music wing staircase after 6 PM?",
-      "Exam week is coming up... can you play something calming on the radio tuner?",
-      "I found a black cardstock ticket tucked into my shoe locker today... my heart is beating so fast.",
-      "The keytar solo in Crescent Resonance has been stuck in my head all through 4th period physics!",
-      "Is it true that the floorboards in Prep Room B vibrate whenever the bass line hits an F-sharp?",
-      "To whoever left the rose-gold pick on the hallway bench: I left it with the library front desk!",
-      "Sera's study tips helped me pass my history midterms! Thank you so much!"
-    ];
-
-    const hostRepliesPool = [
-      "Nekomi: Thanks for tuning in! Keep listening for secret venue announcements!",
-      "Sera: Have a warm cup of barley tea and take a short break whenever study stress gets heavy!",
-      "Akari: Keep that high energy going! 180 BPM all day long!",
-      "Aoi: Remember to keep hallway noise under control during class hours!"
-    ];
-
-    function generateDynamicNote(timestampMs = Date.now()) {
-      if (Math.random() < 0.25) {
-        const featured = featuredStudents[Math.floor(Math.random() * featuredStudents.length)];
-        return {
-          sender: featured.name,
-          time: formatTimestamp(timestampMs),
-          body: featured.msg,
-          reply: featured.reply
-        };
-      } else {
-        const grade = grades[Math.floor(Math.random() * grades.length)];
-        const trait = traits[Math.floor(Math.random() * traits.length)];
-        const loc = locations[Math.floor(Math.random() * locations.length)];
-        const lockerNum = Math.floor(Math.random() * 300) + 101;
-
-        const senderTag = `${trait} ${grade} (${loc} • Locker #${lockerNum})`;
-        const msg = genericStudentMessages[Math.floor(Math.random() * genericStudentMessages.length)];
-        const reply = hostRepliesPool[Math.floor(Math.random() * hostRepliesPool.length)];
-
-        return {
-          sender: senderTag,
-          time: formatTimestamp(timestampMs),
-          body: msg,
-          reply: reply
-        };
+    function loadPollData() {
+      let savedVotes = JSON.parse(localStorage.getItem('echoheart_poll_votes') || 'null');
+      if (!savedVotes) {
+        localStorage.setItem('echoheart_poll_votes', JSON.stringify(defaultPolls));
+        savedVotes = defaultPolls;
       }
+      renderPollList(savedVotes);
     }
 
-    function formatTimestamp(timestampMs) {
-      const diffMins = Math.floor((Date.now() - timestampMs) / 60000);
-      if (diffMins < 1) return "Just Now";
-      if (diffMins < 60) return `${diffMins}m ago`;
-      const diffHours = Math.floor(diffMins / 60);
-      if (diffHours < 24) return `${diffHours}h ago`;
-      return "Yesterday";
-    }
-
-    function loadSavedNotes() {
-      let saved = JSON.parse(localStorage.getItem('echoheart_mailbox') || '[]');
-      const lastVisit = parseInt(localStorage.getItem('echoheart_last_visit') || Date.now());
-      const now = Date.now();
-
-      if (saved.length === 0) {
-        saved = [
-          { sender: "Yumi Takahashi (Art Club • Locker #204)", time: formatTimestamp(now - 600000), body: "I was painting the dusk sky near the west wing window and heard keytar notes floating up from the vents...", reply: "Sera: Your gallery canvas last week was breathtaking, Yumi!" },
-          { sender: "Ren Tachibana (Track Team • Locker #108)", time: formatTimestamp(now - 3600000), body: "Akari! Can you post a 180 BPM drum track to the mixer tab?", reply: "Akari: You got it, Ren! Double-bass kick at full speed!" }
-        ];
-      } else {
-        const elapsedMinutes = Math.floor((now - lastVisit) / 60000);
-        if (elapsedMinutes >= 1) {
-          const missedPostsCount = Math.min(Math.floor(elapsedMinutes / 3), 10);
-          for (let i = missedPostsCount; i > 0; i--) {
-            const postTime = now - (i * 180000);
-            saved.unshift(generateDynamicNote(postTime));
-          }
-        }
-      }
-
-      if (saved.length > MAX_MAILBOX_CAPACITY) {
-        saved = saved.slice(0, MAX_MAILBOX_CAPACITY);
-      }
-
-      localStorage.setItem('echoheart_mailbox', JSON.stringify(saved));
-      localStorage.setItem('echoheart_last_visit', Date.now());
-      renderNotes(saved);
-    }
-
-    function renderNotes(notes) {
-      const container = document.getElementById('mailbox-list');
+    function renderPollList(polls) {
+      const container = document.getElementById('poll-list-container');
       if (!container) return;
       container.innerHTML = '';
-      notes.forEach(item => {
+
+      polls.forEach((item, idx) => {
         const card = document.createElement('div');
-        card.className = 'mail-card';
+        card.className = 'poll-item-card';
         card.innerHTML = `
-          <div class="mail-header">
-            <span>From: ${item.sender}</span>
-            <span>${item.time}</span>
+          <div>
+            <strong style="color:#e2daf8; font-size:0.92rem;">${item.title}</strong>
           </div>
-          <div class="mail-body">"${item.body}"</div>
-          <div class="mail-reply"><strong>${item.reply.split(':')[0]}:</strong> ${item.reply.split(':')[1] || ''}</div>
+          <div>
+            <span class="vote-count-chip">${item.votes} Votes</span>
+            <button class="vote-action-btn" onclick="castVote(${idx})">👍 Vote</button>
+          </div>
         `;
         container.appendChild(card);
       });
     }
 
-    function postNote() {
-      const sender = document.getElementById('user-sender').value.trim() || 'Anonymous Student';
-      const msg = document.getElementById('user-msg').value.trim();
-
-      if (!msg) {
-        alert("Please write a message before dropping it into Locker 102!");
-        return;
-      }
-
-      if (!sanitizeInput(sender) || !sanitizeInput(msg)) {
-        alert("🌸 Student Council Notice: Please keep all messages friendly and strictly SFW!");
-        return;
-      }
-
-      const randomReply = hostRepliesPool[Math.floor(Math.random() * hostRepliesPool.length)];
-      const newNote = {
-        sender: `${sender}`,
-        time: "Just Now",
-        body: msg,
-        reply: randomReply
-      };
-
-      let saved = JSON.parse(localStorage.getItem('echoheart_mailbox') || '[]');
-      saved.unshift(newNote);
-      if (saved.length > MAX_MAILBOX_CAPACITY) saved.pop();
-
-      localStorage.setItem('echoheart_mailbox', JSON.stringify(saved));
-      localStorage.setItem('echoheart_last_visit', Date.now());
-      renderNotes(saved);
-
-      document.getElementById('user-sender').value = '';
-      document.getElementById('user-msg').value = '';
+    function castVote(idx) {
+      let savedVotes = JSON.parse(localStorage.getItem('echoheart_poll_votes') || JSON.stringify(defaultPolls));
+      savedVotes[idx].votes += 1;
+      localStorage.setItem('echoheart_poll_votes', JSON.stringify(savedVotes));
+      renderPollList(savedVotes);
     }
 
-    function startContinuousMailboxLoop() {
+    function submitSongRequest() {
+      const student = document.getElementById('req-student').value.trim() || 'Anonymous Student';
+      const song = document.getElementById('req-song').value.trim();
+      const note = document.getElementById('req-note').value.trim();
+
+      if (!song) {
+        alert("Please enter a song title or artist request!");
+        return;
+      }
+
+      if (!sanitizeInput(student) || !sanitizeInput(song) || !sanitizeInput(note)) {
+        alert("🌸 Student Council Notice: Please keep all song requests friendly and strictly SFW!");
+        return;
+      }
+
+      const board = document.getElementById('request-badge-board');
+      const badge = document.createElement('div');
+      badge.className = 'mail-card';
+      badge.innerHTML = `
+        <div class="mail-header">
+          <span>🎟️ Request from: ${student}</span>
+          <span>Just Now</span>
+        </div>
+        <div class="mail-body"><strong>Song:</strong> ${song}</div>
+        ${note ? `<div class="mail-reply">"${note}"</div>` : ''}
+      `;
+
+      board.prepend(badge);
+
+      document.getElementById('req-student').value = '';
+      document.getElementById('req-song').value = '';
+      document.getElementById('req-note').value = '';
+      alert("🎟️ Song Request Ticket submitted to Neko FM Rotation!");
+    }
+
+    /* Live Rehearsal Countdown Timer */
+    function startCountdownTimer() {
+      const timerEl = document.getElementById('rehearsal-timer');
+      if (!timerEl) return;
+
+      let targetTime = new Date().getTime() + (2 * 86400000) + (4 * 3600000);
+
       setInterval(() => {
-        let saved = JSON.parse(localStorage.getItem('echoheart_mailbox') || '[]');
-        saved.unshift(generateDynamicNote(Date.now()));
+        const now = new Date().getTime();
+        const diff = targetTime - now;
 
-        if (saved.length > MAX_MAILBOX_CAPACITY) saved.pop();
+        if (diff <= 0) {
+          timerEl.innerText = "00d : 00h : 00m : 00s — LIVE NOW!";
+          return;
+        }
 
-        localStorage.setItem('echoheart_mailbox', JSON.stringify(saved));
-        localStorage.setItem('echoheart_last_visit', Date.now());
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-        renderNotes(saved);
-      }, 30000);
+        timerEl.innerText = `${days < 10 ? '0' + days : days}d : ${hours < 10 ? '0' + hours : hours}h : ${mins < 10 ? '0' + mins : mins}m : ${secs < 10 ? '0' + secs : secs}s`;
+      }, 1000);
     }
 
-    /* Live Stream Engine with Cross-Page Persistence & Auto-Retry */
-    function renderPresets() {
-      const isBasement = document.body.classList.contains('basement-mode');
-      const list = isBasement ? radioStations.basement : radioStations.twilight;
-      const container = document.getElementById('preset-container');
-
-      container.innerHTML = '';
-      list.forEach((st, idx) => {
-        const btn = document.createElement('button');
-        btn.className = `preset-btn ${idx === currentStationIdx ? 'active-preset' : ''}`;
-        btn.innerText = `${st.freq} • ${st.name.split(' ')[0]}`;
-        btn.onclick = () => selectStationPreset(idx);
-        container.appendChild(btn);
-      });
-
-      const activeSt = list[currentStationIdx] || list[0];
-      document.getElementById('freq-num').innerText = activeSt.freq;
-      document.getElementById('freq-title').innerText = activeSt.name;
-    }
-
-    function selectStationPreset(idx) {
-      currentStationIdx = idx;
-      renderPresets();
-
-      const isBasement = document.body.classList.contains('basement-mode');
-      const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[idx];
-
-      liveAudioPlayer.src = activeSt.url;
-      localStorage.setItem('echoheart_radio_url', activeSt.url);
-      localStorage.setItem('echoheart_radio_freq', activeSt.freq);
-      localStorage.setItem('echoheart_radio_title', activeSt.name);
-
-      const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
-      if (isPlaying) {
-        liveAudioPlayer.play().catch(e => console.error("Stream play error:", e));
-      }
-    }
-
-    function toggleLiveRadioStream() {
-      const btn = document.getElementById('radio-tuner-play-btn');
-      const isBasement = document.body.classList.contains('basement-mode');
-      const activeSt = (isBasement ? radioStations.basement : radioStations.twilight)[currentStationIdx];
-
-      const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
-
-      if (!isPlaying) {
-        btn.innerText = "⏳ Connecting to Station...";
-        liveAudioPlayer.src = activeSt.url;
-        
-        // Auto-retry connection if buffering stutters past 4 seconds
-        const connectionTimeout = setTimeout(() => {
-          if (liveAudioPlayer.readyState < 2) {
-            console.warn("Stream delayed, attempting reconnect...");
-            liveAudioPlayer.load();
-            liveAudioPlayer.play().catch(e => console.error("Retry failed:", e));
-          }
-        }, 4000);
-
-        liveAudioPlayer.play().then(() => {
-          clearTimeout(connectionTimeout);
-          localStorage.setItem('echoheart_radio_playing', 'true');
-          localStorage.setItem('echoheart_radio_url', activeSt.url);
-          localStorage.setItem('echoheart_radio_freq', activeSt.freq);
-          localStorage.setItem('echoheart_radio_title', activeSt.name);
-          btn.innerText = "⏸ Pause Live Stream";
-        }).catch(err => {
-          clearTimeout(connectionTimeout);
-          console.error("Stream error:", err);
-          btn.innerText = "⚠️ Station Offline — Click to Retry";
-        });
-      } else {
-        liveAudioPlayer.pause();
-        localStorage.setItem('echoheart_radio_playing', 'false');
-        btn.innerText = "▶ Tune Into Live Stream";
-      }
-    }
-
-    /* Sync Radio Audio State across Navigation */
-    function syncPersistentRadioState() {
-      const savedPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
-      const savedUrl = localStorage.getItem('echoheart_radio_url');
-      const btn = document.getElementById('radio-tuner-play-btn');
-
-      if (savedUrl) {
-        liveAudioPlayer.src = savedUrl;
-      }
-
-      if (savedPlaying) {
-        liveAudioPlayer.play().then(() => {
-          if (btn) btn.innerText = "⏸ Pause Live Stream";
-        }).catch(() => {
-          localStorage.setItem('echoheart_radio_playing', 'false');
-        });
-      }
-    }
-
-    /* Dynamic Theme Switcher Sync */
+    /* Theme & UI Sync */
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
-      const modeChip = document.getElementById('mode-chip');
-      const locTag = document.getElementById('studio-location-tag');
-      const topicHeading = document.getElementById('topic-heading');
+      const countLabel = document.getElementById('countdown-label');
 
       if (isBasement) {
         document.body.classList.remove('twilight-mode');
         document.body.classList.add('basement-mode');
         if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
-        if (modeChip) modeChip.innerText = '⚡ Secret Concert Mode Active';
-        if (locTag) locTag.innerText = 'Recorded live in The Basement (Subterranean Cavern)';
-        if (topicHeading) topicHeading.innerText = 'Select After Hours Topic:';
+        if (countLabel) countLabel.innerText = '⚡ Next Subterranean Concert Set Countdown:';
       } else {
         document.body.classList.remove('basement-mode');
         document.body.classList.add('twilight-mode');
         if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
-        if (modeChip) modeChip.innerText = '🌸 Prep Room B Mode Active';
-        if (locTag) locTag.innerText = 'Recorded live in Music Prep Room B';
-        if (topicHeading) topicHeading.innerText = 'Select Podcast Topic:';
+        if (countLabel) countLabel.innerText = '🌸 Next Prep Room B Rehearsal Countdown:';
       }
-
-      selectedEpIdx = 0;
-      currentStationIdx = 0;
-      renderEpisodeButtons();
-      renderPresets();
-
-      if (isPodcastPlaying) togglePodcastPlayback();
     }
 
     function toggleMode() {
@@ -1232,9 +958,8 @@ const radioStations = {
     window.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('echoheart-theme');
       updateThemeUI(savedTheme === 'basement');
-      loadSavedNotes();
-      startContinuousMailboxLoop();
-      syncPersistentRadioState();
+      loadPollData();
+      startCountdownTimer();
     });
   </script>
 </body>
