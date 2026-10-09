@@ -57,37 +57,52 @@
     }
 
     .avatar-canvas {
-      width: 260px;
-      height: 260px;
-      border-radius: 24px;
+      width: 280px;
+      height: 340px;
+      border-radius: 20px;
       background: linear-gradient(145deg, #1f1638, #0d071a);
       border: 3px solid #a88beb;
       box-shadow: 0 0 25px rgba(168, 139, 235, 0.4);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      padding: 16px;
       position: relative;
       overflow: hidden;
       margin-bottom: 20px;
       transition: all 0.3s ease;
     }
 
-    .avatar-icon-main {
-      font-size: 5rem;
-      filter: drop-shadow(0 0 16px rgba(244, 184, 196, 0.6));
-      margin-bottom: 4px;
+    .avatar-img-container {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 3px solid #f4b8c4;
+      overflow: hidden;
+      margin-bottom: 12px;
+      box-shadow: 0 0 15px rgba(244, 184, 196, 0.4);
+      background: #0f0a1e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .avatar-name-badge {
       font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: #f4b8c4;
       text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      margin-bottom: 2px;
     }
 
     .avatar-role-sub {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: #a88beb;
       font-weight: 700;
       text-transform: uppercase;
@@ -100,6 +115,7 @@
       right: 12px;
       font-size: 1rem;
       opacity: 0.8;
+      color: #f4b8c4;
     }
 
     .action-btn {
@@ -118,6 +134,12 @@
     }
 
     .action-btn:hover { transform: translateY(-2px); }
+
+    .gacha-btn {
+      background: linear-gradient(135deg, #ff4d6d, #a88beb);
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
   </style>
 </head>
 <body class="twilight-mode">
@@ -187,7 +209,7 @@
   <section class="hero">
     <h1>NEKO AVATAR & PROFILE MAKER</h1>
     <p class="hero-subtitle hero-twilight-subtitle">
-      🌸 Design custom cat-girl profile pictures and downloadable avatar badges
+      🌸 Fetch live anime cat-girl artwork and design custom profile badges
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
       ⚡ Subterranean Aura Glows & Custom Concert Profile Cards
@@ -201,30 +223,21 @@
       <div class="maker-box">
         <h3 class="content-title">Customize Avatar Specs</h3>
 
+        <button class="action-btn gacha-btn" onclick="fetchRandomNekoArt()">🎲 Summon Random Neko Art</button>
+
         <div class="form-group">
           <label for="mk-name">Name / Handle</label>
-          <input type="text" id="mk-name" class="form-control" value="Mina" oninput="updateAvatar()">
+          <input type="text" id="mk-name" class="form-control" value="Mina" oninput="updateAvatarText()">
         </div>
 
         <div class="form-group">
           <label for="mk-role">Club Role / Tagline</label>
-          <input type="text" id="mk-role" class="form-control" value="Light Music Member" oninput="updateAvatar()">
-        </div>
-
-        <div class="form-group">
-          <label for="mk-ears">Ear Style & Expression</label>
-          <select id="mk-ears" class="form-control" onchange="updateAvatar()">
-            <option value="🐱">🐱 Midnight Black Cat Ears</option>
-            <option value="😸">😸 Happy Pastel Cat Ears</option>
-            <option value="🦊">🦊 Two-Tailed Spirit Fox</option>
-            <option value="🐾">🐾 Moonlight Paw Mark</option>
-            <option value="😻">😻 Star-Eyed Concert Neko</option>
-          </select>
+          <input type="text" id="mk-role" class="form-control" value="Light Music Member" oninput="updateAvatarText()">
         </div>
 
         <div class="form-group">
           <label for="mk-aura">Aura Border & Glow</label>
-          <select id="mk-aura" class="form-control" onchange="updateAvatar()">
+          <select id="mk-aura" class="form-control" onchange="updateAvatarText()">
             <option value="violet">Violet Crescent (#a88beb)</option>
             <option value="rosegold">Rose-Gold Tea (#f4b8c4)</option>
             <option value="crimson">Crimson Flame (#ff4d6d)</option>
@@ -234,7 +247,7 @@
 
         <div class="form-group">
           <label for="mk-crest">Corner Emblem Badge</label>
-          <select id="mk-crest" class="form-control" onchange="updateAvatar()">
+          <select id="mk-crest" class="form-control" onchange="updateAvatarText()">
             <option value="✦">✦ Echo Starlight</option>
             <option value="♡">♡ Hollow Heart Ticket</option>
             <option value="🌙">🌙 Crescent Moon</option>
@@ -249,12 +262,14 @@
 
         <div id="avatar-export" class="avatar-canvas">
           <div id="canvas-crest" class="avatar-corner-crest">✦</div>
-          <div id="canvas-icon" class="avatar-icon-main">🐱</div>
+          <div class="avatar-img-container">
+            <img id="canvas-img" src="https://nekos.best/api/v2/neko/001.png" crossorigin="anonymous" alt="Neko Art">
+          </div>
           <div id="canvas-name" class="avatar-name-badge">Mina</div>
           <div id="canvas-role" class="avatar-role-sub">Light Music Member</div>
         </div>
 
-        <div style="width: 100%; max-width: 260px;">
+        <div style="width: 100%; max-width: 280px;">
           <button class="action-btn" onclick="downloadAvatar()">📷 Download Profile Avatar (PNG)</button>
         </div>
       </div>
@@ -268,16 +283,38 @@
 
   <!-- Scripts -->
   <script>
-    function updateAvatar() {
+    async function fetchRandomNekoArt() {
+      const imgEl = document.getElementById('canvas-img');
+      imgEl.style.opacity = '0.3';
+
+      try {
+        const response = await fetch('https://nekos.best/api/v2/neko');
+        const data = await response.json();
+        if (data.results && data.results[0]) {
+          imgEl.src = data.results[0].url;
+        }
+      } catch (err) {
+        // Backup SFW endpoint
+        try {
+          const backupRes = await fetch('https://api.waifu.pics/sfw/neko');
+          const backupData = await backupRes.json();
+          if (backupData.url) imgEl.src = backupData.url;
+        } catch (e) {
+          console.error("Could not fetch neko art:", e);
+        }
+      } finally {
+        imgEl.style.opacity = '1';
+      }
+    }
+
+    function updateAvatarText() {
       const name = document.getElementById('mk-name').value || 'Neko';
       const role = document.getElementById('mk-role').value || 'Member';
-      const ears = document.getElementById('mk-ears').value;
       const aura = document.getElementById('mk-aura').value;
       const crest = document.getElementById('mk-crest').value;
 
       document.getElementById('canvas-name').innerText = name;
       document.getElementById('canvas-role').innerText = role;
-      document.getElementById('canvas-icon').innerText = ears;
       document.getElementById('canvas-crest').innerText = crest;
 
       const canvas = document.getElementById('avatar-export');
@@ -292,7 +329,7 @@
 
     function downloadAvatar() {
       const avatarElement = document.getElementById('avatar-export');
-      html2canvas(avatarElement, { backgroundColor: null }).then(canvas => {
+      html2canvas(avatarElement, { useCORS: true, backgroundColor: null }).then(canvas => {
         const link = document.createElement('a');
         link.download = `NekoProfileAvatar.png`;
         link.href = canvas.toDataURL('image/png');
