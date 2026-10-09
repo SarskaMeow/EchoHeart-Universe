@@ -48,6 +48,32 @@
       outline: none;
     }
 
+    /* Frame View Selector Buttons */
+    .view-toggle-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .view-btn {
+      flex: 1;
+      padding: 10px;
+      background: rgba(45, 34, 80, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      color: #cbb8f6;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .view-btn:hover, .view-btn.active-view {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border-color: #f4b8c4;
+    }
+
     /* Avatar Canvas Stage */
     .avatar-stage {
       display: flex;
@@ -56,9 +82,10 @@
       justify-content: center;
     }
 
+    /* Full Body Mode Default */
     .avatar-canvas {
       width: 280px;
-      height: 340px;
+      height: 360px;
       border-radius: 20px;
       background: linear-gradient(145deg, #1f1638, #0d071a);
       border: 3px solid #a88beb;
@@ -70,7 +97,15 @@
       position: relative;
       overflow: hidden;
       margin-bottom: 20px;
-      transition: all 0.3s ease;
+      transition: all 0.35 ease;
+    }
+
+    /* Close-Up Portrait Mode Override */
+    .avatar-canvas.portrait-mode {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%; /* Circular Headshot Profile View */
+      padding: 10px;
     }
 
     .avatar-img-container {
@@ -85,12 +120,26 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.35s ease;
+    }
+
+    /* Zoomed Image in Close-Up Mode */
+    .avatar-canvas.portrait-mode .avatar-img-container {
+      width: 240px;
+      height: 240px;
+      margin-bottom: 0;
+      border-color: #a88beb;
     }
 
     .avatar-img-container img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.35s ease;
+    }
+
+    .avatar-canvas.portrait-mode .avatar-img-container img {
+      transform: scale(1.4) translateY(-5%); /* Zoomed-in Close-Up Focus */
     }
 
     .avatar-name-badge {
@@ -99,6 +148,7 @@
       color: #f4b8c4;
       text-shadow: 0 2px 8px rgba(0,0,0,0.8);
       margin-bottom: 2px;
+      transition: opacity 0.3s ease;
     }
 
     .avatar-role-sub {
@@ -107,15 +157,32 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Hide text tags in circular close-up mode if user wants pure PFP, or keep floating overlay */
+    .avatar-canvas.portrait-mode .avatar-role-sub {
+      display: none;
+    }
+
+    .avatar-canvas.portrait-mode .avatar-name-badge {
+      position: absolute;
+      bottom: 14px;
+      background: rgba(13, 7, 26, 0.85);
+      padding: 2px 14px;
+      border-radius: 12px;
+      font-size: 1rem;
+      border: 1px solid rgba(168, 139, 235, 0.5);
     }
 
     .avatar-corner-crest {
       position: absolute;
-      top: 10px;
-      right: 12px;
+      top: 12px;
+      right: 14px;
       font-size: 1rem;
-      opacity: 0.8;
+      opacity: 0.85;
       color: #f4b8c4;
+      z-index: 2;
     }
 
     .action-btn {
@@ -209,7 +276,7 @@
   <section class="hero">
     <h1>NEKO AVATAR & PROFILE MAKER</h1>
     <p class="hero-subtitle hero-twilight-subtitle">
-      🌸 Fetch live anime cat-girl artwork and design custom profile badges
+      🌸 Fetch live anime cat-girl artwork, switch between Close-Up Portrait and Full Body view!
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
       ⚡ Subterranean Aura Glows & Custom Concert Profile Cards
@@ -224,6 +291,14 @@
         <h3 class="content-title">Customize Avatar Specs</h3>
 
         <button class="action-btn gacha-btn" onclick="fetchRandomNekoArt()">🎲 Summon Random Neko Art</button>
+
+        <div class="form-group">
+          <label>Framing View Mode</label>
+          <div class="view-toggle-row">
+            <button id="btn-view-full" class="view-btn active-view" onclick="setFramingMode('full')">🎴 Full Body Card</button>
+            <button id="btn-view-portrait" class="view-btn" onclick="setFramingMode('portrait')">📷 Close-Up Portrait</button>
+          </div>
+        </div>
 
         <div class="form-group">
           <label for="mk-name">Name / Handle</label>
@@ -283,6 +358,25 @@
 
   <!-- Scripts -->
   <script>
+    let currentFraming = 'full'; // 'full' or 'portrait'
+
+    function setFramingMode(mode) {
+      currentFraming = mode;
+      const canvas = document.getElementById('avatar-export');
+      const btnFull = document.getElementById('btn-view-full');
+      const btnPort = document.getElementById('btn-view-portrait');
+
+      if (mode === 'portrait') {
+        canvas.classList.add('portrait-mode');
+        btnPort.classList.add('active-view');
+        btnFull.classList.remove('active-view');
+      } else {
+        canvas.classList.remove('portrait-mode');
+        btnFull.classList.add('active-view');
+        btnPort.classList.remove('active-view');
+      }
+    }
+
     async function fetchRandomNekoArt() {
       const imgEl = document.getElementById('canvas-img');
       imgEl.style.opacity = '0.3';
@@ -294,7 +388,6 @@
           imgEl.src = data.results[0].url;
         }
       } catch (err) {
-        // Backup SFW endpoint
         try {
           const backupRes = await fetch('https://api.waifu.pics/sfw/neko');
           const backupData = await backupRes.json();
@@ -331,7 +424,7 @@
       const avatarElement = document.getElementById('avatar-export');
       html2canvas(avatarElement, { useCORS: true, backgroundColor: null }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `NekoProfileAvatar.png`;
+        link.download = `Neko_${currentFraming}_Avatar.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
