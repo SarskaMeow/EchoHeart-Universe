@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Familiar Nook — EchoHeart & Girls Phantom Dead</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ============================================================
+       THE FAMILIAR NOOK STYLING
+       ============================================================ */
+    .nook-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .familiar-nook-card {
+      background: rgba(30, 22, 54, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 18px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .familiar-nook-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(244, 184, 196, 0.6);
+      box-shadow: 0 12px 35px rgba(244, 184, 196, 0.25);
+    }
+
+    .familiar-nook-card.active-reading {
+      border-color: #f4b8c4;
+      background: rgba(42, 30, 72, 0.95);
+      box-shadow: 0 0 25px rgba(244, 184, 196, 0.35);
+    }
+
+    .familiar-avatar-box {
+      width: 100%;
+      height: 140px;
+      border-radius: 12px;
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px dashed rgba(168, 139, 235, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      text-align: center;
+      padding: 12px;
+    }
+
+    .familiar-icon {
+      font-size: 2.8rem;
+      margin-bottom: 6px;
+      filter: drop-shadow(0 0 10px rgba(168, 139, 235, 0.5));
+    }
+
+    .familiar-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: #f4b8c4;
+      text-transform: uppercase;
+    }
+
+    .companion-bond-chip {
+      display: inline-block;
+      background: rgba(168, 139, 235, 0.15);
+      color: #cbb8f6;
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    /* Vignette Reader Display Panel */
+    .vignette-display-panel {
+      margin-top: 36px;
+      background: rgba(25, 18, 46, 0.9);
+      border: 2px solid rgba(244, 184, 196, 0.4);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      display: none;
+    }
+
+    .vignette-display-panel.open {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .vignette-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(168, 139, 235, 0.25);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .vignette-title-box h3 {
+      font-size: 1.5rem;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .vignette-pov-author {
+      font-size: 0.88rem;
+      color: #f4b8c4;
+      font-weight: 600;
+    }
+
+    .vignette-prose {
+      font-size: 0.98rem;
+      line-height: 1.8;
+      color: #e2daf8;
+      font-style: normal;
+    }
+
+    .vignette-prose p {
+      margin-bottom: 16px;
+    }
+
+    .vignette-audio-indicator {
+      font-size: 0.8rem;
+      color: #a88beb;
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body class="twilight-mode">
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo-container">
+      <span class="logo-echoheart">ECHOHEART</span>
+      <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
+    </div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Live Set</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="characters.html">Band Members</a>
+      <a href="discography.html">Music & Songs</a>
+      <a href="lore.html">Our Story</a>
+      <a href="ticket-creator.html">Ticket Creator</a>
+      <a href="games.html">Mini-Games</a>
+      <a href="familiars.html" class="active">Familiars</a>
+      
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Secret Concert Mode
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Header -->
+  <section class="hero">
+    <h1>THE FAMILIAR NOOK</h1>
+    <p class="hero-subtitle hero-twilight-subtitle">
+      🌸 A cozy afternoon sanctuary for the spirit familiars of Prep Room B
+    </p>
+    <p class="hero-subtitle hero-basement-subtitle">
+      ⚡ Silent observers of secret basement concerts & shadow ticket drops
+    </p>
+  </section>
+
+  <main class="container">
+    <p style="text-align: center; color: #cbb8f6; font-size: 0.95rem; margin-bottom: 20px;">
+      Click on any companion below to listen to their acoustic chime and read a short story told entirely from their perspective.
+    </p>
+
+    <!-- Familiar Cards Grid -->
+    <div class="nook-grid">
+      
+      <!-- Yozora -->
+      <div class="familiar-nook-card" id="card-yozora" onclick="openVignette('yozora')">
+        <div class="familiar-avatar-box">
+          <div class="familiar-icon">🐾</div>
+          <div class="familiar-tag">Black Cat • Crescent Mark</div>
+        </div>
+        <h3 class="card-title" style="margin-bottom: 4px;">Yozora</h3>
+        <p style="font-size: 0.88rem; margin-bottom: 8px;">Lounges atop the mahogany piano during after-school rehearsals, judging acoustic resonance.</p>
+        <span class="companion-bond-chip">Bonded with Nekomi</span>
+      </div>
+
+      <!-- Byakko -->
+      <div class="familiar-nook-card" id="card-byakko" onclick="openVignette('byakko')">
+        <div class="familiar-avatar-box">
+          <div class="familiar-icon">🦊</div>
+          <div class="familiar-tag">Two-Tailed White Fox</div>
+        </div>
+        <h3 class="card-title" style="margin-bottom: 4px;">Byakko</h3>
+        <p style="font-size: 0.88rem; margin-bottom: 8px;">Rests quietly beneath Sera's synth stand, warmed by sweet steam from freshly poured barley tea.</p>
+        <span class="companion-bond-chip">Bonded with Sera</span>
+      </div>
+
+      <!-- Kagerou -->
+      <div class="familiar-nook-card" id="card-kagerou" onclick="openVignette('kagerou')">
+        <div class="familiar-avatar-box">
+          <div class="familiar-icon">🔥</div>
+          <div class="familiar-tag">Ember Marten</div>
+        </div>
+        <h3 class="card-title" style="margin-bottom: 4px;">Kagerou</h3>
+        <p style="font-size: 0.88rem; margin-bottom: 8px;">Rides on Akari's shoulder during 180 BPM drum drills, tail sparking with vibrant crimson energy.</p>
+        <span class="companion-bond-chip">Bonded with Akari</span>
+      </div>
+
+      <!-- Komorebi -->
+      <div class="familiar-nook-card" id="card-komorebi" onclick="openVignette('komorebi')">
+        <div class="familiar-avatar-box">
+          <div class="familiar-icon">🍃</div>
+          <div class="familiar-tag">Moss-Eared Tanuki</div>
+        </div>
+        <h3 class="card-title" style="margin-bottom: 4px;">Komorebi</h3>
+        <p style="font-size: 0.88rem; margin-bottom: 8px;">Sits beside Aoi's neat paperwork stacks, keeping study notes grounded and bass tab sheets organized.</p>
+        <span class="companion-bond-chip">Bonded with Aoi</span>
+      </div>
+
+    </div>
+
+    <!-- Interactive Vignette Reader Panel -->
+    <div id="vignette-panel" class="vignette-display-panel">
+      <div class="vignette-header">
+        <div class="vignette-title-box">
+          <h3 id="vignette-title">Vignette Title</h3>
+          <div id="vignette-author" class="vignette-pov-author">Perspective Narrative</div>
+        </div>
+        <div class="vignette-audio-indicator">
+          <span>♪ Acoustic Chime Resonating...</span>
+        </div>
+      </div>
+
+      <div id="vignette-body" class="vignette-prose">
+        <!-- Story prose gets injected dynamically -->
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
+  </footer>
+
+  <!-- Audio Synthesis & Vignette Scripts -->
+  <script>
+    // Web Audio Synthesizer for Ambient Chimes
+    let audioCtx = null;
+
+    function playFamiliarChime(type) {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        if (type === 'yozora') {
+          // Deep soft cat purr & gentle moon tone
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.4);
+          gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+        } else if (type === 'byakko') {
+          // Ethereal fox chime pad
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+          osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+        } else if (type === 'kagerou') {
+          // Energetic ember spark pulse
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(329.63, audioCtx.currentTime);
+          osc.frequency.setValueAtTime(493.88, audioCtx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.07, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+        } else if (type === 'komorebi') {
+          // Calm grounding bass chord
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(146.83, audioCtx.currentTime); // D3
+          gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.7);
+        }
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.7);
+      } catch(e) {}
+    }
+
+    // Vignette Stories Data
+    const vignettes = {
+      yozora: {
+        title: "A View from the Piano Lid",
+        author: "Told from the Perspective of Yozora (Bonded with Nekomi)",
+        body: `
+          <p>From up here on the polished dark wood of the mahogany piano, the afternoon light in Music Prep Room B always smells faintly of warm dust and dry cedar. Below me, Nekomi rests her forehead against the body of her Crescent guitar, adjusting a tuning peg until the low string hums at precisely the right pitch.</p>
+          <p>She thinks no one notices when her shoulders drop that extra inch after a long school day, but I see it. My tail curls around the corner of the music stand as she plays her first soft chord. The room static clears immediately. Below the floorboards, I can feel the subterranean echo waiting in The Basement—ready for whenever someone in these hallways needs to be heard.</p>
+        `
+      },
+      byakko: {
+        title: "Steam and Synthesizers",
+        author: "Told from the Perspective of Byakko (Bonded with Sera)",
+        body: `
+          <p>Sera's keytar rests on the soft cloth stand beside four steaming ceramic cups of barley tea. My two tails wrap comfortably around the base of her stool as her pastel pink hair catches the warm twilight glow through the prep room window.</p>
+          <p>Whenever Sera plays, the air feels lighter—like rain settling over quiet grass. She hums a harmony under her breath while tweaking a soft synth pad setting. When Akari accidentally knocks over a drumstick, Sera only smiles and offers her a sweet potato snack. I close my eyes and listen as her keytar notes blend seamlessly into the warm room air.</p>
+        `
+      },
+      kagerou: {
+        title: "Ember Sparks at 180 BPM",
+        author: "Told from the Perspective of Kagerou (Bonded with Akari)",
+        body: `
+          <p>There is never a quiet second when Akari holds a pair of drumsticks. I balance carefully on her shoulder, tiny ember sparks flicking from my tail whenever she clicks her sticks together: <em>one, two, three, four!</em></p>
+          <p>Her drumming isn't just fast—it's pure sunshine. Every cymbal crash sends a wave of warm heat through my fur, and I can't help but leap from her shoulder onto the bass drum casing. Akari laughs out loud, her ponytail swishing as she drives the beat straight into the 180 BPM fast tempo. With her behind the set, no one in this school could ever feel lonely.</p>
+        `
+      },
+      komorebi: {
+        title: "The Ground Beneath the Bassline",
+        author: "Told from the Perspective of Komorebi (Bonded with Aoi)",
+        body: `
+          <p>My moss-teal ears twitch as Aoi neatly stacks the student council meeting minutes onto the left side of her desk. On the right side sits her bass guitar rig, cables rolled in clean, tight loops.</p>
+          <p>While the other three girls laugh over tea flavors across the room, Aoi quietly plucks her low E-string. The vibration travels down through her desk leg, through my paws, and straight into the stone foundations of Sakuraoka High. She is the anchor that holds this entire band together. She checks her wristwatch, nods to Nekomi, and whispers that practice can officially begin.</p>
+        `
+      }
+    };
+
+    function openVignette(key) {
+      playFamiliarChime(key);
+
+      // Highlight active card
+      document.querySelectorAll('.familiar-nook-card').forEach(card => card.classList.remove('active-reading'));
+      const activeCard = document.getElementById(`card-${key}`);
+      if (activeCard) activeCard.classList.add('active-reading');
+
+      // Populate vignette display
+      const data = vignettes[key];
+      document.getElementById('vignette-title').innerText = data.title;
+      document.getElementById('vignette-author').innerText = data.author;
+      document.getElementById('vignette-body').innerHTML = data.body;
+
+      // Show panel
+      const panel = document.getElementById('vignette-panel');
+      panel.classList.add('open');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Theme Switcher Logic
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isBasement) {
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+      } else {
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+      }
+    }
+
+    function toggleMode() {
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
+  </script>
+</body>
+</html>
