@@ -668,7 +668,7 @@
           <span id="mode-chip" class="mode-indicator-chip">🌸 Prep Room B Mode Active</span>
           <div style="font-size:2.8rem;">📻</div>
           <div id="freq-num" class="frequency-display">98.4 FM</div>
-          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:8px;">J-Pop Powerplay Kawaii</div>
+          <div id="freq-title" style="color:#a88beb; font-weight:700; margin-bottom:8px;">LISTEN.moe (24/7 Anime & J-Pop)</div>
           <div id="radio-status-tag" style="font-size:0.85rem; color:#f4b8c4; font-weight:800; margin-bottom:18px;">📻 Station Standby</div>
 
           <div id="preset-container" class="station-preset-bar"></div>
@@ -746,14 +746,14 @@
        ------------------------------------------------------------- */
     const radioStations = {
       twilight: [
-        { freq: "98.4 FM", name: "J-Pop Powerplay Kawaii", url: "https://stream.zeno.fm/36y0be0zya0uv" },
-        { freq: "104.2 FM", name: "Asia DREAM Radio Japan", url: "https://stream.zeno.fm/65y77e113a0uv" },
+        { freq: "98.4 FM", name: "LISTEN.moe (24/7 Anime & Vocaloid)", url: "https://listen.moe/fallback" },
+        { freq: "91.5 FM", name: "Gensokyo Radio (J-Rock & Arrangements)", url: "https://stream.gensokyoradio.net/1" },
         { freq: "91.5 FM", name: "Radio Animu 24/7 J-Pop", url: "https://stream.animu.moe/192" },
         { freq: "106.8 FM", name: "animePOP! Kawaii Beats", url: "https://stream.zeno.fm/1peyavabbl1tv" }
       ],
       basement: [
         { freq: "88.0 FM", name: "J-Rock Powerplay Underground", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
-        { freq: "101.3 FM", name: "Hotmix Radio Japan J-Rock", url: "https://hotmixradio-japan.ice.infomaniak.ch/hotmixradio-japan-128.mp3" },
+        { freq: "108.5 FM", name: "Vocaloid Radio 24/7", url: "https://vocaloid.radioca.st/stream" }
         { freq: "95.7 FM", name: "Japan-a-Radio Vocaloid Set", url: "https://audio.misproductions.com/japan48k" },
         { freq: "108.5 FM", name: "Stereo Anime 24/7", url: "https://radio.stereoanime.com/listen/stereoanime/128" }
       ]
@@ -764,48 +764,103 @@
     let backupSynthInterval = null;
     let backupSynthActive = false;
 
-    /* Web Audio API Fallback Generator (Plays ambient chill synth chords if web stream blocked) */
+    /* Mode-Reactive Web Audio API Generator:
+       - Twilight Mode: Chill Lofi Chords & Tape Wobble
+       - Basement Mode: Driving J-Rock Sawtooth Riffs & Drums
+    */
     function startBackupSynthRadio() {
-      if (backupSynthActive) return;
+      if (backupSynthActive) stopBackupSynthRadio();
       backupSynthActive = true;
       
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
 
-      const chords = [
+      const lofiChords = [
         [261.63, 329.63, 392.00, 493.88], // Cmaj7
         [220.00, 261.63, 329.63, 392.00], // Am7
         [174.61, 220.00, 261.63, 329.63], // Fmaj7
-        [196.00, 246.94, 293.66, 349.23]  // G7
+        [146.83, 174.61, 220.00, 261.63]  // Dm7
       ];
-      let chordIdx = 0;
 
-      function playChordStep() {
+      const jrockRiffs = [
+        [164.81, 246.94, 329.63], // E5 Power Chord
+        [196.00, 293.66, 392.00], // G5 Power Chord
+        [220.00, 329.63, 440.00], // A5 Power Chord
+        [130.81, 196.00, 261.63]  // C5 Power Chord
+      ];
+
+      let stepIdx = 0;
+
+      function playStep() {
         if (!backupSynthActive) return;
-        const currentNotes = chords[chordIdx];
-        chordIdx = (chordIdx + 1) % chords.length;
+        const isBasement = document.body.classList.contains('basement-mode');
 
-        currentNotes.forEach((freq, i) => {
+        if (isBasement) {
+          // Hard Driving J-Rock Riff & Percussive Kick
+          const chord = jrockRiffs[stepIdx % jrockRiffs.length];
+          stepIdx++;
+
+          chord.forEach((freq, i) => {
+            try {
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = i === 0 ? 'sawtooth' : 'square';
+              osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+              gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.65);
+
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start();
+              osc.stop(audioCtx.currentTime + 0.7);
+            } catch(e){}
+          });
+
+          // Kick Drum Synth Pulse
           try {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = i === 0 ? 'sine' : 'triangle';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-            gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.04, audioCtx.currentTime + 0.8);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.8);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 4.0);
+            const kickOsc = audioCtx.createOscillator();
+            const kickGain = audioCtx.createGain();
+            kickOsc.frequency.setValueAtTime(130, audioCtx.currentTime);
+            kickOsc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            kickGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            kickGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+            kickOsc.connect(kickGain);
+            kickGain.connect(audioCtx.destination);
+            kickOsc.start();
+            kickOsc.stop(audioCtx.currentTime + 0.22);
           } catch(e){}
-        });
+
+        } else {
+          // Cozy Lofi Chill Chords & Tape Wobble
+          const chord = lofiChords[stepIdx % lofiChords.length];
+          stepIdx++;
+
+          chord.forEach((freq, i) => {
+            try {
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = i === 0 ? 'sine' : 'triangle';
+              osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+              osc.detune.setValueAtTime((Math.random() - 0.5) * 12, audioCtx.currentTime);
+
+              gain.gain.setValueAtTime(0.008, audioCtx.currentTime);
+              gain.gain.linearRampToValueAtTime(0.035, audioCtx.currentTime + 0.6);
+              gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.8);
+
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start();
+              osc.stop(audioCtx.currentTime + 3.0);
+            } catch(e){}
+          });
+        }
       }
 
-      playChordStep();
-      backupSynthInterval = setInterval(playChordStep, 4000);
+      playStep();
+      const intervalMs = document.body.classList.contains('basement-mode') ? 700 : 3200;
+      backupSynthInterval = setInterval(playStep, intervalMs);
     }
 
     function stopBackupSynthRadio() {
@@ -853,7 +908,11 @@
         liveAudioPlayer.play().catch(() => {
           startBackupSynthRadio();
           const statusEl = document.getElementById('radio-status-tag');
-          if (statusEl) statusEl.innerText = '📡 Neko FM Satellite Backup (Synthesizer FM)';
+          if (statusEl) {
+            statusEl.innerText = isBasement 
+              ? '⚡ Neko FM Satellite Backup (Driving J-Rock Riffs)' 
+              : '🌸 Neko FM Satellite Backup (Chill Lofi Beats)';
+          }
         });
       }
     }
@@ -893,7 +952,11 @@
             startBackupSynthRadio();
             localStorage.setItem('echoheart_radio_playing', 'true');
             if (btn) btn.innerText = "⏸ Pause Live Stream";
-            if (statusEl) statusEl.innerText = "📡 Neko FM Satellite Backup (Synthesizer FM)";
+            if (statusEl) {
+              statusEl.innerText = isBasement 
+                ? '⚡ Neko FM Satellite Backup (Driving J-Rock Riffs)' 
+                : '🌸 Neko FM Satellite Backup (Chill Lofi Beats)';
+            }
           });
         }
       }
@@ -1476,6 +1539,7 @@
       const locTag = document.getElementById('studio-location-tag');
       const topicHeading = document.getElementById('topic-heading');
       const countLabel = document.getElementById('countdown-label');
+      const statusEl = document.getElementById('radio-status-tag');
 
       if (isBasement) {
         document.body.classList.remove('twilight-mode');
@@ -1501,6 +1565,16 @@
       renderPresets();
 
       if (isPodcastPlaying) togglePodcastPlayback();
+
+      // If backup audio generator is running when switching modes, update rhythm style dynamically!
+      if (backupSynthActive) {
+        startBackupSynthRadio();
+        if (statusEl) {
+          statusEl.innerText = isBasement 
+            ? '⚡ Neko FM Satellite Backup (Driving J-Rock Riffs)' 
+            : '🌸 Neko FM Satellite Backup (Chill Lofi Beats)';
+        }
+      }
     }
 
     function toggleMode() {
