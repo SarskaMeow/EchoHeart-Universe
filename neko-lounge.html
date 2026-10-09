@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Neko Lounge & Persona Creator — EchoHeart</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    /* Neko Lounge Layout */
+    .lounge-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .lounge-container { grid-template-columns: 1fr; }
+    }
+
+    .lounge-box {
+      background: rgba(30, 22, 54, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 18px;
+      padding: 26px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Tea & Snack Buttons */
+    .snack-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .snack-btn {
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(244, 184, 196, 0.3);
+      color: #e2daf8;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .snack-btn:hover {
+      background: rgba(244, 184, 196, 0.2);
+      border-color: #f4b8c4;
+      transform: translateY(-2px);
+    }
+
+    .dialogue-box {
+      background: rgba(15, 10, 30, 0.8);
+      border-left: 3px solid #f4b8c4;
+      padding: 14px 18px;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+      color: #f4b8c4;
+      font-size: 0.92rem;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    /* Resonance Slider */
+    .resonance-control {
+      margin-top: 20px;
+      background: rgba(15, 10, 30, 0.6);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(168, 139, 235, 0.2);
+    }
+
+    .resonance-slider {
+      width: 100%;
+      accent-color: #f4b8c4;
+      margin-top: 8px;
+      cursor: pointer;
+    }
+
+    /* Persona Generator Form */
+    .form-group { margin-bottom: 14px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: #a88beb;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .form-control, select.form-control {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 8px;
+      color: #e2daf8;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    /* Neko Card Preview */
+    .card-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .neko-card-preview {
+      width: 100%;
+      max-width: 360px;
+      background: linear-gradient(145deg, #1f1638, #0d071a);
+      border: 2px solid #a88beb;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 139, 235, 0.3);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .avatar-display-box {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(15, 10, 30, 0.8);
+      border: 3px solid #f4b8c4;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      box-shadow: 0 0 20px rgba(244, 184, 196, 0.4);
+    }
+
+    .card-neko-name {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.6rem;
+      color: #f4b8c4;
+      margin-bottom: 2px;
+    }
+
+    .card-neko-role {
+      font-size: 0.8rem;
+      color: #a88beb;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+    }
+
+    .card-neko-vibe {
+      font-style: italic;
+      font-size: 0.88rem;
+      color: #e2daf8;
+      background: rgba(244, 184, 196, 0.08);
+      padding: 10px;
+      border-radius: 8px;
+      border-left: 2px solid #f4b8c4;
+      margin-top: 10px;
+    }
+
+    .action-btn {
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none;
+      border-radius: 12px;
+      color: #0d0b18;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.92rem;
+      box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .action-btn:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body class="twilight-mode">
+
+  <!-- Universal Header Navigation -->
+  <header class="navbar">
+    <div class="logo-container">
+      <span class="logo-echoheart">ECHOHEART</span>
+      <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
+    </div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Live Set</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+
+      <!-- Story & Lore Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Story & Lore ▾</button>
+        <div class="dropdown-content">
+          <a href="characters.html">Band Members</a>
+          <a href="lore.html">Our Story & Ancient Lore</a>
+          <a href="familiars.html">The Familiar Nook</a>
+        </div>
+      </div>
+
+      <!-- Music Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Music ▾</button>
+        <div class="dropdown-content">
+          <a href="discography.html">Discography & Deck</a>
+          <a href="mixer.html">Stem Mixer Console</a>
+        </div>
+      </div>
+
+      <!-- Interactive Arcade Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Interactive Arcade ▾</button>
+        <div class="dropdown-content">
+          <a href="ticket-creator.html">Ticket Creator</a>
+          <a href="games.html">Mini-Games</a>
+        </div>
+      </div>
+
+      <!-- Main Cat-Girl Tab -->
+      <a href="neko-lounge.html" class="active">Neko Lounge 🐾</a>
+
+      <!-- Mode Switcher -->
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Secret Concert Mode
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>THE NEKO LOUNGE & PERSONA CREATOR</h1>
+    <p class="hero-subtitle hero-twilight-subtitle">
+      🌸 Tea breaks with Nekomi & Sera, purr frequency tuning, and custom neko avatars
+    </p>
+    <p class="hero-subtitle hero-basement-subtitle">
+      ⚡ Moonlit Feline Resonance & Subterranean Outfit Customizer
+    </p>
+  </section>
+
+  <main class="container">
+    <div class="lounge-container">
+
+      <!-- SECTION 1: THE NEKO LOUNGE INTERACTIVE TEA ROOM -->
+      <div class="lounge-box">
+        <h3 class="content-title">🍵 Prep Room B Tea Counter</h3>
+        <p style="font-size: 0.88rem;">Offer a treat to Nekomi and Sera to trigger tea-time conversation and purr reactions!</p>
+
+        <div class="snack-grid">
+          <button class="snack-btn" onclick="offerTreat('tea')">🍵 Warm Barley Tea</button>
+          <button class="snack-btn" onclick="offerTreat('potato')">🍠 Sweet Potato Slice</button>
+          <button class="snack-btn" onclick="offerTreat('cookie')">🍪 Catnip Tea Biscuit</button>
+          <button class="snack-btn" onclick="offerTreat('tuna')">🐟 Canned Tuna Snack</button>
+        </div>
+
+        <div class="dialogue-box">
+          "<span id="snack-dialogue">Select a snack above to share a cozy afternoon tea break with the cat-girls...</span>"
+        </div>
+
+        <!-- Purr Frequency Resonance Controller -->
+        <div class="resonance-control">
+          <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; color:#a88beb;">
+            <span>Aura Purr Frequency</span>
+            <span id="purr-freq-text" style="color:#f4b8c4;">220 Hz (Relaxed Purr)</span>
+          </div>
+          <input type="range" id="purr-slider" class="resonance-slider" min="100" max="600" value="220" oninput="updatePurrFrequency(this.value)">
+        </div>
+      </div>
+
+      <!-- SECTION 2: CREATE YOUR OWN NEKO-GIRL GENERATOR -->
+      <div class="lounge-box">
+        <h3 class="content-title">🐾 Custom Neko-Girl Creator</h3>
+        <p style="font-size: 0.88rem; margin-bottom: 14px;">Design your custom feline member to join Prep Room B's ranks!</p>
+
+        <div class="form-group">
+          <label for="neko-name">Neko Member Name</label>
+          <input type="text" id="neko-name" class="form-control" value="Mayu Hoshino" oninput="updateCard()">
+        </div>
+
+        <div class="form-group">
+          <label for="neko-role">Band Role / Instrument</label>
+          <select id="neko-role" class="form-control" onchange="updateCard()">
+            <option value="Rhythm Guitar & Backing Vocals">Rhythm Guitar & Backing Vocals</option>
+            <option value="Second Synth / FX Operator">Second Synth / FX Operator</option>
+            <option value="Percussion & Tambourine">Percussion & Tambourine</option>
+            <option value="Acoustic Violinist">Acoustic Violinist</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="neko-avatar">Ear / Spirit Icon</label>
+          <select id="neko-avatar" class="form-control" onchange="updateCard()">
+            <option value="🐱">🐱 Midnight Black Cat Ears</option>
+            <option value="😸">😸 Pink Pastel Cat Ears</option>
+            <option value="🦊">🦊 Two-Tailed Spirit Fox Ears</option>
+            <option value="🐾">🐾 Moonlight Paw Print Crest</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="neko-aura">Aura Glow Color</label>
+          <select id="neko-aura" class="form-control" onchange="updateCard()">
+            <option value="glow-violet">Violet Crescent Glow</option>
+            <option value="glow-rosegold">Rose-Gold Tea Glow</option>
+            <option value="glow-crimson">Crimson Ember Glow</option>
+            <option value="glow-teal">Teal Bass Wave Glow</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="neko-vibe">Personal Motto / Vibe</label>
+          <textarea id="neko-vibe" class="form-control" style="min-height: 60px;" oninput="updateCard()">Always keeps extra tea bags in her blazer pocket and tunes her guitar to the sound of rain.</textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LIVE PERSONA CARD PREVIEW STAGE -->
+    <h2 class="section-title" style="margin-top: 40px;">YOUR NEKO PERSONA CARD</h2>
+    <div class="card-stage">
+      <div id="card-export" class="neko-card-preview">
+        <div id="card-avatar" class="avatar-display-box">🐱</div>
+        <div id="card-name" class="card-neko-name">Mayu Hoshino</div>
+        <div id="card-role" class="card-neko-role">Rhythm Guitar & Backing Vocals</div>
+        <div style="font-size: 0.75rem; color: #8b7cb6; font-weight: 700; letter-spacing: 1px;">SAKURAOKA HIGH LIGHT MUSIC CLUB</div>
+        <div class="card-neko-vibe">
+          "<span id="card-vibe">Always keeps extra tea bags in her blazer pocket and tunes her guitar to the sound of rain.</span>"
+        </div>
+      </div>
+
+      <div style="max-width: 360px; width: 100%;">
+        <button class="action-btn" onclick="downloadNekoCard()">📷 Download Neko Persona Card</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
+  </footer>
+
+  <!-- Web Audio & Lounge Logic -->
+  <script>
+    let audioCtx = null;
+
+    function playTone(freq, type = 'sine', duration = 0.3) {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e){}
+    }
+
+    const dialogueData = {
+      tea: "Sera pours a fresh cup of barley tea: 'Ah, warm tea always settles the static before rehearsal.' Nekomi nods gently in agreement.",
+      potato: "Nekomi's cat ears twitch happily: 'Sweet potato slices! Akari usually eats these before high-tempo drum drills!'",
+      cookie: "Sera laughs as Yozora hops onto the music stand: 'That catnip tea biscuit made Yozora start purring in high C key!'",
+      tuna: "Nekomi smiles softly: 'A quiet snack break between songs keeps our energy steady for secret basement sets.'"
+    };
+
+    function offerTreat(type) {
+      playTone(440, 'sine', 0.2);
+      document.getElementById('snack-dialogue').innerText = dialogueData[type];
+    }
+
+    function updatePurrFrequency(val) {
+      document.getElementById('purr-freq-text').innerText = `${val} Hz (Aura Resonance)`;
+      playTone(parseFloat(val) / 2, 'triangle', 0.15);
+    }
+
+    function updateCard() {
+      const name = document.getElementById('neko-name').value || 'Member Name';
+      const role = document.getElementById('neko-role').value;
+      const avatar = document.getElementById('neko-avatar').value;
+      const aura = document.getElementById('neko-aura').value;
+      const vibe = document.getElementById('neko-vibe').value || '...';
+
+      document.getElementById('card-name').innerText = name;
+      document.getElementById('card-role').innerText = role;
+      document.getElementById('card-avatar').innerText = avatar;
+      document.getElementById('card-vibe').innerText = vibe;
+
+      const card = document.getElementById('card-export');
+      card.style.borderColor = aura === 'glow-violet' ? '#a88beb' : aura === 'glow-rosegold' ? '#f4b8c4' : aura === 'glow-crimson' ? '#ff4d6d' : '#20b2aa';
+      card.style.boxShadow = `0 10px 30px rgba(0,0,0,0.6), 0 0 20px ${card.style.borderColor}`;
+    }
+
+    function downloadNekoCard() {
+      const cardElement = document.getElementById('card-export');
+      html2canvas(cardElement, { backgroundColor: null }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `NekoPersonaCard.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    // Theme Switcher Logic
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isBasement) {
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+      } else {
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+      }
+    }
+
+    function toggleMode() {
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
+  </script>
+</body>
+</html>
