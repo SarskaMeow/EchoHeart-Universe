@@ -3,9 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Band Members — Girls Phantom Dead</title>
+  <title>Band Members & Allies — Girls Phantom Dead</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    /* Characters Page Specific Styling */
+    .member-card {
+      background: rgba(38, 28, 68, 0.65);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .member-card:hover {
+      border-color: rgba(244, 184, 196, 0.5);
+      transform: translateY(-3px);
+    }
+
     .member-header {
       display: flex;
       justify-content: space-between;
@@ -32,7 +49,9 @@
     }
 
     @media (max-width: 650px) {
-      .member-grid { grid-template-columns: 1fr; }
+      .member-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .portrait-box {
@@ -54,7 +73,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .info-chip {
@@ -63,11 +82,34 @@
       border-radius: 8px;
       font-size: 0.82rem;
       color: #cbb8f6;
+      border: 1px solid rgba(168, 139, 235, 0.15);
+    }
+
+    .familiar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .familiar-card {
+      background: rgba(20, 14, 38, 0.6);
+      border: 1px solid rgba(168, 139, 235, 0.2);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .familiar-title {
+      font-weight: 700;
+      color: #f4b8c4;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
     }
   </style>
 </head>
 <body class="twilight-mode">
 
+  <!-- Navigation Bar -->
   <header class="navbar">
     <div class="logo-container">
       <span class="logo-echoheart">ECHOHEART</span>
@@ -86,24 +128,26 @@
       <a href="lore.html">Our Story</a>
       <a href="ticket-creator.html">Ticket Creator</a>
       
+      <!-- Theme Switcher Button -->
       <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
         ⚡ Secret Concert Mode
       </button>
     </nav>
   </header>
 
+  <!-- Hero Header -->
   <section class="hero">
     <h1>BAND MEMBERS & ALLIES</h1>
     <p class="hero-subtitle hero-twilight-subtitle">
       🌸 The four girls of EchoHeart and their animal companions
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
-      ⚡ Girls Phantom Dead • Live Performers in The Basement
+      ⚡ Girls Phantom Dead • Performing Live in The Basement
     </p>
   </section>
 
   <main class="container">
-    <h2 class="section-title">THE BAND</h2>
+    <h2 class="section-title">THE CORE 4 BAND MEMBERS</h2>
 
     <!-- Nekomi -->
     <div class="member-card">
@@ -114,10 +158,10 @@
       <div class="member-grid">
         <div class="portrait-box">
           <span class="twilight-img">📷 [NEKOMI: School Uniform & Cardigan]</span>
-          <span class="basement-img">⚡ [NEKOMI: Dark Leather Jacket]</span>
+          <span class="basement-img">⚡ [NEKOMI: Dark Leather Jacket & Violet Glow]</span>
         </div>
         <div>
-          <p>A quiet cat girl who pours all her unspoken feelings into her guitar solos. She plays with absolute passion to reach anyone struggling in silence.</p>
+          <p>A quiet cat girl who pours all her unspoken feelings into her guitar solos. She plays with absolute passion from the heart to reach anyone struggling in silence.</p>
           <div class="info-list">
             <span class="info-chip">Instrument: Crescent Guitar</span>
             <span class="info-chip">Aura: Deep Violet</span>
@@ -131,15 +175,15 @@
     <div class="member-card">
       <div class="member-header">
         <h3 class="member-name">⌨️ Sera Hanibara</h3>
-        <span class="member-role">Keyboardist & Harmonies</span>
+        <span class="member-role">Keyboardist & Harmony Singer</span>
       </div>
       <div class="member-grid">
         <div class="portrait-box">
-          <span class="twilight-img">📷 [SERA: Pink Cardigan]</span>
+          <span class="twilight-img">📷 [SERA: School Cardigan & Cat Clip]</span>
           <span class="basement-img">⚡ [SERA: Rose-Gold Synth Outfit]</span>
         </div>
         <div>
-          <p>A gentle cat girl with pastel pink hair and a sweet, uplifting singing voice. Her bright synth chords bring warmth whenever the room feels heavy.</p>
+          <p>A gentle cat girl with pastel pink hair and a sweet, uplifting singing voice. Her bright synth chords bring warmth and comfort whenever the room feels heavy.</p>
           <div class="info-list">
             <span class="info-chip">Instrument: Keytar & Synthesizer</span>
             <span class="info-chip">Aura: Warm Rose-Gold</span>
@@ -157,7 +201,7 @@
       </div>
       <div class="member-grid">
         <div class="portrait-box">
-          <span class="twilight-img">📷 [AKARI: School Vest]</span>
+          <span class="twilight-img">📷 [AKARI: School Vest & Ponytail]</span>
           <span class="basement-img">⚡ [AKARI: Punk Drumming Vest]</span>
         </div>
         <div>
@@ -183,21 +227,47 @@
           <span class="basement-img">⚡ [AOI: Long Techwear Coat]</span>
         </div>
         <div>
-          <p>Calm, organized, and deeply thoughtful. Aoi manages club paperwork, keeps practice runs on schedule, and provides rich, grounding basslines.</p>
+          <p>Calm, organized, and deeply thoughtful. Aoi manages club paperwork, keeps practice runs on schedule, and provides rich, grounding basslines for every song.</p>
           <div class="info-list">
-            <span class="info-chip">Instrument: Electric Bass</span>
+            <span class="info-chip">Instrument: Electric Bass Guitar</span>
             <span class="info-chip">Aura: Calm Teal</span>
             <span class="info-chip">Companion: Komorebi (Tanuki)</span>
           </div>
         </div>
       </div>
     </div>
+
+    <h2 class="section-title">SPIRIT FAMILIARS</h2>
+    <div class="familiar-grid">
+      <div class="familiar-card">
+        <div class="familiar-title">🐾 Yozora</div>
+        <p style="font-size: 0.85rem; margin-bottom: 0;">A wise black cat with a crescent moon mark who lounges on the piano during after-school practice.</p>
+      </div>
+
+      <div class="familiar-card">
+        <div class="familiar-title">🦊 Byakko</div>
+        <p style="font-size: 0.85rem; margin-bottom: 0;">A gentle white two-tailed fox that rests near Sera's keytar station during rehearsals.</p>
+      </div>
+
+      <div class="familiar-card">
+        <div class="familiar-title">🔥 Kagerou</div>
+        <p style="font-size: 0.85rem; margin-bottom: 0;">A playful marten with ember sparks on its tail that rides happily on Akari's shoulder.</p>
+      </div>
+
+      <div class="familiar-card">
+        <div class="familiar-title">🍃 Komorebi</div>
+        <p style="font-size: 0.85rem; margin-bottom: 0;">A calm tanuki with mossy-teal ears that sits quietly on Aoi's desk during study sessions.</p>
+      </div>
+    </div>
+
   </main>
 
+  <!-- Footer -->
   <footer>
     <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
+  <!-- Mode Toggle Script -->
   <script>
     function updateThemeUI(isBasement) {
       const toggleBtn = document.getElementById('theme-toggle-btn');
