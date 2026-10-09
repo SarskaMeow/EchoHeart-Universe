@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neko Avatar & Profile Maker — EchoHeart</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    .maker-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 850px) {
+      .maker-grid { grid-template-columns: 1fr; }
+    }
+
+    .maker-box {
+      background: rgba(30, 22, 54, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 18px;
+      padding: 26px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-group { margin-bottom: 14px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: #a88beb;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .form-control, select.form-control {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 8px;
+      color: #e2daf8;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    /* Avatar Canvas Stage */
+    .avatar-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-canvas {
+      width: 260px;
+      height: 260px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, #1f1638, #0d071a);
+      border: 3px solid #a88beb;
+      box-shadow: 0 0 25px rgba(168, 139, 235, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .avatar-icon-main {
+      font-size: 5rem;
+      filter: drop-shadow(0 0 16px rgba(244, 184, 196, 0.6));
+      margin-bottom: 4px;
+    }
+
+    .avatar-name-badge {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.2rem;
+      color: #f4b8c4;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+
+    .avatar-role-sub {
+      font-size: 0.7rem;
+      color: #a88beb;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .avatar-corner-crest {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none;
+      border-radius: 12px;
+      color: #0d0b18;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.92rem;
+      box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
+      transition: transform 0.2s ease;
+      margin-bottom: 10px;
+    }
+
+    .action-btn:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body class="twilight-mode">
+
+  <!-- Universal Header Navigation -->
+  <header class="navbar">
+    <div class="logo-container">
+      <span class="logo-echoheart">ECHOHEART</span>
+      <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
+    </div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Live Set</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+
+      <!-- Story & Lore Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Story & Lore ▾</button>
+        <div class="dropdown-content">
+          <a href="characters.html">Band Members</a>
+          <a href="lore.html">Our Story & Ancient Lore</a>
+          <a href="familiars.html">The Familiar Nook</a>
+        </div>
+      </div>
+
+      <!-- Music Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Music ▾</button>
+        <div class="dropdown-content">
+          <a href="discography.html">Discography & Deck</a>
+          <a href="mixer.html">Stem Mixer Console</a>
+        </div>
+      </div>
+
+      <!-- Interactive Arcade Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Interactive Arcade ▾</button>
+        <div class="dropdown-content">
+          <a href="ticket-creator.html">Ticket Creator</a>
+          <a href="games.html">Mini-Games</a>
+        </div>
+      </div>
+
+      <!-- Neko Lounge Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Neko Lounge ▾</button>
+        <div class="dropdown-content">
+          <a href="neko-lounge.html">Tea Room & Creator</a>
+          <a href="atelier.html">Resonance Atelier</a>
+          <a href="neko-fm.html">Whisper Radio / Neko FM</a>
+          <a href="neko-maker.html" class="active">Neko Avatar Maker</a>
+        </div>
+      </div>
+
+      <!-- Mode Switcher -->
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Secret Concert Mode
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>NEKO AVATAR & PROFILE MAKER</h1>
+    <p class="hero-subtitle hero-twilight-subtitle">
+      🌸 Design custom cat-girl profile pictures and downloadable avatar badges
+    </p>
+    <p class="hero-subtitle hero-basement-subtitle">
+      ⚡ Subterranean Aura Glows & Custom Concert Profile Cards
+    </p>
+  </section>
+
+  <main class="container">
+    <div class="maker-grid">
+
+      <!-- LEFT: CUSTOMIZATION CONTROLS -->
+      <div class="maker-box">
+        <h3 class="content-title">Customize Avatar Specs</h3>
+
+        <div class="form-group">
+          <label for="mk-name">Name / Handle</label>
+          <input type="text" id="mk-name" class="form-control" value="Mina" oninput="updateAvatar()">
+        </div>
+
+        <div class="form-group">
+          <label for="mk-role">Club Role / Tagline</label>
+          <input type="text" id="mk-role" class="form-control" value="Light Music Member" oninput="updateAvatar()">
+        </div>
+
+        <div class="form-group">
+          <label for="mk-ears">Ear Style & Expression</label>
+          <select id="mk-ears" class="form-control" onchange="updateAvatar()">
+            <option value="🐱">🐱 Midnight Black Cat Ears</option>
+            <option value="😸">😸 Happy Pastel Cat Ears</option>
+            <option value="🦊">🦊 Two-Tailed Spirit Fox</option>
+            <option value="🐾">🐾 Moonlight Paw Mark</option>
+            <option value="😻">😻 Star-Eyed Concert Neko</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="mk-aura">Aura Border & Glow</label>
+          <select id="mk-aura" class="form-control" onchange="updateAvatar()">
+            <option value="violet">Violet Crescent (#a88beb)</option>
+            <option value="rosegold">Rose-Gold Tea (#f4b8c4)</option>
+            <option value="crimson">Crimson Flame (#ff4d6d)</option>
+            <option value="teal">Teal Bass Wave (#20b2aa)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="mk-crest">Corner Emblem Badge</label>
+          <select id="mk-crest" class="form-control" onchange="updateAvatar()">
+            <option value="✦">✦ Echo Starlight</option>
+            <option value="♡">♡ Hollow Heart Ticket</option>
+            <option value="🌙">🌙 Crescent Moon</option>
+            <option value="🌸">🌸 Sakuraoka Crest</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- RIGHT: LIVE PREVIEW & DOWNLOAD -->
+      <div class="maker-box avatar-stage">
+        <h3 class="content-title">Avatar Preview</h3>
+
+        <div id="avatar-export" class="avatar-canvas">
+          <div id="canvas-crest" class="avatar-corner-crest">✦</div>
+          <div id="canvas-icon" class="avatar-icon-main">🐱</div>
+          <div id="canvas-name" class="avatar-name-badge">Mina</div>
+          <div id="canvas-role" class="avatar-role-sub">Light Music Member</div>
+        </div>
+
+        <div style="width: 100%; max-width: 260px;">
+          <button class="action-btn" onclick="downloadAvatar()">📷 Download Profile Avatar (PNG)</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    function updateAvatar() {
+      const name = document.getElementById('mk-name').value || 'Neko';
+      const role = document.getElementById('mk-role').value || 'Member';
+      const ears = document.getElementById('mk-ears').value;
+      const aura = document.getElementById('mk-aura').value;
+      const crest = document.getElementById('mk-crest').value;
+
+      document.getElementById('canvas-name').innerText = name;
+      document.getElementById('canvas-role').innerText = role;
+      document.getElementById('canvas-icon').innerText = ears;
+      document.getElementById('canvas-crest').innerText = crest;
+
+      const canvas = document.getElementById('avatar-export');
+      let colorHex = '#a88beb';
+      if (aura === 'rosegold') colorHex = '#f4b8c4';
+      if (aura === 'crimson') colorHex = '#ff4d6d';
+      if (aura === 'teal') colorHex = '#20b2aa';
+
+      canvas.style.borderColor = colorHex;
+      canvas.style.boxShadow = `0 0 25px ${colorHex}`;
+    }
+
+    function downloadAvatar() {
+      const avatarElement = document.getElementById('avatar-export');
+      html2canvas(avatarElement, { backgroundColor: null }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `NekoProfileAvatar.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    // Theme Switcher Logic
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isBasement) {
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+      } else {
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+      }
+    }
+
+    function toggleMode() {
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
+  </script>
+</body>
+</html>
