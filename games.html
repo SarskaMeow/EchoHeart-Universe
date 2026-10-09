@@ -93,10 +93,10 @@
     }
 
     /* Core 4 Character Pad Colors */
-    .pad-nekomi { background: #a88beb; color: #0d0b18; } /* Nekomi Violet */
-    .pad-sera { background: #f4b8c4; color: #0d0b18; }   /* Sera Rose-Gold */
-    .pad-akari { background: #ff4d6d; color: #ffffff; }  /* Akari Crimson */
-    .pad-aoi { background: #20b2aa; color: #ffffff; }    /* Aoi Teal */
+    .pad-nekomi { background: #a88beb; color: #0d0b18; }
+    .pad-sera { background: #f4b8c4; color: #0d0b18; }
+    .pad-akari { background: #ff4d6d; color: #ffffff; }
+    .pad-aoi { background: #20b2aa; color: #ffffff; }
 
     /* Game 2: Rhythm Tapper */
     .tap-stage {
@@ -128,7 +128,71 @@
       box-shadow: 0 0 40px rgba(244, 184, 196, 0.8);
     }
 
-    /* Game 3: Fortune Box */
+    /* NEW GAME: Stealth Ticket Drop Locker Grid */
+    .locker-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .locker-slot {
+      height: 85px;
+      background: rgba(18, 12, 38, 0.9);
+      border: 2px solid rgba(168, 139, 235, 0.25);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .locker-slot.closed {
+      background: linear-gradient(145deg, #1f1638, #120b24);
+      border-color: rgba(168, 139, 235, 0.3);
+      color: #8b7cb6;
+    }
+
+    .locker-slot.target {
+      background: linear-gradient(145deg, #42214d, #2a113d);
+      border-color: #f4b8c4;
+      color: #f4b8c4;
+      box-shadow: 0 0 12px rgba(244, 184, 196, 0.4);
+    }
+
+    .locker-slot.patrol {
+      background: linear-gradient(145deg, #591024, #330513);
+      border-color: #ff3355;
+      color: #ff3355;
+      box-shadow: 0 0 12px rgba(255, 51, 85, 0.5);
+    }
+
+    .locker-number {
+      font-size: 0.7rem;
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      color: #8b7cb6;
+      font-weight: 700;
+    }
+
+    .locker-icon {
+      font-size: 1.4rem;
+      margin-bottom: 2px;
+    }
+
+    .locker-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    /* Game 4: Fortune Box */
     .fortune-box {
       background: rgba(15, 10, 30, 0.7);
       border-left: 3px solid #f4b8c4;
@@ -197,7 +261,7 @@
       🌸 Interactive music games and tea-break activities in Prep Room B
     </p>
     <p class="hero-subtitle hero-basement-subtitle">
-      ⚡ High-Speed Rhythm Drills & Secret Concert Echoes
+      ⚡ High-Speed Rhythm Drills & Stealth Ticket Operations
     </p>
   </section>
 
@@ -205,7 +269,57 @@
   <main class="container">
     <div class="games-grid">
 
-      <!-- Game 1: Sera's Keytar Memory Echo -->
+      <!-- Game 1: Ticket Stealth Drop -->
+      <div class="game-card">
+        <div>
+          <span class="game-badge">STEALTH TIMING REACTION</span>
+          <h3 class="content-title">Shoe-Locker Ticket Stealth Drop</h3>
+          <p style="font-size:0.88rem;">Slip black shadow tickets into target lockers when open! Avoid clicking when hallway patrols pass by!</p>
+
+          <div class="score-banner">
+            <span>Score: <span id="stealth-score" class="score-value">0</span></span>
+            <span>Time Left: <span id="stealth-timer" class="score-value">30s</span></span>
+            <span>Stealth: <span id="stealth-meter" class="score-value">100%</span></span>
+          </div>
+
+          <div class="locker-grid">
+            <div class="locker-slot closed" onclick="clickLocker(0)">
+              <span class="locker-number">#101</span>
+              <div class="locker-icon">🔒</div>
+              <div class="locker-label">Closed</div>
+            </div>
+            <div class="locker-slot closed" onclick="clickLocker(1)">
+              <span class="locker-number">#102</span>
+              <div class="locker-icon">🔒</div>
+              <div class="locker-label">Closed</div>
+            </div>
+            <div class="locker-slot closed" onclick="clickLocker(2)">
+              <span class="locker-number">#103</span>
+              <div class="locker-icon">🔒</div>
+              <div class="locker-label">Closed</div>
+            </div>
+            <div class="locker-slot closed" onclick="clickLocker(3)">
+              <span class="locker-number">#104</span>
+              <div class="locker-icon">🔒</div>
+              <div class="locker-label">Closed</div>
+            </div>
+            <div class="locker-slot closed" onclick="clickLocker(4)">
+              <span class="locker-number">#105</span>
+              <div class="locker-icon">🔒</div>
+              <div class="locker-label">Closed</div>
+            </div>
+            <div class="locker-slot closed" onclick="clickLocker(5)">
+              <span class="locker-number">#106</span>
+              <div class="locker-icon">🔒</div>
+              <div class="locker-label">Closed</div>
+            </div>
+          </div>
+        </div>
+
+        <button id="stealth-start-btn" class="game-action-btn" onclick="startStealthGame()">▶ Start Stealth Drop</button>
+      </div>
+
+      <!-- Game 2: Sera's Keytar Memory Echo -->
       <div class="game-card">
         <div>
           <span class="game-badge">AUDIO PATTERN MATCH</span>
@@ -228,7 +342,7 @@
         <button id="simon-start-btn" class="game-action-btn" onclick="startSimonGame()">▶ Start Memory Game</button>
       </div>
 
-      <!-- Game 2: Akari's 180 BPM Tempo Tapper -->
+      <!-- Game 3: Akari's 180 BPM Tempo Tapper -->
       <div class="game-card">
         <div>
           <span class="game-badge">RHYTHM SPEED DRILL</span>
@@ -251,7 +365,7 @@
         <button class="game-action-btn" onclick="resetDrumTapper()">↺ Reset Tempo Meter</button>
       </div>
 
-      <!-- Game 3: Yozora's Tea-Time Fortune -->
+      <!-- Game 4: Yozora's Tea-Time Fortune -->
       <div class="game-card">
         <div>
           <span class="game-badge">DAILY COMPANION WISDOM</span>
@@ -280,7 +394,7 @@
 
   <!-- Scripts -->
   <script>
-    // Web Audio API Setup
+    // Audio Synthesizer
     let audioCtx = null;
 
     function playNote(freq, duration = 0.25) {
@@ -307,7 +421,107 @@
       } catch(e){}
     }
 
-    // Game 1: Memory Game Logic
+    // ============================================================
+    // GAME 1: SHOE-LOCKER TICKET STEALTH DROP LOGIC
+    // ============================================================
+    let stealthScore = 0;
+    let stealthTimer = 30;
+    let stealthHealth = 100;
+    let stealthActive = false;
+    let stealthInterval = null;
+    let lockerStates = ['closed', 'closed', 'closed', 'closed', 'closed', 'closed'];
+
+    function startStealthGame() {
+      stealthScore = 0;
+      stealthTimer = 30;
+      stealthHealth = 100;
+      stealthActive = true;
+
+      document.getElementById('stealth-score').innerText = stealthScore;
+      document.getElementById('stealth-timer').innerText = `${stealthTimer}s`;
+      document.getElementById('stealth-meter').innerText = `${stealthHealth}%`;
+      document.getElementById('stealth-start-btn').innerText = '🔄 Restart Stealth Drop';
+
+      clearInterval(stealthInterval);
+      stealthInterval = setInterval(updateStealthLoop, 850);
+    }
+
+    function updateStealthLoop() {
+      if (!stealthActive) return;
+
+      stealthTimer--;
+      document.getElementById('stealth-timer').innerText = `${stealthTimer}s`;
+
+      if (stealthTimer <= 0 || stealthHealth <= 0) {
+        endStealthGame();
+        return;
+      }
+
+      // Randomize lockers
+      const lockerElements = document.querySelectorAll('.locker-slot');
+      for (let i = 0; i < 6; i++) {
+        let rand = Math.random();
+        if (rand < 0.35) {
+          lockerStates[i] = 'target'; // Open Target Locker
+          lockerElements[i].className = 'locker-slot target';
+          lockerElements[i].querySelector('.locker-icon').innerText = '♡';
+          lockerElements[i].querySelector('.locker-label').innerText = 'Drop Ticket';
+        } else if (rand < 0.52) {
+          lockerStates[i] = 'patrol'; // Teacher / Patrol
+          lockerElements[i].className = 'locker-slot patrol';
+          lockerElements[i].querySelector('.locker-icon').innerText = '🚨';
+          lockerElements[i].querySelector('.locker-label').innerText = 'Patrol!';
+        } else {
+          lockerStates[i] = 'closed';
+          lockerElements[i].className = 'locker-slot closed';
+          lockerElements[i].querySelector('.locker-icon').innerText = '🔒';
+          lockerElements[i].querySelector('.locker-label').innerText = 'Closed';
+        }
+      }
+    }
+
+    function clickLocker(idx) {
+      if (!stealthActive) return;
+
+      const lockerElements = document.querySelectorAll('.locker-slot');
+      const state = lockerStates[idx];
+
+      if (state === 'target') {
+        stealthScore += 100;
+        playNote(523.25, 0.15); // Success note
+        document.getElementById('stealth-score').innerText = stealthScore;
+        lockerStates[idx] = 'closed';
+        lockerElements[idx].className = 'locker-slot closed';
+        lockerElements[idx].querySelector('.locker-icon').innerText = '✨';
+        lockerElements[idx].querySelector('.locker-label').innerText = 'Dropped!';
+      } else if (state === 'patrol') {
+        stealthHealth -= 25;
+        playNote(120, 0.3); // Warning buzz
+        document.getElementById('stealth-meter').innerText = `${Math.max(0, stealthHealth)}%`;
+        if (stealthHealth <= 0) {
+          endStealthGame();
+        }
+      }
+    }
+
+    function endStealthGame() {
+      stealthActive = false;
+      clearInterval(stealthInterval);
+      
+      const lockerElements = document.querySelectorAll('.locker-slot');
+      lockerElements.forEach(el => {
+        el.className = 'locker-slot closed';
+        el.querySelector('.locker-icon').innerText = '🔒';
+        el.querySelector('.locker-label').innerText = 'Closed';
+      });
+
+      alert(`Operation Complete! Final Score: ${stealthScore} points dropped into shoe lockers.`);
+      document.getElementById('stealth-start-btn').innerText = '▶ Start Stealth Drop';
+    }
+
+    // ============================================================
+    // GAME 2: SERA'S KEYTAR MEMORY ECHO LOGIC
+    // ============================================================
     const padNotes = [220, 261.63, 329.63, 392.00];
     let simonSequence = [];
     let playerSequence = [];
@@ -379,7 +593,9 @@
       }
     }
 
-    // Game 2: Rhythm Tapper Logic
+    // ============================================================
+    // GAME 3: AKARI'S TEMPO TAPPER LOGIC
+    // ============================================================
     let tapTimes = [];
 
     function registerDrumTap() {
@@ -423,3 +639,52 @@
       document.getElementById('bpm-accuracy').innerText = "-- %";
       document.getElementById('tap-feedback').innerText = "Tap along to the steady heartbeat!";
       document.getElementById('tap-feedback').style.color = "#a88beb";
+    }
+
+    // ============================================================
+    // GAME 4: YOZORA'S FORTUNE LOGIC
+    // ============================================================
+    const fortunes = [
+      "Nekomi left her favorite Crescent pick on the piano—a sign that your creative spark is close by today.",
+      "Sera says: 'When your thoughts get noisy, take a slow breath and listen to warm keytar chords.'",
+      "Akari's advice: 'If a problem feels too big, break it into 180 BPM quick steps and sprint past it!'",
+      "Aoi's note: 'The student council paperwork is done. Time for warm barley tea and quiet practice.'",
+      "Yozora stretched lazily on the piano keys. Today is a great day to let your music echo.",
+      "A shadow ticket dropped into your locker... somewhere beneath the floorboards, a concert awaits."
+    ];
+
+    function drawFortune() {
+      playNote(523.25, 0.2);
+      const randIdx = Math.floor(Math.random() * fortunes.length);
+      document.getElementById('fortune-text').innerText = fortunes[randIdx];
+    }
+
+    // ============================================================
+    // THEME SWITCHER LOGIC
+    // ============================================================
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isBasement) {
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+      } else {
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+      }
+    }
+
+    function toggleMode() {
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
+  </script>
+</body>
+</html>
