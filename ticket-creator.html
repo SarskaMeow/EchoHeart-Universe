@@ -177,20 +177,35 @@
       <span class="status-badge basement-status">💜 The Basement • Live Set</span>
     </div>
 
-    <nav>
+   <nav>
       <a href="index.html">Home</a>
-      <a href="characters.html">Band Members</a>
-      <a href="discography.html">Music & Songs</a>
-      <a href="lore.html">Our Story</a>
-      <a href="ticket-creator.html" class="active">Ticket Creator</a>
-      <a href="games.html">Mini-Games</a>
-      <a href="familiars.html">Familiars</a>
-      
-      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
-        ⚡ Secret Concert Mode
-      </button>
-    </nav>
-  </header>
+
+      <!-- Story & Lore Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Story & Lore ▾</button>
+        <div class="dropdown-content">
+          <a href="characters.html">Band Members</a>
+          <a href="lore.html">Our Story</a>
+          <a href="familiars.html">The Familiar Nook</a>
+        </div>
+      </div>
+
+      <!-- Music Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Music ▾</button>
+        <div class="dropdown-content">
+          <a href="discography.html">Discography & Deck</a>
+        </div>
+      </div>
+
+      <!-- Interactive Arcade Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Interactive Arcade ▾</button>
+        <div class="dropdown-content">
+          <a href="ticket-creator.html">Ticket Creator</a>
+          <a href="games.html">Mini-Games</a>
+        </div>
+      </div>
 
   <!-- Hero Section -->
   <section class="hero">
