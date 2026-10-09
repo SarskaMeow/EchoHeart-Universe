@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe-Locker Ticket Creator — Girls Phantom Dead</title>
+  <title>Ticket Creator — Girls Phantom Dead</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    /* Ticket Creator Specific Layout */
     .creator-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -16,15 +15,10 @@
     }
 
     @media (max-width: 800px) {
-      .creator-grid {
-        grid-template-columns: 1fr;
-      }
+      .creator-grid { grid-template-columns: 1fr; }
     }
 
-    /* Form Inputs */
-    .form-group {
-      margin-bottom: 16px;
-    }
+    .form-group { margin-bottom: 16px; }
 
     .form-group label {
       display: block;
@@ -46,17 +40,6 @@
       outline: none;
     }
 
-    .form-control:focus {
-      border-color: #f4b8c4;
-      box-shadow: 0 0 8px rgba(244, 184, 196, 0.3);
-    }
-
-    textarea.form-control {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    /* Preset Buttons */
     .preset-container {
       display: flex;
       gap: 10px;
@@ -73,16 +56,8 @@
       font-size: 0.82rem;
       cursor: pointer;
       font-weight: 600;
-      transition: all 0.2s ease;
     }
 
-    .preset-btn:hover {
-      background: rgba(244, 184, 196, 0.2);
-      border-color: #f4b8c4;
-      color: #ffffff;
-    }
-
-    /* Ticket Card Preview */
     .ticket-stage {
       display: flex;
       flex-direction: column;
@@ -98,7 +73,6 @@
       border-radius: 12px;
       padding: 24px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(244, 184, 196, 0.2);
-      position: relative;
     }
 
     .ticket-header {
@@ -115,43 +89,11 @@
     }
 
     .ticket-band-title {
-      font-size: 1.1rem;
-      font-weight: 800;
+      font-family: 'Pirata One', cursive, serif;
+      font-size: 1.4rem;
       letter-spacing: 2px;
-      color: #ffffff;
-      margin-top: 4px;
-    }
-
-    .ticket-sub {
-      font-size: 0.75rem;
-      color: #a88beb;
-    }
-
-    .ticket-field {
-      margin-bottom: 10px;
-    }
-
-    .ticket-label {
-      font-size: 0.72rem;
-      color: #8b7cb6;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .ticket-value {
-      font-size: 0.95rem;
-      color: #e2daf8;
-      font-weight: 600;
-    }
-
-    .ticket-note-box {
-      margin-top: 16px;
-      padding: 10px 12px;
-      background: rgba(244, 184, 196, 0.05);
-      border-left: 2px solid #f4b8c4;
-      font-style: italic;
-      font-size: 0.88rem;
-      color: #f4b8c4;
+      color: #ff3355;
+      text-shadow: 0 0 8px rgba(255, 51, 85, 0.6);
     }
 
     .action-btn {
@@ -163,28 +105,21 @@
       border-radius: 10px;
       color: #0d0b18;
       font-weight: 800;
-      font-size: 0.95rem;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
-      transition: transform 0.2s ease;
-    }
-
-    .action-btn:hover {
-      transform: translateY(-2px);
     }
   </style>
 </head>
 <body class="twilight-mode">
 
-  <!-- Navigation Bar -->
   <header class="navbar">
-    <div class="logo-text">
-      ECHOHEART <span class="logo-subtext">✦ GIRLS PHANTOM DEAD</span>
+    <div class="logo-container">
+      <span class="logo-echoheart">ECHOHEART</span>
+      <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
     </div>
     
     <div class="status-badge-container">
-      <span class="status-badge room-status">🌸 Prep Room B • After-School Practice</span>
-      <span class="status-badge basement-status">💜 The Basement • Secret Concert</span>
+      <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Live Set</span>
     </div>
 
     <nav>
@@ -212,7 +147,6 @@
 
   <main class="container">
     <div class="creator-grid">
-      <!-- Controls Form -->
       <div class="content-card">
         <h3 class="content-title">Customize Ticket Details</h3>
         
@@ -222,51 +156,50 @@
         </div>
 
         <div class="form-group">
-          <label for="input-target">Target Student</label>
+          <label>Target Student</label>
           <input type="text" id="input-target" class="form-control" value="Yumi Takahashi" oninput="updateTicket()">
         </div>
 
         <div class="form-group">
-          <label for="input-location">Concert Location</label>
+          <label>Concert Location</label>
           <input type="text" id="input-location" class="form-control" value="The Basement (Trapdoor in Prep Room B)" oninput="updateTicket()">
         </div>
 
         <div class="form-group">
-          <label for="input-time">Time & Schedule</label>
+          <label>Time & Schedule</label>
           <input type="text" id="input-time" class="form-control" value="6:30 PM • After Club Practice" oninput="updateTicket()">
         </div>
 
         <div class="form-group">
-          <label for="input-note">Personal Message / Note</label>
+          <label>Personal Message / Note</label>
           <textarea id="input-note" class="form-control" oninput="updateTicket()">Your paintbrush hasn't lost its voice. Come listen beneath the floorboards.</textarea>
         </div>
       </div>
 
-      <!-- Ticket Display -->
       <div class="ticket-stage">
         <div id="ticket-export" class="ticket-card">
           <div class="ticket-header">
             <div class="ticket-stamp">[ ♡ ]</div>
             <div class="ticket-band-title">GIRLS PHANTOM DEAD</div>
-            <div class="ticket-sub">Sakuraoka High Underground Ticket</div>
+            <div style="font-size:0.75rem; color:#a88beb;">Sakuraoka High Underground Ticket</div>
           </div>
 
-          <div class="ticket-field">
-            <div class="ticket-label">INVITATION FOR</div>
-            <div id="card-target" class="ticket-value">Yumi Takahashi</div>
+          <div style="margin-bottom:10px;">
+            <div style="font-size:0.7rem; color:#8b7cb6;">INVITATION FOR</div>
+            <div id="card-target" style="font-weight:600; color:#e2daf8;">Yumi Takahashi</div>
           </div>
 
-          <div class="ticket-field">
-            <div class="ticket-label">LOCATION</div>
-            <div id="card-location" class="ticket-value">The Basement (Trapdoor in Prep Room B)</div>
+          <div style="margin-bottom:10px;">
+            <div style="font-size:0.7rem; color:#8b7cb6;">LOCATION</div>
+            <div id="card-location" style="font-weight:600; color:#e2daf8;">The Basement (Trapdoor in Prep Room B)</div>
           </div>
 
-          <div class="ticket-field">
-            <div class="ticket-label">TIME</div>
-            <div id="card-time" class="ticket-value">6:30 PM • After Club Practice</div>
+          <div style="margin-bottom:10px;">
+            <div style="font-size:0.7rem; color:#8b7cb6;">TIME</div>
+            <div id="card-time" style="font-weight:600; color:#e2daf8;">6:30 PM • After Club Practice</div>
           </div>
 
-          <div class="ticket-note-box">
+          <div style="margin-top:14px; padding:10px; background:rgba(244,184,196,0.05); border-left:2px solid #f4b8c4; font-style:italic; font-size:0.88rem; color:#f4b8c4;">
             "<span id="card-note">Your paintbrush hasn't lost its voice. Come listen beneath the floorboards.</span>"
           </div>
         </div>
