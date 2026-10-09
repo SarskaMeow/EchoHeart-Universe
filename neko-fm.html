@@ -997,7 +997,7 @@
       return "Yesterday";
     }
 
-    function loadSavedNotes() {
+   function loadSavedNotes() {
       let saved = JSON.parse(localStorage.getItem('echoheart_mailbox') || '[]');
       const lastVisit = parseInt(localStorage.getItem('echoheart_last_visit') || Date.now());
       const now = Date.now();
@@ -1021,6 +1021,11 @@
       if (saved.length > MAX_MAILBOX_CAPACITY) {
         saved = saved.slice(0, MAX_MAILBOX_CAPACITY);
       }
+
+      localStorage.setItem('echoheart_mailbox', JSON.stringify(saved));
+      localStorage.setItem('echoheart_last_visit', Date.now());
+      renderNotes(saved);
+    }
 
       localStorage.setItem('echoheart_mailbox', JSON.stringify(saved));
       localStorage.setItem('echoheart_last_visit', Date.now());
