@@ -662,13 +662,13 @@
 
     /* Distinct Audio Synthesizer Profiles for Each Girl */
     const voiceProfiles = {
-      nekomi: { freq: 329.63, type: 'sawtooth', duration: 0.35, gain: 0.08 }, // Guitar slide chime
-      sera:   { freq: 523.25, type: 'triangle', duration: 0.40, gain: 0.07 }, // High keytar chime
-      akari:  { freq: 440.00, type: 'square',   duration: 0.20, gain: 0.06 }, // Punchy drum pulse
-      aoi:    { freq: 146.83, type: 'sine',     duration: 0.50, gain: 0.10 }  // Warm bass note
+      nekomi: { freq: 329.63, type: 'sawtooth', duration: 0.35, gain: 0.08 },
+      sera:   { freq: 523.25, type: 'triangle', duration: 0.40, gain: 0.07 },
+      akari:  { freq: 440.00, type: 'square',   duration: 0.20, gain: 0.06 },
+      aoi:    { freq: 146.83, type: 'sine',     duration: 0.50, gain: 0.10 }
     };
 
-    /* EXTENDED TWILIGHT EPISODES (16 TURNS PER EPISODE) */
+    /* EXTENDED TWILIGHT EPISODES */
     const twilightEpisodes = [
       {
         title: "Ep 1: Hallway Rumors & Shadow Tickets (Full Broadcast)",
@@ -735,7 +735,7 @@
       }
     ];
 
-    /* EXTENDED BASEMENT EPISODES (16 TURNS PER EPISODE) */
+    /* EXTENDED BASEMENT EPISODES */
     const basementEpisodes = [
       {
         title: "After Hours Ep 1: The Shadow Ticket Protocol & Ruptures",
@@ -825,7 +825,7 @@
 
     function switchStudioTab(tabId) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
-      event.target.classList.add('active-tab');
+      if (event && event.target) event.target.classList.add('active-tab');
 
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active-content'));
       document.getElementById(tabId).classList.add('active-content');
@@ -911,7 +911,7 @@
       document.querySelectorAll('.speaker-avatar').forEach(el => el.classList.remove('speaking'));
     }
 
-    /* Massive Campus Mailbox Engine with Featured Students & Random Lockers */
+    /* Massive Campus Mailbox Engine */
     const MAX_MAILBOX_CAPACITY = 30;
 
     const featuredStudents = [
@@ -997,7 +997,7 @@
       return "Yesterday";
     }
 
-   function loadSavedNotes() {
+    function loadSavedNotes() {
       let saved = JSON.parse(localStorage.getItem('echoheart_mailbox') || '[]');
       const lastVisit = parseInt(localStorage.getItem('echoheart_last_visit') || Date.now());
       const now = Date.now();
@@ -1021,11 +1021,6 @@
       if (saved.length > MAX_MAILBOX_CAPACITY) {
         saved = saved.slice(0, MAX_MAILBOX_CAPACITY);
       }
-
-      localStorage.setItem('echoheart_mailbox', JSON.stringify(saved));
-      localStorage.setItem('echoheart_last_visit', Date.now());
-      renderNotes(saved);
-    }
 
       localStorage.setItem('echoheart_mailbox', JSON.stringify(saved));
       localStorage.setItem('echoheart_last_visit', Date.now());
