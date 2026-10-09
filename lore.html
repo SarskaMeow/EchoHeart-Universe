@@ -3,264 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EchoHeart — Lore & World Mechanics</title>
+  <title>Our Story — EchoHeart & Girls Phantom Dead</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    .lore-section {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 2rem;
-      margin-bottom: 2.5rem;
-      box-shadow: var(--card-shadow);
-    }
-
-    .lore-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-
-    .lore-card {
-      background-color: rgba(11, 12, 16, 0.2);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 1.5rem;
-    }
-
-    .lore-card.echo { border-top: 4px solid var(--pink-sera); }
-    .lore-card.phantom { border-top: 4px solid var(--violet-nekomi); }
-
-    .domain-box {
-      border-radius: 10px;
-      padding: 1.5rem;
-      border: 1px solid var(--border-color);
-      background-color: rgba(11, 12, 16, 0.2);
-    }
-
-    .domain-box.violet { border-left: 5px solid var(--violet-nekomi); }
-    .domain-box.pink { border-left: 5px solid var(--pink-sera); }
-    .domain-box.crimson { border-left: 5px solid var(--crimson-akari); }
-    .domain-box.teal { border-left: 5px solid var(--teal-aoi); }
-
-    .domain-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .db-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    .db-table th, .db-table td {
-      padding: 1rem;
-      border-bottom: 1px solid var(--border-color);
-      text-align: left;
-    }
-
-    .db-table th {
-      background-color: rgba(11, 12, 16, 0.2);
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .db-range {
-      font-weight: 800;
-      color: var(--violet-nekomi);
-      font-family: monospace;
-      font-size: 1.1rem;
-    }
-  </style>
 </head>
-<body>
+<body class="twilight-mode">
 
   <!-- Navigation Bar -->
   <header class="navbar">
-    <div class="logo-text">ECHOHEART</div>
+    <div class="logo-text">
+      ECHOHEART <span class="logo-subtext">✦ GIRLS PHANTOM DEAD</span>
+    </div>
     
     <div class="status-badge-container">
-      <span class="status-badge day-status">🟢 Prep Room B • 65 dB</span>
-      <span class="status-badge vault-status">🔴 Sub-Vault 02 • 138 dB [ACTIVE]</span>
+      <span class="status-badge room-status">🌸 Prep Room B • After-School Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Secret Concert</span>
     </div>
 
     <nav>
       <a href="index.html">Home</a>
-      <a href="characters.html">Core 4 Roster</a>
-      <a href="discography.html">Discography</a>
-      <a href="lore.html" class="active">Lore & Mechanics</a>
-      <a href="games.html">Games & Apps</a>
+      <a href="characters.html">Band Members</a>
+      <a href="discography.html">Music & Songs</a>
+      <a href="lore.html" class="active">Our Story</a>
+      <a href="ticket-creator.html">Ticket Creator</a>
       
       <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
-        ⚡ Vault Mode
+        ⚡ Secret Concert Mode
       </button>
     </nav>
   </header>
 
-  <!-- Hero Section -->
   <section class="hero">
-    <h1>LORE & WORLD MECHANICS</h1>
-    <p class="hero-daytime-subtitle">
-      🌸 Official World Rules & Acoustic Physics of Sakuraoka High
+    <h1>OUR STORY</h1>
+    <p class="hero-subtitle hero-twilight-subtitle">
+      🌸 The private bond and secret music of Sakuraoka High
     </p>
-    <p class="hero-vault-subtitle">
-      ⚡ SUBTERRANEAN DISSONANCE PHYSICS & SANCTUARY DOMAIN PROTOCOLS
+    <p class="hero-subtitle hero-basement-subtitle">
+      ⚡ How a phantom band reached students who felt lost in the dark
     </p>
   </section>
 
   <main class="container">
+    <h2 class="section-title">THE DUAL IDENTITY</h2>
 
-    <!-- 1. DUAL IDENTITY SYSTEM -->
-    <section class="lore-section">
-      <h2 class="section-title">DUAL IDENTITY SYSTEM</h2>
-      <p style="color: var(--text-muted); text-align: center; max-width: 800px; margin: 0 auto 1.5rem auto;">
-        To the students and faculty of Sakuraoka High, the girls are a sweet daytime Light Music Club. Beneath the surface, they are high-decibel acoustic vigilantes.
-      </p>
+    <div class="content-card">
+      <span class="tag-badge">Campus Urban Legend</span>
+      <h3 class="content-title">Girls Phantom Dead</h3>
+      <p>To the students of Sakuraoka High, "Girls Phantom Dead" is a mysterious phantom band whispered about in hallway rumors. They drop black cardstock tickets stamped with a hollow heart into shoe lockers, inviting students dealing with heavy stress or creative burnout to secret underground performances.</p>
+    </div>
 
-      <div class="lore-grid">
-        <div class="lore-card echo">
-          <h3 style="color: var(--pink-sera); margin-bottom: 0.5rem;">🌸 EchoHeart (Daytime Persona)</h3>
-          <p><strong>Primary Setting:</strong> Music Prep Room B & Campus Courtyard Stage</p>
-          <p><strong>Genre & Style:</strong> J-Pop & K-Pop Cover Arrangements, Acoustic Demos, Festival Anthems</p>
-          <p style="margin-top: 0.75rem;">Acts as the public cover for the Core 4. EchoHeart presents an innocent, polished pop aesthetic that keeps Student Council oversight and faculty noise complaints at bay while maintaining high campus popularity.</p>
-        </div>
+    <div class="content-card">
+      <span class="tag-badge">Private Inner Bond</span>
+      <h3 class="content-title">EchoHeart</h3>
+      <p>Behind closed doors in Music Prep Room B, "EchoHeart" is the true name of the four girls' connection. It represents their shared heartbeats bouncing back and forth—an echo of genuine friendship, warmth, and trust that holds Nekomi, Sera, Akari, and Aoi together.</p>
+    </div>
 
-        <div class="lore-card phantom">
-          <h3 style="color: var(--violet-nekomi); margin-bottom: 0.5rem;">⚡ Girls Phantom Dead (Underground Persona)</h3>
-          <p><strong>Primary Setting:</strong> Subterranean Sub-Stage Vaults 01–04</p>
-          <p><strong>Genre & Style:</strong> 180+ BPM Heavy J-Rock, Post-Rock, High-Gain Distortion</p>
-          <p style="margin-top: 0.75rem;">The nocturnal vigilante identity deployed inside corrupted subterranean vaults. Armed with high-output amplifiers and mystical familiars, they engage acute emotional Dissonance through raw acoustic force.</p>
-        </div>
-      </div>
-    </section>
+    <h2 class="section-title">KEY LOCATIONS</h2>
 
-    <!-- 2. DISSONANCE VS RESONANCE -->
-    <section class="lore-section">
-      <h2 class="section-title">ACOUSTIC PHYSICS: DISSONANCE & RESONANCE</h2>
+    <div class="content-card">
+      <span class="tag-badge">3rd Floor West Wing</span>
+      <h3 class="content-title">Music Prep Room B</h3>
+      <p>The quiet home base where the girls drink warm barley tea, write song lyrics, and plan their after-school rehearsals. A secret trapdoor hidden behind the mahogany piano leads down to their live performance space.</p>
+    </div>
 
-      <div class="lore-grid">
-        <div class="lore-card">
-          <h3 style="color: var(--crimson-akari); margin-bottom: 0.5rem;">🌀 Dissonance (Emotional Distortion)</h3>
-          <p>Dissonance is formed when suppressed psychological trauma, anxiety, or perfectionism reaches critical mass within a student. It manifests as localized acoustic static, fog, or memory corruption within closed spatial pockets called <strong>Vaults</strong>. Left unchecked, Dissonance completely consumes the individual's emotional equilibrium.</p>
-        </div>
-
-        <div class="lore-card">
-          <h3 style="color: var(--teal-aoi); margin-bottom: 0.5rem;">✨ Resonance & Heart Sync</h3>
-          <p>Resonance is the pure acoustic counter-frequency generated when band members align their emotional frequencies through music. When Nekomi Aoyama and Sera Hanibara achieve <strong>100% Heart Sync</strong>, their combined lead guitar solos and <em>Sun Voice</em> harmonics trigger complete Dissonance purification.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. THE 4 SANCTUARY DOMAINS -->
-    <section class="lore-section">
-      <h2 class="section-title">THE 4 SANCTUARY DOMAINS</h2>
-
-      <div class="grid">
-        <div class="domain-box violet">
-          <div class="domain-title">
-            <span style="color: var(--violet-nekomi);">Violet Starlight Domain</span>
-            <span>🎸 Nekomi Aoyama</span>
-          </div>
-          <p><strong>Role:</strong> Frontline Offensive Core & Lead Solo Focus</p>
-          <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Cuts through Dissonance barriers using high-gain Crescent-Moon guitar leads and raw distortion pulses backed by Yozora's shadow cat manifestation.</p>
-        </div>
-
-        <div class="domain-box pink">
-          <div class="domain-title">
-            <span style="color: var(--pink-sera);">Rose-Gold Glow Domain</span>
-            <span>⌨️ Sera Hanibara</span>
-          </div>
-          <p><strong>Role:</strong> Frequency Cleanser & Harmonic Shield</p>
-          <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Uses the high-frequency <em>Sun Voice</em> and keytar synth pads to soothe acute psychological trauma, supported by Byakko's two-tailed fox light.</p>
-        </div>
-
-        <div class="domain-box crimson">
-          <div class="domain-title">
-            <span style="color: var(--crimson-akari);">Crimson Spark Domain</span>
-            <span>🥁 Akari Minase</span>
-          </div>
-          <p><strong>Role:</strong> Kinetic Energy & 180+ BPM Rhythm Engine</p>
-          <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Provides physical impact through rapid double-kick drumming and stick-spinning fills, amplified by Kagerou's ember trails.</p>
-        </div>
-
-        <div class="domain-box teal">
-          <div class="domain-title">
-            <span style="color: var(--teal-aoi);">Mossy-Teal Wave Domain</span>
-            <span>🎸 Aoi Mizuhara</span>
-          </div>
-          <p><strong>Role:</strong> Sub-Bass Containment & Tactical Stealth</p>
-          <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">Anchors low-frequency basslines that prevent subterranean acoustic leakage from reaching campus floors above, assisted by Komorebi.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. DECIBEL SCALE RULES -->
-    <section class="lore-section">
-      <h2 class="section-title">THE DECIBEL SCALE & ACOUSTIC LIMITS</h2>
-
-      <table class="db-table">
-        <thead>
-          <tr>
-            <th>Decibel Range</th>
-            <th>Classification</th>
-            <th>Acoustic State & Operational Protocol</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="db-range">0 – 85 dB</td>
-            <td><strong>Daytime Ambient</strong></td>
-            <td>Normal school activity. Used for EchoHeart rehearsals in Music Prep Room B and campus courtyard acoustic performances. Completely stealthy.</td>
-          </tr>
-          <tr>
-            <td class="db-range">86 – 115 dB</td>
-            <td><strong>Dissonance Static</strong></td>
-            <td>Acute emotional distress threshold. Localized static or fog begins corrupting surrounding spaces. Requires immediate subterranean isolation.</td>
-          </tr>
-          <tr>
-            <td class="db-range">116 – 140+ dB</td>
-            <td><strong>Subterranean Vault Engagement</strong></td>
-            <td>Girls Phantom Dead full deployment. High-gain distortion and 180 BPM drum drivers are unleashed to purify corrupted Resonance cores.</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
+    <div class="content-card">
+      <span class="tag-badge">Underground Secret Venue</span>
+      <h3 class="content-title">The Basement</h3>
+      <p>A cavernous stone space directly beneath the music prep room. Away from teachers and campus noise, this is where the band plugs in their amplifiers and performs high-energy J-Rock sets to lift heavy burdens from fellow students.</p>
+    </div>
   </main>
 
-  <!-- Footer -->
   <footer>
-    <p>&copy; EchoHeart Universe. Official Light Novel & Transmedia World Archive.</p>
+    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
   </footer>
 
-  <!-- Mode Switcher Script -->
   <script>
-    const savedTheme = localStorage.getItem('echoheart-theme');
-    const toggleBtn = document.getElementById('theme-toggle-btn');
-
-    if (savedTheme === 'vault') {
-      document.body.classList.add('vault-mode');
-      if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isBasement) {
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+      } else {
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+      }
     }
 
     function toggleMode() {
-      const isVault = document.body.classList.toggle('vault-mode');
-      if (isVault) {
-        localStorage.setItem('echoheart-theme', 'vault');
-        if (toggleBtn) toggleBtn.innerText = '🌸 Daytime Mode';
-      } else {
-        localStorage.setItem('echoheart-theme', 'daytime');
-        if (toggleBtn) toggleBtn.innerText = '⚡ Vault Mode';
-      }
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
   </script>
 </body>
 </html>
