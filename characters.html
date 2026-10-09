@@ -122,13 +122,54 @@
     </div>
 
     <nav>
-      <a href="index.html">Home</a>
-      <a href="characters.html" class="active">Band Members</a>
-      <a href="discography.html">Music & Songs</a>
-      <a href="lore.html">Our Story</a>
-      <a href="ticket-creator.html">Ticket Creator</a>
-      <a href="games.html">Mini-Games</a>
-      <a href="familiars.html">Familiars</a>
+<!-- Navigation Bar with Dropdown Menus -->
+<header class="navbar">
+  <div class="logo-container">
+    <span class="logo-echoheart">ECHOHEART</span>
+    <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
+  </div>
+  
+  <div class="status-badge-container">
+    <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
+    <span class="status-badge basement-status">💜 The Basement • Live Set</span>
+  </div>
+
+  <nav>
+    <a href="index.html">Home</a>
+
+    <!-- Story & Lore Dropdown -->
+    <div class="dropdown">
+      <button class="dropdown-btn">Story & Lore ▾</button>
+      <div class="dropdown-content">
+        <a href="characters.html">Band Members</a>
+        <a href="lore.html">Our Story</a>
+        <a href="familiars.html">The Familiar Nook</a>
+      </div>
+    </div>
+
+    <!-- Music Dropdown -->
+    <div class="dropdown">
+      <button class="dropdown-btn">Music ▾</button>
+      <div class="dropdown-content">
+        <a href="discography.html">Discography & Deck</a>
+      </div>
+    </div>
+
+    <!-- Interactive Arcade Dropdown -->
+    <div class="dropdown">
+      <button class="dropdown-btn">Interactive Arcade ▾</button>
+      <div class="dropdown-content">
+        <a href="ticket-creator.html">Ticket Creator</a>
+        <a href="games.html">Mini-Games</a>
+      </div>
+    </div>
+    
+    <!-- Mode Switcher -->
+    <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+      ⚡ Secret Concert Mode
+    </button>
+  </nav>
+</header>
       
       <!-- Theme Switcher Button -->
       <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
