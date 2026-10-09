@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shoe-Locker Ticket Creator — Girls Phantom Dead</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    /* Ticket Creator Specific Layout */
+    .creator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 800px) {
+      .creator-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Form Inputs */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      color: #a88beb;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 8px;
+      color: #e2daf8;
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: #f4b8c4;
+      box-shadow: 0 0 8px rgba(244, 184, 196, 0.3);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* Preset Buttons */
+    .preset-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .preset-btn {
+      background: rgba(45, 34, 80, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      color: #cbb8f6;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .preset-btn:hover {
+      background: rgba(244, 184, 196, 0.2);
+      border-color: #f4b8c4;
+      color: #ffffff;
+    }
+
+    /* Ticket Card Preview */
+    .ticket-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ticket-card {
+      width: 100%;
+      max-width: 380px;
+      background: linear-gradient(145deg, #18122b, #0a0714);
+      border: 2px solid #f4b8c4;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(244, 184, 196, 0.2);
+      position: relative;
+    }
+
+    .ticket-header {
+      text-align: center;
+      border-bottom: 1px dashed rgba(244, 184, 196, 0.3);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .ticket-stamp {
+      font-size: 1.8rem;
+      color: #f4b8c4;
+      text-shadow: 0 0 10px rgba(244, 184, 196, 0.6);
+    }
+
+    .ticket-band-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ffffff;
+      margin-top: 4px;
+    }
+
+    .ticket-sub {
+      font-size: 0.75rem;
+      color: #a88beb;
+    }
+
+    .ticket-field {
+      margin-bottom: 10px;
+    }
+
+    .ticket-label {
+      font-size: 0.72rem;
+      color: #8b7cb6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .ticket-value {
+      font-size: 0.95rem;
+      color: #e2daf8;
+      font-weight: 600;
+    }
+
+    .ticket-note-box {
+      margin-top: 16px;
+      padding: 10px 12px;
+      background: rgba(244, 184, 196, 0.05);
+      border-left: 2px solid #f4b8c4;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: #f4b8c4;
+    }
+
+    .action-btn {
+      width: 100%;
+      margin-top: 18px;
+      padding: 12px;
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none;
+      border-radius: 10px;
+      color: #0d0b18;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="twilight-mode">
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo-text">
+      ECHOHEART <span class="logo-subtext">✦ GIRLS PHANTOM DEAD</span>
+    </div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge room-status">🌸 Prep Room B • After-School Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Secret Concert</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="characters.html">Band Members</a>
+      <a href="discography.html">Music & Songs</a>
+      <a href="lore.html">Our Story</a>
+      <a href="ticket-creator.html" class="active">Ticket Creator</a>
+      
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Secret Concert Mode
+      </button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>SHOE-LOCKER TICKET CREATOR</h1>
+    <p class="hero-subtitle hero-twilight-subtitle">
+      🌸 Create customized shadow concert tickets dropped into student shoe lockers
+    </p>
+    <p class="hero-subtitle hero-basement-subtitle">
+      ⚡ Stamped tickets granting access to secret concerts in The Basement
+    </p>
+  </section>
+
+  <main class="container">
+    <div class="creator-grid">
+      <!-- Controls Form -->
+      <div class="content-card">
+        <h3 class="content-title">Customize Ticket Details</h3>
+        
+        <div class="preset-container">
+          <button class="preset-btn" onclick="loadPreset('yumi')">Load Case 1 (Yumi)</button>
+          <button class="preset-btn" onclick="loadPreset('ren')">Load Case 2 (Ren)</button>
+        </div>
+
+        <div class="form-group">
+          <label for="input-target">Target Student</label>
+          <input type="text" id="input-target" class="form-control" value="Yumi Takahashi" oninput="updateTicket()">
+        </div>
+
+        <div class="form-group">
+          <label for="input-location">Concert Location</label>
+          <input type="text" id="input-location" class="form-control" value="The Basement (Trapdoor in Prep Room B)" oninput="updateTicket()">
+        </div>
+
+        <div class="form-group">
+          <label for="input-time">Time & Schedule</label>
+          <input type="text" id="input-time" class="form-control" value="6:30 PM • After Club Practice" oninput="updateTicket()">
+        </div>
+
+        <div class="form-group">
+          <label for="input-note">Personal Message / Note</label>
+          <textarea id="input-note" class="form-control" oninput="updateTicket()">Your paintbrush hasn't lost its voice. Come listen beneath the floorboards.</textarea>
+        </div>
+      </div>
+
+      <!-- Ticket Display -->
+      <div class="ticket-stage">
+        <div id="ticket-export" class="ticket-card">
+          <div class="ticket-header">
+            <div class="ticket-stamp">[ ♡ ]</div>
+            <div class="ticket-band-title">GIRLS PHANTOM DEAD</div>
+            <div class="ticket-sub">Sakuraoka High Underground Ticket</div>
+          </div>
+
+          <div class="ticket-field">
+            <div class="ticket-label">INVITATION FOR</div>
+            <div id="card-target" class="ticket-value">Yumi Takahashi</div>
+          </div>
+
+          <div class="ticket-field">
+            <div class="ticket-label">LOCATION</div>
+            <div id="card-location" class="ticket-value">The Basement (Trapdoor in Prep Room B)</div>
+          </div>
+
+          <div class="ticket-field">
+            <div class="ticket-label">TIME</div>
+            <div id="card-time" class="ticket-value">6:30 PM • After Club Practice</div>
+          </div>
+
+          <div class="ticket-note-box">
+            "<span id="card-note">Your paintbrush hasn't lost its voice. Come listen beneath the floorboards.</span>"
+          </div>
+        </div>
+
+        <button class="action-btn" onclick="downloadTicket()">📷 Download Ticket Image</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
+  </footer>
+
+  <script>
+    function updateTicket() {
+      document.getElementById('card-target').innerText = document.getElementById('input-target').value || 'Student Name';
+      document.getElementById('card-location').innerText = document.getElementById('input-location').value || 'The Basement';
+      document.getElementById('card-time').innerText = document.getElementById('input-time').value || 'Twilight';
+      document.getElementById('card-note').innerText = document.getElementById('input-note').value || '...';
+    }
+
+    function loadPreset(caseName) {
+      if (caseName === 'yumi') {
+        document.getElementById('input-target').value = 'Yumi Takahashi';
+        document.getElementById('input-location').value = 'The Basement (Trapdoor in Prep Room B)';
+        document.getElementById('input-time').value = '6:30 PM • After Club Practice';
+        document.getElementById('input-note').value = "Your paintbrush hasn't lost its voice. Come listen beneath the floorboards.";
+      } else if (caseName === 'ren') {
+        document.getElementById('input-target').value = 'Ren Tachibana';
+        document.getElementById('input-location').value = 'Athletic Stadium Finish Line';
+        document.getElementById('input-time').value = '5:45 PM • Evening Time Trials';
+        document.getElementById('input-note').value = "Your legs aren't broken. Run toward the sound when the track goes dark.";
+      }
+      updateTicket();
+    }
+
+    function downloadTicket() {
+      const ticketElement = document.getElementById('ticket-export');
+      html2canvas(ticketElement, { backgroundColor: null }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `GirlsPhantomDead_Ticket.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isBasement) {
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+      } else {
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+      }
+    }
+
+    function toggleMode() {
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
+  </script>
+</body>
+</html>
