@@ -1,339 +1,201 @@
 /* ============================================================
-   ECHOHEART UNIVERSE — OFFICIAL DUAL-MODE MASTER STYLESHEET
+   ECHOHEART & GIRLS PHANTOM DEAD — GLOBAL TWILIGHT STYLES
    ============================================================ */
-
-/* ------------------------------------------------------------
-   1. DAYTIME MODE (DEFAULT / ECHOHEART PREP ROOM)
-   ------------------------------------------------------------ */
-:root {
-  --bg-dark: #f8fafc;
-  --bg-card: #ffffff;
-  --bg-nav: rgba(255, 255, 255, 0.92);
-  --border-color: #e2e8f0;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --hero-bg: radial-gradient(circle at center, rgba(244, 63, 94, 0.1) 0%, transparent 70%);
-  
-  /* Domain Color Accents (Soft Version) */
-  --violet-nekomi: #7c3aed;
-  --pink-sera: #e11d48;
-  --crimson-akari: #e11d48;
-  --teal-aoi: #0d9488;
-  --gold-maya: #d97706;
-
-  --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  --glow-effect: none;
-}
-
-/* ------------------------------------------------------------
-   2. UNDERGROUND VAULT MODE (GIRLS PHANTOM DEAD)
-   ------------------------------------------------------------ */
-body.vault-mode {
-  --bg-dark: #090a0f;
-  --bg-card: #12141f;
-  --bg-nav: rgba(9, 10, 15, 0.95);
-  --border-color: #232738;
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --hero-bg: radial-gradient(circle at center, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
-  
-  /* Domain Color Accents (Neon Version) */
-  --violet-nekomi: #a78bfa;
-  --pink-sera: #fb7185;
-  --crimson-akari: #f87171;
-  --teal-aoi: #2dd4bf;
-  --gold-maya: #facc15;
-
-  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-  --glow-effect: 0 0 15px rgba(167, 139, 250, 0.3);
-
-  /* Subterranean Grid Overlay */
-  background-image: 
-    linear-gradient(rgba(35, 39, 56, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(35, 39, 56, 0.3) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-/* ------------------------------------------------------------
-   3. GENERAL STYLING & NAVIGATION
-   ------------------------------------------------------------ */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
 body {
-  background-color: var(--bg-dark);
-  color: var(--text-main);
-  line-height: 1.6;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  min-height: 100vh;
+}
+
+/* 🌙 Mode 1: Twilight HQ (Prep Room B) - Soft Dark Lavender/Violet */
+body.twilight-mode {
+  background-color: #130f26;
+  color: #e2daf8;
+}
+
+/* ⚡ Mode 2: Secret Concert (The Basement) - Deep Midnight & Rose Gold */
+body.basement-mode {
+  background-color: #070510;
+  color: #f4b8c4;
 }
 
 /* Navigation Bar */
-header.navbar {
-  position: sticky;
-  top: 0;
-  background-color: var(--bg-nav);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--border-color);
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  z-index: 1000;
-  flex-wrap: wrap;
-  gap: 1rem;
+  padding: 16px 28px;
+  background: rgba(28, 20, 52, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(168, 139, 235, 0.25);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .logo-text {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 800;
-  letter-spacing: 2px;
-  background: linear-gradient(45deg, var(--violet-nekomi), var(--pink-sera));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  letter-spacing: 1.5px;
+  color: #a88beb;
 }
+
+.logo-subtext {
+  font-size: 0.85rem;
+  color: #f4b8c4;
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+.status-badge-container {
+  display: flex;
+  gap: 10px;
+}
+
+.status-badge {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  background: rgba(45, 34, 80, 0.7);
+  border: 1px solid rgba(168, 139, 235, 0.3);
+}
+
+.room-status { color: #b5ebb5; }
+.basement-status { color: #f4b8c4; }
 
 nav {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  flex-wrap: wrap;
+  gap: 18px;
 }
 
 nav a {
-  color: var(--text-muted);
+  color: #cbb8f6;
   text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
 }
 
 nav a:hover, nav a.active {
-  color: var(--text-main);
-  text-shadow: var(--glow-effect);
+  color: #f4b8c4;
 }
 
-/* Status Badges */
-.status-badge {
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.3125rem 0.75rem;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.status-badge.day-status {
-  background-color: rgba(13, 148, 136, 0.15);
-  color: var(--teal-aoi);
-  border: 1px solid var(--teal-aoi);
-  display: inline-block;
-}
-
-.status-badge.vault-status {
-  background-color: rgba(244, 63, 94, 0.2);
-  color: var(--pink-sera);
-  border: 1px solid var(--pink-sera);
-  box-shadow: 0 0 10px rgba(244, 63, 94, 0.4);
-  display: none;
-}
-
-body.vault-mode .status-badge.day-status { display: none; }
-body.vault-mode .status-badge.vault-status { display: inline-block; }
-
-/* Mode Switcher Button */
+/* Theme Toggle Button */
 .theme-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-card);
-  color: var(--text-main);
+  background: linear-gradient(135deg, #a88beb, #f4b8c4);
+  color: #0d0b18;
+  border: none;
   font-weight: 700;
-  font-size: 0.85rem;
+  padding: 8px 18px;
+  border-radius: 20px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  transition: all 0.3s ease;
+  font-size: 0.88rem;
+  box-shadow: 0 4px 12px rgba(168, 139, 235, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .theme-btn:hover {
-  border-color: var(--violet-nekomi);
-  box-shadow: var(--glow-effect);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 18px rgba(244, 184, 196, 0.5);
 }
 
-/* ------------------------------------------------------------
-   4. HERO SECTION & DYNAMIC HEADERS
-   ------------------------------------------------------------ */
+/* Layout Containers & Typography */
 .hero {
   text-align: center;
-  padding: 5rem 1.5rem;
-  background: var(--hero-bg);
-  border-bottom: 1px solid var(--border-color);
+  padding: 40px 20px 20px;
 }
 
 .hero h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  letter-spacing: 1px;
+  font-size: 2.2rem;
+  letter-spacing: 2px;
+  color: #f4b8c4;
+  text-shadow: 0 0 15px rgba(244, 184, 196, 0.3);
+  margin-bottom: 8px;
 }
 
-.hero p {
-  font-size: 1.25rem;
-  color: var(--text-muted);
-  max-width: 700px;
-  margin: 0 auto;
+.hero-subtitle {
+  font-size: 1rem;
+  color: #cbb8f6;
 }
 
-.hero-vault-subtitle {
-  display: none;
-  color: var(--violet-nekomi);
-  font-family: monospace;
-  letter-spacing: 1px;
-  font-weight: 700;
-}
-
-.hero-daytime-subtitle {
-  display: block;
-}
-
-body.vault-mode .hero-daytime-subtitle { display: none; }
-body.vault-mode .hero-vault-subtitle { display: block; }
-
-/* ------------------------------------------------------------
-   5. CARDS & GRID LAYOUT
-   ------------------------------------------------------------ */
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto 60px;
+  padding: 0 20px;
 }
 
 .section-title {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  text-align: center;
-  position: relative;
+  color: #a88beb;
+  margin: 30px 0 16px;
+  font-size: 1.4rem;
+  border-bottom: 1px solid rgba(168, 139, 235, 0.2);
+  padding-bottom: 8px;
 }
 
-.section-title::after {
-  content: '';
-  display: block;
-  width: 60px;
-  height: 4px;
-  background: linear-gradient(to right, var(--violet-nekomi), var(--pink-sera));
-  margin: 0.5rem auto 0 auto;
-  border-radius: 2px;
+/* Cards & Content Panels */
+.card, .content-card {
+  background: rgba(38, 28, 68, 0.65);
+  border: 1px solid rgba(168, 139, 235, 0.25);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
+.card-title, .content-title {
+  font-size: 1.25rem;
+  color: #ffffff;
+  margin-bottom: 10px;
 }
 
-.card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: var(--card-shadow);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+p {
+  font-size: 0.93rem;
+  line-height: 1.6;
+  color: #d1c5ed;
+  margin-bottom: 12px;
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--glow-effect);
-}
-
-.card.nekomi { border-top: 4px solid var(--violet-nekomi); }
-.card.sera { border-top: 4px solid var(--pink-sera); }
-.card.akari { border-top: 4px solid var(--crimson-akari); }
-.card.aoi { border-top: 4px solid var(--teal-aoi); }
-.card.maya { border-top: 4px solid var(--gold-maya); }
-
-.card-title {
-  font-size: 1.35rem;
-  margin-bottom: 0.25rem;
-}
-
-.card-tag {
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 1rem;
+.tag-badge {
   display: inline-block;
+  background: rgba(244, 184, 196, 0.15);
+  color: #f4b8c4;
+  border: 1px solid rgba(244, 184, 196, 0.3);
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
-.nekomi .card-tag { color: var(--violet-nekomi); }
-.sera .card-tag { color: var(--pink-sera); }
-.akari .card-tag { color: var(--crimson-akari); }
-.aoi .card-tag { color: var(--teal-aoi); }
-.maya .card-tag { color: var(--gold-maya); }
-
-/* Dynamic Outfit Box & Image Placeholders */
-.portrait-container {
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-  background-color: rgba(11, 12, 16, 0.05);
-  border: 1px dashed var(--border-color);
+/* Mode Toggles */
+body.twilight-mode .hero-basement-subtitle,
+body.twilight-mode .basement-text,
+body.twilight-mode .basement-img,
+body.twilight-mode .basement-status {
+  display: none !important;
 }
 
-.portrait-placeholder {
-  padding: 2.5rem 1rem;
-  text-align: center;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
+body.basement-mode .hero-twilight-subtitle,
+body.basement-mode .twilight-text,
+body.basement-mode .twilight-img,
+body.basement-mode .room-status {
+  display: none !important;
 }
-
-.portrait-placeholder.vault-img { display: none; }
-.portrait-placeholder.day-img { display: block; }
-
-body.vault-mode .portrait-placeholder.day-img { display: none; }
-body.vault-mode .portrait-placeholder.vault-img {
-  display: block;
-  color: var(--violet-nekomi);
-  background-color: rgba(139, 92, 246, 0.08);
-}
-
-.outfit-box {
-  background-color: rgba(11, 12, 16, 0.05);
-  border: 1px dashed var(--border-color);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-  font-size: 0.88rem;
-  font-weight: 700;
-}
-
-.outfit-label.vault-text {
-  display: none;
-  color: var(--violet-nekomi);
-}
-
-.outfit-label.daytime-text {
-  display: inline-block;
-  color: var(--pink-sera);
-}
-
-body.vault-mode .outfit-box {
-  background-color: rgba(139, 92, 246, 0.1);
-  border: 1px solid var(--violet-nekomi);
-}
-
-body.vault-mode .outfit-label.daytime-text { display: none; }
-body.vault-mode .outfit-label.vault-text { display: inline-block; }
 
 footer {
   text-align: center;
-  padding: 2rem;
-  border-top: 1px solid var(--border-color);
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  padding: 30px;
+  font-size: 0.85rem;
+  color: #8b7cb6;
+  border-top: 1px solid rgba(168, 139, 235, 0.15);
+  background: rgba(15, 10, 30, 0.8);
 }
