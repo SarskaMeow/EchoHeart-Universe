@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>After-School Arcade — Girls Phantom Dead & EchoHeart</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Arcade & Game Cards Layout */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      margin-top: 20px;
+    }
+
+    .game-card {
+      background: rgba(30, 22, 54, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 18px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .game-card:hover {
+      border-color: rgba(244, 184, 196, 0.5);
+      transform: translateY(-4px);
+    }
+
+    .game-badge {
+      display: inline-block;
+      background: rgba(244, 184, 196, 0.15);
+      color: #f4b8c4;
+      border: 1px solid rgba(244, 184, 196, 0.3);
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .score-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 10, 30, 0.7);
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(168, 139, 235, 0.2);
+      margin: 12px 0 18px;
+      font-size: 0.85rem;
+      color: #cbb8f6;
+      font-weight: 600;
+    }
+
+    .score-value {
+      color: #f4b8c4;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    /* Game 1: Keytar Pad Grid */
+    .simon-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .simon-pad {
+      height: 90px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.88rem;
+      transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+      user-select: none;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .simon-pad:active, .simon-pad.active-lit {
+      transform: scale(0.96);
+      filter: brightness(1.6);
+      box-shadow: 0 0 20px currentColor;
+    }
+
+    /* Core 4 Character Pad Colors */
+    .pad-nekomi { background: #a88beb; color: #0d0b18; } /* Nekomi Violet */
+    .pad-sera { background: #f4b8c4; color: #0d0b18; }   /* Sera Rose-Gold */
+    .pad-akari { background: #ff4d6d; color: #ffffff; }  /* Akari Crimson */
+    .pad-aoi { background: #20b2aa; color: #ffffff; }    /* Aoi Teal */
+
+    /* Game 2: Rhythm Tapper */
+    .tap-stage {
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .tap-target-btn {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ff4d6d 0%, #7b0099 100%);
+      border: 4px solid #f4b8c4;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(255, 77, 109, 0.5);
+      transition: transform 0.1s ease;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    .tap-target-btn:active {
+      transform: scale(0.92);
+      box-shadow: 0 0 40px rgba(244, 184, 196, 0.8);
+    }
+
+    /* Game 3: Fortune Box */
+    .fortune-box {
+      background: rgba(15, 10, 30, 0.7);
+      border-left: 3px solid #f4b8c4;
+      padding: 16px;
+      border-radius: 0 12px 12px 0;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      font-style: italic;
+      color: #e2daf8;
+      font-size: 0.92rem;
+      margin-bottom: 16px;
+    }
+
+    .game-action-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none;
+      border-radius: 12px;
+      color: #0d0b18;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 12px rgba(168, 139, 235, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .game-action-btn:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="twilight-mode">
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo-container">
+      <span class="logo-echoheart">ECHOHEART</span>
+      <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
+    </div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Live Set</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="characters.html">Band Members</a>
+      <a href="discography.html">Music & Songs</a>
+      <a href="lore.html">Our Story</a>
+      <a href="ticket-creator.html">Ticket Creator</a>
+      <a href="games.html" class="active">Mini-Games</a>
+      
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Secret Concert Mode
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Header -->
+  <section class="hero">
+    <h1>AFTER-SCHOOL ARCADE</h1>
+    <p class="hero-subtitle hero-twilight-subtitle">
+      🌸 Interactive music games and tea-break activities in Prep Room B
+    </p>
+    <p class="hero-subtitle hero-basement-subtitle">
+      ⚡ High-Speed Rhythm Drills & Secret Concert Echoes
+    </p>
+  </section>
+
+  <!-- Mini-Games Container -->
+  <main class="container">
+    <div class="games-grid">
+
+      <!-- Game 1: Sera's Keytar Memory Echo -->
+      <div class="game-card">
+        <div>
+          <span class="game-badge">AUDIO PATTERN MATCH</span>
+          <h3 class="content-title">Sera's Keytar Memory Echo</h3>
+          <p style="font-size:0.88rem;">Listen to the note sequence played by the band members and repeat the notes in exact order!</p>
+
+          <div class="score-banner">
+            <span>Round Level: <span id="simon-level" class="score-value">1</span></span>
+            <span>Best Streak: <span id="simon-best" class="score-value">0</span></span>
+          </div>
+
+          <div class="simon-grid">
+            <div class="simon-pad pad-nekomi" onclick="handlePadClick(0)">🎸 Nekomi</div>
+            <div class="simon-pad pad-sera" onclick="handlePadClick(1)">⌨️ Sera</div>
+            <div class="simon-pad pad-akari" onclick="handlePadClick(2)">🥁 Akari</div>
+            <div class="simon-pad pad-aoi" onclick="handlePadClick(3)">🎸 Aoi</div>
+          </div>
+        </div>
+
+        <button id="simon-start-btn" class="game-action-btn" onclick="startSimonGame()">▶ Start Memory Game</button>
+      </div>
+
+      <!-- Game 2: Akari's 180 BPM Tempo Tapper -->
+      <div class="game-card">
+        <div>
+          <span class="game-badge">RHYTHM SPEED DRILL</span>
+          <h3 class="content-title">Akari's 180 BPM Tempo Tapper</h3>
+          <p style="font-size:0.88rem;">Tap the drum pad in steady rhythm to match Akari's intense 180 BPM concert tempo!</p>
+
+          <div class="score-banner">
+            <span>Your Tempo: <span id="bpm-current" class="score-value">0 BPM</span></span>
+            <span>Accuracy: <span id="bpm-accuracy" class="score-value">-- %</span></span>
+          </div>
+
+          <div class="tap-stage">
+            <div class="tap-target-btn" onclick="registerDrumTap()">
+              🥁 TAP BEAT
+            </div>
+            <div style="font-size:0.8rem; color:#a88beb;" id="tap-feedback">Tap along to the steady heartbeat!</div>
+          </div>
+        </div>
+
+        <button class="game-action-btn" onclick="resetDrumTapper()">↺ Reset Tempo Meter</button>
+      </div>
+
+      <!-- Game 3: Yozora's Tea-Time Fortune -->
+      <div class="game-card">
+        <div>
+          <span class="game-badge">DAILY COMPANION WISDOM</span>
+          <h3 class="content-title">Yozora's Afternoon Fortune</h3>
+          <p style="font-size:0.88rem;">Click Yozora the black cat on the piano to receive a daily band note or tea-time encouragement!</p>
+
+          <div class="score-banner">
+            <span>Tea Room Mood: <span class="score-value">🌸 Cozy & Warm</span></span>
+          </div>
+
+          <div class="fortune-box">
+            "<span id="fortune-text">Click the button below to draw today's wisdom note from Prep Room B...</span>"
+          </div>
+        </div>
+
+        <button class="game-action-btn" onclick="drawFortune()">🐾 Ask Yozora for Wisdom</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Web Audio API Setup
+    let audioCtx = null;
+
+    function playNote(freq, duration = 0.25) {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e){}
+    }
+
+    // Game 1: Memory Game Logic
+    const padNotes = [220, 261.63, 329.63, 392.00];
+    let simonSequence = [];
+    let playerSequence = [];
+    let simonLevel = 1;
+    let simonBest = 0;
+    let isPlayingSequence = false;
+
+    function startSimonGame() {
+      simonSequence = [];
+      playerSequence = [];
+      simonLevel = 1;
+      document.getElementById('simon-level').innerText = simonLevel;
+      document.getElementById('simon-start-btn').innerText = '🔄 Restart Memory Game';
+      nextSimonRound();
+    }
+
+    function nextSimonRound() {
+      playerSequence = [];
+      simonSequence.push(Math.floor(Math.random() * 4));
+      document.getElementById('simon-level').innerText = simonSequence.length;
+      playSimonSequence();
+    }
+
+    function playSimonSequence() {
+      isPlayingSequence = true;
+      let i = 0;
+      const pads = document.querySelectorAll('.simon-pad');
+
+      const interval = setInterval(() => {
+        const index = simonSequence[i];
+        flashPad(pads[index], index);
+        i++;
+        if (i >= simonSequence.length) {
+          clearInterval(interval);
+          isPlayingSequence = false;
+        }
+      }, 600);
+    }
+
+    function flashPad(padElement, noteIdx) {
+      padElement.classList.add('active-lit');
+      playNote(padNotes[noteIdx], 0.3);
+      setTimeout(() => {
+        padElement.classList.remove('active-lit');
+      }, 300);
+    }
+
+    function handlePadClick(index) {
+      if (isPlayingSequence || simonSequence.length === 0) return;
+
+      const pads = document.querySelectorAll('.simon-pad');
+      flashPad(pads[index], index);
+      playerSequence.push(index);
+
+      const step = playerSequence.length - 1;
+      if (playerSequence[step] !== simonSequence[step]) {
+        alert("Resonance static! The sequence broke. Try again!");
+        if (simonSequence.length - 1 > simonBest) {
+          simonBest = simonSequence.length - 1;
+          document.getElementById('simon-best').innerText = simonBest;
+        }
+        simonSequence = [];
+        document.getElementById('simon-start-btn').innerText = '▶ Start Memory Game';
+        return;
+      }
+
+      if (playerSequence.length === simonSequence.length) {
+        setTimeout(nextSimonRound, 800);
+      }
+    }
+
+    // Game 2: Rhythm Tapper Logic
+    let tapTimes = [];
+
+    function registerDrumTap() {
+      const now = Date.now();
+      playNote(150, 0.12);
+
+      tapTimes.push(now);
+      if (tapTimes.length > 8) tapTimes.shift();
+
+      if (tapTimes.length > 1) {
+        let intervals = [];
+        for (let i = 1; i < tapTimes.length; i++) {
+          intervals.push(tapTimes[i] - tapTimes[i - 1]);
+        }
+        const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+        const currentBPM = Math.round(60000 / avgInterval);
+
+        let diff = Math.abs(180 - currentBPM);
+        let accuracy = Math.max(0, Math.round(100 - (diff / 1.8)));
+
+        document.getElementById('bpm-current').innerText = `${currentBPM} BPM`;
+        document.getElementById('bpm-accuracy').innerText = `${accuracy}%`;
+
+        const feedback = document.getElementById('tap-feedback');
+        if (accuracy > 90) {
+          feedback.innerText = "⚡ PERFECT RESONANCE! Driving at full 180 BPM!";
+          feedback.style.color = "#f4b8c4";
+        } else if (currentBPM < 180) {
+          feedback.innerText = "🐢 Speed up slightly! Pick up the drum sticks!";
+          feedback.style.color = "#a88beb";
+        } else {
+          feedback.innerText = "🔥 Fast & energetic! Keep the rhythm steady!";
+          feedback.style.color = "#ff4d6d";
+        }
+      }
+    }
+
+    function resetDrumTapper() {
+      tapTimes = [];
+      document.getElementById('bpm-current').innerText = "0 BPM";
+      document.getElementById('bpm-accuracy').innerText = "-- %";
+      document.getElementById('tap-feedback').innerText = "Tap along to the steady heartbeat!";
+      document.getElementById('tap-feedback').style.color = "#a88beb";
