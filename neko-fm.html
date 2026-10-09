@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whisper Radio / Neko FM — EchoHeart</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Radio Console Layout */
+    .radio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 850px) {
+      .radio-grid { grid-template-columns: 1fr; }
+    }
+
+    .radio-box {
+      background: rgba(30, 22, 54, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 18px;
+      padding: 26px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Player Interface */
+    .radio-player-deck {
+      background: rgba(12, 8, 25, 0.9);
+      border: 2px solid #f4b8c4;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(244, 184, 196, 0.25);
+      margin-bottom: 20px;
+    }
+
+    .frequency-display {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 2.2rem;
+      color: #f4b8c4;
+      margin: 10px 0 4px;
+      text-shadow: 0 0 12px rgba(244, 184, 196, 0.5);
+    }
+
+    .station-name {
+      font-size: 0.85rem;
+      color: #a88beb;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+
+    .channel-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .channel-btn {
+      background: rgba(45, 34, 80, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      color: #cbb8f6;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .channel-btn:hover, .channel-btn.active-channel {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border-color: #f4b8c4;
+    }
+
+    .broadcast-status {
+      font-size: 0.88rem;
+      color: #e2daf8;
+      font-style: italic;
+      background: rgba(168, 139, 235, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+      border-left: 3px solid #a88beb;
+    }
+
+    /* Mailbox & Submissions */
+    .mail-card {
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .mail-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #f4b8c4;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .mail-body {
+      font-size: 0.9rem;
+      color: #e2daf8;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .mail-reply {
+      font-size: 0.85rem;
+      color: #cbb8f6;
+      font-style: italic;
+      background: rgba(244, 184, 196, 0.08);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border-left: 2px solid #f4b8c4;
+    }
+
+    .form-group { margin-bottom: 12px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: #a88beb;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 8px;
+      color: #e2daf8;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none;
+      border-radius: 12px;
+      color: #0d0b18;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.92rem;
+      box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .action-btn:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body class="twilight-mode">
+
+  <!-- Universal Header Navigation -->
+  <header class="navbar">
+    <div class="logo-container">
+      <span class="logo-echoheart">ECHOHEART</span>
+      <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
+    </div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Live Set</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+
+      <!-- Story & Lore Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Story & Lore ▾</button>
+        <div class="dropdown-content">
+          <a href="characters.html">Band Members</a>
+          <a href="lore.html">Our Story & Ancient Lore</a>
+          <a href="familiars.html">The Familiar Nook</a>
+        </div>
+      </div>
+
+      <!-- Music Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Music ▾</button>
+        <div class="dropdown-content">
+          <a href="discography.html">Discography & Deck</a>
+          <a href="mixer.html">Stem Mixer Console</a>
+        </div>
+      </div>
+
+      <!-- Interactive Arcade Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Interactive Arcade ▾</button>
+        <div class="dropdown-content">
+          <a href="ticket-creator.html">Ticket Creator</a>
+          <a href="games.html">Mini-Games</a>
+        </div>
+      </div>
+
+      <!-- Neko Lounge Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Neko Lounge ▾</button>
+        <div class="dropdown-content">
+          <a href="neko-lounge.html">Tea Room & Creator</a>
+          <a href="atelier.html">Resonance Atelier</a>
+          <a href="neko-fm.html" class="active">Whisper Radio / Neko FM</a>
+        </div>
+      </div>
+
+      <!-- Mode Switcher -->
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Secret Concert Mode
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>WHISPER RADIO / NEKO FM</h1>
+    <p class="hero-subtitle hero-twilight-subtitle">
+      🌸 Late-night tea broadcasts, ambient purr lo-fi, and student locker letters
+    </p>
+    <p class="hero-subtitle hero-basement-subtitle">
+      ⚡ Subterranean Rehearsal Tapes & Secret Signal Transmissions
+    </p>
+  </section>
+
+  <main class="container">
+    <div class="radio-grid">
+
+      <!-- LEFT COLUMN: RADIO PLAYER DECK -->
+      <div class="radio-box">
+        <h3 class="content-title">📻 Prep Room B Broadcast Deck</h3>
+        <p style="font-size:0.88rem; margin-bottom:16px;">Select a frequency channel to stream ambient study loops and radio broadcasts!</p>
+
+        <div class="radio-player-deck">
+          <div style="font-size:2.5rem;">🎙️</div>
+          <div id="freq-num" class="frequency-display">98.4 FM</div>
+          <div id="freq-title" class="station-name">Tea-Time Lo-Fi & Warm Chords</div>
+
+          <div class="channel-buttons">
+            <button class="channel-btn active-channel" onclick="setChannel(98.4, 'Tea-Time Lo-Fi & Warm Chords', 'lofi')">98.4 FM • Tea Lo-Fi</button>
+            <button class="channel-btn" onclick="setChannel(104.2, 'Rain & Purr Study Sanctuary', 'rain')">104.2 FM • Rain & Purr</button>
+            <button class="channel-btn" onclick="setChannel(88.0, 'Subterranean Rehearsal Tapes', 'rock')">88.0 FM • Rehearsal Tape</button>
+          </div>
+
+          <button id="broadcast-btn" class="action-btn" onclick="toggleRadioStream()">▶ Tune Into Broadcast</button>
+        </div>
+
+        <div class="broadcast-status">
+          💬 <span id="radio-host-text">Nekomi: "Welcome to Neko FM! Grab some warm barley tea and let the music settle your thoughts."</span>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: LOCKER MAILBOX & SUBMISSIONS -->
+      <div class="radio-box">
+        <h3 class="content-title">📬 Locker Note Mailbox</h3>
+        <p style="font-size:0.88rem; margin-bottom:16px;">Anonymous student letters dropped into Prep Room B for radio read-outs!</p>
+
+        <div id="mailbox-list">
+          <div class="mail-card">
+            <div class="mail-header">
+              <span>From: Anonymous 2nd-Year</span>
+              <span>Locker #104</span>
+            </div>
+            <div class="mail-body">"How do you stay focused when studying for exams gets too stressful?"</div>
+            <div class="mail-reply">
+              <strong>Sera:</strong> "Take short tea breaks every 25 minutes! Aoi always reminds us that rest is part of practice."
+            </div>
+          </div>
+
+          <div class="mail-card">
+            <div class="mail-header">
+              <span>From: Anonymous Track Runner</span>
+              <span>Locker #108</span>
+            </div>
+            <div class="mail-body">"Can you play something fast to help me pace my morning runs?"</div>
+            <div class="mail-reply">
+              <strong>Akari:</strong> "Tuned in 180 BPM drum beats! Sprinting to rhythm makes the track feel weightless!"
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Form -->
+        <h4 style="color:#f4b8c4; margin:16px 0 8px; font-size:1rem;">Submit Note to Neko FM</h4>
+        <div class="form-group">
+          <label for="user-sender">Your Name / Locker ID</label>
+          <input type="text" id="user-sender" class="form-control" placeholder="e.g. Locker #201 or Quiet Listener">
+        </div>
+        <div class="form-group">
+          <label for="user-msg">Your Message / Request</label>
+          <textarea id="user-msg" class="form-control" style="min-height:60px;" placeholder="Type your letter for Nekomi & Sera..."></textarea>
+        </div>
+        <button class="action-btn" onclick="postNote()">📨 Send Letter to Prep Room B</button>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
+  </footer>
+
+  <!-- Web Audio Stream Scripts -->
+  <script>
+    let audioCtx = null;
+    let isPlaying = false;
+    let streamInterval = null;
+    let currentMode = 'lofi';
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function setChannel(freq, name, mode) {
+      currentMode = mode;
+      document.getElementById('freq-num').innerText = `${freq} FM`;
+      document.getElementById('freq-title').innerText = name;
+
+      document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active-channel'));
+      event.target.classList.add('active-channel');
+
+      const hostText = document.getElementById('radio-host-text');
+      if (mode === 'lofi') {
+        hostText.innerText = 'Sera: "Playing soft keytar chords and gentle tea-time ambient beats..."';
+      } else if (mode === 'rain') {
+        hostText.innerText = 'Nekomi: "Rain tapping against Prep Room B windows while Yozora purrs on the piano lid..."';
+      } else if (mode === 'rock') {
+        hostText.innerText = 'Akari: "Broadcasting fresh 180 BPM rehearsal tapes straight from The Basement!"';
+      }
+
+      if (isPlaying) {
+        clearInterval(streamInterval);
+        startStreamLoop();
+      }
+    }
+
+    function toggleRadioStream() {
+      initAudio();
+      isPlaying = !isPlaying;
+      const btn = document.getElementById('broadcast-btn');
+
+      if (isPlaying) {
+        btn.innerText = '⏸ Pause Stream';
+        startStreamLoop();
+      } else {
+        btn.innerText = '▶ Tune Into Broadcast';
+        clearInterval(streamInterval);
+      }
+    }
+
+    function startStreamLoop() {
+      streamInterval = setInterval(() => {
+        if (!isPlaying) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        if (currentMode === 'lofi') {
+          osc.type = 'triangle';
+          osc.frequency.value = [261.63, 329.63, 392.00, 440.00][Math.floor(Math.random() * 4)];
+          gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+        } else if (currentMode === 'rain') {
+          osc.type = 'sine';
+          osc.frequency.value = 180 + Math.random() * 80;
+          gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+        } else if (currentMode === 'rock') {
+          osc.type = 'sawtooth';
+          osc.frequency.value = [146.83, 220.00, 329.63][Math.floor(Math.random() * 3)];
+          gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+        }
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.5);
+      }, 500);
+    }
+
+    function postNote() {
+      const sender = document.getElementById('user-sender').value || 'Anonymous Student';
+      const msg = document.getElementById('user-msg').value;
+
+      if (!msg) {
+        alert("Please write a note before sending!");
+        return;
+      }
+
+      const list = document.getElementById('mailbox-list');
+      const newCard = document.createElement('div');
+      newCard.className = 'mail-card';
+      newCard.innerHTML = `
+        <div class="mail-header">
+          <span>From: ${sender}</span>
+          <span>Just Now</span>
+        </div>
+        <div class="mail-body">"${msg}"</div>
+        <div class="mail-reply">
+          <strong>Nekomi:</strong> "Thanks for your note! We'll dedicate our next rehearsal chord to you!"
+        </div>
+      `;
+      list.prepend(newCard);
+
+      document.getElementById('user-sender').value = '';
+      document.getElementById('user-msg').value = '';
+      alert("Your letter has been posted to Prep Room B!");
+    }
+
+    // Theme Switcher Logic
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isBasement) {
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+      } else {
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+      }
+    }
+
+    function toggleMode() {
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
+  </script>
+</body>
+</html>
