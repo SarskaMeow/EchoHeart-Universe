@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prep Room B Multitrack Stem Mixer — EchoHeart & Girls Phantom Dead</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Console & Mixer Layout */
+    .mixer-console {
+      background: rgba(22, 15, 42, 0.9);
+      border: 2px solid rgba(168, 139, 235, 0.35);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      margin-top: 20px;
+    }
+
+    .master-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(12, 8, 25, 0.8);
+      border: 1px solid rgba(244, 184, 196, 0.3);
+      padding: 16px 24px;
+      border-radius: 14px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .master-btn {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border: none;
+      font-weight: 800;
+      padding: 12px 28px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(168, 139, 235, 0.4);
+      transition: transform 0.2s ease;
+    }
+
+    .master-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .bpm-display {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.1rem;
+      color: #f4b8c4;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tracks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .stem-channel {
+      background: rgba(30, 22, 54, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: border-color 0.3s ease;
+    }
+
+    .stem-channel.nekomi { border-top: 4px solid #a88beb; }
+    .stem-channel.sera { border-top: 4px solid #f4b8c4; }
+    .stem-channel.akari { border-top: 4px solid #ff4d6d; }
+    .stem-channel.aoi { border-top: 4px solid #20b2aa; }
+
+    .channel-avatar {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .channel-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .channel-role {
+      font-size: 0.78rem;
+      color: #a88beb;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    /* Track Controls */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 18px;
+    }
+
+    .track-btn {
+      flex: 1;
+      padding: 8px 0;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      background: rgba(15, 10, 30, 0.7);
+      color: #cbb8f6;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .track-btn.mute-active {
+      background: #ff3355;
+      color: #ffffff;
+      border-color: #ff3355;
+    }
+
+    .track-btn.solo-active {
+      background: #20b2aa;
+      color: #ffffff;
+      border-color: #20b2aa;
+    }
+
+    .fader-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fader-label {
+      font-size: 0.75rem;
+      color: #8b7cb6;
+      font-weight: 600;
+    }
+
+    .volume-fader {
+      width: 100%;
+      accent-color: #f4b8c4;
+      cursor: pointer;
+    }
+
+    /* Signal Meter Indicator */
+    .signal-meter {
+      width: 100%;
+      height: 6px;
+      background: rgba(10, 6, 20, 0.8);
+      border-radius: 3px;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .signal-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #a88beb, #f4b8c4);
+      transition: width 0.1s ease;
+    }
+  </style>
+</head>
+<body class="twilight-mode">
+
+  <!-- Navigation Bar with Dropdown Menus -->
+  <header class="navbar">
+    <div class="logo-container">
+      <span class="logo-echoheart">ECHOHEART</span>
+      <span class="logo-phantom">✦ GIRLS PHANTOM DEAD</span>
+    </div>
+    
+    <div class="status-badge-container">
+      <span class="status-badge room-status">🌸 Prep Room B • Practice</span>
+      <span class="status-badge basement-status">💜 The Basement • Live Set</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Home</a>
+
+      <!-- Story & Lore Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Story & Lore ▾</button>
+        <div class="dropdown-content">
+          <a href="characters.html">Band Members</a>
+          <a href="lore.html">Our Story</a>
+          <a href="familiars.html">The Familiar Nook</a>
+        </div>
+      </div>
+
+      <!-- Music Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Music ▾</button>
+        <div class="dropdown-content">
+          <a href="discography.html">Discography & Deck</a>
+          <a href="mixer.html" class="active">Stem Mixer console</a>
+        </div>
+      </div>
+
+      <!-- Interactive Arcade Dropdown -->
+      <div class="dropdown">
+        <button class="dropdown-btn">Interactive Arcade ▾</button>
+        <div class="dropdown-content">
+          <a href="ticket-creator.html">Ticket Creator</a>
+          <a href="games.html">Mini-Games</a>
+        </div>
+      </div>
+
+      <!-- Mode Switcher -->
+      <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
+        ⚡ Secret Concert Mode
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Header -->
+  <section class="hero">
+    <h1>PREP ROOM B STEM MIXER</h1>
+    <p class="hero-subtitle hero-twilight-subtitle">
+      🌸 Isolate or combine Nekomi, Sera, Akari, and Aoi's rehearsal stems
+    </p>
+    <p class="hero-subtitle hero-basement-subtitle">
+      ⚡ Live Subterranean Soundboard for Secret Underground Sets
+    </p>
+  </section>
+
+  <main class="container">
+    <div class="mixer-console">
+      
+      <!-- Master Deck Controls -->
+      <div class="master-controls">
+        <button id="master-play-btn" class="master-btn" onclick="togglePlayback()">
+          ▶ Start Rehearsal Loop
+        </button>
+        
+        <div class="bpm-display">
+          <span>⚡ Tempo: 180 BPM</span>
+          <span style="color:#8b7cb6; font-size:0.85rem; font-style:italic;">(Synced J-Rock Loop)</span>
+        </div>
+      </div>
+
+      <!-- 4 Channel Stems -->
+      <div class="tracks-grid">
+
+        <!-- Channel 1: Nekomi -->
+        <div class="stem-channel nekomi">
+          <div class="channel-avatar">🎸</div>
+          <div class="channel-name">Nekomi</div>
+          <div class="channel-role">Lead Guitar</div>
+
+          <div class="btn-row">
+            <button id="mute-nekomi" class="track-btn" onclick="toggleMute('nekomi')">MUTE</button>
+            <button id="solo-nekomi" class="track-btn" onclick="toggleSolo('nekomi')">SOLO</button>
+          </div>
+
+          <div class="fader-container">
+            <span class="fader-label">Volume</span>
+            <input type="range" id="vol-nekomi" class="volume-fader" min="0" max="1" step="0.05" value="0.8" oninput="updateVolume('nekomi')">
+          </div>
+
+          <div class="signal-meter">
+            <div id="meter-nekomi" class="signal-bar"></div>
+          </div>
+        </div>
+
+        <!-- Channel 2: Sera -->
+        <div class="stem-channel sera">
+          <div class="channel-avatar">⌨️</div>
+          <div class="channel-name">Sera</div>
+          <div class="channel-role">Keytar / Synth</div>
+
+          <div class="btn-row">
+            <button id="mute-sera" class="track-btn" onclick="toggleMute('sera')">MUTE</button>
+            <button id="solo-sera" class="track-btn" onclick="toggleSolo('sera')">SOLO</button>
+          </div>
+
+          <div class="fader-container">
+            <span class="fader-label">Volume</span>
+            <input type="range" id="vol-sera" class="volume-fader" min="0" max="1" step="0.05" value="0.8" oninput="updateVolume('sera')">
+          </div>
+
+          <div class="signal-meter">
+            <div id="meter-sera" class="signal-bar"></div>
+          </div>
+        </div>
+
+        <!-- Channel 3: Akari -->
+        <div class="stem-channel akari">
+          <div class="channel-avatar">🥁</div>
+          <div class="channel-name">Akari</div>
+          <div class="channel-role">Drums</div>
+
+          <div class="btn-row">
+            <button id="mute-akari" class="track-btn" onclick="toggleMute('akari')">MUTE</button>
+            <button id="solo-akari" class="track-btn" onclick="toggleSolo('akari')">SOLO</button>
+          </div>
+
+          <div class="fader-container">
+            <span class="fader-label">Volume</span>
+            <input type="range" id="vol-akari" class="volume-fader" min="0" max="1" step="0.05" value="0.8" oninput="updateVolume('akari')">
+          </div>
+
+          <div class="signal-meter">
+            <div id="meter-akari" class="signal-bar"></div>
+          </div>
+        </div>
+
+        <!-- Channel 4: Aoi -->
+        <div class="stem-channel aoi">
+          <div class="channel-avatar">🎸</div>
+          <div class="channel-name">Aoi</div>
+          <div class="channel-role">Bass</div>
+
+          <div class="btn-row">
+            <button id="mute-aoi" class="track-btn" onclick="toggleMute('aoi')">MUTE</button>
+            <button id="solo-aoi" class="track-btn" onclick="toggleSolo('aoi')">SOLO</button>
+          </div>
+
+          <div class="fader-container">
+            <span class="fader-label">Volume</span>
+            <input type="range" id="vol-aoi" class="volume-fader" min="0" max="1" step="0.05" value="0.8" oninput="updateVolume('aoi')">
+          </div>
+
+          <div class="signal-meter">
+            <div id="meter-aoi" class="signal-bar"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
+  </footer>
+
+  <!-- Web Audio Synthesizer Engine -->
+  <script>
+    let audioCtx = null;
+    let isPlaying = false;
+    let stepCount = 0;
+    let timerId = null;
+
+    // Track states
+    const tracks = {
+      nekomi: { volume: 0.8, muted: false, soloed: false, gainNode: null },
+      sera:   { volume: 0.8, muted: false, soloed: false, gainNode: null },
+      akari:  { volume: 0.8, muted: false, soloed: false, gainNode: null },
+      aoi:    { volume: 0.8, muted: false, soloed: false, gainNode: null }
+    };
+
+    // J-Rock 16-step patterns (180 BPM)
+    // Notes in Hz
+    const guitarNotes = [329.63, 0, 392.00, 440.00, 329.63, 523.25, 493.88, 440.00, 329.63, 392.00, 440.00, 523.25, 587.33, 523.25, 493.88, 440.00];
+    const synthNotes  = [261.63, 0, 329.63, 0, 392.00, 0, 523.25, 0, 261.63, 0, 329.63, 0, 392.00, 0, 440.00, 0];
+    const bassNotes   = [110.00, 110.00, 0, 110.00, 130.81, 130.81, 0, 130.81, 146.83, 146.83, 0, 146.83, 123.47, 123.47, 0, 123.47];
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Setup individual track gains
+        for (let key in tracks) {
+          tracks[key].gainNode = audioCtx.createGain();
+          tracks[key].gainNode.connect(audioCtx.destination);
+        }
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function togglePlayback() {
+      initAudio();
+      isPlaying = !isPlaying;
+
+      const playBtn = document.getElementById('master-play-btn');
+      if (isPlaying) {
+        playBtn.innerText = '⏸ Pause Rehearsal Loop';
+        stepCount = 0;
+        // 180 BPM = 16th notes every 83.3ms
+        timerId = setInterval(playStep, 83.3);
+      } else {
+        playBtn.innerText = '▶ Start Rehearsal Loop';
+        clearInterval(timerId);
+        resetMeters();
+      }
+    }
+
+    function isTrackAudible(key) {
+      const anySolo = Object.values(tracks).some(t => t.soloed);
+      if (anySolo) {
+        return tracks[key].soloed && !tracks[key].muted;
+      }
+      return !tracks[key].muted;
+    }
+
+    function playStep() {
+      const step = stepCount % 16;
+
+      // Update signal meters
+      for (let key in tracks) {
+        const meterBar = document.getElementById(`meter-${key}`);
+        if (isTrackAudible(key)) {
+          meterBar.style.width = `${Math.random() * 60 + 40}%`;
+        } else {
+          meterBar.style.width = '0%';
+        }
+      }
+
+      // 1. Nekomi (Lead Guitar - Overdriven Sawtooth)
+      if (isTrackAudible('nekomi') && guitarNotes[step] > 0) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.value = guitarNotes[step];
+
+        gain.gain.setValueAtTime(tracks.nekomi.volume * 0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+
+        osc.connect(gain);
+        gain.connect(tracks.nekomi.gainNode);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+      }
+
+      // 2. Sera (Keytar/Synth Pad - Smooth Triangle)
+      if (isTrackAudible('sera') && synthNotes[step] > 0) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = synthNotes[step];
+
+        gain.gain.setValueAtTime(tracks.sera.volume * 0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+
+        osc.connect(gain);
+        gain.connect(tracks.sera.gainNode);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.25);
+      }
+
+      // 3. Akari (Drums - Synth Noise / Kick Synth)
+      if (isTrackAudible('akari')) {
+        // Kick on 0, 4, 8, 12
+        if (step % 4 === 0) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.1);
+          gain.gain.setValueAtTime(tracks.akari.volume * 0.3, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+          osc.connect(gain);
+          gain.connect(tracks.akari.gainNode);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.1);
+        }
+        // Snare on 4, 12
+        if (step % 8 === 4) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'square';
+          osc.frequency.value = 200;
+          gain.gain.setValueAtTime(tracks.akari.volume * 0.15, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+          osc.connect(gain);
+          gain.connect(tracks.akari.gainNode);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.12);
+        }
+      }
+
+      // 4. Aoi (Bass - Warm Deep Sine)
+      if (isTrackAudible('aoi') && bassNotes[step] > 0) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = bassNotes[step];
+
+        gain.gain.setValueAtTime(tracks.aoi.volume * 0.25, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+
+        osc.connect(gain);
+        gain.connect(tracks.aoi.gainNode);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.18);
+      }
+
+      stepCount++;
+    }
+
+    function toggleMute(key) {
+      tracks[key].muted = !tracks[key].muted;
+      const btn = document.getElementById(`mute-${key}`);
+      btn.classList.toggle('mute-active', tracks[key].muted);
+    }
+
+    function toggleSolo(key) {
+      tracks[key].soloed = !tracks[key].soloed;
+      const btn = document.getElementById(`solo-${key}`);
+      btn.classList.toggle('solo-active', tracks[key].soloed);
+    }
+
+    function updateVolume(key) {
+      const val = parseFloat(document.getElementById(`vol-${key}`).value);
+      tracks[key].volume = val;
+    }
+
+    function resetMeters() {
+      for (let key in tracks) {
+        document.getElementById(`meter-${key}`).style.width = '0%';
+      }
+    }
+
+    // Mode Switcher Logic
+    function updateThemeUI(isBasement) {
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isBasement) {
+        document.body.classList.remove('twilight-mode');
+        document.body.classList.add('basement-mode');
+        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
+      } else {
+        document.body.classList.remove('basement-mode');
+        document.body.classList.add('twilight-mode');
+        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
+      }
+    }
+
+    function toggleMode() {
+      const isBasement = document.body.classList.contains('twilight-mode');
+      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
+      updateThemeUI(isBasement);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('echoheart-theme');
+      updateThemeUI(savedTheme === 'basement');
+    });
+  </script>
+</body>
+</html>
