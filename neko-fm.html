@@ -1078,6 +1078,49 @@
     const liveAudioPlayer = document.getElementById('live-audio-player');
 
     /* -------------------------------------------------------------
+       BROWSER WEB SPEECH API - 4 CHARACTER VOICE ENGINE
+       ------------------------------------------------------------- */
+    const characterVoiceProfiles = {
+      nekomi: { pitch: 1.25, rate: 1.00, voiceOffset: 0 },  // Cheerful lead singer
+      sera:   { pitch: 1.10, rate: 0.88, voiceOffset: 1 },  // Gentle keytarist
+      akari:  { pitch: 1.45, rate: 1.18, voiceOffset: 2 },  // Fast energetic drummer
+      aoi:    { pitch: 0.85, rate: 0.95, voiceOffset: 3 }   // Deep composed bassist
+    };
+
+    function speakDialogueLine(speakerKey, text) {
+      if (!('speechSynthesis' in window)) return;
+
+      // Stop any ongoing speech line before starting a new one
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      const profile = characterVoiceProfiles[speakerKey] || characterVoiceProfiles.nekomi;
+
+      utterance.pitch = profile.pitch;
+      utterance.rate = profile.rate;
+
+      // Dynamically select native OS speech voices
+      const availableVoices = window.speechSynthesis.getVoices();
+      if (availableVoices.length > 0) {
+        const enVoices = availableVoices.filter(v => v.lang.startsWith('en'));
+        const pool = enVoices.length > 0 ? enVoices : availableVoices;
+        const selectedVoice = pool[profile.voiceOffset % pool.length];
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        }
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Pre-load available system voices (handles Chrome asynchronous loading)
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+
+    /* -------------------------------------------------------------
        TAB 3: RADIO TUNER & WEBAUDIO BACKUP ENGINE
        ------------------------------------------------------------- */
     const radioStations = {
@@ -1308,14 +1351,6 @@
       return true;
     }
 
-    /* Voice Synthesizer Profiles */
-    const voiceProfiles = {
-      nekomi: { freq: 329.63, type: 'sawtooth', duration: 0.35, gain: 0.08 },
-      sera:   { freq: 523.25, type: 'triangle', duration: 0.40, gain: 0.07 },
-      akari:  { freq: 440.00, type: 'square',   duration: 0.20, gain: 0.06 },
-      aoi:    { freq: 146.83, type: 'sine',     duration: 0.50, gain: 0.10 }
-    };
-
     /* EXTENDED TWILIGHT EPISODES */
     const twilightEpisodes = [
       {
@@ -1473,6 +1508,8 @@
     }
 
     function switchStudioTab(tabId, evt) {
+      if (isPodcastPlaying) togglePodcastPlayback();
+
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
       const e = evt || window.event;
       if (e && e.target) {
@@ -1483,29 +1520,6 @@
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active-content'));
       const targetEl = document.getElementById(tabId);
       if (targetEl) targetEl.classList.add('active-content');
-    }
-
-    /* Distinct Sound Chime Engine */
-    function playVoiceChime(speakerKey) {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-
-      try {
-        const profile = voiceProfiles[speakerKey] || voiceProfiles.nekomi;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = profile.type;
-        osc.frequency.setValueAtTime(profile.freq, audioCtx.currentTime);
-
-        gain.gain.setValueAtTime(profile.gain, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + profile.duration);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + profile.duration);
-      } catch(e){}
     }
 
     function selectEpisode(idx) {
@@ -1529,12 +1543,13 @@
       if (isPodcastPlaying) {
         isPodcastPlaying = false;
         clearInterval(podcastInterval);
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         btn.innerText = "▶ Resume Episode Broadcast";
       } else {
         isPodcastPlaying = true;
         btn.innerText = "⏸ Pause Episode Broadcast";
         playScriptStep();
-        podcastInterval = setInterval(playScriptStep, 4600);
+        podcastInterval = setInterval(playScriptStep, 5200);
       }
     }
 
@@ -1546,7 +1561,9 @@
       }
 
       const line = ep.script[currentLineIdx];
-      playVoiceChime(line.speaker);
+
+      // Speak line out loud using character voice synthesizers
+      speakDialogueLine(line.speaker, line.text);
 
       resetSpeakerHighlights();
       const activeEl = document.getElementById(`spk-${line.speaker}`);
@@ -1875,6 +1892,8 @@
 
     /* Dynamic Theme Switcher Sync */
     function updateThemeUI(isBasement) {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
       const toggleBtn = document.getElementById('theme-toggle-btn');
       const modeChip = document.getElementById('mode-chip');
       const locTag = document.getElementById('studio-location-tag');
