@@ -1082,81 +1082,74 @@
     };
 
     function getFemaleVoicePool() {
-      if (!('speechSynthesis' in window)) return [];
-      const availableVoices = window.speechSynthesis.getVoices();
-      if (!availableVoices || availableVoices.length === 0) return [];
+      try {
+        if (!('speechSynthesis' in window)) return [];
+        const availableVoices = window.speechSynthesis.getVoices();
+        if (!availableVoices || availableVoices.length === 0) return [];
 
-      const enVoices = availableVoices.filter(v => v.lang.startsWith('en'));
-      const pool = enVoices.length > 0 ? enVoices : availableVoices;
+        const enVoices = availableVoices.filter(v => v.lang && v.lang.startsWith('en'));
+        const pool = enVoices.length > 0 ? enVoices : availableVoices;
 
-      // Filter specifically for known female voice names across Windows, Mac, Chrome, iOS, Android
-      const femaleKeywords = ['female', 'zira', 'hazel', 'susan', 'samantha', 'victoria', 'karen', 'fiona', 'aura', 'jenny', 'aria', 'ana', 'michelle', 'catherine', 'helena', 'moira', 'veena', 'google us english'];
-      
-      let femaleVoices = pool.filter(v => {
-        const nameLower = v.name.toLowerCase();
-        return femaleKeywords.some(kw => nameLower.includes(kw));
-      });
+        const femaleKeywords = ['female', 'zira', 'hazel', 'susan', 'samantha', 'victoria', 'karen', 'fiona', 'aura', 'jenny', 'aria', 'ana', 'michelle', 'catherine', 'helena', 'moira', 'veena', 'google us english'];
+        let femaleVoices = pool.filter(v => femaleKeywords.some(kw => v.name.toLowerCase().includes(kw)));
 
-      // Fallback: Exclude known male voice names
-      if (femaleVoices.length === 0) {
-        const maleKeywords = ['male', 'david', 'mark', 'george', 'alex', 'fred', 'daniel', 'richard', 'james', 'pavel'];
-        femaleVoices = pool.filter(v => {
-          const nameLower = v.name.toLowerCase();
-          return !maleKeywords.some(kw => nameLower.includes(kw));
-        });
+        return femaleVoices.length > 0 ? femaleVoices : pool;
+      } catch (err) {
+        console.warn("Error fetching speech voices:", err);
+        return [];
       }
-
-      return femaleVoices.length > 0 ? femaleVoices : pool;
     }
 
     function speakDialogueLine(speakerKey, text, onLineComplete) {
       if (speechStepTimeout) clearTimeout(speechStepTimeout);
 
+      const profile = characterVoiceProfiles[speakerKey] || characterVoiceProfiles.nekomi;
+      const estimatedDurationMs = Math.max(3000, (text.length * 75) / (profile.rate || 1) + 1200);
+
       if (!('speechSynthesis' in window)) {
-        // Fallback timer if Web Speech API isn't available
-        const fallbackDelay = Math.max(3000, text.length * 65 + 1000);
         speechStepTimeout = setTimeout(() => {
-          if (isPodcastPlaying && onLineComplete) onLineComplete();
-        }, fallbackDelay);
+          if (isPodcastPlaying && typeof onLineComplete === 'function') onLineComplete();
+        }, estimatedDurationMs);
         return;
       }
 
-      window.speechSynthesis.cancel(); // Clear any previous speech queue
+      try {
+        window.speechSynthesis.cancel();
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      const profile = characterVoiceProfiles[speakerKey] || characterVoiceProfiles.nekomi;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.pitch = profile.pitch || 1.2;
+        utterance.rate = profile.rate || 1.0;
 
-      utterance.pitch = profile.pitch;
-      utterance.rate = profile.rate;
+        const femalePool = getFemaleVoicePool();
+        if (femalePool.length > 0) {
+          utterance.voice = femalePool[profile.voiceOffset % femalePool.length];
+        }
 
-      const femalePool = getFemaleVoicePool();
-      if (femalePool.length > 0) {
-        utterance.voice = femalePool[profile.voiceOffset % femalePool.length];
-      }
+        let lineFinished = false;
+        function handleComplete() {
+          if (lineFinished) return;
+          lineFinished = true;
+          if (speechStepTimeout) clearTimeout(speechStepTimeout);
 
-      let lineFinished = false;
+          speechStepTimeout = setTimeout(() => {
+            if (isPodcastPlaying && typeof onLineComplete === 'function') {
+              onLineComplete();
+            }
+          }, 700);
+        }
 
-      function handleComplete() {
-        if (lineFinished) return;
-        lineFinished = true;
-        if (speechStepTimeout) clearTimeout(speechStepTimeout);
+        utterance.onend = handleComplete;
+        utterance.onerror = handleComplete;
 
-        // Pause naturally for 0.7s after finishing speech before playing the next line
+        speechStepTimeout = setTimeout(handleComplete, estimatedDurationMs);
+
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {
+        console.warn("Speech Synthesis playback error:", e);
         speechStepTimeout = setTimeout(() => {
-          if (isPodcastPlaying && onLineComplete) {
-            onLineComplete();
-          }
-        }, 700);
+          if (isPodcastPlaying && typeof onLineComplete === 'function') onLineComplete();
+        }, 3500);
       }
-
-      utterance.onend = handleComplete;
-      utterance.onerror = handleComplete;
-
-      // Safety timeout in case utterance.onend fails to fire in specific mobile webviews
-      const estimatedDurationMs = Math.max(3500, (text.length * 75) / profile.rate + 1500);
-      speechStepTimeout = setTimeout(handleComplete, estimatedDurationMs);
-
-      window.speechSynthesis.speak(utterance);
     }
 
     if ('speechSynthesis' in window) {
@@ -1389,188 +1382,209 @@
       return true;
     }
 
-    /* EXTENDED TWILIGHT EPISODES */
+    /* ==========================================================================
+       EXTENDED 5-MINUTE PODCAST SCRIPTS WITH REAL RADIO STRUCTURE
+       Structure: Greeting -> Self Intros -> Topic Intro -> Extended Banter -> Outro
+       ========================================================================== */
+
     const twilightEpisodes = [
       {
-        title: "Ep 1: Hallway Rumors & Shadow Tickets (Full Broadcast)",
+        title: "Ep 1: Hallway Rumors & Shadow Tickets",
         script: [
-          { speaker: 'nekomi', text: "Welcome back to Neko FM! We're sitting around the tea table in Prep Room B after a long afternoon practice." },
-          { speaker: 'sera', text: "Sipping warm barley tea while looking over student council locker notes... it's so quiet up here on the 3rd floor." },
-          { speaker: 'akari', text: "Quiet? Speak for yourself! I heard three students near the gym talking about 'vibrations' coming from under the floorboards!" },
-          { speaker: 'aoi', text: "Akari, I told you to use the rubber mute pads during daytime drum drills! The student council desk was rattling." },
-          { speaker: 'nekomi', text: "Hehe. But those vibrations are how students know Girls Phantom Dead is active." },
-          { speaker: 'sera', text: "That's true! Someone dropped a note in Locker 102 today saying they heard a bass line echoing through the vents during 5th period." },
-          { speaker: 'akari', text: "That was Aoi practicing her bass run for Crescent Resonance! It sounded so cool!" },
-          { speaker: 'aoi', text: "Regardless... as long as faculty thinks it's just old plumbing pipes in the west wing, our secret venue remains safe." },
-          { speaker: 'nekomi', text: "Speaking of rumors... did anyone hear what happened near the east courtyard during 3rd period?" },
-          { speaker: 'sera', text: "Oh, the Art Club exhibition announcement? Yumi Takahashi was setting up her canvas frames when her easel almost tipped over." },
-          { speaker: 'akari', text: "I ran over and caught it right before it hit the floor! Fast drum reflexes come in handy everywhere!" },
-          { speaker: 'aoi', text: "Yumi dropped a handwritten note in Locker 102 later expressing her gratitude. She said our music gave her back her inspiration." },
-          { speaker: 'nekomi', text: "That's what EchoHeart is all about. Turning heavy days into shared light." },
-          { speaker: 'sera', text: "If anyone listening feels overwhelmed by school stress... check your shoe locker tonight. You might find a black cardstock ticket." },
-          { speaker: 'akari', text: "And when dusk falls... follow the sound of keytar chords down past the grand piano!" },
-          { speaker: 'aoi', text: "We'll be waiting in the cavern beneath. Stay safe until then, everyone." }
+          /* --- GREETING & SELF INTRODUCTIONS --- */
+          { speaker: 'nekomi', text: "Good morning and good afternoon to all our listeners across Sakuraoka High! You are tuned into Whisper Radio on Neko FM!" },
+          { speaker: 'sera', text: "Hello, everyone. I'm Sera, keytar and synth player for the band. I hope your morning classes went smoothly today." },
+          { speaker: 'akari', text: "And I'm Akari Minase, on drums! If you're feeling sleepy after fourth period, we are here to wake you right up!" },
+          { speaker: 'aoi', text: "And I'm Aoi, student council president and bassist. Before we get into today's broadcast, please remember to keep the third-floor hallway clear during lunch break." },
+          
+          /* --- TOPIC INTRODUCTION --- */
+          { speaker: 'nekomi', text: "Thanks, Aoi! Today's main topic is one that has been overflowing in Locker 102 all week long: hallway rumors, subterranean vibrations, and the mystery of the Shadow Tickets!" },
+          { speaker: 'sera', text: "That's right. We've received over twenty student letters asking why the floorboards near the music wing seem to rumble right around sunset." },
+          
+          /* --- EXTENDED DISCUSSION & BANTER --- */
+          { speaker: 'akari', text: "Haha! Okay, I have to confess... a lot of those vibrations might be my fault! I was testing out a new double-bass drum technique during lunch break!" },
+          { speaker: 'aoi', text: "Akari Minase, I explicitly asked you to use the rubber mute pads on your kick drum during daytime drills! The student council desk in Room 201 was literally walking across the floor." },
+          { speaker: 'nekomi', text: "Hehe, but Aoi, those vibrations are how students know we're up here working hard in Prep Room B! It builds up the excitement!" },
+          { speaker: 'sera', text: "It really does. One note dropped into Locker 102 said they heard Aoi's bassline echoing softly through the ventilation shaft all the way down in the library." },
+          { speaker: 'akari', text: "That was during our run of Crescent Resonance! It sounds so epic when the low notes echo through the building!" },
+          { speaker: 'aoi', text: "Regardless of how epic it sounds, as long as the faculty believes it is just ancient plumbing pipes in the west wing, our secret venue remains safe." },
+          { speaker: 'nekomi', text: "Speaking of rumors... did anyone hear what happened near the east courtyard during third period today?" },
+          { speaker: 'sera', text: "Oh, you mean Yumi Takahashi from the Art Club? She was setting up her canvas frames when her easel almost tipped over in the wind." },
+          { speaker: 'akari', text: "I ran across the courtyard and caught it right before it hit the cobblestones! Fast drum reflexes come in handy everywhere, not just behind a kit!" },
+          { speaker: 'aoi', text: "Yumi dropped a handwritten thank-you note into Locker 102 later this afternoon. She mentioned that listening to our afternoon radio broadcast gave her back her creative inspiration." },
+          { speaker: 'nekomi', text: "And that is what EchoHeart is all about! Taking the heavy, exhausting feelings of school life and turning them into shared warmth and light." },
+          { speaker: 'sera', text: "If anyone listening right now feels overwhelmed by exam stress or feeling invisible... make sure to check your shoe locker before leaving campus tonight." },
+          { speaker: 'akari', text: "You just might find a matte-black cardstock ticket stamped with a rose-gold hollow heart!" },
+          { speaker: 'aoi', text: "And when dusk falls... follow the sound of keytar chords down past the grand piano trapdoor." },
+          { speaker: 'nekomi', text: "We'll be waiting in the cavern beneath to play a set just for you!" },
+
+          /* --- OUTRO & GOODBYES --- */
+          { speaker: 'sera', text: "It looks like the afternoon bell is about to ring, which means our broadcast time for today is coming to an end." },
+          { speaker: 'akari', text: "Aww, already?! Time flies so fast when we're chatting!" },
+          { speaker: 'aoi', text: "Remember to turn in your homework on time, drink plenty of water, and stay safe on your walk home." },
+          { speaker: 'nekomi', text: "Thank you so much for tuning in to Neko FM! From all four of us here in Prep Room B, have a wonderful afternoon!" },
+          { speaker: 'sera', text: "Good afternoon, everyone. Rest well tonight." },
+          { speaker: 'akari', text: "Keep your energy high! 180 BPM forever!" },
+          { speaker: 'aoi', text: "Until next time, protect your heart and stay safe." },
+          { speaker: 'nekomi', text: "This is Whisper Radio signing off! Bye-bye!" }
         ]
       },
       {
-        title: "Ep 2: Ancient Lore & The Cavern (Extended History)",
+        title: "Ep 2: Ancient Lore & The Cavern",
         script: [
-          { speaker: 'sera', text: "Welcome to Episode 2! Today we're answering a question from Locker 115 about the ancient history of Sakuraoka High." },
-          { speaker: 'nekomi', text: "A lot of students ask why the acoustic resonance in The Basement feels so different from regular music rooms." },
-          { speaker: 'aoi', text: "According to old school archives from 80 years ago, the school foundation was built over an ancient natural stone cavern." },
-          { speaker: 'akari', text: "A natural cavern! That explains why my drum kick echoes for three full seconds down there!" },
-          { speaker: 'sera', text: "It's also where the moonlit cat-girl lineage originally bonded with spirit guardians like Yozora and Byakko." },
-          { speaker: 'nekomi', text: "Yozora is curled up on top of my guitar amplifier right now. Her tail twitches every time Sera plays a chord in C major." },
-          { speaker: 'akari', text: "And Kagerou always perches on my snare drum rim when I hit 180 BPM! Spirit familiars love fast tempos!" },
-          { speaker: 'aoi', text: "The cavern stone possesses a unique piezo-electric quality. It absorbs heavy emotional weight from the campus above and converts it into sound waves." },
-          { speaker: 'sera', text: "That's why when someone enters The Basement with a heavy heart, the ambient room air feels charged with static." },
-          { speaker: 'nekomi', text: "When we play our instruments, that static gets transformed into musical harmony. It's like emotional alchemy." },
-          { speaker: 'akari', text: "I remember the first time I hit my crash cymbal down there! The whole cavern ceiling glowed violet for a split second!" },
-          { speaker: 'aoi', text: "We must respect the cavern's history. It isn't just a rehearsal space; it's a sanctuary built to protect students from despair." },
-          { speaker: 'sera', text: "Every time we strike a chord, we honor the moonlit cat-girl guardians who kept watch here long before us." },
-          { speaker: 'nekomi', text: "So whenever you feel lost in these long hallways... remember that the stone beneath your feet remembers your voice." },
-          { speaker: 'akari', text: "We're always here playing for you!" },
-          { speaker: 'aoi', text: "Keep your chin up, everyone." }
+          /* --- GREETING & SELF INTRODUCTIONS --- */
+          { speaker: 'nekomi', text: "Good afternoon, Sakuraoka High! Welcome back to another episode of Whisper Radio on Neko FM!" },
+          { speaker: 'sera', text: "Hello, everyone. Sera here, sipping warm barley tea in Prep Room B." },
+          { speaker: 'akari', text: "Akari Minase here, ready to talk about the coolest secrets on campus!" },
+          { speaker: 'aoi', text: "And I'm Aoi. Glad you could join us for your after-school study break." },
+
+          /* --- TOPIC INTRODUCTION --- */
+          { speaker: 'sera', text: "Today we are opening a special letter from Locker 115 asking about the history of the ancient stone cavern beneath the school." },
+          { speaker: 'nekomi', text: "Yes! So many listeners ask why the acoustic sound in The Basement feels so magical compared to regular classrooms." },
+
+          /* --- EXTENDED DISCUSSION & BANTER --- */
+          { speaker: 'aoi', text: "According to the historical archives in the library vault, the school foundation was built over an ancient natural stone cavern eighty years ago." },
+          { speaker: 'akari', text: "An actual natural cavern! That explains why my snare kick drum echoes for three full seconds down there!" },
+          { speaker: 'sera', text: "It is also where the moonlit cat-girl lineage originally bonded with spirit guardians like Yozora, Byakko, and Kagerou." },
+          { speaker: 'nekomi', text: "Yozora is actually curled up on top of my guitar amplifier right now! Her tail twitches whenever Sera plays a chord in C major." },
+          { speaker: 'akari', text: "And Kagerou always perches right on my snare drum rim when I hit 180 BPM! Spirit familiars love fast tempos!" },
+          { speaker: 'aoi', text: "The cavern stone possesses a unique piezo-electric quality. It naturally absorbs heavy emotional weight from the campus above and converts it into acoustic resonance." },
+          { speaker: 'sera', text: "That's why when someone steps into The Basement carrying heavy sadness or frustration, the ambient air feels charged with static." },
+          { speaker: 'nekomi', text: "When we pick up our instruments, that static gets transformed into musical harmony! It's like emotional alchemy." },
+          { speaker: 'akari', text: "I remember the first time I hit my crash cymbal down there! The whole cavern ceiling glowed soft violet for a split second!" },
+          { speaker: 'aoi', text: "We must respect the cavern's history. It isn't just a rehearsal space; it is a sanctuary built to protect students from despair." },
+          { speaker: 'sera', text: "Every time we strike a chord, we honor the guardians who kept watch here long before us." },
+          { speaker: 'nekomi', text: "So whenever you feel lost in these long school hallways... remember that the stone beneath your feet remembers your voice." },
+
+          /* --- OUTRO & GOODBYES --- */
+          { speaker: 'akari', text: "That is all the time we have for today's history spotlight!" },
+          { speaker: 'sera', text: "Thank you for sharing your tea break with us." },
+          { speaker: 'aoi', text: "Study hard for your upcoming midterms, everyone." },
+          { speaker: 'nekomi', text: "Keep listening and keep smiling! See you next time on Neko FM!" }
         ]
       },
       {
         title: "Ep 3: Shopping Street Festival & Secret Set",
         script: [
+          /* --- GREETING & SELF INTRODUCTIONS --- */
+          { speaker: 'nekomi', text: "Good afternoon, everyone! Welcome back to Neko FM!" },
+          { speaker: 'sera', text: "Hello, listeners. Sera here, tuning keytar patches." },
+          { speaker: 'akari', text: "Akari Minase here! Who's ready for festival news?!" },
+          { speaker: 'aoi', text: "And I'm Aoi. Let's cover today's main announcement." },
+
+          /* --- TOPIC INTRODUCTION --- */
           { speaker: 'akari', text: "Episode 3 is live! Who's excited for the upcoming Sakuraoka Shopping Street Cultural Festival?!" },
           { speaker: 'sera', text: "I saw the paper lanterns being hung along the arcade street this morning. The tea shops are setting up special stalls!" },
+
+          /* --- EXTENDED DISCUSSION & BANTER --- */
           { speaker: 'nekomi', text: "We're planning a secret pop-up set near the old arcade clock tower right as the sun sets." },
           { speaker: 'aoi', text: "I've secured the official permit under the Light Music Club name, so student council patrols won't interfere." },
           { speaker: 'akari', text: "Aoi is the ultimate manager-bassist! No one manages festival logistics like her!" },
           { speaker: 'sera', text: "We'll be premiering a brand new synth-pad arrangement of EchoHeart's main motif!" },
           { speaker: 'nekomi', text: "I've been tweaking my distortion pedal all week specifically for this performance. The lead riffs are going to sound so crisp." },
           { speaker: 'akari', text: "And I added double-stick rolls to the chorus! It's going to make everyone want to jump!" },
-          { speaker: 'aoi', text: "Remember to keep the performance within our allotted 20-minute window so we don't draw unnecessary faculty attention." },
+          { speaker: 'aoi', text: "Remember to keep the performance within our allotted twenty-minute window so we don't draw unnecessary faculty attention." },
           { speaker: 'sera', text: "Sipping sweet matcha tea while playing open-air music under street lanterns... it's going to be magical." },
           { speaker: 'nekomi', text: "Bring your friends and warm tea cups. When the street lanterns light up, listen closely for the lead guitar." },
+
+          /* --- OUTRO & GOODBYES --- */
           { speaker: 'akari', text: "Look out for the black cardstock posters pinned near the clock tower for exact set times!" },
           { speaker: 'aoi', text: "That concludes today's broadcast. Thank you for tuning into Neko FM, everyone!" },
-          { speaker: 'sera', text: "See you at the festival!" },
-          { speaker: 'nekomi', text: "Keep listening!" },
-          { speaker: 'akari', text: "180 BPM forever!" }
+          { speaker: 'sera', text: "See you at the festival! Have a wonderful evening." },
+          { speaker: 'nekomi', text: "Keep listening and stay bright!" },
+          { speaker: 'akari', text: "180 BPM forever! Bye-bye!" }
         ]
       }
     ];
 
-    /* ==========================================================================
-   EXTENDED 5-MINUTE PODCAST SCRIPTS WITH REAL RADIO STRUCTURE
-   Structure: Greeting -> Self Intros -> Topic Intro -> Extended Banter -> Outro
-   ========================================================================== */
+    const basementEpisodes = [
+      {
+        title: "After Hours Ep 1: The Shadow Ticket Protocol",
+        script: [
+          /* --- GREETING & SELF INTRODUCTIONS --- */
+          { speaker: 'nekomi', text: "Good evening... or late night, to those still listening in the dark. Welcome to Girls Phantom Dead: After Hours." },
+          { speaker: 'sera', text: "The campus gates are locked, Prep Room B is pitch black, and the subterranean amps are live. I'm Sera." },
+          { speaker: 'akari', text: "Akari Minase here in the dark! Drums tuned, sticks ready, and amplifiers humming!" },
+          { speaker: 'aoi', text: "And I'm Aoi. Tonight we are broadcasting directly from the subterranean cavern beneath the grand piano." },
 
-const twilightEpisodes = [
-  {
-    title: "Ep 1: Hallway Rumors & Shadow Tickets",
-    script: [
-      /* --- GREETING & SELF INTRODUCTIONS --- */
-      { speaker: 'nekomi', text: "Good morning and good afternoon to all our listeners across Sakuraoka High! You are tuned into Whisper Radio on Neko FM!" },
-      { speaker: 'sera', text: "Hello, everyone. I'm Sera, keytar and synth player for the band. I hope your morning classes went smoothly today." },
-      { speaker: 'akari', text: "And I'm Akari Minase, on drums! If you're feeling sleepy after fourth period, we are here to wake you right up!" },
-      { speaker: 'aoi', text: "And I'm Aoi, student council president and bassist. Before we get into today's broadcast, please remember to keep the third-floor hallway clear during lunch break." },
-      
-      /* --- TOPIC INTRODUCTION --- */
-      { speaker: 'nekomi', text: "Thanks, Aoi! Today's main topic is one that has been overflowing in Locker 102 all week long: hallway rumors, subterranean vibrations, and the mystery of the Shadow Tickets!" },
-      { speaker: 'sera', text: "That's right. We've received over twenty student letters asking why the floorboards near the music wing seem to rumble right around sunset." },
-      
-      /* --- EXTENDED DISCUSSION & BANTER (~5 MINS) --- */
-      { speaker: 'akari', text: "Haha! Okay, I have to confess... a lot of those vibrations might be my fault! I was testing out a new double-bass drum technique during lunch break!" },
-      { speaker: 'aoi', text: "Akari Minase, I explicitly asked you to use the rubber mute pads on your kick drum during daytime drills! The student council desk in Room 201 was literally walking across the floor." },
-      { speaker: 'nekomi', text: "Hehe, but Aoi, those vibrations are how students know we're up here working hard in Prep Room B! It builds up the excitement!" },
-      { speaker: 'sera', text: "It really does. One note dropped into Locker 102 said they heard Aoi's bassline echoing softly through the ventilation shaft all the way down in the library." },
-      { speaker: 'akari', text: "That was during our run of Crescent Resonance! It sounds so epic when the low notes echo through the building!" },
-      { speaker: 'aoi', text: "Regardless of how epic it sounds, as long as the faculty believes it is just ancient plumbing pipes in the west wing, our secret venue remains safe." },
-      { speaker: 'nekomi', text: "Speaking of rumors... did anyone hear what happened near the east courtyard during third period today?" },
-      { speaker: 'sera', text: "Oh, you mean Yumi Takahashi from the Art Club? She was setting up her canvas frames when her easel almost tipped over in the wind." },
-      { speaker: 'akari', text: "I ran across the courtyard and caught it right before it hit the cobblestones! Fast drum reflexes come in handy everywhere, not just behind a kit!" },
-      { speaker: 'aoi', text: "Yumi dropped a handwritten thank-you note into Locker 102 later this afternoon. She mentioned that listening to our afternoon radio broadcast gave her back her creative inspiration." },
-      { speaker: 'nekomi', text: "And that is what EchoHeart is all about! Taking the heavy, exhausting feelings of school life and turning them into shared warmth and light." },
-      { speaker: 'sera', text: "If anyone listening right now feels overwhelmed by exam stress or feeling invisible... make sure to check your shoe locker before leaving campus tonight." },
-      { speaker: 'akari', text: "You just might find a matte-black cardstock ticket stamped with a rose-gold hollow heart!" },
-      { speaker: 'aoi', text: "And when dusk falls... follow the sound of keytar chords down past the grand piano trapdoor." },
-      { speaker: 'nekomi', text: "We'll be waiting in the cavern beneath to play a set just for you!" },
+          /* --- TOPIC INTRODUCTION --- */
+          { speaker: 'nekomi', text: "Tonight we're opening Case File #009... the heavy emotional ruptures across campus that trigger the Shadow Ticket protocol." },
+          { speaker: 'sera', text: "A lot of late-night listeners wonder how we decide which shoe locker receives a ticket. It isn't random." },
 
-      /* --- OUTRO & GOODBYES --- */
-      { speaker: 'sera', text: "It looks like the afternoon bell is about to ring, which means our broadcast time for today is coming to an end." },
-      { speaker: 'akari', text: "Aww, already?! Time flies so fast when we're chatting!" },
-      { speaker: 'aoi', text: "Remember to turn in your homework on time, drink plenty of water, and stay safe on your walk home." },
-      { speaker: 'nekomi', text: "Thank you so much for tuning in to Neko FM! From all four of us here in Prep Room B, have a wonderful afternoon!" },
-      { speaker: 'sera', text: "Good afternoon, everyone. Rest well tonight." },
-      { speaker: 'akari', text: "Keep your energy high! 180 BPM forever!" },
-      { speaker: 'aoi', text: "Until next time, protect your heart and stay safe." },
-      { speaker: 'nekomi', text: "This is Whisper Radio signing off! Bye-bye!" }
-    ]
-  },
-  {
-    title: "Ep 2: Ancient Lore & The Cavern",
-    script: [
-      /* --- GREETING & SELF INTRODUCTIONS --- */
-      { speaker: 'nekomi', text: "Good afternoon, Sakuraoka High! Welcome back to another episode of Whisper Radio on Neko FM!" },
-      { speaker: 'sera', text: "Hello, everyone. Sera here, sipping warm barley tea in Prep Room B." },
-      { speaker: 'akari', text: "Akari Minase here, ready to talk about the coolest secrets on campus!" },
-      { speaker: 'aoi', text: "And I'm Aoi. Glad you could join us for your after-school study break." },
+          /* --- EXTENDED DISCUSSION & BANTER --- */
+          { speaker: 'aoi', text: "The ancient cavern stone beneath us acts as a resonance sensor for emotional distress." },
+          { speaker: 'akari', text: "When a student reaches their breaking point—whether from exam failure or feeling completely invisible—the stone picks up that static frequency!" },
+          { speaker: 'nekomi', text: "I can feel it in my feline ears! It feels like a high-pitched distortion chord ringing through my guitar pickups." },
+          { speaker: 'sera', text: "When that happens, I slip out during seventh period twilight and drop a matte-black ticket into their shoe locker." },
+          { speaker: 'aoi', text: "It is a heavy responsibility. If a student rejects the ticket, the static burden remains trapped in their heart." },
+          { speaker: 'akari', text: "That's why when they finally step into The Basement, we give everything we have! 180 BPM drum hits to shatter that silence completely!" },
+          { speaker: 'nekomi', text: "We don't play for applause down here. We play to rescue souls from the dark before dusk settles permanently." },
+          { speaker: 'sera', text: "Music speaks directly to the parts of the heart that words can't reach." },
 
-      /* --- TOPIC INTRODUCTION --- */
-      { speaker: 'sera', text: "Today we are opening a special letter from Locker 115 asking about the history of the ancient stone cavern beneath the school." },
-      { speaker: 'nekomi', text: "Yes! So many listeners ask why the acoustic sound in The Basement feels so magical compared to regular classrooms." },
+          /* --- OUTRO & GOODBYES --- */
+          { speaker: 'aoi', text: "The midnight bell is about to strike. We must power down the subterranean amps." },
+          { speaker: 'akari', text: "Until the next shadow ticket is dropped... stay strong!" },
+          { speaker: 'sera', text: "Goodnight, late-night listeners. Rest peacefully." },
+          { speaker: 'nekomi', text: "This is Whisper Radio After Hours, signing off into the shadows. Goodnight!" }
+        ]
+      },
+      {
+        title: "After Hours Ep 2: Subterranean Cavern & Spectral Lore",
+        script: [
+          /* --- GREETING & SELF INTRODUCTIONS --- */
+          { speaker: 'sera', text: "Good evening, listeners. Sera here on late-night broadcast duty." },
+          { speaker: 'nekomi', text: "Nekomi on guitar! Amplifiers are warm and ready." },
+          { speaker: 'akari', text: "Akari Minase on drums! Double kick drum pedals locked and loaded!" },
+          { speaker: 'aoi', text: "And Aoi on bass. Welcome to After Hours Episode 2." },
 
-      /* --- EXTENDED DISCUSSION & BANTER (~5 MINS) --- */
-      { speaker: 'aoi', text: "According to the historical archives in the library vault, the school foundation was built over an ancient natural stone cavern eighty years ago." },
-      { speaker: 'akari', text: "An actual natural cavern! That explains why my snare kick drum echoes for three full seconds down there!" },
-      { speaker: 'sera', text: "It is also where the moonlit cat-girl lineage originally bonded with spirit guardians like Yozora, Byakko, and Kagerou." },
-      { speaker: 'nekomi', text: "Yozora is actually curled up on top of my guitar amplifier right now! Her tail twitches whenever Sera plays a chord in C major." },
-      { speaker: 'akari', text: "And Kagerou always perches right on my snare drum rim when I hit 180 BPM! Spirit familiars love fast tempos!" },
-      { speaker: 'aoi', text: "The cavern stone possesses a unique piezo-electric quality. It naturally absorbs heavy emotional weight from the campus above and converts it into acoustic resonance." },
-      { speaker: 'sera', text: "That's why when someone steps into The Basement carrying heavy sadness or frustration, the ambient air feels charged with static." },
-      { speaker: 'nekomi', text: "When we pick up our instruments, that static gets transformed into musical harmony! It's like emotional alchemy." },
-      { speaker: 'akari', text: "I remember the first time I hit my crash cymbal down there! The whole cavern ceiling glowed soft violet for a split second!" },
-      { speaker: 'aoi', text: "We must respect the cavern's history. It isn't just a rehearsal space; it is a sanctuary built to protect students from despair." },
-      { speaker: 'sera', text: "Every time we strike a chord, we honor the guardians who kept watch here long before us." },
-      { speaker: 'nekomi', text: "So whenever you feel lost in these long school hallways... remember that the stone beneath your feet remembers your voice." },
+          /* --- TOPIC INTRODUCTION --- */
+          { speaker: 'sera', text: "Tonight we're diving deep into the dark lore of the stone cavern carved beneath the school eighty years ago." },
 
-      /* --- OUTRO & GOODBYES --- */
-      { speaker: 'akari', text: "That is all the time we have for today's history spotlight!" },
-      { speaker: 'sera', text: "Thank you for sharing your tea break with us." },
-      { speaker: 'aoi', text: "Study hard for your upcoming midterms, everyone." },
-      { speaker: 'nekomi', text: "Keep listening and keep smiling! See you next time on Neko FM!" }
-    ]
-  }
-];
+          /* --- EXTENDED DISCUSSION & BANTER --- */
+          { speaker: 'aoi', text: "Before Sakuraoka High was built, this site was an ancient sanctuary where cat-girl priestesses guarded emotional resonance lines." },
+          { speaker: 'nekomi', text: "Our ancestors discovered that emotional pain and grief don't disappear into thin air. They sink into the earth and form acoustic static." },
+          { speaker: 'akari', text: "And if that static builds up too long without an outlet... it distorts into phantom echoes that haunt people!" },
+          { speaker: 'sera', text: "That's why Yozora, Byakko, and Kagerou exist. Our spirit familiars are conduits that absorb raw emotional energy during live sets." },
+          { speaker: 'aoi', text: "When my bassline hits the lowest octave, the cavern walls vibrate at exactly 432 Hz—the natural pitch of stone." },
+          { speaker: 'nekomi', text: "It converts that heavy static into pure J-Rock power. The room temperature drops ten degrees during the final solo." },
+          { speaker: 'akari', text: "It's incredible! You're standing in the dark and the whole cavern is glowing violet!" },
 
-const basementEpisodes = [
-  {
-    title: "After Hours Ep 1: The Shadow Ticket Protocol",
-    script: [
-      /* --- GREETING & SELF INTRODUCTIONS --- */
-      { speaker: 'nekomi', text: "Good evening... or late night, to those still listening in the dark. Welcome to Girls Phantom Dead: After Hours." },
-      { speaker: 'sera', text: "The campus gates are locked, Prep Room B is pitch black, and the subterranean amps are live. I'm Sera." },
-      { speaker: 'akari', text: "Akari Minase here in the dark! Drums tuned, sticks ready, and amplifiers humming!" },
-      { speaker: 'aoi', text: "And I'm Aoi. Tonight we are broadcasting directly from the subterranean cavern beneath the grand piano." },
+          /* --- OUTRO & GOODBYES --- */
+          { speaker: 'sera', text: "The familiars channel the cavern's aura directly into our gear. It's time to seal the trapdoor." },
+          { speaker: 'aoi', text: "We are custodians of an ancient sacred duty. Stay safe in the dark." },
+          { speaker: 'nekomi', text: "Never forget why we play." },
+          { speaker: 'akari', text: "Louder than the darkness! Goodnight, everyone!" }
+        ]
+      },
+      {
+        title: "After Hours Ep 3: The Unspoken Phantom Laws",
+        script: [
+          /* --- GREETING & SELF INTRODUCTIONS --- */
+          { speaker: 'aoi', text: "Good evening. This is Aoi, Student Council President and bassist for Girls Phantom Dead." },
+          { speaker: 'nekomi', text: "Nekomi here, tuned in from the dark!" },
+          { speaker: 'sera', text: "Sera on keytar and synth." },
+          { speaker: 'akari', text: "And Akari Minase on drums!" },
 
-      /* --- TOPIC INTRODUCTION --- */
-      { speaker: 'nekomi', text: "Tonight we're opening Case File #009... the heavy emotional ruptures across campus that trigger the Shadow Ticket protocol." },
-      { speaker: 'sera', text: "A lot of late-night listeners wonder how we decide which shoe locker receives a ticket. It isn't random." },
+          /* --- TOPIC INTRODUCTION --- */
+          { speaker: 'aoi', text: "Tonight's topic is The Unspoken Phantom Laws—the strict rulebook governing our secret subterranean sets." },
 
-      /* --- EXTENDED DISCUSSION & BANTER (~5 MINS) --- */
-      { speaker: 'aoi', text: "The ancient cavern stone beneath us acts as a resonance sensor for emotional distress." },
-      { speaker: 'akari', text: "When a student reaches their breaking point—whether from exam failure or feeling completely invisible—the stone picks up that static frequency!" },
-      { speaker: 'nekomi', text: "I can feel it in my feline ears! It feels like a high-pitched distortion chord ringing through my guitar pickups." },
-      { speaker: 'sera', text: "When that happens, I slip out during seventh period twilight and drop a matte-black ticket into their shoe locker." },
-      { speaker: 'aoi', text: "It is a heavy responsibility. If a student rejects the ticket, the static burden remains trapped in their heart." },
-      { speaker: 'akari', text: "That's why when they finally step into The Basement, we give everything we have! 180 BPM drum hits to shatter that silence completely!" },
-      { speaker: 'nekomi', text: "We don't play for applause down here. We play to rescue souls from the dark before dusk settles permanently." },
-      { speaker: 'sera', text: "Music speaks directly to the parts of the heart that words can't reach." },
+          /* --- EXTENDED DISCUSSION & BANTER --- */
+          { speaker: 'nekomi', text: "Rule Number 1: Girls Phantom Dead can never perform for public gain or ticket sales. The sound belongs solely to the target soul in need." },
+          { speaker: 'sera', text: "Rule Number 2: Absolute anonymity. We veil our faces in shadow so faculty never connects us to Prep Room B." },
+          { speaker: 'akari', text: "If the Principal found out we unlocked the trapdoor beneath the grand piano... they'd seal the cavern in concrete!" },
+          { speaker: 'aoi', text: "Rule Number 3: The Thirty-Minute Resonance Limit. Humans can't withstand raw spirit frequencies indefinitely." },
+          { speaker: 'nekomi', text: "If we play past thirty minutes, feline spirit energy begins consuming our stamina." },
+          { speaker: 'sera', text: "That's why every secret set is a race against time. One setlist, 180 BPM, total emotional catharsis... then we vanish." },
 
-      /* --- OUTRO & GOODBYES --- */
-      { speaker: 'aoi', text: "The midnight bell is about to strike. We must power down the subterranean amps." },
-      { speaker: 'akari', text: "Until the next shadow ticket is dropped... stay strong!" },
-      { speaker: 'sera', text: "Goodnight, late-night listeners. Rest peacefully." },
-      { speaker: 'nekomi', text: "This is Whisper Radio After Hours, signing off into the shadows. Goodnight!" }
-    ]
-  }
-];
+          /* --- OUTRO & GOODBYES --- */
+          { speaker: 'akari', text: "When the lights come back on in Prep Room B the next morning, we're just four regular girls drinking tea again!" },
+          { speaker: 'aoi', text: "That concludes tonight's After Hours broadcast. Protect your heart." },
+          { speaker: 'nekomi', text: "Whisper Radio signing off." },
+          { speaker: 'sera', text: "Goodnight, listeners." },
+          { speaker: 'akari', text: "See ya in the dark! Bye-bye!" }
+        ]
+      }
+    ];
 
     function getActiveEpisodes() {
       return document.body.classList.contains('basement-mode') ? basementEpisodes : twilightEpisodes;
@@ -1644,8 +1658,30 @@ const basementEpisodes = [
 
       const epList = getActiveEpisodes();
       const ep = epList[selectedEpIdx];
+      if (!ep || !ep.script || ep.script.length === 0) return;
+
+      // STOP WHEN EPISODE FINISHES
       if (currentLineIdx >= ep.script.length) {
+        isPodcastPlaying = false;
         currentLineIdx = 0;
+        if (speechStepTimeout) clearTimeout(speechStepTimeout);
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        
+        resetSpeakerHighlights();
+
+        const btn = document.getElementById('podcast-play-btn');
+        if (btn) btn.innerText = "▶ Replay Episode Broadcast";
+
+        const titleDisplay = document.getElementById('speaker-title-display');
+        if (titleDisplay) titleDisplay.innerText = "Broadcast Concluded";
+
+        const lineDisplay = document.getElementById('dialogue-line-display');
+        if (lineDisplay) lineDisplay.innerText = "Thank you for listening to Neko FM! Select another topic or press Replay to listen again.";
+
+        const fillEl = document.getElementById('ep-progress-fill');
+        if (fillEl) fillEl.style.width = '100%';
+
+        return;
       }
 
       const line = ep.script[currentLineIdx];
@@ -1655,14 +1691,17 @@ const basementEpisodes = [
       if (activeEl) activeEl.classList.add('speaking');
 
       const progressPercent = ((currentLineIdx + 1) / ep.script.length) * 100;
-      document.getElementById('ep-progress-fill').style.width = `${progressPercent}%`;
+      const fillEl = document.getElementById('ep-progress-fill');
+      if (fillEl) fillEl.style.width = `${progressPercent}%`;
 
-      document.getElementById('speaker-title-display').innerText = `🎙️ ${line.speaker.toUpperCase()} ON AIR:`;
-      document.getElementById('dialogue-line-display').innerText = `"${line.text}"`;
+      const titleDisplay = document.getElementById('speaker-title-display');
+      if (titleDisplay) titleDisplay.innerText = `🎙️ ${line.speaker.toUpperCase()} ON AIR:`;
+
+      const lineDisplay = document.getElementById('dialogue-line-display');
+      if (lineDisplay) lineDisplay.innerText = `"${line.text}"`;
 
       currentLineIdx++;
 
-      // Read line aloud and wait for completion before proceeding to next line
       speakDialogueLine(line.speaker, line.text, () => {
         if (isPodcastPlaying) playScriptStep();
       });
