@@ -219,9 +219,7 @@
       transition: all 0.3s ease;
     }
 
-    /* ==========================================================================
-       MOBILE RESPONSIVE DRAWER (Screens under 992px)
-       ========================================================================== */
+    /* Mobile Responsive Drawer */
     @media (max-width: 992px) {
       .mobile-menu-btn {
         display: flex;
@@ -1028,7 +1026,6 @@
        MOBILE NAVBAR & DROPDOWN TOGGLE LOGIC
        ========================================================================== */
 
-    // Toggle Mobile Main Navigation Menu
     function toggleMobileMenu() {
       const navMenu = document.getElementById('nav-menu');
       if (navMenu) {
@@ -1036,7 +1033,6 @@
       }
     }
 
-    // Mobile Touch Dropdown Handler (Allows clicking parent menu item on phone screens)
     function toggleMobileDropdown(event, element) {
       if (window.innerWidth <= 992) {
         event.preventDefault();
@@ -1044,7 +1040,6 @@
         
         const parentDropdown = element.closest('.dropdown');
         
-        // Close other mobile open dropdowns
         document.querySelectorAll('.dropdown').forEach(drop => {
           if (drop !== parentDropdown) {
             drop.classList.remove('active-mobile');
@@ -1057,7 +1052,6 @@
       }
     }
 
-    // Close mobile menu if clicked outside
     document.addEventListener('click', (event) => {
       const navMenu = document.getElementById('nav-menu');
       const menuBtn = document.getElementById('mobile-menu-toggle');
@@ -1070,28 +1064,64 @@
     });
 
     let audioCtx = null;
-    let podcastInterval = null;
     let isPodcastPlaying = false;
     let currentLineIdx = 0;
     let selectedEpIdx = 0;
+    let speechStepTimeout = null;
 
     const liveAudioPlayer = document.getElementById('live-audio-player');
 
     /* -------------------------------------------------------------
-       BROWSER WEB SPEECH API - 4 CHARACTER VOICE ENGINE
+       BROWSER WEB SPEECH API - 4 FEMALE CHARACTER VOICE ENGINE
        ------------------------------------------------------------- */
     const characterVoiceProfiles = {
-      nekomi: { pitch: 1.25, rate: 1.00, voiceOffset: 0 },  // Cheerful lead singer
-      sera:   { pitch: 1.10, rate: 0.88, voiceOffset: 1 },  // Gentle keytarist
-      akari:  { pitch: 1.45, rate: 1.18, voiceOffset: 2 },  // Fast energetic drummer
-      aoi:    { pitch: 0.85, rate: 0.95, voiceOffset: 3 }   // Deep composed bassist
+      nekomi: { pitch: 1.35, rate: 1.02, voiceOffset: 0 },  // Cheerful lead singer
+      sera:   { pitch: 1.20, rate: 0.88, voiceOffset: 1 },  // Gentle keytarist
+      akari:  { pitch: 1.55, rate: 1.15, voiceOffset: 2 },  // Fast energetic drummer
+      aoi:    { pitch: 1.05, rate: 0.95, voiceOffset: 3 }   // Deep composed bassist
     };
 
-    function speakDialogueLine(speakerKey, text) {
-      if (!('speechSynthesis' in window)) return;
+    function getFemaleVoicePool() {
+      if (!('speechSynthesis' in window)) return [];
+      const availableVoices = window.speechSynthesis.getVoices();
+      if (!availableVoices || availableVoices.length === 0) return [];
 
-      // Stop any ongoing speech line before starting a new one
-      window.speechSynthesis.cancel();
+      const enVoices = availableVoices.filter(v => v.lang.startsWith('en'));
+      const pool = enVoices.length > 0 ? enVoices : availableVoices;
+
+      // Filter specifically for known female voice names across Windows, Mac, Chrome, iOS, Android
+      const femaleKeywords = ['female', 'zira', 'hazel', 'susan', 'samantha', 'victoria', 'karen', 'fiona', 'aura', 'jenny', 'aria', 'ana', 'michelle', 'catherine', 'helena', 'moira', 'veena', 'google us english'];
+      
+      let femaleVoices = pool.filter(v => {
+        const nameLower = v.name.toLowerCase();
+        return femaleKeywords.some(kw => nameLower.includes(kw));
+      });
+
+      // Fallback: Exclude known male voice names
+      if (femaleVoices.length === 0) {
+        const maleKeywords = ['male', 'david', 'mark', 'george', 'alex', 'fred', 'daniel', 'richard', 'james', 'pavel'];
+        femaleVoices = pool.filter(v => {
+          const nameLower = v.name.toLowerCase();
+          return !maleKeywords.some(kw => nameLower.includes(kw));
+        });
+      }
+
+      return femaleVoices.length > 0 ? femaleVoices : pool;
+    }
+
+    function speakDialogueLine(speakerKey, text, onLineComplete) {
+      if (speechStepTimeout) clearTimeout(speechStepTimeout);
+
+      if (!('speechSynthesis' in window)) {
+        // Fallback timer if Web Speech API isn't available
+        const fallbackDelay = Math.max(3000, text.length * 65 + 1000);
+        speechStepTimeout = setTimeout(() => {
+          if (isPodcastPlaying && onLineComplete) onLineComplete();
+        }, fallbackDelay);
+        return;
+      }
+
+      window.speechSynthesis.cancel(); // Clear any previous speech queue
 
       const utterance = new SpeechSynthesisUtterance(text);
       const profile = characterVoiceProfiles[speakerKey] || characterVoiceProfiles.nekomi;
@@ -1099,21 +1129,36 @@
       utterance.pitch = profile.pitch;
       utterance.rate = profile.rate;
 
-      // Dynamically select native OS speech voices
-      const availableVoices = window.speechSynthesis.getVoices();
-      if (availableVoices.length > 0) {
-        const enVoices = availableVoices.filter(v => v.lang.startsWith('en'));
-        const pool = enVoices.length > 0 ? enVoices : availableVoices;
-        const selectedVoice = pool[profile.voiceOffset % pool.length];
-        if (selectedVoice) {
-          utterance.voice = selectedVoice;
-        }
+      const femalePool = getFemaleVoicePool();
+      if (femalePool.length > 0) {
+        utterance.voice = femalePool[profile.voiceOffset % femalePool.length];
       }
+
+      let lineFinished = false;
+
+      function handleComplete() {
+        if (lineFinished) return;
+        lineFinished = true;
+        if (speechStepTimeout) clearTimeout(speechStepTimeout);
+
+        // Pause naturally for 0.7s after finishing speech before playing the next line
+        speechStepTimeout = setTimeout(() => {
+          if (isPodcastPlaying && onLineComplete) {
+            onLineComplete();
+          }
+        }, 700);
+      }
+
+      utterance.onend = handleComplete;
+      utterance.onerror = handleComplete;
+
+      // Safety timeout in case utterance.onend fails to fire in specific mobile webviews
+      const estimatedDurationMs = Math.max(3500, (text.length * 75) / profile.rate + 1500);
+      speechStepTimeout = setTimeout(handleComplete, estimatedDurationMs);
 
       window.speechSynthesis.speak(utterance);
     }
 
-    // Pre-load available system voices (handles Chrome asynchronous loading)
     if ('speechSynthesis' in window) {
       window.speechSynthesis.onvoiceschanged = () => {
         window.speechSynthesis.getVoices();
@@ -1143,10 +1188,6 @@
     let backupSynthInterval = null;
     let backupSynthActive = false;
 
-    /* Mode-Reactive Web Audio API Generator:
-       - Twilight Mode: Chill Lofi Chords & Tape Wobble
-       - Basement Mode: Driving J-Rock Sawtooth Riffs & Drums
-    */
     function startBackupSynthRadio() {
       if (backupSynthActive) stopBackupSynthRadio();
       backupSynthActive = true;
@@ -1155,17 +1196,17 @@
       if (audioCtx.state === 'suspended') audioCtx.resume();
 
       const lofiChords = [
-        [261.63, 329.63, 392.00, 493.88], // Cmaj7
-        [220.00, 261.63, 329.63, 392.00], // Am7
-        [174.61, 220.00, 261.63, 329.63], // Fmaj7
-        [146.83, 174.61, 220.00, 261.63]  // Dm7
+        [261.63, 329.63, 392.00, 493.88],
+        [220.00, 261.63, 329.63, 392.00],
+        [174.61, 220.00, 261.63, 329.63],
+        [146.83, 174.61, 220.00, 261.63]
       ];
 
       const jrockRiffs = [
-        [164.81, 246.94, 329.63], // E5 Power Chord
-        [196.00, 293.66, 392.00], // G5 Power Chord
-        [220.00, 329.63, 440.00], // A5 Power Chord
-        [130.81, 196.00, 261.63]  // C5 Power Chord
+        [164.81, 246.94, 329.63],
+        [196.00, 293.66, 392.00],
+        [220.00, 329.63, 440.00],
+        [130.81, 196.00, 261.63]
       ];
 
       let stepIdx = 0;
@@ -1175,7 +1216,6 @@
         const isBasement = document.body.classList.contains('basement-mode');
 
         if (isBasement) {
-          // Hard Driving J-Rock Riff & Percussive Kick
           const chord = jrockRiffs[stepIdx % jrockRiffs.length];
           stepIdx++;
 
@@ -1196,7 +1236,6 @@
             } catch(e){}
           });
 
-          // Kick Drum Synth Pulse
           try {
             const kickOsc = audioCtx.createOscillator();
             const kickGain = audioCtx.createGain();
@@ -1211,7 +1250,6 @@
           } catch(e){}
 
         } else {
-          // Cozy Lofi Chill Chords & Tape Wobble
           const chord = lofiChords[stepIdx % lofiChords.length];
           stepIdx++;
 
@@ -1542,18 +1580,19 @@
       const btn = document.getElementById('podcast-play-btn');
       if (isPodcastPlaying) {
         isPodcastPlaying = false;
-        clearInterval(podcastInterval);
+        if (speechStepTimeout) clearTimeout(speechStepTimeout);
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         btn.innerText = "▶ Resume Episode Broadcast";
       } else {
         isPodcastPlaying = true;
         btn.innerText = "⏸ Pause Episode Broadcast";
         playScriptStep();
-        podcastInterval = setInterval(playScriptStep, 5200);
       }
     }
 
     function playScriptStep() {
+      if (!isPodcastPlaying) return;
+
       const epList = getActiveEpisodes();
       const ep = epList[selectedEpIdx];
       if (currentLineIdx >= ep.script.length) {
@@ -1561,9 +1600,6 @@
       }
 
       const line = ep.script[currentLineIdx];
-
-      // Speak line out loud using character voice synthesizers
-      speakDialogueLine(line.speaker, line.text);
 
       resetSpeakerHighlights();
       const activeEl = document.getElementById(`spk-${line.speaker}`);
@@ -1576,6 +1612,11 @@
       document.getElementById('dialogue-line-display').innerText = `"${line.text}"`;
 
       currentLineIdx++;
+
+      // Read line aloud and wait for completion before proceeding to next line
+      speakDialogueLine(line.speaker, line.text, () => {
+        if (isPodcastPlaying) playScriptStep();
+      });
     }
 
     function resetSpeakerHighlights() {
@@ -1893,6 +1934,7 @@
     /* Dynamic Theme Switcher Sync */
     function updateThemeUI(isBasement) {
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      if (speechStepTimeout) clearTimeout(speechStepTimeout);
 
       const toggleBtn = document.getElementById('theme-toggle-btn');
       const modeChip = document.getElementById('mode-chip');
@@ -1926,7 +1968,6 @@
 
       if (isPodcastPlaying) togglePodcastPlayback();
 
-      // If backup audio generator is running when switching modes, update rhythm style dynamically!
       if (backupSynthActive) {
         startBackupSynthRadio();
         if (statusEl) {
