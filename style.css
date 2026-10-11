@@ -36,6 +36,11 @@ body.basement-mode {
   color: var(--text-basement);
 }
 
+body.backstage-mode {
+  background: #05020a;
+  color: #ffffff;
+}
+
 /* VIP Paid Element Highlight */
 .vip-card {
   background: var(--vip-card-bg) !important;
@@ -46,4 +51,85 @@ body.basement-mode {
 .vip-card:hover {
   border-color: var(--vip-gold) !important;
   box-shadow: 0 10px 30px rgba(255, 209, 102, 0.35);
+}
+
+/* ==========================================================================
+   3-TIER MODE SELECTOR DROPDOWN STYLES
+   ========================================================================== */
+
+.mode-select-dropdown {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 8px 32px 8px 14px;
+  border-radius: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+/* 🌸 Tier 1: Twilight Mode Dropdown */
+body.twilight-mode .mode-select-dropdown {
+  background-color: var(--card-twilight);
+  border: 1px solid var(--border-twilight);
+  color: var(--text-twilight);
+  box-shadow: 0 0 12px rgba(168, 139, 235, 0.2);
+}
+
+body.twilight-mode .mode-select-dropdown:hover {
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 16px rgba(244, 184, 196, 0.4);
+}
+
+/* ⚡ Tier 2: Basement Mode Dropdown */
+body.basement-mode .mode-select-dropdown {
+  background-color: var(--card-basement);
+  border: 1px solid var(--border-basement);
+  color: var(--accent-red);
+  box-shadow: 0 0 12px rgba(255, 77, 109, 0.25);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+}
+
+body.basement-mode .mode-select-dropdown:hover {
+  border-color: var(--accent-rose);
+  box-shadow: 0 0 18px rgba(255, 51, 85, 0.5);
+}
+
+/* 🎟️ Tier 3: Backstage Pass Dropdown */
+body.backstage-mode .mode-select-dropdown {
+  background-color: var(--vip-card-bg);
+  border: 1px solid var(--vip-gold);
+  color: var(--vip-gold);
+  box-shadow: 0 0 15px rgba(255, 209, 102, 0.35);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+}
+
+body.backstage-mode .mode-select-dropdown:hover {
+  border-color: var(--vip-magenta);
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+}
+
+/* Mobile Dropdown Options List Fix */
+.mode-select-dropdown option {
+  background-color: #120924;
+  color: #e2daf8;
+  padding: 10px;
+  font-weight: 700;
+}
+
+body.basement-mode .mode-select-dropdown option {
+  background-color: #0b0414;
+  color: #ff4d6d;
+}
+
+body.backstage-mode .mode-select-dropdown option {
+  background-color: #080210;
+  color: #ffd166;
 }
