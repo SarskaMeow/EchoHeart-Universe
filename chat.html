@@ -265,15 +265,39 @@
       border: 1px solid rgba(168, 139, 235, 0.25);
       border-radius: 12px;
       padding: 12px 16px;
+      animation: fadeInMsg 0.35s ease forwards;
+    }
+
+    @keyframes fadeInMsg {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .msg-card.vip-user {
-      border-color: #ff4d6d;
-      box-shadow: 0 0 12px rgba(255, 77, 109, 0.2);
+      border-color: #ff007f;
+      background: rgba(25, 10, 35, 0.85);
+      box-shadow: 0 0 14px rgba(255, 0, 127, 0.25);
     }
 
-    .msg-author { font-size: 0.82rem; color: #f4b8c4; font-weight: 800; margin-bottom: 4px; }
-    .vip-badge { background: #ff4d6d; color: #fff; padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; margin-left: 6px; }
+    .msg-card.rare-char {
+      border-color: #ffd166;
+      background: rgba(35, 25, 15, 0.85);
+      box-shadow: 0 0 14px rgba(255, 209, 102, 0.3);
+    }
+
+    .msg-card.ultra-rare {
+      border-color: #a88beb;
+      background: rgba(30, 15, 55, 0.9);
+      box-shadow: 0 0 18px rgba(168, 139, 235, 0.4);
+    }
+
+    .msg-author { font-size: 0.82rem; color: #f4b8c4; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; }
+    .msg-card.rare-char .msg-author { color: #ffd166; }
+    .msg-card.ultra-rare .msg-author { color: #a88beb; }
+
+    .vip-badge { background: #ff007f; color: #fff; padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; margin-left: 6px; }
+    .rare-badge { background: #ffd166; color: #000; padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; margin-left: 6px; font-weight: 900; }
+    .lore-badge { background: #a88beb; color: #0d0b18; padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; margin-left: 6px; font-weight: 900; }
 
     .emote-bar { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
     .emote-btn { background: rgba(35, 25, 65, 0.8); border: 1px solid rgba(168, 139, 235, 0.3); color: #fff; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
@@ -393,16 +417,9 @@
   <!-- Live Chat Stage -->
   <main class="chat-container">
     <section class="chat-feed-box">
-      <h3>💬 Locker 102 Live Community Feed</h3>
+      <h3 id="chat-title-heading">💬 Locker 102 Live Classmate Feed</h3>
       <div id="chat-stream" class="chat-messages">
-        <div class="msg-card vip-user">
-          <div class="msg-author">Student_Akari_Fan <span class="vip-badge">VIP Pass</span></div>
-          <div>"The drum tempo shift in Episode 2 was insane! 🥁⚡"</div>
-        </div>
-        <div class="msg-card">
-          <div class="msg-author">Sera_Keytar_Listener</div>
-          <div>"Hoping we get an acoustic version of the cavern track next week!"</div>
-        </div>
+        <!-- Live Chat & NPC Message Feed Populates Here -->
       </div>
 
       <!-- Band Emote Selector -->
@@ -417,7 +434,7 @@
     <!-- Post Note Drawer -->
     <aside class="post-panel">
       <h3>📮 Send a Note</h3>
-      <p style="font-size: 0.82rem; color: #a88beb;">🔒 Live message posting requires an active Backstage Pass to ensure SFW community safety.</p>
+      <p id="posting-access-note" style="font-size: 0.82rem; color: #a88beb;">🔒 Live message posting requires an active Backstage Pass to ensure SFW community safety.</p>
       
       <input type="text" id="chat-handle" class="form-control" placeholder="Your Student Name">
       <textarea id="chat-text" class="form-control" rows="4" placeholder="Write a message to the band..."></textarea>
@@ -432,6 +449,36 @@
       isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
       isVIP: localStorage.getItem('neko_is_vip') === 'true'
     };
+
+    // Classmate NPC Chat Pools (Rarity-weighted)
+    const NPC_CLASSMATE_MESSAGES = [
+      { type: 'common', author: 'Locker_88', text: 'Did anyone leave drumsticks near Prep Room B? 🥁' },
+      { type: 'common', author: 'Class_2B_Student', text: 'That keytar synth solo in the rehearsal feed was insane! 🎹⚡' },
+      { type: 'common', author: 'Sakuraoka_Guitarist', text: 'Who voted on the Neko FM setlist poll today?' },
+      { type: 'common', author: 'PrepRoom_Lurker', text: 'Are they practicing down in the subterranean basement after school?' },
+      { type: 'common', author: 'Subterranean_Vibes', text: 'The reverb on that acoustic track is so soothing 🌸' },
+      { type: 'common', author: 'Locker_102_Regular', text: 'Got my headphones on! Ready for tonight’s broadcast stream.' },
+      { type: 'common', author: 'Class_1A_Listener', text: 'Has anyone seen the new light novel lore entry in Universe Hub?' },
+      { type: 'common', author: 'BassLine_Fan', text: 'Tempo shifts in Episode 2 were wild!! 🎸' },
+
+      // Rare Character Pop-ins
+      { type: 'rare', author: 'Akari Minase', text: 'Thanks for tuning in everyone! We are working on new guitar arrangements right now 🎸' },
+      { type: 'rare', author: 'Nekomi', text: 'Don’t forget to cast your vote on the weekly Neko FM setlist poll! 🌸' },
+      { type: 'rare', author: 'Sera', text: 'Keytar synth lead calibration complete. Prep Room B sound check ready! 🎹' },
+      { type: 'rare', author: 'Aoi', text: 'Drums tuned! Let’s turn up the volume for the broadcast feed 🥁' },
+
+      // Ultra-Rare Cavern Lore Pop-ins
+      { type: 'ultra', author: 'Cavern_Echo_Voice', text: '✦ Resonance frequency detected beneath Sakuraoka High... ⚡' },
+      { type: 'ultra', author: 'Phantom_Stagehand', text: 'Who left the amplifier dials on 11 in the cavern hall? 👻' }
+    ];
+
+    const VIP_FEED_PRESETS = [
+      { author: 'Student_Akari_Fan', vip: true, text: 'The drum tempo shift in Episode 2 was insane! 🥁⚡' },
+      { author: 'Sera_Keytar_Listener', vip: true, text: 'Hoping we get an acoustic version of the cavern track next week!' },
+      { author: 'VIP_Backstage_Pass', vip: true, text: 'Master stem downloads in the Hub are sounding crisp today 💎' }
+    ];
+
+    let npcStreamInterval = null;
 
     function handleModeChange(targetMode) {
       const selector = document.getElementById('mode-selector');
@@ -450,6 +497,7 @@
 
       localStorage.setItem('neko_active_mode', targetMode);
       applyThemeMode(targetMode);
+      loadChatFeedForMode(targetMode);
     }
 
     function getCurrentMode() {
@@ -464,6 +512,100 @@
       body.classList.add(`${mode}-mode`);
 
       if (selector) selector.value = mode;
+    }
+
+    function loadChatFeedForMode(mode) {
+      const stream = document.getElementById('chat-stream');
+      const heading = document.getElementById('chat-title-heading');
+      const note = document.getElementById('posting-access-note');
+      
+      stream.innerHTML = '';
+      if (npcStreamInterval) clearInterval(npcStreamInterval);
+
+      if (mode === 'backstage') {
+        heading.innerText = '🎟️ Locker 102 Backstage VIP Live Stream';
+        note.innerHTML = '✨ <strong style="color:#ffd166;">VIP Active:</strong> Live message posting enabled for Backstage Pass members.';
+        
+        // Populate initial VIP feed
+        VIP_FEED_PRESETS.forEach(msg => {
+          appendMessageToFeed(msg.author, msg.text, 'vip-user', '<span class="vip-badge">VIP Pass</span>');
+        });
+      } else {
+        heading.innerText = '💬 Locker 102 Live Classmate Feed';
+        note.innerHTML = '🔒 Live message posting requires an active Backstage Pass to ensure SFW community safety.';
+
+        // Populate initial classmate starter messages
+        appendMessageToFeed('Locker_42', 'Anyone down at Prep Room B today?', 'msg-card');
+        appendMessageToFeed('Class_2B_Student', 'The keytar riff is stuck in my head all afternoon 🎹', 'msg-card');
+
+        // Start Auto-NPC Chat Feed
+        npcStreamInterval = setInterval(triggerRandomClassmateNPCMessage, 4500);
+      }
+    }
+
+    function triggerRandomClassmateNPCMessage() {
+      if (getCurrentMode() === 'backstage') return;
+
+      const roll = Math.random();
+      let candidates = [];
+
+      if (roll < 0.70) {
+        // 70% Common Locker classmates
+        candidates = NPC_CLASSMATE_MESSAGES.filter(m => m.type === 'common');
+      } else if (roll < 0.92) {
+        // 22% Rare Character Pop-in
+        candidates = NPC_CLASSMATE_MESSAGES.filter(m => m.type === 'rare');
+      } else {
+        // 8% Ultra-Rare Cavern Pop-in
+        candidates = NPC_CLASSMATE_MESSAGES.filter(m => m.type === 'ultra');
+      }
+
+      const msg = candidates[Math.floor(Math.random() * candidates.length)];
+      let cssClass = 'msg-card';
+      let badge = '';
+
+      if (msg.type === 'rare') {
+        cssClass = 'msg-card rare-char';
+        badge = '<span class="rare-badge">Band Member</span>';
+      } else if (msg.type === 'ultra') {
+        cssClass = 'msg-card ultra-rare';
+        badge = '<span class="lore-badge">Lore Echo</span>';
+      }
+
+      appendMessageToFeed(msg.author, msg.text, cssClass, badge);
+    }
+
+    function appendMessageToFeed(author, text, cssClass = 'msg-card', badgeHTML = '') {
+      const stream = document.getElementById('chat-stream');
+      const card = document.createElement('div');
+      card.className = cssClass;
+      card.innerHTML = `<div class="msg-author"><span>${author}</span> ${badgeHTML}</div><div>"${text}"</div>`;
+      stream.appendChild(card);
+
+      // Keep maximum 35 messages to maintain smooth performance
+      if (stream.children.length > 35) {
+        stream.removeChild(stream.firstChild);
+      }
+
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    function handleLivePost() {
+      if (!userState.isVIP) {
+        showVIPModal('Backstage Pass Required', '🔒 Locker 102 Live Message Posting is reserved for Backstage Pass holders to ensure a safe, troll-free community!');
+        return;
+      }
+      
+      const handle = document.getElementById('chat-handle').value.trim() || 'Anonymous Student';
+      const text = document.getElementById('chat-text').value.trim();
+      if (!text) return;
+
+      appendMessageToFeed(handle, text, 'msg-card vip-user', '<span class="vip-badge">VIP Pass</span>');
+      document.getElementById('chat-text').value = '';
+    }
+
+    function insertEmote(emote) {
+      document.getElementById('chat-text').value += ' ' + emote;
     }
 
     function showAuthModal(title, message) {
@@ -527,30 +669,10 @@
       if (navMenu) navMenu.classList.toggle('open');
     }
 
-    function insertEmote(emote) {
-      document.getElementById('chat-text').value += ' ' + emote;
-    }
-
-    function handleLivePost() {
-      if (!userState.isVIP) {
-        showVIPModal('Backstage Pass Required', '🔒 Locker 102 Live Message Posting is reserved for Backstage Pass holders to ensure a safe, troll-free community!');
-        return;
-      }
-      
-      const handle = document.getElementById('chat-handle').value || 'Anonymous Student';
-      const text = document.getElementById('chat-text').value;
-      if (!text) return;
-
-      const stream = document.getElementById('chat-stream');
-      const card = document.createElement('div');
-      card.className = 'msg-card vip-user';
-      card.innerHTML = `<div class="msg-author">${handle} <span class="vip-badge">VIP Pass</span></div><div>"${text}"</div>`;
-      stream.appendChild(card);
-      document.getElementById('chat-text').value = '';
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
-      applyThemeMode(getCurrentMode());
+      const activeMode = getCurrentMode();
+      applyThemeMode(activeMode);
+      loadChatFeedForMode(activeMode);
 
       document.addEventListener('click', function(event) {
         const navMenu = document.getElementById('nav-menu');
