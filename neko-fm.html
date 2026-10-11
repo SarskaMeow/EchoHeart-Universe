@@ -447,7 +447,7 @@
       letter-spacing: 2px;
     }
 
-    /* Girls Dead Phantom Premiere Showcase Card with 10-Minute Timer Beside */
+    /* Girls Dead Phantom Premiere Showcase Card with 10-Minute Timer Right Beside */
     .premiere-showcase-card {
       background: linear-gradient(135deg, rgba(35, 20, 60, 0.95), rgba(15, 8, 30, 0.95));
       border: 2px solid #a88beb;
@@ -632,11 +632,131 @@
       cursor: default;
     }
 
-    /* DISCOGRAPHY & 20s PREVIEW STYLING */
+    /* REVAMPED FANCY GIRLS DEAD PHANTOM HUB STYLES */
+    .gdp-hero-banner {
+      background: linear-gradient(135deg, rgba(32, 18, 56, 0.95), rgba(12, 6, 24, 0.98));
+      border: 2px solid rgba(244, 184, 196, 0.45);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 12px 35px rgba(168, 139, 235, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    body.basement-mode .gdp-hero-banner {
+      border-color: rgba(255, 77, 109, 0.6);
+      box-shadow: 0 12px 35px rgba(255, 77, 109, 0.3);
+    }
+
+    body.backstage-mode .gdp-hero-banner {
+      border-color: #ffd166;
+      box-shadow: 0 12px 35px rgba(255, 209, 102, 0.35);
+    }
+
+    .gdp-hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .gdp-hero-title {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .gdp-roster-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .member-chip {
+      background: rgba(35, 25, 65, 0.9);
+      border: 1px solid rgba(168, 139, 235, 0.35);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .member-role { color: #f4b8c4; font-weight: 700; opacity: 0.9; }
+
+    .gdp-spotlight-box {
+      background: linear-gradient(135deg, rgba(40, 20, 70, 0.98), rgba(18, 8, 36, 0.98));
+      border: 2px solid #f4b8c4;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 0 25px rgba(244, 184, 196, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    body.basement-mode .gdp-spotlight-box {
+      border-color: #ff4d6d;
+      box-shadow: 0 0 25px rgba(255, 77, 109, 0.35);
+    }
+
+    body.backstage-mode .gdp-spotlight-box {
+      border-color: #ffd166;
+      box-shadow: 0 0 25px rgba(255, 209, 102, 0.4);
+    }
+
+    /* CSS Animated Soundwave Graphic */
+    .soundwave-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 24px;
+      margin-bottom: 6px;
+    }
+
+    .soundwave-bar {
+      width: 4px;
+      background: #f4b8c4;
+      border-radius: 2px;
+      animation: soundwavePulse 1.2s infinite ease-in-out alternate;
+    }
+
+    body.basement-mode .soundwave-bar { background: #ff4d6d; }
+    body.backstage-mode .soundwave-bar { background: #ffd166; }
+
+    .soundwave-bar:nth-child(1) { height: 30%; animation-delay: 0.1s; }
+    .soundwave-bar:nth-child(2) { height: 90%; animation-delay: 0.3s; }
+    .soundwave-bar:nth-child(3) { height: 50%; animation-delay: 0.2s; }
+    .soundwave-bar:nth-child(4) { height: 100%; animation-delay: 0.4s; }
+    .soundwave-bar:nth-child(5) { height: 40%; animation-delay: 0.15s; }
+
+    @keyframes soundwavePulse {
+      0% { height: 20%; }
+      100% { height: 100%; }
+    }
+
+    /* Discography Grid & Vinyl Cards */
     .discography-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+      gap: 18px;
       margin-top: 20px;
     }
 
@@ -645,32 +765,56 @@
     }
 
     .disco-track-card {
-      background: rgba(18, 12, 34, 0.85);
+      background: rgba(20, 12, 38, 0.9);
       border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 14px;
-      padding: 16px 20px;
+      border-radius: 16px;
+      padding: 18px 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      transition: all 0.25s ease;
+      gap: 16px;
+      transition: all 0.3s ease;
+      position: relative;
     }
 
     .disco-track-card:hover {
       border-color: #f4b8c4;
-      background: rgba(28, 18, 50, 0.95);
+      background: rgba(32, 20, 58, 0.98);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(168, 139, 235, 0.25);
     }
 
-    body.basement-mode .disco-track-card:hover { border-color: #ff4d6d; }
-    body.backstage-mode .disco-track-card:hover { border-color: #ffd166; }
+    body.basement-mode .disco-track-card:hover {
+      border-color: #ff4d6d;
+      box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
+    }
 
-    .disco-title { font-weight: 800; font-size: 0.98rem; color: #ffffff; margin-bottom: 4px; }
-    .disco-meta { font-size: 0.78rem; color: #cbb8f6; }
+    body.backstage-mode .disco-track-card:hover {
+      border-color: #ffd166;
+      box-shadow: 0 8px 20px rgba(255, 209, 102, 0.35);
+    }
+
+    .vinyl-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #2a1b4e 30%, #100620 70%);
+      border: 2px solid rgba(168, 139, 235, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: #f4b8c4;
+      flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .disco-title { font-weight: 800; font-size: 1.02rem; color: #ffffff; margin-bottom: 4px; }
+    .disco-meta { font-size: 0.8rem; color: #cbb8f6; }
 
     .disco-tier-badge {
       font-size: 0.68rem;
       font-weight: 900;
-      padding: 3px 7px;
+      padding: 3px 8px;
       border-radius: 6px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -690,17 +834,6 @@
       display: inline-block;
       margin-top: 4px;
     }
-
-    .band-bio-banner {
-      background: rgba(15, 10, 30, 0.85);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 16px;
-      padding: 22px 26px;
-      margin-bottom: 24px;
-    }
-
-    .band-bio-banner h3 { margin: 0 0 8px; color: #ffffff; font-size: 1.3rem; }
-    .band-bio-banner p { margin: 0; color: #cbb8f6; font-size: 0.88rem; line-height: 1.5; }
 
     .suggestion-box-panel {
       background: rgba(15, 10, 30, 0.8);
@@ -863,7 +996,7 @@
         </div>
 
         <div class="premiere-actions-side">
-          <!-- 10-Minute Soundcheck Countdown Timer (Placed Right Beside Voted Song) -->
+          <!-- 10-Minute Soundcheck Countdown Timer -->
           <div class="premiere-10min-timer-badge" id="premier-soundcheck-box">
             ⏱️ Premiere In: <span id="soundcheck-digits">10:00</span>
           </div>
@@ -887,28 +1020,76 @@
       </div>
     </section>
 
-    <!-- TAB 3: GIRLS DEAD PHANTOM DISCOGRAPHY & PREVIEW HUB -->
+    <!-- TAB 3: REVAMPED FANCY GIRLS DEAD PHANTOM DISCOGRAPHY & PREVIEW HUB -->
     <section id="discography-tab" class="tab-content">
       
-      <!-- Band Lore & Official Status Banner -->
-      <div class="band-bio-banner">
-        <h3>🎸 Girls Dead Phantom — Official Discography & Vault</h3>
-        <p>Full 10-track discography for <strong>Girls Dead Phantom</strong> (Akari Minase, Nekomi, Sera, and Aoi). Tap any track below to listen to a <strong>20-second official audio preview</strong>!</p>
-      </div>
-
-      <!-- Poll Sync "On Deck" Banner -->
-      <div class="premiere-showcase-card" style="border-color: #f4b8c4;">
-        <div class="premiere-info-group">
-          <span class="premiere-badge" style="background: linear-gradient(135deg, #ff4d6d, #f4b8c4);">⚡ QUEUED FOR NEXT PREMIERE BROADCAST</span>
-          <h4 class="premiere-title" id="disco-deck-track-name">"Subterranean Resonance (Official Studio Cut)"</h4>
-          <p class="premiere-sub">Synchronized with Girls Dead Phantom Poll Leader • Plays automatically when 10-min premiere countdown ends</p>
+      <!-- Fancy Hero Band Header & Roster Banner -->
+      <div class="gdp-hero-banner">
+        <div class="gdp-hero-top">
+          <div>
+            <h2 class="gdp-hero-title">🎸 GIRLS DEAD PHANTOM</h2>
+            <p style="margin: 6px 0 0; color: #cbb8f6; font-size: 0.9rem;">
+              Prep Room B Sound Engineers • Sakuraoka High Underground Ensemble
+            </p>
+          </div>
+          <div style="text-align: right;">
+            <span class="premiere-badge" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000;">
+              ✨ 10 OFFICIAL RELEASES
+            </span>
+          </div>
         </div>
-        <button class="vote-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 18px; font-size: 0.88rem;">
-          ▶ Stream On-Deck Track
-        </button>
+
+        <p style="color: #e2daf8; font-size: 0.88rem; line-height: 1.5; margin: 0 0 12px;">
+          Welcome to the official <strong>Girls Dead Phantom</strong> audio lounge! Formed inside Sakuraoka High's Prep Room B by lead guitarist <strong>Akari Minase</strong>. Explore all 10 official studio releases, subterranean B-Sides, and preview 20-second teasers directly in your browser!
+        </p>
+
+        <!-- Band Member Roster Chips -->
+        <div class="gdp-roster-chips">
+          <div class="member-chip">🎸 Akari Minase <span class="member-role">(Lead Guitar)</span></div>
+          <div class="member-chip">🎙️ Nekomi <span class="member-role">(Lead Vocals)</span></div>
+          <div class="member-chip">🎹 Sera <span class="member-role">(Keytar & Synth)</span></div>
+          <div class="member-chip">🥁 Aoi <span class="member-role">(Drums & Bass)</span></div>
+        </div>
       </div>
 
-      <h4 style="margin: 24px 0 10px; color: #ffffff;">💿 Official Song List (10 Tracks — 20s Previews)</h4>
+      <!-- Main Concert Spotlight Card with 10-Minute Countdown Timer Embedded -->
+      <div class="gdp-spotlight-box">
+        <div class="premiere-info-group">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="soundwave-box">
+              <span class="soundwave-bar"></span>
+              <span class="soundwave-bar"></span>
+              <span class="soundwave-bar"></span>
+              <span class="soundwave-bar"></span>
+              <span class="soundwave-bar"></span>
+            </div>
+            <span class="premiere-badge">⚡ QUEUED PREMIERE WINNER</span>
+          </div>
+          
+          <h3 class="premiere-title" id="disco-deck-track-name" style="font-size: 1.25rem;">"Subterranean Resonance (Official Studio Cut)"</h3>
+          <p class="premiere-sub">Synchronized with Girls Dead Phantom Poll Leader • Auto-plays when soundcheck finishes</p>
+        </div>
+
+        <div class="premiere-actions-side">
+          <!-- 10-Minute Soundcheck Countdown Timer (HUB SPECIFIC DISPLAY) -->
+          <div class="premiere-10min-timer-badge">
+            ⏱️ Premiere In: <span id="hub-soundcheck-digits">10:00</span>
+          </div>
+          <button class="vote-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 20px; font-size: 0.9rem;">
+            ▶ Stream On-Deck Track
+          </button>
+        </div>
+      </div>
+
+      <!-- Discography Section Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+          💿 Official Studio Tracklist <span style="font-size: 0.8rem; color: #f4b8c4; font-weight: 600;">(20s Preview Teasers)</span>
+        </h3>
+        <span style="font-size: 0.8rem; color: #cbb8f6;">Showing 10 Tracks</span>
+      </div>
+
+      <!-- Fancier Discography Grid Container -->
       <div class="discography-grid" id="discography-container">
         <!-- Rendered dynamically by JavaScript -->
       </div>
@@ -948,16 +1129,16 @@
 
     // 10 Official Songs for Girls Dead Phantom Discography
     const DISCOGRAPHY_CATALOG = [
-      { id: 'gdp-1', title: 'Subterranean Resonance', type: 'Debut Single (2026)', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/stream' },
-      { id: 'gdp-2', title: 'Keytar Midnight Run', type: '180 BPM Synth Remix', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.zeno.fm/f0p485a06chvv' },
-      { id: 'gdp-3', title: 'Sakuraoka Dusk Echoes', type: 'Live Acoustic Session', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.zeno.fm/f3wvbbqmdg8uv' },
-      { id: 'gdp-4', title: 'Cavern Reverb Overdrive', type: 'Subterranean B-Side', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.zeno.fm/918p426338quv' },
-      { id: 'gdp-5', title: 'Phantom Echoes in Prep Room B', type: 'Studio Cut', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.zeno.fm/k2k24q08s0hvv' },
-      { id: 'gdp-6', title: '180 BPM Velocity', type: 'Fast Tempo Rock', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.zeno.fm/088019y2eb8uv' },
-      { id: 'gdp-7', title: 'Dusk Over Sakuraoka', type: 'Melodic Punk', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/stream' },
-      { id: 'gdp-8', title: 'Locker 102 Whispers', type: 'Dark Pop Underground', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.zeno.fm/f0p485a06chvv' },
-      { id: 'gdp-9', title: 'Akari\'s Crimson Riff', type: 'Guitar Instrumental', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/918p426338quv' },
-      { id: 'gdp-10', title: 'After Dark Distortion', type: 'Uncompressed Master Stem', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/054a1078s0hvv' }
+      { id: 'gdp-1', trackNo: '01', title: 'Subterranean Resonance', type: 'Debut Single (2026)', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/stream' },
+      { id: 'gdp-2', trackNo: '02', title: 'Keytar Midnight Run', type: '180 BPM Synth Remix', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.zeno.fm/f0p485a06chvv' },
+      { id: 'gdp-3', trackNo: '03', title: 'Sakuraoka Dusk Echoes', type: 'Live Acoustic Session', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.zeno.fm/f3wvbbqmdg8uv' },
+      { id: 'gdp-4', trackNo: '04', title: 'Cavern Reverb Overdrive', type: 'Subterranean B-Side', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.zeno.fm/918p426338quv' },
+      { id: 'gdp-5', trackNo: '05', title: 'Phantom Echoes in Prep Room B', type: 'Studio Cut', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.zeno.fm/k2k24q08s0hvv' },
+      { id: 'gdp-6', trackNo: '06', title: '180 BPM Velocity', type: 'Fast Tempo Rock', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.zeno.fm/088019y2eb8uv' },
+      { id: 'gdp-7', trackNo: '07', title: 'Dusk Over Sakuraoka', type: 'Melodic Punk', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/stream' },
+      { id: 'gdp-8', trackNo: '08', title: 'Locker 102 Whispers', type: 'Dark Pop Underground', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.zeno.fm/f0p485a06chvv' },
+      { id: 'gdp-9', trackNo: '09', title: 'Akari\'s Crimson Riff', type: 'Guitar Instrumental', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/918p426338quv' },
+      { id: 'gdp-10', trackNo: '10', title: 'After Dark Distortion', type: 'Uncompressed Master Stem', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/054a1078s0hvv' }
     ];
 
     let currentMode = 'twilight';
@@ -1085,7 +1266,6 @@
       let pollTarget = localStorage.getItem('gdp_poll_end_time');
       let soundcheckTarget = localStorage.getItem('gdp_soundcheck_end_time');
 
-      // Initialize Hourly Poll Target if not set or expired
       if (!pollTarget || parseInt(pollTarget) < Date.now()) {
         pollTarget = Date.now() + (60 * 60 * 1000); // 60 Minutes
         localStorage.setItem('gdp_poll_end_time', pollTarget.toString());
@@ -1100,6 +1280,7 @@
       const pollTimerDigits = document.getElementById('poll-countdown-digits');
       const pollTimerLabel = document.getElementById('poll-timer-label');
       const soundcheckDigits = document.getElementById('soundcheck-digits');
+      const hubSoundcheckDigits = document.getElementById('hub-soundcheck-digits');
 
       const now = Date.now();
       const pollTarget = parseInt(localStorage.getItem('gdp_poll_end_time') || '0');
@@ -1111,15 +1292,17 @@
       if (pollDiff > 0) {
         const m = Math.floor(pollDiff / (1000 * 60));
         const s = Math.floor((pollDiff % (1000 * 60)) / 1000);
-        if (pollTimerDigits) pollTimerDigits.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        const timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+        if (pollTimerDigits) pollTimerDigits.innerText = timeStr;
         if (pollTimerLabel) pollTimerLabel.innerText = "⚡ Voting Closes In";
 
         if (soundcheckDigits) soundcheckDigits.innerText = "10:00 (Waiting)";
+        if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = "10:00 (Waiting)";
       } 
-      // PHASE 2: Poll Ended -> Start 10-Minute Pre-Show Countdown Beside Winner Track
+      // PHASE 2: Poll Ended -> Start 10-Minute Pre-Show Countdown
       else {
         if (!soundcheckTarget || parseInt(soundcheckTarget) < now) {
-          // Trigger 10-Minute Soundcheck Countdown Timer
           soundcheckTarget = (now + (10 * 60 * 1000)).toString();
           localStorage.setItem('gdp_soundcheck_end_time', soundcheckTarget);
         }
@@ -1132,16 +1315,18 @@
         if (soundcheckDiff > 0) {
           const scM = Math.floor(soundcheckDiff / (1000 * 60));
           const scS = Math.floor((soundcheckDiff % (1000 * 60)) / 1000);
-          if (soundcheckDigits) soundcheckDigits.innerText = `${scM.toString().padStart(2, '0')}:${scS.toString().padStart(2, '0')}`;
+          const scTimeStr = `${scM.toString().padStart(2, '0')}:${scS.toString().padStart(2, '0')}`;
+
+          if (soundcheckDigits) soundcheckDigits.innerText = scTimeStr;
+          if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = scTimeStr;
         } else {
-          // PHASE 3: 10-Minute Soundcheck Complete -> Reset Hourly Poll Cycle
+          // PHASE 3: Complete -> Reset
           if (soundcheckDigits) soundcheckDigits.innerText = "00:00 - LIVE!";
+          if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = "00:00 - LIVE!";
           
-          // Reset Poll Timer for next hour & clear 10-min soundcheck state
           localStorage.setItem('gdp_poll_end_time', (now + (60 * 60 * 1000)).toString());
           localStorage.removeItem('gdp_soundcheck_end_time');
           
-          // Reset votes to 0 for fair hourly cycle
           pollData.forEach(item => item.votes = 0);
           localStorage.removeItem('neko_voted_poll_id');
           saveStoredPollData(pollData);
@@ -1325,8 +1510,9 @@
         const card = document.createElement('div');
         card.className = 'disco-track-card';
         card.innerHTML = `
-          <div>
-            <div class="disco-title">${track.title}</div>
+          <div class="vinyl-icon-box">💿</div>
+          <div style="flex: 1;">
+            <div class="disco-title">${track.trackNo}. ${track.title}</div>
             <div class="disco-meta">${track.type} • <span class="disco-tier-badge ${track.badgeClass}">${track.tierLabel}</span></div>
             ${isPreviewingThis ? `<span class="preview-active-pill">🎵 Previewing Live</span>` : ''}
           </div>
