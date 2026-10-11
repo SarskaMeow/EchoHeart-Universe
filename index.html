@@ -3,23 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Girls Phantom Dead & EchoHeart — Official Archive</title>
+  <title>EchoHeart & Girls Phantom Dead — Otaku Neko Lounge</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ==========================================================================
-       OTAKU NEKO LOUNGE & ECHOHEART UNIVERSE - MOBILE-FRIENDLY NAVBAR STYLES
-       ========================================================================== */
     :root {
       --nav-bg-twilight: rgba(18, 12, 36, 0.94);
-      --nav-bg-basement: rgba(15, 8, 22, 0.96);
       --nav-border-twilight: rgba(168, 139, 235, 0.35);
-      --nav-border-basement: rgba(255, 77, 109, 0.45);
       --accent-pink: #f4b8c4;
       --accent-purple: #a88beb;
       --accent-red: #ff4d6d;
       --text-light: #e2daf8;
     }
 
+    body {
+      background: #0d0b18;
+      color: var(--text-light);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Universal Header Navbar */
     .navbar {
       position: sticky;
       top: 0;
@@ -29,12 +33,6 @@
       border-bottom: 2px solid var(--nav-border-twilight);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      transition: background 0.4s ease, border-color 0.4s ease;
-    }
-
-    body.basement-mode .navbar {
-      background: var(--nav-bg-basement);
-      border-bottom-color: var(--nav-border-basement);
     }
 
     .nav-container {
@@ -67,12 +65,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    body.basement-mode .logo-main {
-      background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
     .logo-sub {
       font-size: 0.72rem;
       font-weight: 800;
@@ -81,199 +73,165 @@
       opacity: 0.9;
     }
 
-    body.basement-mode .logo-sub {
-      color: var(--accent-red);
-    }
-
     .nav-links {
       display: flex;
       align-items: center;
       gap: 14px;
     }
 
-    .nav-item, .dropdown-btn {
-      background: transparent;
-      border: none;
+    .nav-item {
       color: #cbb8f6;
       font-size: 0.88rem;
       font-weight: 700;
       padding: 10px 14px;
       border-radius: 10px;
-      cursor: pointer;
       text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
       transition: all 0.25s ease;
       white-space: nowrap;
     }
 
-    .nav-item:hover, .dropdown-btn:hover, .nav-item.active {
+    .nav-item:hover, .nav-item.active {
       background: rgba(168, 139, 235, 0.18);
       color: #ffffff;
     }
 
-    .highlight-brand {
-      background: rgba(168, 139, 235, 0.15);
-      border: 1px solid rgba(244, 184, 196, 0.4);
-      color: #f4b8c4;
+    /* Hero Section */
+    .hero-container {
+      max-width: 1200px;
+      margin: 40px auto 20px;
+      padding: 40px 20px;
+      text-align: center;
+      background: linear-gradient(145deg, rgba(22, 15, 42, 0.9), rgba(12, 8, 24, 0.95));
+      border: 2px solid rgba(168, 139, 235, 0.35);
+      border-radius: 24px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
     }
 
-    .highlight-brand:hover {
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-      color: #0d0b18;
-      border-color: #f4b8c4;
-    }
-
-    .dropdown {
-      position: relative;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      min-width: 240px;
-      background: rgba(20, 13, 38, 0.97);
-      border: 1px solid var(--nav-border-twilight);
-      border-radius: 14px;
-      padding: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(18px);
-      margin-top: 6px;
-      z-index: 1001;
-    }
-
-    body.basement-mode .dropdown-content {
-      border-color: var(--nav-border-basement);
-      background: rgba(16, 8, 26, 0.98);
-    }
-
-    .dropdown:hover .dropdown-content,
-    .dropdown.active-mobile .dropdown-content {
-      display: block;
-      animation: fadeInDown 0.25s ease;
-    }
-
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .dropdown-content a {
-      color: #e2daf8;
-      padding: 10px 12px;
-      text-decoration: none;
-      display: block;
-      font-size: 0.84rem;
-      font-weight: 600;
-      border-radius: 8px;
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-
-    .dropdown-content a:hover {
-      background: rgba(168, 139, 235, 0.25);
-      color: #ffffff;
-    }
-
-    .theme-btn {
-      background: linear-gradient(135deg, rgba(255, 77, 109, 0.2), rgba(168, 139, 235, 0.2));
-      border: 1px solid var(--accent-pink);
-      color: #ffffff;
-      padding: 8px 16px;
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 16px;
       border-radius: 20px;
+      background: rgba(168, 139, 235, 0.2);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      color: #f4b8c4;
       font-size: 0.8rem;
       font-weight: 800;
-      cursor: pointer;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-size: 2.8rem;
+      margin: 0 0 16px;
+      background: linear-gradient(135deg, #ffffff, #f4b8c4, #a88beb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: #cbb8f6;
+      max-width: 750px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn-primary {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      font-weight: 800;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(168, 139, 235, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cta-btn-secondary {
+      background: rgba(35, 25, 65, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      color: #e2daf8;
+      font-weight: 800;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .cta-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(244, 184, 196, 0.5); }
+    .cta-btn-secondary:hover { background: rgba(168, 139, 235, 0.25); color: #ffffff; }
+
+    /* Main Navigation Gateway Cards */
+    .gateway-grid {
+      max-width: 1200px;
+      margin: 30px auto 50px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .gateway-card {
+      background: rgba(22, 15, 42, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 18px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
       transition: all 0.3s ease;
-      white-space: nowrap;
-    }
-
-    .theme-btn:hover {
-      transform: scale(1.04);
-      box-shadow: 0 0 15px rgba(244, 184, 196, 0.5);
-    }
-
-    .mobile-menu-btn {
-      display: none;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 8px;
+      display: flex;
       flex-direction: column;
-      gap: 5px;
+      justify-content: space-between;
     }
 
-    .hamburger-bar {
-      width: 26px;
-      height: 3px;
-      background: var(--accent-pink);
-      border-radius: 3px;
-      transition: all 0.3s ease;
+    .gateway-card:hover {
+      transform: translateY(-4px);
+      border-color: #f4b8c4;
+      box-shadow: 0 10px 28px rgba(244, 184, 196, 0.25);
+      background: rgba(30, 20, 58, 0.95);
     }
 
-    @media (max-width: 992px) {
-      .mobile-menu-btn {
-        display: flex;
-      }
+    .gateway-icon {
+      font-size: 2.5rem;
+      margin-bottom: 14px;
+    }
 
-      .nav-links {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: rgba(16, 10, 32, 0.98);
-        border-bottom: 2px solid var(--nav-border-twilight);
-        flex-direction: column;
-        align-items: stretch;
-        padding: 20px;
-        gap: 10px;
-        display: none;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
-        max-height: 80vh;
-        overflow-y: auto;
-      }
+    .gateway-card h3 {
+      font-size: 1.2rem;
+      margin: 0 0 8px;
+      color: #ffffff;
+    }
 
-      .nav-links.open {
-        display: flex;
-      }
+    .gateway-card p {
+      font-size: 0.88rem;
+      color: #cbb8f6;
+      line-height: 1.5;
+      margin: 0 0 16px;
+    }
 
-      .nav-item, .dropdown-btn {
-        width: 100%;
-        justify-content: space-between;
-        padding: 12px 16px;
-        font-size: 0.95rem;
-      }
-
-      .dropdown-content {
-        position: static;
-        display: none;
-        box-shadow: none;
-        background: rgba(28, 18, 54, 0.6);
-        margin-top: 6px;
-        padding-left: 14px;
-      }
-
-      .dropdown.active-mobile .dropdown-content {
-        display: block;
-      }
-
-      .theme-btn {
-        margin-top: 10px;
-        text-align: center;
-        padding: 12px;
-      }
+    .gateway-link-text {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #f4b8c4;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
   </style>
 </head>
-<body class="twilight-mode">
+<body>
 
   <!-- Universal Header Navigation -->
   <header class="navbar">
     <div class="nav-container">
-      
-      <!-- Site Logo / Branding -->
       <div class="logo-container">
         <a href="index.html" class="logo-link">
           <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
@@ -281,252 +239,67 @@
         </a>
       </div>
 
-      <!-- Mobile Hamburger Menu Button -->
-      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle navigation menu" onclick="toggleMobileMenu()">
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-      </button>
-
-      <!-- Navigation Links -->
-      <nav class="nav-links" id="nav-menu">
-        
+      <nav class="nav-links">
         <a href="index.html" class="nav-item active">🏠 Home</a>
-
-        <!-- 🌸 1. Neko Lounge & 24/7 Radio -->
-        <div class="dropdown">
-          <button class="dropdown-btn" onclick="toggleMobileDropdown(event, this)">
-            🌸 Neko Lounge ▾
-          </button>
-          <div class="dropdown-content">
-            <a href="neko-fm.html#tuner-tab">📻 24/7 Radio Tuner (J-Pop / J-Rock)</a>
-            <a href="neko-fm.html#mailbox-tab">📬 Locker 102 Mailbox & Live Chat Zone</a>
-            <a href="neko-lounge.html">☕ Tea Room & Hangout Creator</a>
-            <a href="neko-maker.html">🐱 Neko Avatar Maker</a>
-          </div>
-        </div>
-
-        <!-- 🎮 2. Neko Arcade & Mini-Games -->
-        <div class="dropdown">
-          <button class="dropdown-btn" onclick="toggleMobileDropdown(event, this)">
-            🎮 Neko Arcade ▾
-          </button>
-          <div class="dropdown-content">
-            <a href="games.html">🏃 Neko Dash & Mini-Games</a>
-            <a href="ticket-creator.html">🎟️ Pass & Ticket Pass Creator</a>
-          </div>
-        </div>
-
-        <!-- ✦ 3. EchoHeart Universe (Flagship Branded Hub) -->
-        <div class="dropdown">
-          <button class="dropdown-btn highlight-brand" onclick="toggleMobileDropdown(event, this)">
-            ✦ EchoHeart Universe ▾
-          </button>
-          <div class="dropdown-content">
-            <a href="lore.html">📖 Light Novel & Ancient Cavern Lore</a>
-            <a href="characters.html">🎸 Band Members (Akari Minase, Nekomi, Sera, Aoi)</a>
-            <a href="neko-fm.html#broadcast-tab">🎙️ Whisper Radio Audio Drama Podcasts</a>
-            <a href="discography.html">🎶 Discography & Music Deck</a>
-            <a href="mixer.html">🎛️ Stem Mixer Console</a>
-            <a href="familiars.html">🐾 The Familiar Nook</a>
-          </div>
-        </div>
-
-        <!-- 🎨 4. Atelier & Board -->
-        <div class="dropdown">
-          <button class="dropdown-btn" onclick="toggleMobileDropdown(event, this)">
-            🎨 Atelier & Board ▾
-          </button>
-          <div class="dropdown-content">
-            <a href="atelier.html">🖼️ Resonance Atelier & Asset Downloads</a>
-            <a href="neko-fm.html#board-tab">📊 Setlist Voting & Song Requests</a>
-          </div>
-        </div>
-
-        <!-- Mode Switcher -->
-        <button id="theme-toggle-btn" class="theme-btn" onclick="toggleMode()">
-          ⚡ Secret Concert Mode
-        </button>
-
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+        <a href="chat.html" class="nav-item">💬 Live Chat</a>
+        <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
       </nav>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1>GIRLS PHANTOM DEAD</h1>
-    <p class="hero-subtitle hero-twilight-subtitle">
-      🌸 Sakuraoka High Light Music Research Group • EchoHeart Soul Link
+  <!-- Hero Banner -->
+  <section class="hero-container">
+    <span class="hero-badge">✦ Official Audio Drama & Fan Portal</span>
+    <h1 class="hero-title">EchoHeart & Girls Phantom Dead</h1>
+    <p class="hero-subtitle">
+      Step into Sakuraoka High's Prep Room B. Listen to weekly audio drama broadcasts, stream 24/7 J-Rock radio, chat with fellow listeners, and explore cavern lore.
     </p>
-    <p class="hero-subtitle hero-basement-subtitle">
-      ⚡ THE BASEMENT • SECRET UNDERGROUND CONCERTS & SHADOW TICKETS
-    </p>
+    <div class="hero-cta-group">
+      <a href="podcast.html" class="cta-btn-primary">🎙️ Listen to Podcast</a>
+      <a href="chat.html" class="cta-btn-secondary">💬 Enter Locker 102 Chat</a>
+    </div>
   </section>
 
-  <!-- Core Band Members Section -->
-  <main class="container">
-    <h2 class="section-title">MEET THE BAND</h2>
-    
-    <div class="grid">
-      <!-- Nekomi -->
-      <div class="card nekomi">
-        <div class="portrait-container">
-          <span class="twilight-img">📷 [NEKOMI: School Uniform & Cardigan]</span>
-          <span class="basement-img">⚡ [NEKOMI: Dark Leather Jacket & Violet Glow]</span>
-        </div>
-        <div class="outfit-box">
-          <span class="outfit-label twilight-text">🌸 LOOK: School Blazer & Thigh-High Stockings</span>
-          <span class="outfit-label basement-text">⚡ LOOK: Dark Leather Jacket & Violet Ribbon</span>
-        </div>
-        <div class="card-tag">Cat Girl • Violet Aura</div>
-        <h3 class="card-title">🎸 Nekomi Aoyama</h3>
-        <p>Lead Guitarist & Main Singer. She plays passionate J-Rock riffs from the heart to reach anyone who feels lost or alone.</p>
+  <!-- Primary Feature Launcher Grid -->
+  <main class="gateway-grid">
+    <a href="podcast.html" class="gateway-card">
+      <div>
+        <div class="gateway-icon">🎙️</div>
+        <h3>Whisper Radio Podcast Studio</h3>
+        <p>Full-length audio drama episodes featuring Nekomi, Sera, Akari Minase, and Aoi.</p>
       </div>
+      <span class="gateway-link-text">Launch Studio Stage →</span>
+    </a>
 
-      <!-- Sera -->
-      <div class="card sera">
-        <div class="portrait-container">
-          <span class="twilight-img">📷 [SERA: School Cardigan & Cat Clip]</span>
-          <span class="basement-img">⚡ [SERA: Soft Rose-Gold Synth Outfit]</span>
-        </div>
-        <div class="outfit-box">
-          <span class="outfit-label twilight-text">🌸 LOOK: Pastel Pink Hair & School Cardigan</span>
-          <span class="outfit-label basement-text">⚡ LOOK: Soft Lace Top & Comfortable Boots</span>
-        </div>
-        <div class="card-tag">Cat Girl • Rose-Gold Aura</div>
-        <h3 class="card-title">⌨️ Sera Hanibara</h3>
-        <p>Keyboard Player & Harmony Singer. Her warm synth melodies bring gentle comfort and lift everyone's spirits when things get heavy.</p>
+    <a href="neko-fm.html" class="gateway-card">
+      <div>
+        <div class="gateway-icon">📻</div>
+        <h3>24/7 Neko FM Radio Lounge</h3>
+        <p>Continuous J-Pop/J-Rock streams, station tuner presets, and setlist voting polls.</p>
       </div>
+      <span class="gateway-link-text">Tune In Now →</span>
+    </a>
 
-      <!-- Akari -->
-      <div class="card akari">
-        <div class="portrait-container">
-          <span class="twilight-img">📷 [AKARI: School Vest & Ponytail]</span>
-          <span class="basement-img">⚡ [AKARI: Sleeveless Vest & Drumsticks]</span>
-        </div>
-        <div class="outfit-box">
-          <span class="outfit-label twilight-text">🌸 LOOK: Open Vest & Vibrant Wristbands</span>
-          <span class="outfit-label basement-text">⚡ LOOK: Punk Vest & Holstered Drumsticks</span>
-        </div>
-        <div class="card-tag">Human • Crimson Aura</div>
-        <h3 class="card-title">🥁 Akari Minase</h3>
-        <p>High-Energy Drummer. Full of big smiles and wild enthusiasm, she keeps the band moving fast with her bright, energetic drumming.</p>
+    <a href="chat.html" class="gateway-card">
+      <div>
+        <div class="gateway-icon">💬</div>
+        <h3>Locker 102 Live Community</h3>
+        <p>Moderated SFW chat, band emote selector, and Backstage Pass VIP message board.</p>
       </div>
+      <span class="gateway-link-text">Open Live Chat →</span>
+    </a>
 
-      <!-- Aoi -->
-      <div class="card aoi">
-        <div class="portrait-container">
-          <span class="twilight-img">📷 [AOI: Sweater Vest & Glasses]</span>
-          <span class="basement-img">⚡ [AOI: Dark Coat & Bass Rig]</span>
-        </div>
-        <div class="outfit-box">
-          <span class="outfit-label twilight-text">🌸 LOOK: Teal Sweater Vest & Neat Glasses</span>
-          <span class="outfit-label basement-text">⚡ LOOK: Long Coat & Sound Equipment</span>
-        </div>
-        <div class="card-tag">Human • Teal Aura</div>
-        <h3 class="card-title">🎸 Aoi Mizuhara</h3>
-        <p>Bassist & Student Council Member. Level-headed and reliable, she handles club paperwork and grounds the music with rich, deep basslines.</p>
+    <a href="hub.html" class="gateway-card">
+      <div>
+        <div class="gateway-icon">🌌</div>
+        <h3>Universe Hub Portal</h3>
+        <p>Light novel lore, character bio archives, stem mixer, and Atelier asset downloads.</p>
       </div>
-    </div>
+      <span class="gateway-link-text">Explore Portal →</span>
+    </a>
   </main>
 
-  <footer>
-    <p>&copy; EchoHeart / Girls Phantom Dead Official Story Archive.</p>
-  </footer>
-
-  <!-- Global Live Radio Audio Element -->
-  <audio id="global-live-radio" style="display:none;"></audio>
-
-  <script>
-    /* Mobile Navbar & Dropdown Toggle Mechanics */
-    function toggleMobileMenu() {
-      const navMenu = document.getElementById('nav-menu');
-      if (navMenu) {
-        navMenu.classList.toggle('open');
-      }
-    }
-
-    function toggleMobileDropdown(event, element) {
-      if (window.innerWidth <= 992) {
-        event.preventDefault();
-        event.stopPropagation();
-        
-        const parentDropdown = element.closest('.dropdown');
-        document.querySelectorAll('.dropdown').forEach(drop => {
-          if (drop !== parentDropdown) {
-            drop.classList.remove('active-mobile');
-          }
-        });
-
-        if (parentDropdown) {
-          parentDropdown.classList.toggle('active-mobile');
-        }
-      }
-    }
-
-    document.addEventListener('click', (event) => {
-      const navMenu = document.getElementById('nav-menu');
-      const menuBtn = document.getElementById('mobile-menu-toggle');
-
-      if (navMenu && navMenu.classList.contains('open')) {
-        if (!navMenu.contains(event.target) && !menuBtn.contains(event.target)) {
-          navMenu.classList.remove('open');
-        }
-      }
-    });
-
-    function updateThemeUI(isBasement) {
-      const toggleBtn = document.getElementById('theme-toggle-btn');
-      if (isBasement) {
-        document.body.classList.remove('twilight-mode');
-        document.body.classList.add('basement-mode');
-        if (toggleBtn) toggleBtn.innerText = '🌙 Prep Room B Mode';
-      } else {
-        document.body.classList.remove('basement-mode');
-        document.body.classList.add('twilight-mode');
-        if (toggleBtn) toggleBtn.innerText = '⚡ Secret Concert Mode';
-      }
-    }
-
-    function toggleMode() {
-      const isBasement = document.body.classList.contains('twilight-mode');
-      localStorage.setItem('echoheart-theme', isBasement ? 'basement' : 'twilight');
-      updateThemeUI(isBasement);
-    }
-
-    /* Global Radio Persistence & Sound Conflict Manager */
-    function initGlobalRadioSync() {
-      const globalPlayer = document.getElementById('global-live-radio');
-      const isPlaying = localStorage.getItem('echoheart_radio_playing') === 'true';
-      const savedUrl = localStorage.getItem('echoheart_radio_url');
-
-      // 1. Resume background stream if active
-      if (globalPlayer && savedUrl && isPlaying) {
-        globalPlayer.src = savedUrl;
-        globalPlayer.play().catch(e => {
-          console.log("Radio stream queued — click anywhere on page to enable audio.");
-        });
-      }
-
-      // 2. Pause radio when playing other audio on the page (like Stem Mixer or Discography)
-      const pageAudioElements = document.querySelectorAll('audio, video');
-      pageAudioElements.forEach(media => {
-        if (media !== globalPlayer) {
-          media.addEventListener('play', () => {
-            if (globalPlayer && !globalPlayer.paused) {
-              globalPlayer.pause();
-            }
-            localStorage.setItem('echoheart_radio_playing', 'false');
-          });
-        }
-      });
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('echoheart-theme');
-      updateThemeUI(savedTheme === 'basement');
-      initGlobalRadioSync();
-    });
-  </script>
 </body>
 </html>
