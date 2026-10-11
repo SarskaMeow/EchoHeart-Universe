@@ -450,68 +450,90 @@
       isVIP: localStorage.getItem('neko_is_vip') === 'true'
     };
 
-    // Classmate & Character NPC Chat Pools (Massive non-repeating variety)
+    // Sensible, Grounded High-School Classmate NPC Message Pool
     const NPC_CLASSMATE_MESSAGES = [
-      // --- COMMON UNKNOWN NPCS / LOCKER NUMBERS ---
-      { type: 'common', author: 'Locker_12', text: 'Who left a keytar tuner on the bench outside Prep Room B? 🎹' },
-      { type: 'common', author: 'Locker_22', text: 'Saw someone carrying a keytar case past the library today!' },
-      { type: 'common', author: 'Locker_31', text: 'Anyone else rewatching the audio drama episode 1 right now?' },
-      { type: 'common', author: 'Locker_45', text: 'Did anyone record the live stream from last Friday?' },
-      { type: 'common', author: 'Locker_51', text: 'Did Akari change her solo riff in the intro? Sounded even faster today!' },
-      { type: 'common', author: 'Locker_64', text: 'EchoHeart’s harmonies in chapter 3 were unreal 🌸' },
-      { type: 'common', author: 'Locker_77', text: 'Is the broadcast starting at 7 PM or 8 PM tonight?' },
-      { type: 'common', author: 'Locker_88', text: 'Did anyone leave drumsticks near Prep Room B? 🥁' },
-      { type: 'common', author: 'Locker_99', text: 'The bass tones in subterranean mode hit different 🎧' },
-      { type: 'common', author: 'Locker_102', text: 'EchoHeart’s new setlist is absolute fire 🔥' },
-      { type: 'common', author: 'Locker_114', text: 'Who has the link to the stem mixer downloads in the Hub?' },
-      { type: 'common', author: 'Locker_150', text: 'I can hear guitar echoes all the way down the East Hallway!' },
-      { type: 'common', author: 'Locker_180', text: '180 BPM is my workout soundtrack now!' },
-      { type: 'common', author: 'Locker_204', text: 'Class 2-B is having a debate on which song cover was best.' },
-      { type: 'common', author: 'Locker_215', text: 'Sakuraoka High after-hours vibes hit different.' },
-      { type: 'common', author: 'Locker_309', text: 'I heard someone playing acoustic guitar near the lockers this morning.' },
-      { type: 'common', author: 'Class_2B_Student', text: 'That keytar synth solo in the rehearsal feed was insane! 🎹⚡' },
-      { type: 'common', author: 'Class_1A_Listener', text: 'Has anyone seen the new light novel lore entry in Universe Hub?' },
-      { type: 'common', author: 'Class_3C_Student', text: 'Prep Room B is legendary at Sakuraoka High.' },
-      { type: 'common', author: 'Class_1B_Representative', text: 'The student council is discussing the upcoming school festival stage schedule!' },
-      { type: 'common', author: 'Sakuraoka_Guitarist', text: 'Who voted on the Neko FM setlist poll today?' },
-      { type: 'common', author: 'PrepRoom_Lurker', text: 'Are they practicing down in the subterranean basement after school?' },
-      { type: 'common', author: 'Subterranean_Vibes', text: 'The reverb on that acoustic track is so soothing 🌸' },
-      { type: 'common', author: 'Locker_102_Regular', text: 'Got my headphones on! Ready for tonight’s broadcast stream.' },
-      { type: 'common', author: 'BassLine_Fan', text: 'Tempo shifts in Episode 2 were wild!! 🎸' },
-      { type: 'common', author: 'Audio_Club_President', text: 'The sound quality on Neko FM has been top tier lately.' },
-      { type: 'common', author: 'Hallway_Runner', text: 'Almost missed class trying to catch the end of the rehearsal stream!' },
+      // --- COMMON SCHOOL CLASSMATES & LOCKERS (82% Probability) ---
+      { type: 'common', author: 'Locker_12', text: 'Has anyone seen the updated setlist poll on Neko FM today?' },
+      { type: 'common', author: 'Locker_22', text: 'Prep Room B was echoing all through the East hallway during 4th period! 🎸' },
+      { type: 'common', author: 'Locker_31', text: 'Akari’s new guitar intro on track 2 sounds so clean!' },
+      { type: 'common', author: 'Locker_45', text: 'Did someone leave a spare bass pick on top of Locker 102?' },
+      { type: 'common', author: 'Locker_51', text: 'Sera’s keytar synth solo in the rehearsal stream gave me chills 🎹' },
+      { type: 'common', author: 'Locker_64', text: 'Can’t wait to see which song wins the weekly broadcast vote!' },
+      { type: 'common', author: 'Locker_77', text: 'Listening to Neko FM while finishing my art assignment 🌸' },
+      { type: 'common', author: 'Locker_88', text: 'Aoi’s drum fills during the chorus shift were so punchy!' },
+      { type: 'common', author: 'Locker_99', text: 'Is anyone going down to the basement rehearsal room after school?' },
+      { type: 'common', author: 'Locker_102', text: 'Nekomi’s vocals in the acoustic version were so peaceful ✨' },
+      { type: 'common', author: 'Locker_114', text: 'Sakuraoka High’s music wing is definitely best after school hours.' },
+      { type: 'common', author: 'Locker_150', text: 'Saved the new audio drama episode to listen to on the bus tomorrow!' },
+      { type: 'common', author: 'Locker_180', text: 'I put my vote in for the 180 BPM keytar remix!' },
+      { type: 'common', author: 'Locker_204', text: 'The reverb in the cavern acoustic recordings is so cool.' },
+      { type: 'common', author: 'Locker_215', text: 'Someone left an EchoHeart sticker on Locker 88 haha.' },
+      { type: 'common', author: 'Locker_309', text: 'Class 2-B is all talking about the new chapter drop in the Hub.' },
+      { type: 'common', author: 'Class_2B_Student', text: 'Hope they play the full band version on Friday’s broadcast!' },
+      { type: 'common', author: 'Class_1A_Listener', text: 'Headphones on, study mode activated with Neko FM 🎧' },
+      { type: 'common', author: 'Class_3C_Student', text: 'Did anyone else catch that subtle synth layer in the background?' },
+      { type: 'common', author: 'Audio_Club_President', text: 'The audio clarity on the Prep Room B feed has been amazing lately.' },
+      { type: 'common', author: 'Hallway_Runner', text: 'Almost missed the bell trying to catch the end of the sound check!' },
 
-      // --- RARE CORE ECHOHEART CHARACTERS ---
-      { type: 'rare', author: 'Akari Minase', text: 'Thanks for tuning in everyone! We are working on new guitar arrangements right now 🎸' },
-      { type: 'rare', author: 'Akari Minase', text: 'Testing out a new chord progression for the next chapter’s theme! What do you think?' },
-      { type: 'rare', author: 'Akari Minase', text: 'Prep Room B is quiet tonight, perfect time to fine-tune the intro solo 🌸' },
-      { type: 'rare', author: 'Akari Minase', text: 'Akari here! Don’t forget to check out the new setlist poll on Neko FM!' },
+      // --- RARE BAND MEMBERS (12% Probability - Reduced Frequency) ---
+      { type: 'rare', author: 'Akari Minase', text: 'Thanks for tuning in everyone! Fine-tuning the lead guitar melody in Prep Room B right now 🎸' },
+      { type: 'rare', author: 'Akari Minase', text: 'Testing out a new chord progression for the next chapter’s theme! What do you all think?' },
+      { type: 'rare', author: 'Akari Minase', text: 'Prep Room B is quiet tonight, perfect time to polish the intro solo 🌸' },
+      { type: 'rare', author: 'Akari Minase', text: 'Akari here! Don’t forget to cast your vote on the new setlist poll on Neko FM!' },
       { type: 'rare', author: 'Nekomi', text: 'Don’t forget to cast your vote on the weekly Neko FM setlist poll! 🌸' },
       { type: 'rare', author: 'Nekomi', text: 'Welcome to the lounge, everyone! Keep the cozy vibes going ✨' },
       { type: 'rare', author: 'Nekomi', text: 'Sera and I are tweaking the broadcast audio levels for tonight’s stream!' },
+      { type: 'rare', author: 'Nekomi', text: 'Reading everyone’s song suggestions in the board drawer—you all have great taste!' },
       { type: 'rare', author: 'Sera', text: 'Keytar synth lead calibration complete. Prep Room B sound check ready! 🎹' },
       { type: 'rare', author: 'Sera', text: 'Adding some subtle cavern reverb to the synth pad layer.' },
-      { type: 'rare', author: 'Sera', text: 'Working on a new synth motif for the subterranean sessions...' },
+      { type: 'rare', author: 'Sera', text: 'Adjusting the pitch bend settings on my keytar for the fast solo section ⚡' },
       { type: 'rare', author: 'Aoi', text: 'Drums tuned! Let’s turn up the volume for the broadcast feed 🥁' },
       { type: 'rare', author: 'Aoi', text: '180 BPM tempo locked in! Let’s go!' },
-      { type: 'rare', author: 'Aoi', text: 'Just finished replacing a broken snare head in Prep Room B!' },
+      { type: 'rare', author: 'Aoi', text: 'Practicing drum fills for the chorus transition—tempo is feeling punchy!' },
 
-      // --- ULTRA-RARE CAVERN & LORE ECHOES ---
+      // --- ULTRA-RARE CAVERN & LORE ECHOES (6% Probability) ---
       { type: 'ultra', author: 'Cavern_Echo_Voice', text: '✦ Resonance frequency detected beneath Sakuraoka High... ⚡' },
-      { type: 'ultra', author: 'Cavern_Echo_Voice', text: '✦ The subterranean echoes grow louder as midnight approaches...' },
-      { type: 'ultra', author: 'Phantom_Stagehand', text: 'Who left the amplifier dials on 11 in the cavern hall? 👻' },
-      { type: 'ultra', author: 'Phantom_Stagehand', text: 'Dimming the stage lights for after-hours rehearsal...' },
-      { type: 'ultra', author: 'Subterranean_Frequency', text: '⚡ Signal lock established on 102.8 FM...' }
+      { type: 'ultra', author: 'Cavern_Echo_Voice', text: '✦ The subterranean echoes grow clearer as midnight approaches...' },
+      { type: 'ultra', author: 'Phantom_Stagehand', text: 'Who left the amplifier dials on 11 down in the cavern hall? 👻' }
     ];
 
-    const VIP_FEED_PRESETS = [
-      { author: 'Student_Akari_Fan', vip: true, text: 'The drum tempo shift in Episode 2 was insane! 🥁⚡' },
-      { author: 'Sera_Keytar_Listener', vip: true, text: 'Hoping we get an acoustic version of the cavern track next week!' },
-      { author: 'VIP_Backstage_Pass', vip: true, text: 'Master stem downloads in the Hub are sounding crisp today 💎' }
-    ];
+    const DEFAULT_STARTER_MESSAGES = {
+      twilight: [
+        { author: 'Locker_42', text: 'Anyone down at Prep Room B today?', cssClass: 'msg-card', badge: '' },
+        { author: 'Class_2B_Student', text: 'The keytar riff is stuck in my head all afternoon 🎹', cssClass: 'msg-card', badge: '' },
+        { author: 'Sakuraoka_Guitarist', text: 'Voted for the acoustic version in the setlist poll! 🌸', cssClass: 'msg-card', badge: '' }
+      ],
+      basement: [
+        { author: 'Subterranean_Lurker', text: 'Underground stream signal locked in. Turn up the bass! ⚡', cssClass: 'msg-card', badge: '' },
+        { author: 'Class_3C_Student', text: '180 BPM J-Rock rehearsal track is heavy tonight 🎸', cssClass: 'msg-card', badge: '' }
+      ],
+      backstage: [
+        { author: 'Student_Akari_Fan', text: 'The drum tempo shift in Episode 2 was insane! 🥁⚡', cssClass: 'msg-card vip-user', badge: '<span class="vip-badge">VIP Pass</span>' },
+        { author: 'Sera_Keytar_Listener', text: 'Hoping we get an acoustic version of the cavern track next week!', cssClass: 'msg-card vip-user', badge: '<span class="vip-badge">VIP Pass</span>' },
+        { author: 'VIP_Backstage_Pass', text: 'Master stem downloads in the Hub are sounding crisp today 💎', cssClass: 'msg-card vip-user', badge: '<span class="vip-badge">VIP Pass</span>' }
+      ]
+    };
 
     let npcStreamInterval = null;
-    let recentIndexes = []; // Prevents immediate repetitive phrases
+    let recentIndexes = []; // Anti-repetition tracker
+
+    // Local Storage Persistent Chat Manager
+    function getStoredChatHistory(mode) {
+      try {
+        const data = localStorage.getItem(`neko_chat_history_${mode}`);
+        return data ? JSON.parse(data) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function saveChatHistory(mode, messagesArray) {
+      try {
+        localStorage.setItem(`neko_chat_history_${mode}`, JSON.stringify(messagesArray));
+      } catch (e) {
+        console.error("Storage save error:", e);
+      }
+    }
 
     function handleModeChange(targetMode) {
       const selector = document.getElementById('mode-selector');
@@ -558,34 +580,43 @@
       if (mode === 'backstage') {
         heading.innerText = '🎟️ Locker 102 Backstage VIP Live Stream';
         note.innerHTML = '✨ <strong style="color:#ffd166;">VIP Active:</strong> Live message posting enabled for Backstage Pass members.';
-        
-        // Populate initial VIP feed
-        VIP_FEED_PRESETS.forEach(msg => {
-          appendMessageToFeed(msg.author, msg.text, 'vip-user', '<span class="vip-badge">VIP Pass</span>');
-        });
       } else {
         heading.innerText = '💬 Locker 102 Live Classmate Feed';
         note.innerHTML = '🔒 Live message posting requires an active Backstage Pass to ensure SFW community safety.';
+      }
 
-        // Populate initial classmate starter messages
-        appendMessageToFeed('Locker_42', 'Anyone down at Prep Room B today?', 'msg-card');
-        appendMessageToFeed('Class_2B_Student', 'The keytar riff is stuck in my head all afternoon 🎹', 'msg-card');
+      // Check if persistent history exists for this mode
+      let history = getStoredChatHistory(mode);
 
-        // Start Auto-NPC Chat Feed
-        npcStreamInterval = setInterval(triggerRandomClassmateNPCMessage, 4000);
+      if (!history || history.length === 0) {
+        // First load defaults
+        history = DEFAULT_STARTER_MESSAGES[mode] || DEFAULT_STARTER_MESSAGES.twilight;
+        saveChatHistory(mode, history);
+      }
+
+      // Render stored messages
+      history.forEach(msg => {
+        appendMessageDOM(msg.author, msg.text, msg.cssClass, msg.badge);
+      });
+
+      // Start live NPC auto-stream for non-VIP modes or live feed ambient
+      if (mode !== 'backstage') {
+        npcStreamInterval = setInterval(triggerRandomClassmateNPCMessage, 4500);
       }
     }
 
     function triggerRandomClassmateNPCMessage() {
-      if (getCurrentMode() === 'backstage') return;
+      const currentMode = getCurrentMode();
+      if (currentMode === 'backstage') return;
 
       const roll = Math.random();
       let targetType = 'common';
 
-      if (roll < 0.70) {
+      // Probabilities: 82% Common Classmates, 12% Rare Band Members, 6% Ultra-Rare Cavern
+      if (roll < 0.82) {
         targetType = 'common';
-      } else if (roll < 0.92) {
-        targetType = 'rare';
+      } else if (roll < 0.94) {
+        targetType = 'rare'; // Band members chat less often
       } else {
         targetType = 'ultra';
       }
@@ -598,7 +629,6 @@
         }
       });
 
-      // Fallback if all of that type were recent
       if (candidateIndexes.length === 0) {
         candidateIndexes = NPC_CLASSMATE_MESSAGES.map((_, idx) => idx);
       }
@@ -606,9 +636,8 @@
       const selectedIdx = candidateIndexes[Math.floor(Math.random() * candidateIndexes.length)];
       const msg = NPC_CLASSMATE_MESSAGES[selectedIdx];
 
-      // Track recent history to prevent repeats
       recentIndexes.push(selectedIdx);
-      if (recentIndexes.length > 15) recentIndexes.shift();
+      if (recentIndexes.length > 18) recentIndexes.shift();
 
       let cssClass = 'msg-card';
       let badge = '';
@@ -621,18 +650,34 @@
         badge = '<span class="lore-badge">Lore Echo</span>';
       }
 
-      appendMessageToFeed(msg.author, msg.text, cssClass, badge);
+      addAndPersistMessage(currentMode, msg.author, msg.text, cssClass, badge);
     }
 
-    function appendMessageToFeed(author, text, cssClass = 'msg-card', badgeHTML = '') {
+    function addAndPersistMessage(mode, author, text, cssClass = 'msg-card', badgeHTML = '') {
+      let history = getStoredChatHistory(mode) || [];
+      const newMsg = { author, text, cssClass, badge: badgeHTML };
+
+      history.push(newMsg);
+
+      // Keep maximum 40 messages to maintain clean performance & localStorage
+      if (history.length > 40) {
+        history.shift();
+      }
+
+      saveChatHistory(mode, history);
+      appendMessageDOM(author, text, cssClass, badgeHTML);
+    }
+
+    function appendMessageDOM(author, text, cssClass = 'msg-card', badgeHTML = '') {
       const stream = document.getElementById('chat-stream');
+      if (!stream) return;
+
       const card = document.createElement('div');
       card.className = cssClass;
       card.innerHTML = `<div class="msg-author"><span>${author}</span> ${badgeHTML}</div><div>"${text}"</div>`;
       stream.appendChild(card);
 
-      // Keep maximum 35 messages to maintain smooth performance
-      if (stream.children.length > 35) {
+      if (stream.children.length > 40) {
         stream.removeChild(stream.firstChild);
       }
 
@@ -649,7 +694,8 @@
       const text = document.getElementById('chat-text').value.trim();
       if (!text) return;
 
-      appendMessageToFeed(handle, text, 'msg-card vip-user', '<span class="vip-badge">VIP Pass</span>');
+      const activeMode = getCurrentMode();
+      addAndPersistMessage(activeMode, handle, text, 'msg-card vip-user', '<span class="vip-badge">VIP Pass</span>');
       document.getElementById('chat-text').value = '';
     }
 
