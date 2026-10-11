@@ -450,26 +450,58 @@
       isVIP: localStorage.getItem('neko_is_vip') === 'true'
     };
 
-    // Classmate NPC Chat Pools (Rarity-weighted)
+    // Classmate & Character NPC Chat Pools (Massive non-repeating variety)
     const NPC_CLASSMATE_MESSAGES = [
+      // --- COMMON UNKNOWN NPCS / LOCKER NUMBERS ---
+      { type: 'common', author: 'Locker_12', text: 'Who left a keytar tuner on the bench outside Prep Room B? 🎹' },
+      { type: 'common', author: 'Locker_22', text: 'Saw someone carrying a keytar case past the library today!' },
+      { type: 'common', author: 'Locker_31', text: 'Anyone else rewatching the audio drama episode 1 right now?' },
+      { type: 'common', author: 'Locker_45', text: 'Did anyone record the live stream from last Friday?' },
+      { type: 'common', author: 'Locker_51', text: 'Did Akari change her solo riff in the intro? Sounded even faster today!' },
+      { type: 'common', author: 'Locker_64', text: 'EchoHeart’s harmonies in chapter 3 were unreal 🌸' },
+      { type: 'common', author: 'Locker_77', text: 'Is the broadcast starting at 7 PM or 8 PM tonight?' },
       { type: 'common', author: 'Locker_88', text: 'Did anyone leave drumsticks near Prep Room B? 🥁' },
+      { type: 'common', author: 'Locker_99', text: 'The bass tones in subterranean mode hit different 🎧' },
+      { type: 'common', author: 'Locker_102', text: 'EchoHeart’s new setlist is absolute fire 🔥' },
+      { type: 'common', author: 'Locker_114', text: 'Who has the link to the stem mixer downloads in the Hub?' },
+      { type: 'common', author: 'Locker_150', text: 'I can hear guitar echoes all the way down the East Hallway!' },
+      { type: 'common', author: 'Locker_180', text: '180 BPM is my workout soundtrack now!' },
+      { type: 'common', author: 'Locker_204', text: 'Class 2-B is having a debate on which song cover was best.' },
+      { type: 'common', author: 'Locker_215', text: 'Sakuraoka High after-hours vibes hit different.' },
+      { type: 'common', author: 'Locker_309', text: 'I heard someone playing acoustic guitar near the lockers this morning.' },
       { type: 'common', author: 'Class_2B_Student', text: 'That keytar synth solo in the rehearsal feed was insane! 🎹⚡' },
+      { type: 'common', author: 'Class_1A_Listener', text: 'Has anyone seen the new light novel lore entry in Universe Hub?' },
+      { type: 'common', author: 'Class_3C_Student', text: 'Prep Room B is legendary at Sakuraoka High.' },
+      { type: 'common', author: 'Class_1B_Representative', text: 'The student council is discussing the upcoming school festival stage schedule!' },
       { type: 'common', author: 'Sakuraoka_Guitarist', text: 'Who voted on the Neko FM setlist poll today?' },
       { type: 'common', author: 'PrepRoom_Lurker', text: 'Are they practicing down in the subterranean basement after school?' },
       { type: 'common', author: 'Subterranean_Vibes', text: 'The reverb on that acoustic track is so soothing 🌸' },
       { type: 'common', author: 'Locker_102_Regular', text: 'Got my headphones on! Ready for tonight’s broadcast stream.' },
-      { type: 'common', author: 'Class_1A_Listener', text: 'Has anyone seen the new light novel lore entry in Universe Hub?' },
       { type: 'common', author: 'BassLine_Fan', text: 'Tempo shifts in Episode 2 were wild!! 🎸' },
+      { type: 'common', author: 'Audio_Club_President', text: 'The sound quality on Neko FM has been top tier lately.' },
+      { type: 'common', author: 'Hallway_Runner', text: 'Almost missed class trying to catch the end of the rehearsal stream!' },
 
-      // Rare Character Pop-ins
+      // --- RARE CORE ECHOHEART CHARACTERS ---
       { type: 'rare', author: 'Akari Minase', text: 'Thanks for tuning in everyone! We are working on new guitar arrangements right now 🎸' },
+      { type: 'rare', author: 'Akari Minase', text: 'Testing out a new chord progression for the next chapter’s theme! What do you think?' },
+      { type: 'rare', author: 'Akari Minase', text: 'Prep Room B is quiet tonight, perfect time to fine-tune the intro solo 🌸' },
+      { type: 'rare', author: 'Akari Minase', text: 'Akari here! Don’t forget to check out the new setlist poll on Neko FM!' },
       { type: 'rare', author: 'Nekomi', text: 'Don’t forget to cast your vote on the weekly Neko FM setlist poll! 🌸' },
+      { type: 'rare', author: 'Nekomi', text: 'Welcome to the lounge, everyone! Keep the cozy vibes going ✨' },
+      { type: 'rare', author: 'Nekomi', text: 'Sera and I are tweaking the broadcast audio levels for tonight’s stream!' },
       { type: 'rare', author: 'Sera', text: 'Keytar synth lead calibration complete. Prep Room B sound check ready! 🎹' },
+      { type: 'rare', author: 'Sera', text: 'Adding some subtle cavern reverb to the synth pad layer.' },
+      { type: 'rare', author: 'Sera', text: 'Working on a new synth motif for the subterranean sessions...' },
       { type: 'rare', author: 'Aoi', text: 'Drums tuned! Let’s turn up the volume for the broadcast feed 🥁' },
+      { type: 'rare', author: 'Aoi', text: '180 BPM tempo locked in! Let’s go!' },
+      { type: 'rare', author: 'Aoi', text: 'Just finished replacing a broken snare head in Prep Room B!' },
 
-      // Ultra-Rare Cavern Lore Pop-ins
+      // --- ULTRA-RARE CAVERN & LORE ECHOES ---
       { type: 'ultra', author: 'Cavern_Echo_Voice', text: '✦ Resonance frequency detected beneath Sakuraoka High... ⚡' },
-      { type: 'ultra', author: 'Phantom_Stagehand', text: 'Who left the amplifier dials on 11 in the cavern hall? 👻' }
+      { type: 'ultra', author: 'Cavern_Echo_Voice', text: '✦ The subterranean echoes grow louder as midnight approaches...' },
+      { type: 'ultra', author: 'Phantom_Stagehand', text: 'Who left the amplifier dials on 11 in the cavern hall? 👻' },
+      { type: 'ultra', author: 'Phantom_Stagehand', text: 'Dimming the stage lights for after-hours rehearsal...' },
+      { type: 'ultra', author: 'Subterranean_Frequency', text: '⚡ Signal lock established on 102.8 FM...' }
     ];
 
     const VIP_FEED_PRESETS = [
@@ -479,6 +511,7 @@
     ];
 
     let npcStreamInterval = null;
+    let recentIndexes = []; // Prevents immediate repetitive phrases
 
     function handleModeChange(targetMode) {
       const selector = document.getElementById('mode-selector');
@@ -539,7 +572,7 @@
         appendMessageToFeed('Class_2B_Student', 'The keytar riff is stuck in my head all afternoon 🎹', 'msg-card');
 
         // Start Auto-NPC Chat Feed
-        npcStreamInterval = setInterval(triggerRandomClassmateNPCMessage, 4500);
+        npcStreamInterval = setInterval(triggerRandomClassmateNPCMessage, 4000);
       }
     }
 
@@ -547,20 +580,36 @@
       if (getCurrentMode() === 'backstage') return;
 
       const roll = Math.random();
-      let candidates = [];
+      let targetType = 'common';
 
       if (roll < 0.70) {
-        // 70% Common Locker classmates
-        candidates = NPC_CLASSMATE_MESSAGES.filter(m => m.type === 'common');
+        targetType = 'common';
       } else if (roll < 0.92) {
-        // 22% Rare Character Pop-in
-        candidates = NPC_CLASSMATE_MESSAGES.filter(m => m.type === 'rare');
+        targetType = 'rare';
       } else {
-        // 8% Ultra-Rare Cavern Pop-in
-        candidates = NPC_CLASSMATE_MESSAGES.filter(m => m.type === 'ultra');
+        targetType = 'ultra';
       }
 
-      const msg = candidates[Math.floor(Math.random() * candidates.length)];
+      // Filter candidates and exclude recently shown indexes
+      let candidateIndexes = [];
+      NPC_CLASSMATE_MESSAGES.forEach((m, idx) => {
+        if (m.type === targetType && !recentIndexes.includes(idx)) {
+          candidateIndexes.push(idx);
+        }
+      });
+
+      // Fallback if all of that type were recent
+      if (candidateIndexes.length === 0) {
+        candidateIndexes = NPC_CLASSMATE_MESSAGES.map((_, idx) => idx);
+      }
+
+      const selectedIdx = candidateIndexes[Math.floor(Math.random() * candidateIndexes.length)];
+      const msg = NPC_CLASSMATE_MESSAGES[selectedIdx];
+
+      // Track recent history to prevent repeats
+      recentIndexes.push(selectedIdx);
+      if (recentIndexes.length > 15) recentIndexes.shift();
+
       let cssClass = 'msg-card';
       let badge = '';
 
