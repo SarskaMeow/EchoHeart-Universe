@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whisper Radio Podcast Studio — EchoHeart</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #0d0b18; color: #e2daf8; font-family: 'Segoe UI', sans-serif; margin: 0; }
+    
+    .podcast-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      padding: 0 20px;
+    }
+
+    @media (max-width: 900px) { .podcast-container { grid-template-columns: 1fr; } }
+
+    .wide-stage {
+      background: linear-gradient(145deg, #120924, #080412);
+      border: 2px solid #f4b8c4;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 0 30px rgba(244, 184, 196, 0.25);
+    }
+
+    .on-air-badge {
+      background: #ff3355;
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+    }
+
+    .speaker-booth-wide {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+      background: rgba(20, 14, 38, 0.6);
+      padding: 16px;
+      border-radius: 14px;
+    }
+
+    .speaker-avatar {
+      text-align: center;
+      opacity: 0.45;
+      transition: all 0.3s ease;
+    }
+
+    .speaker-avatar.speaking {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .speaker-icon-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(30, 22, 54, 0.9);
+      border: 2px solid rgba(168, 139, 235, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 6px;
+    }
+
+    .speaker-avatar.speaking .speaker-icon-box {
+      border-color: #f4b8c4;
+      box-shadow: 0 0 18px rgba(244, 184, 196, 0.7);
+    }
+
+    .script-transcript-box {
+      background: rgba(15, 10, 30, 0.9);
+      border-left: 5px solid #a88beb;
+      padding: 20px;
+      border-radius: 0 14px 14px 0;
+      min-height: 100px;
+      margin-bottom: 20px;
+    }
+
+    .current-speaker-title { color: #f4b8c4; font-weight: 800; font-size: 0.85rem; }
+    .current-dialogue-line { font-size: 1.05rem; font-style: italic; }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(168, 139, 235, 0.2);
+      border-radius: 4px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #a88beb, #f4b8c4); }
+
+    .action-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none;
+      border-radius: 12px;
+      color: #0d0b18;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .archive-drawer {
+      background: rgba(22, 15, 42, 0.9);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .ep-card {
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.2);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .ep-card:hover, .ep-card.active { border-color: #f4b8c4; background: rgba(35, 25, 65, 0.9); }
+  </style>
+</head>
+<body>
+
+  <main class="podcast-container">
+    <!-- LEFT: LIVE PODCAST STAGE -->
+    <section class="wide-stage">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>🎙️ WHISPER RADIO STUDIO STAGE</h2>
+        <span class="on-air-badge">ON AIR</span>
+      </div>
+
+      <!-- 4 Speaker Character Avatars -->
+      <div class="speaker-booth-wide">
+        <div id="spk-nekomi" class="speaker-avatar">
+          <div class="speaker-icon-box">🎸</div>
+          <strong>Nekomi</strong>
+        </div>
+        <div id="spk-sera" class="speaker-avatar">
+          <div class="speaker-icon-box">🎹</div>
+          <strong>Sera</strong>
+        </div>
+        <div id="spk-akari" class="speaker-avatar">
+          <div class="speaker-icon-box">🥁</div>
+          <strong>Akari Minase</strong>
+        </div>
+        <div id="spk-aoi" class="speaker-avatar">
+          <div class="speaker-icon-box">🎸</div>
+          <strong>Aoi</strong>
+        </div>
+      </div>
+
+      <!-- Live Line Dialogue Display -->
+      <div class="script-transcript-box">
+        <div id="speaker-title-display" class="current-speaker-title">🎙️ READY TO BROADCAST</div>
+        <div id="dialogue-line-display" class="current-dialogue-line">"Select an episode from the archive drawer to start listening!"</div>
+      </div>
+
+      <div class="progress-bar-container">
+        <div id="ep-progress-fill" class="progress-bar-fill"></div>
+      </div>
+
+      <button id="podcast-play-btn" class="action-btn" onclick="togglePodcastPlayback()">▶ Start Episode Broadcast</button>
+    </section>
+
+    <!-- RIGHT: EPISODE ARCHIVE DRAWER -->
+    <aside class="archive-drawer">
+      <h3>📻 Episode Archives</h3>
+      <div class="ep-card active" onclick="selectEpisode(0)">
+        <strong>Episode 1: Prep Room B Revival</strong>
+        <p style="font-size: 0.8rem; margin: 4px 0 0; color: #a88beb;">Runtime: 5:12 • Free</p>
+      </div>
+      <div class="ep-card" onclick="selectEpisode(1)">
+        <strong>Episode 2: 180 BPM Keytar Secrets</strong>
+        <p style="font-size: 0.8rem; margin: 4px 0 0; color: #a88beb;">Runtime: 4:48 • Free</p>
+      </div>
+      <div class="ep-card" onclick="selectEpisode(2)">
+        <strong>Subterranean Ep 1: Cavern Echoes</strong>
+        <p style="font-size: 0.8rem; margin: 4px 0 0; color: #ff4d6d;">Runtime: 6:05 • Backstage Pass</p>
+      </div>
+    </aside>
+  </main>
+
+  <script src="js/audio-engine.js"></script>
+</body>
+</html>
