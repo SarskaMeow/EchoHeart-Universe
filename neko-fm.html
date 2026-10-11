@@ -1,34 +1,3 @@
-<!-- Universal Header Navigation -->
-<header class="navbar">
-  <div class="nav-container">
-    
-    <!-- Brand Logo -->
-    <div class="logo-container">
-      <a href="index.html" class="logo-link">
-        <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
-        <span class="logo-sub">✦ ECHOHEART UNIVERSE</span>
-      </a>
-    </div>
-
-    <!-- Hamburger Toggle Button -->
-    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-      <span class="hamburger-bar"></span>
-      <span class="hamburger-bar"></span>
-      <span class="hamburger-bar"></span>
-    </button>
-
-    <!-- Navigation Links -->
-    <nav class="nav-links" id="nav-menu">
-      <a href="index.html" class="nav-item">🏠 Home</a>
-      <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
-      <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-      <a href="chat.html" class="nav-item">💬 Live Chat</a>
-      <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
-    </nav>
-
-  </div>
-</header>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +55,18 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: relative;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-link {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
     }
 
     .logo-main {
@@ -125,11 +106,50 @@
       border-radius: 10px;
       text-decoration: none;
       transition: all 0.25s ease;
+      white-space: nowrap;
     }
 
     .nav-item:hover, .nav-item.active {
       background: rgba(168, 139, 235, 0.18);
       color: #ffffff;
+    }
+
+    /* Mobile Hamburger Toggle Button */
+    .mobile-menu-btn {
+      display: none;
+      background: rgba(168, 139, 235, 0.15);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 8px;
+      padding: 8px;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .hamburger-bar {
+      width: 22px;
+      height: 2.5px;
+      background: var(--accent-pink);
+      border-radius: 2px;
+    }
+
+    @media (max-width: 992px) {
+      .mobile-menu-btn { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(15, 10, 30, 0.98);
+        border-bottom: 2px solid var(--nav-border-twilight);
+        flex-direction: column;
+        padding: 16px;
+        gap: 10px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
+      }
+      .nav-links.open { display: flex; }
+      .nav-item { width: 100%; box-sizing: border-box; }
     }
 
     /* Secret Concert Mode Button */
@@ -143,6 +163,7 @@
       font-weight: 800;
       cursor: pointer;
       transition: all 0.3s ease;
+      white-space: nowrap;
     }
 
     .theme-btn:hover {
@@ -316,12 +337,21 @@
   <!-- Universal Header Navigation -->
   <header class="navbar">
     <div class="nav-container">
-      <a href="index.html" style="text-decoration:none;">
-        <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span><br>
-        <span class="logo-sub">✦ ECHOHEART UNIVERSE</span>
-      </a>
+      <div class="logo-container">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
+          <span class="logo-sub">✦ ECHOHEART UNIVERSE</span>
+        </a>
+      </div>
 
-      <nav class="nav-links">
+      <!-- Hamburger Toggle Button -->
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+
+      <nav class="nav-links" id="nav-menu">
         <a href="index.html" class="nav-item">🏠 Home</a>
         <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
         <a href="neko-fm.html" class="nav-item active">📻 24/7 Neko FM</a>
@@ -331,6 +361,9 @@
       </nav>
     </div>
   </header>
+
+  <!-- Audio Engine Player (Hidden) -->
+  <audio id="radio-audio-player" crossorigin="anonymous"></audio>
 
   <!-- Radio & Prep Room Board Lounge -->
   <main class="studio-dashboard">
@@ -373,25 +406,27 @@
   </main>
 
   <script>
-    // Master Radio Stations Repository
+    // Master Radio Stations Repository with Direct Stream URLs
     const RADIO_STATIONS = {
       twilight: [
-        { name: "LISTEN.moe", genre: "Anime & Vocaloid Stream", freq: "LISTEN.moe" },
-        { name: "Asia DREAM Radio Japan", genre: "J-Pop Hits & Idol Tracks", freq: "Asia DREAM Radio" },
-        { name: "Tokyo FM World", genre: "Tokyo Mainstream & Indie Pop", freq: "Tokyo FM World" },
-        { name: "J-Pop Project Radio", genre: "Classic & Modern J-Pop", freq: "J-Pop Project" }
+        { name: "LISTEN.moe", genre: "Anime & Vocaloid Stream", url: "https://listen.moe/stream" },
+        { name: "Asia DREAM Radio Japan", genre: "J-Pop Hits & Idol Tracks", url: "https://stream.zeno.fm/f3wvbbqmdg8uv" },
+        { name: "Tokyo FM World", genre: "Tokyo Mainstream & Indie Pop", url: "https://stream.zeno.fm/088019y2eb8uv" },
+        { name: "J-Pop Project Radio", genre: "Classic & Modern J-Pop", url: "https://stream.zeno.fm/k2k24q08s0hvv" }
       ],
       basement: [
-        { name: "J-Rock Powerplay Underground", genre: "Heavy Rock & Guitar Riffs", freq: "J-Rock Powerplay" },
-        { name: "Hotmix Radio Japan", genre: "Fast-Tempo Electronic & Beats", freq: "Hotmix Japan" },
-        { name: "Japan-a-Radio", genre: "Underground Anime & Rock Mixes", freq: "Japan-a-Radio" },
-        { name: "Vocaloid Radio 24/7", genre: "180 BPM High-Energy Vocaloid", freq: "Vocaloid 24/7" }
+        { name: "J-Rock Powerplay Underground", genre: "Heavy Rock & Guitar Riffs", url: "https://stream.zeno.fm/f0p485a06chvv" },
+        { name: "Hotmix Radio Japan", genre: "Fast-Tempo Electronic & Beats", url: "https://hotmixradio-japan-128.stream.kaltura.com/hls/live/2042838/japan/master.m3u8" },
+        { name: "Japan-a-Radio", genre: "Underground Anime & Rock Mixes", url: "https://stream.zeno.fm/918p426338quv" },
+        { name: "Vocaloid Radio 24/7", genre: "180 BPM High-Energy Vocaloid", url: "https://stream.zeno.fm/054a1078s0hvv" }
       ]
     };
 
     let currentMode = 'twilight';
     let selectedStationIndex = 0;
     let isStreaming = false;
+
+    const audioPlayer = document.getElementById('radio-audio-player');
 
     // Render Station Buttons
     function renderStationPresets() {
@@ -417,6 +452,13 @@
     function selectStation(index) {
       selectedStationIndex = index;
       renderStationPresets();
+
+      const stations = RADIO_STATIONS[currentMode];
+      audioPlayer.src = stations[selectedStationIndex].url;
+
+      if (isStreaming) {
+        audioPlayer.play().catch(err => console.log("Audio playback error:", err));
+      }
     }
 
     function toggleSecretConcertMode() {
@@ -443,6 +485,10 @@
 
       selectedStationIndex = 0;
       renderStationPresets();
+
+      if (isStreaming) {
+        selectStation(0);
+      }
     }
 
     function switchTab(tabId, btnEl) {
@@ -453,9 +499,28 @@
     }
 
     function toggleRadioStream() {
-      isStreaming = !isStreaming;
       const btn = document.getElementById('radio-play-btn');
-      btn.innerText = isStreaming ? '⏸ Pause Radio Stream' : '▶ Stream Live Signal';
+      const stations = RADIO_STATIONS[currentMode];
+
+      if (!isStreaming) {
+        audioPlayer.src = stations[selectedStationIndex].url;
+        audioPlayer.play().then(() => {
+          isStreaming = true;
+          btn.innerText = '⏸ Pause Radio Stream';
+        }).catch(err => {
+          console.log("Playback error:", err);
+          alert("Click again or select another station to allow audio playback!");
+        });
+      } else {
+        audioPlayer.pause();
+        isStreaming = false;
+        btn.innerText = '▶ Stream Live Signal';
+      }
+    }
+
+    function toggleMobileMenu() {
+      const navMenu = document.getElementById('nav-menu');
+      navMenu.classList.toggle('open');
     }
 
     // Initialize on page load
