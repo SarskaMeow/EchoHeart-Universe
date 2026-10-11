@@ -23,7 +23,7 @@
       padding: 0;
     }
 
-    /* Universal Header Navbar */
+    /* Navbar Base Styles */
     .navbar {
       position: sticky;
       top: 0;
@@ -33,6 +33,7 @@
       border-bottom: 2px solid var(--nav-border-twilight);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      box-sizing: border-box;
     }
 
     .nav-container {
@@ -42,6 +43,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: relative;
     }
 
     .logo-container {
@@ -95,7 +97,62 @@
       color: #ffffff;
     }
 
-    /* Hero Section */
+    .mobile-menu-btn {
+      display: none;
+    }
+
+    /* Mobile Collapsible Menu Fix */
+    @media (max-width: 992px) {
+      .nav-container {
+        padding: 10px 16px;
+      }
+
+      .mobile-menu-btn {
+        display: flex !important;
+        background: rgba(168, 139, 235, 0.15);
+        border: 1px solid rgba(168, 139, 235, 0.3);
+        border-radius: 8px;
+        padding: 8px;
+        flex-direction: column;
+        gap: 4px;
+        cursor: pointer;
+      }
+
+      .hamburger-bar {
+        width: 22px;
+        height: 2.5px;
+        background: #f4b8c4;
+        border-radius: 2px;
+      }
+
+      /* Hide menu drawer on mobile until hamburger is tapped */
+      .nav-links {
+        display: none !important;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(15, 10, 30, 0.98);
+        border-bottom: 2px solid rgba(168, 139, 235, 0.35);
+        flex-direction: column;
+        padding: 16px;
+        gap: 10px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
+      }
+
+      /* Slide down drawer when opened */
+      .nav-links.open {
+        display: flex !important;
+      }
+
+      .nav-item {
+        width: 100%;
+        padding: 10px 14px;
+        box-sizing: border-box;
+      }
+    }
+
+    /* Hero Banner */
     .hero-container {
       max-width: 1200px;
       margin: 40px auto 20px;
@@ -169,7 +226,7 @@
     .cta-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(244, 184, 196, 0.5); }
     .cta-btn-secondary:hover { background: rgba(168, 139, 235, 0.25); color: #ffffff; }
 
-    /* Main Navigation Gateway Cards */
+    /* Gateway Grid Cards */
     .gateway-grid {
       max-width: 1200px;
       margin: 30px auto 50px;
@@ -229,9 +286,11 @@
 </head>
 <body>
 
-  <!-- Universal Header Navigation -->
+  <!-- Universal Header Navbar -->
   <header class="navbar">
     <div class="nav-container">
+      
+      <!-- Brand Logo -->
       <div class="logo-container">
         <a href="index.html" class="logo-link">
           <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
@@ -239,13 +298,22 @@
         </a>
       </div>
 
-      <nav class="nav-links">
+      <!-- Mobile Hamburger Toggle Button (Hides menu until tapped) -->
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Menu" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+
+      <!-- Navigation Links (Hidden on mobile by default) -->
+      <nav class="nav-links" id="nav-menu">
         <a href="index.html" class="nav-item active">🏠 Home</a>
         <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
         <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
         <a href="chat.html" class="nav-item">💬 Live Chat</a>
         <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
       </nav>
+
     </div>
   </header>
 
@@ -262,7 +330,7 @@
     </div>
   </section>
 
-  <!-- Primary Feature Launcher Grid -->
+  <!-- Primary Feature Gateway Grid -->
   <main class="gateway-grid">
     <a href="podcast.html" class="gateway-card">
       <div>
@@ -301,5 +369,11 @@
     </a>
   </main>
 
+  <script>
+    function toggleMobileMenu() {
+      const navMenu = document.getElementById('nav-menu');
+      navMenu.classList.toggle('open');
+    }
+  </script>
 </body>
 </html>
