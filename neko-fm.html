@@ -3,17 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neko FM — 24/7 Radio Lounge & Locker 102</title>
+  <title>Neko FM — 24/7 Radio Lounge</title>
   <link rel="stylesheet" href="style.css">
   <style>
     :root {
       --nav-bg-twilight: rgba(18, 12, 36, 0.94);
-      --nav-bg-basement: rgba(15, 8, 22, 0.96);
       --nav-border-twilight: rgba(168, 139, 235, 0.35);
-      --nav-border-basement: rgba(255, 77, 109, 0.45);
       --accent-pink: #f4b8c4;
       --accent-purple: #a88beb;
-      --accent-red: #ff4d6d;
       --text-light: #e2daf8;
     }
 
@@ -33,13 +30,6 @@
       background: var(--nav-bg-twilight);
       border-bottom: 2px solid var(--nav-border-twilight);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      transition: background 0.4s ease, border-color 0.4s ease;
-    }
-
-    body.basement-mode .navbar {
-      background: var(--nav-bg-basement);
-      border-bottom-color: var(--nav-border-basement);
     }
 
     .nav-container {
@@ -51,20 +41,11 @@
       align-items: center;
     }
 
-    .logo-container { display: flex; align-items: center; }
-    .logo-link { text-decoration: none; display: flex; flex-direction: column; }
     .logo-main {
       font-family: 'Fredoka', cursive, sans-serif;
       font-size: 1.15rem;
       font-weight: 800;
-      letter-spacing: 1px;
       background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    body.basement-mode .logo-main {
-      background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -74,64 +55,26 @@
       font-weight: 800;
       letter-spacing: 1.5px;
       color: var(--accent-pink);
-      opacity: 0.9;
     }
 
     .nav-links { display: flex; align-items: center; gap: 14px; }
-    .nav-item, .dropdown-btn {
-      background: transparent;
-      border: none;
+    .nav-item {
       color: #cbb8f6;
       font-size: 0.88rem;
       font-weight: 700;
       padding: 10px 14px;
       border-radius: 10px;
-      cursor: pointer;
       text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
       transition: all 0.25s ease;
-      white-space: nowrap;
     }
 
-    .nav-item:hover, .dropdown-btn:hover {
+    .nav-item:hover, .nav-item.active {
       background: rgba(168, 139, 235, 0.18);
       color: #ffffff;
     }
 
-    .dropdown { position: relative; }
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      min-width: 240px;
-      background: rgba(20, 13, 38, 0.97);
-      border: 1px solid var(--nav-border-twilight);
-      border-radius: 14px;
-      padding: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(18px);
-      margin-top: 6px;
-      z-index: 1001;
-    }
-
-    .dropdown:hover .dropdown-content { display: block; }
-    .dropdown-content a {
-      color: #e2daf8;
-      padding: 10px 12px;
-      text-decoration: none;
-      display: block;
-      font-size: 0.84rem;
-      font-weight: 600;
-      border-radius: 8px;
-    }
-    .dropdown-content a:hover { background: rgba(168, 139, 235, 0.25); color: #fff; }
-
-    /* Studio Dashboard Container */
     .studio-dashboard {
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 30px auto;
       background: rgba(22, 15, 42, 0.92);
       border: 2px solid rgba(168, 139, 235, 0.35);
@@ -167,7 +110,6 @@
     .tab-content { display: none; }
     .tab-content.active-content { display: block; }
 
-    /* Tuner & Mailbox Styles */
     .tuner-card {
       background: rgba(15, 10, 30, 0.8);
       border: 1px solid rgba(168, 139, 235, 0.3);
@@ -185,6 +127,13 @@
       font-weight: 800;
     }
 
+    .station-preset-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
     .preset-btn {
       background: rgba(45, 34, 80, 0.8);
       border: 1px solid rgba(168, 139, 235, 0.4);
@@ -199,112 +148,95 @@
       color: #0d0b18;
     }
 
-    .mail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .mail-card {
-      background: rgba(15, 10, 30, 0.7);
+    .action-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none;
+      border-radius: 12px;
+      color: #0d0b18;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .poll-item-card {
+      background: rgba(20, 14, 38, 0.7);
       border: 1px solid rgba(168, 139, 235, 0.25);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 16px;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .vote-count-chip {
+      background: rgba(168, 139, 235, 0.2);
+      color: #f4b8c4;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.85rem;
     }
   </style>
 </head>
-<body class="twilight-mode">
+<body>
 
-  <!-- Universal Header Navigation -->
+  <!-- Universal Navbar -->
   <header class="navbar">
     <div class="nav-container">
-      <div class="logo-container">
-        <a href="index.html" class="logo-link">
-          <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
-          <span class="logo-sub">✦ ECHOHEART UNIVERSE</span>
-        </a>
-      </div>
+      <a href="index.html" style="text-decoration:none;">
+        <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span><br>
+        <span class="logo-sub">✦ ECHOHEART UNIVERSE</span>
+      </a>
 
       <nav class="nav-links">
         <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="podcast.html" class="nav-item">🎙️ Podcast Studio</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
         <a href="neko-fm.html" class="nav-item active">📻 24/7 Neko FM</a>
+        <a href="chat.html" class="nav-item">💬 Live Chat</a>
         <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
       </nav>
     </div>
   </header>
 
-  <!-- Main Lounge Dashboard -->
+  <!-- Radio & Board Lounge -->
   <main class="studio-dashboard">
     <div class="dashboard-tabs">
       <button class="tab-btn active-tab" onclick="switchTab('tuner-tab', this)">📻 24/7 J-Pop Radio Tuner</button>
-      <button class="tab-btn" onclick="switchTab('mailbox-tab', this)">📬 Locker 102 Mailbox & Chat</button>
       <button class="tab-btn" onclick="switchTab('board-tab', this)">📋 Prep Room Board & Polls</button>
     </div>
 
     <!-- TAB 1: 24/7 RADIO TUNER -->
     <section id="tuner-tab" class="tab-content active-content">
       <div class="tuner-card">
-        <h3>📻 24/7 WHISPER RADIO STREAM</h3>
+        <h3>📻 WHISPER RADIO LIVE STREAM</h3>
         <div class="frequency-display" id="freq-num">102.5 MHz</div>
-        <p>Streaming high-energy J-Rock & EchoHeart instrumental tracks nonstop.</p>
+        <p>Nonstop J-Rock, EchoHeart instrumental stems, and band motifs.</p>
         
         <div class="station-preset-bar">
-          <button class="preset-btn active-preset" onclick="setPreset('102.5', 'Sakuraoka Main Broadcast')">102.5 Sakuraoka</button>
-          <button class="preset-btn" onclick="setPreset('88.3', 'Cavern Reverb FM')">88.3 Subterranean</button>
-          <button class="preset-btn" onclick="setPreset('99.1', '180 BPM Drums')">99.1 Akari Beats</button>
+          <button class="preset-btn active-preset" onclick="setPreset('102.5')">102.5 Sakuraoka</button>
+          <button class="preset-btn" onclick="setPreset('88.3')">88.3 Subterranean</button>
+          <button class="preset-btn" onclick="setPreset('99.1')">99.1 Akari Beats</button>
         </div>
 
         <button class="action-btn" id="radio-play-btn" onclick="toggleRadioStream()">▶ Stream Live Signal</button>
       </div>
     </section>
 
-    <!-- TAB 2: LOCKER 102 MAILBOX & LIVE CHAT -->
-    <section id="mailbox-tab" class="tab-content">
-      <div class="mail-grid">
-        <div class="mailbox-scroll-container">
-          <h3>📮 Community Locker Notes</h3>
-          <div class="mail-card">
-            <div class="mail-header">
-              <span>From: Student #201</span>
-              <span>102.5 FM</span>
-            </div>
-            <div class="mail-body">"Can Akari play a drum solo at the end of Episode 3?"</div>
-            <div class="mail-reply">🎙️ Akari: "You bet! 180 BPM incoming!"</div>
-          </div>
-        </div>
-
-        <div class="post-note-form">
-          <h3>✍️ Drop a Note into Locker 102</h3>
-          <p class="bot-notice">🔒 Live chat posting requires an active Backstage Pass.</p>
-          <div class="form-group">
-            <label>Your Listener Handle:</label>
-            <input type="text" id="chat-handle" class="form-control" placeholder="e.g. Student_Aoi_Fan">
-          </div>
-          <div class="form-group">
-            <label>Your Message:</label>
-            <textarea id="chat-msg" class="form-control" rows="4" placeholder="Keep messages friendly and strictly SFW!"></textarea>
-          </div>
-          <button class="action-btn" onclick="submitLockerNote()">🌸 Send Note to Band</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: PREP ROOM BOARD & POLLS -->
+    <!-- TAB 2: PREP ROOM BOARD & POLLS -->
     <section id="board-tab" class="tab-content">
-      <h3>📋 Prep Room B Setlist Voting</h3>
+      <h3>📋 Weekly Broadcast Setlist Voting</h3>
       <p>Vote on next week's broadcast song cover!</p>
 
       <div class="poll-item-card">
         <span>🎸 "Subterranean Resonance" (Acoustic Version)</span>
-        <div>
-          <span class="vote-count-chip">142 Votes</span>
-          <button class="vote-action-btn" onclick="castVote(1)">Vote</button>
-        </div>
+        <span class="vote-count-chip">142 Votes</span>
       </div>
 
       <div class="poll-item-card">
-        <span>🎹 "Keytar Midnight Run" (180 BPM Synth Remix)</span>
-        <div>
-          <span class="vote-count-chip">189 Votes</span>
-          <button class="vote-action-btn" onclick="castVote(2)">Vote</button>
-        </div>
+        <span>🎹 "Keytar Midnight Run" (180 BPM Remix)</span>
+        <span class="vote-count-chip">189 Votes</span>
       </div>
     </section>
   </main>
@@ -317,7 +249,7 @@
       btnEl.classList.add('active-tab');
     }
 
-    function setPreset(freq, name) {
+    function setPreset(freq) {
       document.getElementById('freq-num').innerText = freq + " MHz";
       document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active-preset'));
       event.target.classList.add('active-preset');
@@ -326,14 +258,6 @@
     function toggleRadioStream() {
       const btn = document.getElementById('radio-play-btn');
       btn.innerText = btn.innerText.includes('▶') ? '⏸ Pause Radio Stream' : '▶ Stream Live Signal';
-    }
-
-    function submitLockerNote() {
-      alert("🔒 Live posting is guarded by Backstage Pass status to keep Locker 102 SFW!");
-    }
-
-    function castVote(option) {
-      alert("🌸 Vote recorded! Thank you for supporting Prep Room B!");
     }
   </script>
 </body>
