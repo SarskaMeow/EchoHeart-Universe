@@ -392,17 +392,90 @@
       box-shadow: 0 4px 15px rgba(255, 209, 102, 0.4);
     }
 
-    /* Enhanced Interactive Setlist Poll Styles */
+    /* Enhanced Interactive Setlist Poll & Countdown Styles */
     .poll-header-banner {
-      background: rgba(15, 10, 30, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.3);
+      background: rgba(15, 10, 30, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.35);
+      border-radius: 16px;
+      padding: 22px 26px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .poll-header-text h3 { margin: 0 0 6px; color: #ffffff; font-size: 1.25rem; }
+    .poll-header-text p { margin: 0; color: #cbb8f6; font-size: 0.88rem; line-height: 1.5; }
+
+    .countdown-timer-box {
+      background: rgba(30, 18, 52, 0.95);
+      border: 2px solid #f4b8c4;
+      border-radius: 14px;
+      padding: 12px 20px;
+      text-align: center;
+      box-shadow: 0 0 16px rgba(244, 184, 196, 0.3);
+      min-width: 220px;
+    }
+
+    body.basement-mode .countdown-timer-box {
+      border-color: #ff4d6d;
+      box-shadow: 0 0 16px rgba(255, 77, 109, 0.35);
+    }
+
+    body.backstage-mode .countdown-timer-box {
+      border-color: #ffd166;
+      box-shadow: 0 0 16px rgba(255, 209, 102, 0.35);
+    }
+
+    .countdown-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #f4b8c4;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .countdown-digits {
+      font-family: 'Fredoka', cursive, monospace;
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 2px;
+    }
+
+    /* Official EchoHeart Premiere Showcase Card */
+    .premiere-showcase-card {
+      background: linear-gradient(135deg, rgba(35, 20, 60, 0.95), rgba(15, 8, 30, 0.95));
+      border: 2px solid #a88beb;
       border-radius: 16px;
       padding: 20px 24px;
       margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 25px rgba(168, 139, 235, 0.25);
     }
 
-    .poll-header-banner h3 { margin: 0 0 6px; color: #ffffff; font-size: 1.25rem; }
-    .poll-header-banner p { margin: 0; color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; }
+    .premiere-badge {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      font-size: 0.72rem;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .premiere-title { font-size: 1.15rem; font-weight: 800; color: #ffffff; margin: 0 0 4px; }
+    .premiere-sub { font-size: 0.85rem; color: #cbb8f6; margin: 0; }
 
     .poll-card {
       background: rgba(20, 14, 38, 0.8);
@@ -665,9 +738,31 @@
 
     <!-- TAB 2: PREP ROOM BOARD & SETLIST POLLS -->
     <section id="board-tab" class="tab-content">
+      
+      <!-- Poll & Live Countdown Header Banner -->
       <div class="poll-header-banner">
-        <h3>📋 Prep Room B — Weekly Setlist Voting</h3>
-        <p>Vote for next week's broadcast song cover! The winning arrangement will be performed by EchoHeart in Prep Room B and featured as the lead track on Neko FM.</p>
+        <div class="poll-header-text">
+          <h3>📋 Prep Room B — Weekly Setlist Voting</h3>
+          <p>Vote for next week's broadcast song cover! The winning arrangement will be performed by EchoHeart in Prep Room B and premiered live when the countdown hits zero.</p>
+        </div>
+
+        <!-- Persistent Live Countdown Box -->
+        <div class="countdown-timer-box">
+          <div class="countdown-label">⚡ Broadcast Premiere In</div>
+          <div class="countdown-digits" id="poll-countdown-digits">00:45:00</div>
+        </div>
+      </div>
+
+      <!-- Spotify-Style Official Track Premiere Showcase Card -->
+      <div class="premiere-showcase-card">
+        <div>
+          <span class="premiere-badge">🌟 EchoHeart Debut Single</span>
+          <h4 class="premiere-title" id="winning-track-name">"Subterranean Resonance (Official Studio Cut)"</h4>
+          <p class="premiere-sub">Akari Minase (Lead Guitar) • Nekomi (Vocals) • Sera (Keytar) • Aoi (Drums)</p>
+        </div>
+        <button class="vote-btn" id="play-premiere-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 20px; font-size: 0.9rem;">
+          ▶ Play Track Preview
+        </button>
       </div>
 
       <!-- Dynamic Poll List Container -->
@@ -708,41 +803,46 @@
       ]
     };
 
-    // Interactive Setlist Poll Data State
-    let pollData = [
+    // Default Fresh Poll Data (Votes Reset to 0)
+    const DEFAULT_POLL_ITEMS = [
       {
         id: 0,
         title: '🎸 "Subterranean Resonance"',
         badge: 'Acoustic Duo',
         performers: 'Akari Minase (Guitar) & Nekomi (Vocals)',
-        votes: 142
+        streamUrl: 'https://listen.moe/stream',
+        votes: 0
       },
       {
         id: 1,
         title: '🎹 "Keytar Midnight Run"',
         badge: '180 BPM Remix',
         performers: 'Sera (Keytar) & Aoi (Drums)',
-        votes: 189
+        streamUrl: 'https://stream.zeno.fm/f0p485a06chvv',
+        votes: 0
       },
       {
         id: 2,
         title: '🌸 "Sakuraoka Dusk Echoes"',
         badge: 'Full Band Live',
         performers: 'EchoHeart Core Ensemble',
-        votes: 95
+        streamUrl: 'https://stream.zeno.fm/f3wvbbqmdg8uv',
+        votes: 0
       },
       {
         id: 3,
         title: '⚡ "Cavern Reverb Overdrive"',
         badge: 'Heavy J-Rock',
         performers: 'Akari Minase (Lead Guitar) & Aoi (Drums)',
-        votes: 210
+        streamUrl: 'https://stream.zeno.fm/918p426338quv',
+        votes: 0
       }
     ];
 
     let currentMode = 'twilight';
     let selectedStationIndex = 0;
     let isStreaming = false;
+    let countdownInterval = null;
 
     const audioPlayer = document.getElementById('radio-audio-player');
 
@@ -751,6 +851,29 @@
       isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
       isVIP: localStorage.getItem('neko_is_vip') === 'true'
     };
+
+    // Get Persistent Poll Data from LocalStorage or initialize 0 votes
+    function getStoredPollData() {
+      try {
+        const stored = localStorage.getItem('neko_poll_votes_data');
+        if (stored) {
+          return JSON.parse(stored);
+        }
+      } catch (e) {
+        console.error("Error reading stored poll data:", e);
+      }
+      return DEFAULT_POLL_ITEMS;
+    }
+
+    function saveStoredPollData(data) {
+      try {
+        localStorage.setItem('neko_poll_votes_data', JSON.stringify(data));
+      } catch (e) {
+        console.error("Error saving poll data:", e);
+      }
+    }
+
+    let pollData = getStoredPollData();
 
     function handleModeChange(targetMode) {
       const selector = document.getElementById('mode-selector');
@@ -840,6 +963,88 @@
       }
     }
 
+    // Persistent Countdown Timer Management
+    function initCountdownTimer() {
+      let targetTimestamp = localStorage.getItem('neko_poll_countdown_end');
+
+      // If no end time exists or has expired over 24h, set target to 45 minutes from now
+      if (!targetTimestamp || parseInt(targetTimestamp) < Date.now()) {
+        targetTimestamp = Date.now() + (45 * 60 * 1000);
+        localStorage.setItem('neko_poll_countdown_end', targetTimestamp.toString());
+      }
+
+      updateCountdownDisplay();
+      if (countdownInterval) clearInterval(countdownInterval);
+      countdownInterval = setInterval(updateCountdownDisplay, 1000);
+    }
+
+    function updateCountdownDisplay() {
+      const timerDigits = document.getElementById('poll-countdown-digits');
+      if (!timerDigits) return;
+
+      const targetTimestamp = parseInt(localStorage.getItem('neko_poll_countdown_end') || '0');
+      const diff = targetTimestamp - Date.now();
+
+      if (diff <= 0) {
+        timerDigits.innerText = "00:00:00 - LIVE!";
+        timerDigits.style.color = "#ff4d6d";
+        clearInterval(countdownInterval);
+
+        // Auto play the winning poll song when countdown reaches 0
+        triggerCountdownWinnerPlayback();
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      const hh = hours.toString().padStart(2, '0');
+      const mm = minutes.toString().padStart(2, '0');
+      const ss = seconds.toString().padStart(2, '0');
+
+      timerDigits.innerText = `${hh}:${mm}:${ss}`;
+    }
+
+    function triggerCountdownWinnerPlayback() {
+      const winner = getWinningTrack();
+      const trackTitleEl = document.getElementById('winning-track-name');
+      const playBtn = document.getElementById('play-premiere-btn');
+
+      if (trackTitleEl) trackTitleEl.innerText = `${winner.title} (Broadcast Premiere Winner!)`;
+      if (playBtn) playBtn.innerText = "🎉 Stream Winner Song!";
+      
+      playOfficialSongPremiere();
+    }
+
+    function getWinningTrack() {
+      let highest = pollData[0];
+      pollData.forEach(item => {
+        if (item.votes > highest.votes) highest = item;
+      });
+      return highest;
+    }
+
+    function playOfficialSongPremiere() {
+      const winner = getWinningTrack();
+      const btn = document.getElementById('play-premiere-btn');
+
+      if (audioPlayer.src !== winner.streamUrl || audioPlayer.paused) {
+        audioPlayer.src = winner.streamUrl;
+        audioPlayer.play().then(() => {
+          isStreaming = true;
+          if (btn) btn.innerText = "⏸ Pause Track";
+        }).catch(err => {
+          console.log("Audio play error:", err);
+          alert(`🌸 Now Premiering: ${winner.title}! Click again if blocked by browser audio settings.`);
+        });
+      } else {
+        audioPlayer.pause();
+        isStreaming = false;
+        if (btn) btn.innerText = "▶ Play Track Preview";
+      }
+    }
+
     // Render Setlist Voting Cards
     function renderSetlistPolls() {
       const container = document.getElementById('poll-container');
@@ -850,6 +1055,13 @@
       // Calculate Total Votes
       const totalVotes = pollData.reduce((sum, item) => sum + item.votes, 0);
       const votedSongId = localStorage.getItem('neko_voted_poll_id');
+
+      // Update Top Winning Track Showcase
+      const winner = getWinningTrack();
+      const trackTitleEl = document.getElementById('winning-track-name');
+      if (trackTitleEl) {
+        trackTitleEl.innerText = `${winner.title} (${winner.badge})`;
+      }
 
       pollData.forEach(item => {
         const percent = totalVotes > 0 ? Math.round((item.votes / totalVotes) * 100) : 0;
@@ -895,6 +1107,7 @@
       if (currentItem) currentItem.votes++;
 
       localStorage.setItem('neko_voted_poll_id', id);
+      saveStoredPollData(pollData);
       renderSetlistPolls();
     }
 
@@ -1001,6 +1214,7 @@
       applyThemeMode(currentMode);
       renderStationPresets();
       renderSetlistPolls();
+      initCountdownTimer();
     });
   </script>
 </body>
