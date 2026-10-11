@@ -21,6 +21,23 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* 3-Tier Mode Themes */
+    body.twilight-mode { background: #0d0b18; color: #e2daf8; }
+    body.basement-mode { background: #08030f; color: #fce8ec; }
+    body.backstage-mode { background: #05020a; color: #ffffff; }
+
+    body.basement-mode .navbar {
+      background: rgba(15, 8, 22, 0.96);
+      border-bottom-color: rgba(255, 77, 109, 0.45);
+    }
+
+    body.backstage-mode .navbar {
+      background: rgba(10, 4, 16, 0.98);
+      border-bottom: 2px solid #ff007f;
+      box-shadow: 0 4px 20px rgba(255, 0, 127, 0.3);
     }
 
     /* Universal Navbar Base Styles */
@@ -34,6 +51,7 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       box-sizing: border-box;
+      transition: background 0.4s ease, border-color 0.4s ease;
     }
 
     .nav-container {
@@ -97,6 +115,31 @@
       color: #ffffff;
     }
 
+    /* Mode Select Dropdown Styling */
+    .mode-select-dropdown {
+      background: rgba(35, 25, 65, 0.9);
+      border: 1px solid #f4b8c4;
+      color: #ffffff;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    body.basement-mode .mode-select-dropdown {
+      border-color: #ff4d6d;
+      background: rgba(25, 10, 30, 0.9);
+    }
+
+    body.backstage-mode .mode-select-dropdown {
+      border-color: #ffd166;
+      background: rgba(30, 5, 20, 0.9);
+      box-shadow: 0 0 12px rgba(255, 209, 102, 0.4);
+    }
+
     .mobile-menu-btn {
       display: none;
     }
@@ -138,7 +181,8 @@
       }
 
       .nav-links.open { display: flex !important; }
-      .nav-item { width: 100%; padding: 10px 14px; box-sizing: border-box; }
+      .nav-item, .mode-selector-wrapper { width: 100%; box-sizing: border-box; }
+      .mode-select-dropdown { width: 100%; text-align: center; }
     }
 
     /* Podcast Layout Styles */
@@ -268,9 +312,53 @@
     }
 
     .ep-card:hover, .ep-card.active { border-color: #f4b8c4; background: rgba(35, 25, 65, 0.9); }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5, 2, 12, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: rgba(22, 15, 42, 0.96);
+      border: 2px solid #a88beb;
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+    }
+
+    .vip-modal-card { border-color: #ff007f; box-shadow: 0 0 30px rgba(255, 0, 127, 0.4); }
+    .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.3rem; }
+    .modal-card p { color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
+    .modal-price-tag {
+      background: rgba(255, 209, 102, 0.15);
+      border: 1px solid #ffd166;
+      color: #ffd166;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
+    .google-btn { background: #ffffff; color: #111; }
+    .stripe-btn { background: linear-gradient(135deg, #ff007f, #ffd166); color: #000; }
+    .close-btn { background: transparent; color: #a88beb; border: 1px solid rgba(168, 139, 235, 0.3); }
   </style>
 </head>
-<body>
+<body class="twilight-mode">
 
   <!-- Universal Header Navigation -->
   <header class="navbar">
@@ -291,13 +379,21 @@
         <span class="hamburger-bar"></span>
       </button>
 
-      <!-- Navigation Links -->
+      <!-- Navigation Links & 3-Tier Mode Selector -->
       <nav class="nav-links" id="nav-menu">
         <a href="index.html" class="nav-item">🏠 Home</a>
         <a href="podcast.html" class="nav-item active">🎙️ Podcast</a>
         <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
         <a href="chat.html" class="nav-item">💬 Live Chat</a>
         <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+
+        <div class="mode-selector-wrapper">
+          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
+            <option value="twilight">🌸 Twilight (Public)</option>
+            <option value="basement">⚡ Basement 🔒</option>
+            <option value="backstage">🎟️ Backstage Pass 💎</option>
+          </select>
+        </div>
       </nav>
 
     </div>
@@ -364,6 +460,101 @@
   </main>
 
   <script>
+    // User Auth & Tier State
+    let userState = {
+      isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
+      isVIP: localStorage.getItem('neko_is_vip') === 'true'
+    };
+
+    function handleModeChange(targetMode) {
+      const selector = document.getElementById('mode-selector');
+
+      if (targetMode === 'basement' && !userState.isLoggedIn) {
+        if (selector) selector.value = getCurrentMode();
+        showAuthModal('Google Login Required', 'Sign in with Google to access After-Hours Basement streams and community profiles.');
+        return;
+      }
+
+      if (targetMode === 'backstage' && !userState.isVIP) {
+        if (selector) selector.value = getCurrentMode();
+        showVIPModal('Backstage Pass Required', 'Unlock exclusive subterranean audio, stem mixers, live chat posting, and high-res Atelier downloads.');
+        return;
+      }
+
+      localStorage.setItem('neko_active_mode', targetMode);
+      applyThemeMode(targetMode);
+    }
+
+    function getCurrentMode() {
+      return localStorage.getItem('neko_active_mode') || 'twilight';
+    }
+
+    function applyThemeMode(mode) {
+      const body = document.body;
+      const selector = document.getElementById('mode-selector');
+
+      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
+      body.classList.add(`${mode}-mode`);
+
+      if (selector) selector.value = mode;
+    }
+
+    function showAuthModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card">
+            <h3>🔑 ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-actions">
+              <button class="modal-btn google-btn" onclick="simulateGoogleLogin()">Sign In with Google</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function showVIPModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card vip-modal-card">
+            <h3>🎟️ ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-price-tag">$4.99 / month • Backstage Pass</div>
+            <div class="modal-actions">
+              <button class="modal-btn stripe-btn" onclick="simulateStripeCheckout()">Unlock Backstage Pass</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function removeExistingModals() {
+      const existing = document.getElementById('neko-gate-modal');
+      if (existing) existing.remove();
+    }
+
+    function simulateGoogleLogin() {
+      userState.isLoggedIn = true;
+      localStorage.setItem('neko_logged_in', 'true');
+      removeExistingModals();
+      handleModeChange('basement');
+    }
+
+    function simulateStripeCheckout() {
+      userState.isLoggedIn = true;
+      userState.isVIP = true;
+      localStorage.setItem('neko_logged_in', 'true');
+      localStorage.setItem('neko_is_vip', 'true');
+      removeExistingModals();
+      handleModeChange('backstage');
+    }
+
     // Master Episode Script Archive
     const EPISODES = [
       {
@@ -462,20 +653,16 @@
 
       const line = ep.script[currentLineIdx];
 
-      // Highlight active speaker
       document.querySelectorAll('.speaker-avatar').forEach(avatar => avatar.classList.remove('speaking'));
       const activeAvatar = document.getElementById(`spk-${line.speaker}`);
       if (activeAvatar) activeAvatar.classList.add('speaking');
 
-      // Update transcript UI
       document.getElementById('speaker-title-display').innerText = `🎙️ ${line.title}`;
       document.getElementById('dialogue-line-display').innerText = `"${line.text}"`;
 
-      // Update progress bar
       const progressPercent = ((currentLineIdx + 1) / ep.script.length) * 100;
       document.getElementById('ep-progress-fill').style.width = `${progressPercent}%`;
 
-      // Speak using Web Speech API if supported
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(line.text);
@@ -494,11 +681,15 @@
 
         window.speechSynthesis.speak(utterance);
       } else {
-        // Fallback timer if SpeechSynthesis is blocked or unavailable
         currentLineIdx++;
         playbackTimer = setTimeout(playNextLine, 3500);
       }
     }
+
+    // Initialize mode on load
+    document.addEventListener('DOMContentLoaded', () => {
+      applyThemeMode(getCurrentMode());
+    });
   </script>
 </body>
 </html>
