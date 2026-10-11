@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Locker 102 Live Chat — EchoHeart</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #0d0b18; color: #e2daf8; font-family: 'Segoe UI', sans-serif; margin: 0; }
+    
+    .navbar {
+      position: sticky; top: 0; z-index: 1000;
+      background: rgba(18, 12, 36, 0.94);
+      border-bottom: 2px solid rgba(168, 139, 235, 0.35);
+      backdrop-filter: blur(16px);
+      padding: 12px 20px;
+    }
+
+    .nav-container { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .nav-links { display: flex; gap: 14px; }
+    .nav-item { color: #cbb8f6; text-decoration: none; font-weight: 700; padding: 8px 12px; border-radius: 8px; }
+    .nav-item.active { background: rgba(168, 139, 235, 0.18); color: #fff; }
+
+    .chat-container {
+      max-width: 1100px;
+      margin: 30px auto;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 24px;
+      padding: 0 20px;
+    }
+
+    @media (max-width: 850px) { .chat-container { grid-template-columns: 1fr; } }
+
+    .chat-feed-box {
+      background: rgba(22, 15, 42, 0.92);
+      border: 2px solid rgba(168, 139, 235, 0.35);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      height: 520px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .msg-card {
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
+    .msg-card.vip-user {
+      border-color: #ff4d6d;
+      box-shadow: 0 0 12px rgba(255, 77, 109, 0.2);
+    }
+
+    .msg-author { font-size: 0.82rem; color: #f4b8c4; font-weight: 800; margin-bottom: 4px; }
+    .vip-badge { background: #ff4d6d; color: #fff; padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; margin-left: 6px; }
+
+    .emote-bar { display: flex; gap: 8px; margin: 12px 0; }
+    .emote-btn { background: rgba(35, 25, 65, 0.8); border: 1px solid rgba(168, 139, 235, 0.3); color: #fff; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+
+    .post-panel {
+      background: rgba(22, 15, 42, 0.92);
+      border: 2px solid rgba(168, 139, 235, 0.35);
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .form-control {
+      width: 100%; padding: 10px; background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.3); border-radius: 8px; color: #fff; margin-bottom: 12px; box-sizing: border-box;
+    }
+
+    .action-btn {
+      width: 100%; padding: 12px; background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none; border-radius: 10px; color: #0d0b18; font-weight: 800; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Universal Header Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" style="text-decoration:none; color:#f4b8c4; font-weight:800;">🌸 OTAKU NEKO LOUNGE</a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">🏠 Home</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+        <a href="chat.html" class="nav-item active">💬 Live Chat</a>
+        <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Live Chat Stage -->
+  <main class="chat-container">
+    <section class="chat-feed-box">
+      <h3>💬 Locker 102 Live Community Feed</h3>
+      <div id="chat-stream" class="chat-messages">
+        <div class="msg-card vip-user">
+          <div class="msg-author">Student_Akari_Fan <span class="vip-badge">VIP Pass</span></div>
+          <div>"The drum tempo shift in Episode 2 was insane! 🥁⚡"</div>
+        </div>
+        <div class="msg-card">
+          <div class="msg-author">Sera_Keytar_Listener</div>
+          <div>"Hoping we get an acoustic version of the cavern track next week!"</div>
+        </div>
+      </div>
+
+      <!-- Band Emote Selector -->
+      <div class="emote-bar">
+        <button class="emote-btn" onclick="insertEmote('🎸')">🎸 Guitar</button>
+        <button class="emote-btn" onclick="insertEmote('🎹')">🎹 Keytar</button>
+        <button class="emote-btn" onclick="insertEmote('🥁')">🥁 Drums</button>
+        <button class="emote-btn" onclick="insertEmote('🌸')">🌸 Cherry</button>
+      </div>
+    </section>
+
+    <!-- Post Note Drawer -->
+    <aside class="post-panel">
+      <h3>📮 Send a Note</h3>
+      <p style="font-size: 0.82rem; color: #a88beb;">🔒 Live message posting requires an active Backstage Pass to ensure SFW community safety.</p>
+      
+      <input type="text" id="chat-handle" class="form-control" placeholder="Your Student Name">
+      <textarea id="chat-text" class="form-control" rows="4" placeholder="Write a message to the band..."></textarea>
+      
+      <button class="action-btn" onclick="handleLivePost()">🌸 Post to Locker 102</button>
+    </aside>
+  </main>
+
+  <script>
+    let isVipUser = false; // Set via Auth / Stripe session
+
+    function insertEmote(emote) {
+      document.getElementById('chat-text').value += ' ' + emote;
+    }
+
+    function handleLivePost() {
+      if (!isVipUser) {
+        alert("🔒 Locker 102 Live Posting is reserved for Backstage Pass holders to keep our community troll-free and strictly SFW!");
+        return;
+      }
+      
+      const handle = document.getElementById('chat-handle').value || 'Anonymous Student';
+      const text = document.getElementById('chat-text').value;
+      if (!text) return;
+
+      const stream = document.getElementById('chat-stream');
+      const card = document.createElement('div');
+      card.className = 'msg-card vip-user';
+      card.innerHTML = `<div class="msg-author">${handle} <span class="vip-badge">VIP Pass</span></div><div>"${text}"</div>`;
+      stream.appendChild(card);
+      document.getElementById('chat-text').value = '';
+    }
+  </script>
+</body>
+</html>
