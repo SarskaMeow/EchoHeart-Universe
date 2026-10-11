@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neko FM — 24/7 Radio Lounge</title>
+  <title>Neko FM — 24/7 Radio Lounge & Setlist Polls</title>
   <link rel="stylesheet" href="style.css">
   <style>
     :root {
       --nav-bg-twilight: rgba(18, 12, 36, 0.94);
+      --nav-bg-basement: rgba(15, 8, 22, 0.96);
       --nav-border-twilight: rgba(168, 139, 235, 0.35);
+      --nav-border-basement: rgba(255, 77, 109, 0.45);
       --accent-pink: #f4b8c4;
       --accent-purple: #a88beb;
+      --accent-red: #ff4d6d;
       --text-light: #e2daf8;
     }
 
@@ -20,8 +23,14 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
+      transition: background 0.4s ease;
     }
 
+    body.basement-mode {
+      background: #08030f;
+    }
+
+    /* Universal Header Navbar */
     .navbar {
       position: sticky;
       top: 0;
@@ -30,6 +39,13 @@
       background: var(--nav-bg-twilight);
       border-bottom: 2px solid var(--nav-border-twilight);
       backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    body.basement-mode .navbar {
+      background: var(--nav-bg-basement);
+      border-bottom-color: var(--nav-border-basement);
     }
 
     .nav-container {
@@ -45,7 +61,14 @@
       font-family: 'Fredoka', cursive, sans-serif;
       font-size: 1.15rem;
       font-weight: 800;
+      letter-spacing: 1px;
       background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body.basement-mode .logo-main {
+      background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -57,7 +80,12 @@
       color: var(--accent-pink);
     }
 
+    body.basement-mode .logo-sub {
+      color: var(--accent-red);
+    }
+
     .nav-links { display: flex; align-items: center; gap: 14px; }
+    
     .nav-item {
       color: #cbb8f6;
       font-size: 0.88rem;
@@ -73,6 +101,25 @@
       color: #ffffff;
     }
 
+    /* Secret Concert Mode Button */
+    .theme-btn {
+      background: linear-gradient(135deg, rgba(255, 77, 109, 0.2), rgba(168, 139, 235, 0.2));
+      border: 1px solid var(--accent-pink);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 15px rgba(244, 184, 196, 0.5);
+    }
+
+    /* Studio Dashboard Container */
     .studio-dashboard {
       max-width: 1000px;
       margin: 30px auto;
@@ -81,6 +128,13 @@
       border-radius: 20px;
       padding: 28px;
       backdrop-filter: blur(14px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      transition: border-color 0.4s ease;
+    }
+
+    body.basement-mode .studio-dashboard {
+      border-color: rgba(255, 77, 109, 0.5);
+      box-shadow: 0 12px 40px rgba(255, 51, 85, 0.25);
     }
 
     .dashboard-tabs {
@@ -100,6 +154,7 @@
       font-weight: 700;
       font-size: 0.9rem;
       cursor: pointer;
+      transition: all 0.25s ease;
     }
 
     .tab-btn.active-tab {
@@ -107,45 +162,82 @@
       color: #0d0b18;
     }
 
+    body.basement-mode .tab-btn.active-tab {
+      background: linear-gradient(135deg, #ff4d6d, #a88beb);
+      color: #ffffff;
+    }
+
     .tab-content { display: none; }
     .tab-content.active-content { display: block; }
 
+    /* Tuner Display Card */
     .tuner-card {
       background: rgba(15, 10, 30, 0.8);
       border: 1px solid rgba(168, 139, 235, 0.3);
       border-radius: 16px;
       padding: 30px;
       text-align: center;
-      max-width: 550px;
+      max-width: 650px;
       margin: 0 auto;
     }
 
     .frequency-display {
-      font-size: 2.5rem;
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 2.2rem;
       color: #f4b8c4;
       margin: 10px 0;
       font-weight: 800;
+      text-shadow: 0 0 14px rgba(244, 184, 196, 0.5);
     }
 
-    .station-preset-bar {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin: 20px 0;
+    body.basement-mode .frequency-display {
+      color: #ff4d6d;
+      text-shadow: 0 0 14px rgba(255, 77, 109, 0.6);
+    }
+
+    .station-preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    @media (max-width: 600px) {
+      .station-preset-grid { grid-template-columns: 1fr; }
     }
 
     .preset-btn {
       background: rgba(45, 34, 80, 0.8);
       border: 1px solid rgba(168, 139, 235, 0.4);
       color: #cbb8f6;
-      padding: 8px 16px;
-      border-radius: 20px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
       cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: left;
     }
 
-    .preset-btn.active-preset {
-      background: #f4b8c4;
+    .preset-btn:hover, .preset-btn.active-preset {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
       color: #0d0b18;
+      border-color: #f4b8c4;
+    }
+
+    body.basement-mode .preset-btn:hover, 
+    body.basement-mode .preset-btn.active-preset {
+      background: linear-gradient(135deg, #ff4d6d, #a88beb);
+      color: #ffffff;
+      border-color: #ff4d6d;
+    }
+
+    .preset-genre {
+      display: block;
+      font-size: 0.72rem;
+      opacity: 0.8;
+      font-weight: 600;
+      margin-top: 2px;
     }
 
     .action-btn {
@@ -157,6 +249,14 @@
       color: #0d0b18;
       font-weight: 800;
       cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
+    }
+
+    body.basement-mode .action-btn {
+      background: linear-gradient(135deg, #ff4d6d, #a88beb);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
     }
 
     .poll-item-card {
@@ -180,9 +280,9 @@
     }
   </style>
 </head>
-<body>
+<body class="twilight-mode">
 
-  <!-- Universal Navbar -->
+  <!-- Universal Header Navigation -->
   <header class="navbar">
     <div class="nav-container">
       <a href="index.html" style="text-decoration:none;">
@@ -196,28 +296,28 @@
         <a href="neko-fm.html" class="nav-item active">📻 24/7 Neko FM</a>
         <a href="chat.html" class="nav-item">💬 Live Chat</a>
         <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+        <button class="theme-btn" id="mode-toggle-btn" onclick="toggleSecretConcertMode()">⚡ Secret Concert Mode</button>
       </nav>
     </div>
   </header>
 
-  <!-- Radio & Board Lounge -->
+  <!-- Radio & Prep Room Board Lounge -->
   <main class="studio-dashboard">
     <div class="dashboard-tabs">
-      <button class="tab-btn active-tab" onclick="switchTab('tuner-tab', this)">📻 24/7 J-Pop Radio Tuner</button>
-      <button class="tab-btn" onclick="switchTab('board-tab', this)">📋 Prep Room Board & Polls</button>
+      <button class="tab-btn active-tab" onclick="switchTab('tuner-tab', this)">📻 24/7 Radio Tuner</button>
+      <button class="tab-btn" onclick="switchTab('board-tab', this)">📋 Prep Room Board & Setlist Polls</button>
     </div>
 
     <!-- TAB 1: 24/7 RADIO TUNER -->
     <section id="tuner-tab" class="tab-content active-content">
       <div class="tuner-card">
-        <h3>📻 WHISPER RADIO LIVE STREAM</h3>
-        <div class="frequency-display" id="freq-num">102.5 MHz</div>
-        <p>Nonstop J-Rock, EchoHeart instrumental stems, and band motifs.</p>
+        <h3 id="mode-badge-title">🌸 TWILIGHT BROADCAST STATIONS</h3>
+        <div class="frequency-display" id="freq-num">LISTEN.moe</div>
+        <p id="mode-desc-text">Streaming Japanese Vocaloid, Anime OSTs, and J-Pop live streams.</p>
         
-        <div class="station-preset-bar">
-          <button class="preset-btn active-preset" onclick="setPreset('102.5')">102.5 Sakuraoka</button>
-          <button class="preset-btn" onclick="setPreset('88.3')">88.3 Subterranean</button>
-          <button class="preset-btn" onclick="setPreset('99.1')">99.1 Akari Beats</button>
+        <!-- Preset Stations Grid (Swaps per mode) -->
+        <div class="station-preset-grid" id="preset-grid">
+          <!-- Populated by JavaScript -->
         </div>
 
         <button class="action-btn" id="radio-play-btn" onclick="toggleRadioStream()">▶ Stream Live Signal</button>
@@ -242,6 +342,78 @@
   </main>
 
   <script>
+    // Master Radio Stations Repository
+    const RADIO_STATIONS = {
+      twilight: [
+        { name: "LISTEN.moe", genre: "Anime & Vocaloid Stream", freq: "LISTEN.moe" },
+        { name: "Asia DREAM Radio Japan", genre: "J-Pop Hits & Idol Tracks", freq: "Asia DREAM Radio" },
+        { name: "Tokyo FM World", genre: "Tokyo Mainstream & Indie Pop", freq: "Tokyo FM World" },
+        { name: "J-Pop Project Radio", genre: "Classic & Modern J-Pop", freq: "J-Pop Project" }
+      ],
+      basement: [
+        { name: "J-Rock Powerplay Underground", genre: "Heavy Rock & Guitar Riffs", freq: "J-Rock Powerplay" },
+        { name: "Hotmix Radio Japan", genre: "Fast-Tempo Electronic & Beats", freq: "Hotmix Japan" },
+        { name: "Japan-a-Radio", genre: "Underground Anime & Rock Mixes", freq: "Japan-a-Radio" },
+        { name: "Vocaloid Radio 24/7", genre: "180 BPM High-Energy Vocaloid", freq: "Vocaloid 24/7" }
+      ]
+    };
+
+    let currentMode = 'twilight';
+    let selectedStationIndex = 0;
+    let isStreaming = false;
+
+    // Render Station Buttons
+    function renderStationPresets() {
+      const gridContainer = document.getElementById('preset-grid');
+      gridContainer.innerHTML = '';
+
+      const stations = RADIO_STATIONS[currentMode];
+      stations.forEach((station, index) => {
+        const btn = document.createElement('button');
+        btn.className = `preset-btn ${index === selectedStationIndex ? 'active-preset' : ''}`;
+        btn.onclick = () => selectStation(index);
+        btn.innerHTML = `
+          ${station.name}
+          <span class="preset-genre">${station.genre}</span>
+        `;
+        gridContainer.appendChild(btn);
+      });
+
+      // Update frequency readout
+      document.getElementById('freq-num').innerText = stations[selectedStationIndex].name;
+    }
+
+    function selectStation(index) {
+      selectedStationIndex = index;
+      renderStationPresets();
+    }
+
+    function toggleSecretConcertMode() {
+      const body = document.body;
+      const toggleBtn = document.getElementById('mode-toggle-btn');
+      const badgeTitle = document.getElementById('mode-badge-title');
+      const descText = document.getElementById('mode-desc-text');
+
+      if (currentMode === 'twilight') {
+        currentMode = 'basement';
+        body.classList.remove('twilight-mode');
+        body.classList.add('basement-mode');
+        toggleBtn.innerText = '🌸 Twilight Mode';
+        badgeTitle.innerText = '⚡ SECRET CONCERT UNDERGROUND STATIONS';
+        descText.innerText = 'Streaming dark pop, high-energy J-Rock, and underground subterranean riffs.';
+      } else {
+        currentMode = 'twilight';
+        body.classList.remove('basement-mode');
+        body.classList.add('twilight-mode');
+        toggleBtn.innerText = '⚡ Secret Concert Mode';
+        badgeTitle.innerText = '🌸 TWILIGHT BROADCAST STATIONS';
+        descText.innerText = 'Streaming Japanese Vocaloid, Anime OSTs, and J-Pop live streams.';
+      }
+
+      selectedStationIndex = 0;
+      renderStationPresets();
+    }
+
     function switchTab(tabId, btnEl) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-content'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active-tab'));
@@ -249,16 +421,14 @@
       btnEl.classList.add('active-tab');
     }
 
-    function setPreset(freq) {
-      document.getElementById('freq-num').innerText = freq + " MHz";
-      document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active-preset'));
-      event.target.classList.add('active-preset');
+    function toggleRadioStream() {
+      isStreaming = !isStreaming;
+      const btn = document.getElementById('radio-play-btn');
+      btn.innerText = isStreaming ? '⏸ Pause Radio Stream' : '▶ Stream Live Signal';
     }
 
-    function toggleRadioStream() {
-      const btn = document.getElementById('radio-play-btn');
-      btn.innerText = btn.innerText.includes('▶') ? '⏸ Pause Radio Stream' : '▶ Stream Live Signal';
-    }
+    // Initialize on page load
+    renderStationPresets();
   </script>
 </body>
 </html>
