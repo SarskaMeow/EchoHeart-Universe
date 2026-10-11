@@ -1,6 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Universal Header Navigation -->
+<header class="navbar">
+  <div class="nav-container">
+    
+    <!-- Brand Logo -->
+    <div class="logo-container">
+      <a href="index.html" class="logo-link">
+        <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
+        <span class="logo-sub">✦ ECHOHEART UNIVERSE</span>
+      </a>
+    </div>
+
+    <!-- Mobile Hamburger Toggle Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+    </button>
+
+    <!-- Navigation Links & Mode Switcher -->
+    <nav class="nav-links" id="nav-menu">
+      <a href="index.html" class="nav-item">🏠 Home</a>
+      <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+      <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+      <a href="chat.html" class="nav-item">💬 Live Chat</a>
+      <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+      <button class="theme-btn" id="mode-toggle-btn" onclick="toggleSecretConcertMode()">⚡ Secret Concert Mode</button>
+    </nav>
+
+  </div>
+</header>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EchoHeart & Girls Phantom Dead — Otaku Neko Lounge</title>
