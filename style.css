@@ -1,138 +1,100 @@
-/* ============================================================
-   GOOGLE FONTS IMPORT
-   ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Pirata+One&display=swap');
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ==========================================================================
+   SHARED RESPONSIVE NAVBAR STYLES (style.css)
+   ========================================================================== */
+:root {
+  --nav-bg-twilight: rgba(18, 12, 36, 0.96);
+  --nav-border-twilight: rgba(168, 139, 235, 0.35);
+  --accent-pink: #f4b8c4;
+  --accent-purple: #a88beb;
+  --accent-red: #ff4d6d;
+  --text-light: #e2daf8;
 }
 
-body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  transition: background-color 0.4s ease, color 0.4s ease;
-  min-height: 100vh;
-  width: 100%;
-}
-
-/* ============================================================
-   MODE BASE BACKGROUNDS
-   ============================================================ */
-body.twilight-mode {
-  background-color: #130f26;
-  color: #e2daf8;
-}
-
-body.basement-mode {
-  background-color: #07040d;
-  color: #f4b8c4;
-}
-
-/* ============================================================
-   NAVBAR & DROPDOWN NAVIGATION
-   ============================================================ */
+/* Base Header Bar */
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: var(--nav-bg-twilight);
+  border-bottom: 2px solid var(--nav-border-twilight);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-sizing: border-box;
+}
+
+.nav-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 28px;
-  background: rgba(20, 14, 38, 0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(168, 139, 235, 0.25);
-  position: sticky;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
+  position: relative;
 }
 
+/* Brand Logo */
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 10px;
 }
 
-.logo-echoheart {
-  font-family: 'Fredoka', cursive, sans-serif;
-  font-size: 1.4rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  background: linear-gradient(90deg, #a88beb 0%, #f4b8c4 33%, #ff4d6d 66%, #20b2aa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 8px rgba(168, 139, 235, 0.3));
-}
-
-.logo-phantom {
-  font-family: 'Pirata One', cursive, serif;
-  font-size: 1.15rem;
-  letter-spacing: 2px;
-  background: linear-gradient(90deg, #ff1a1a 0%, #a820c2 50%, #cc0033 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 8px rgba(220, 0, 40, 0.8));
-  margin-left: 6px;
-  text-transform: uppercase;
-}
-
-.status-badge-container {
+.logo-link {
+  text-decoration: none;
   display: flex;
-  gap: 10px;
+  flex-direction: column;
 }
 
-.status-badge {
-  font-size: 0.8rem;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-weight: 600;
-  background: rgba(45, 34, 80, 0.7);
-  border: 1px solid rgba(168, 139, 235, 0.3);
+.logo-main {
+  font-family: 'Fredoka', cursive, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.room-status { color: #b5ebb5; }
-.basement-status { color: #f4b8c4; }
+.logo-sub {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: var(--accent-pink);
+  opacity: 0.9;
+}
 
-nav {
+/* Desktop Navigation Links */
+.nav-links {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 10px;
 }
 
-nav a {
+.nav-item, .dropdown-btn {
+  background: transparent;
+  border: none;
   color: #cbb8f6;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-nav a:hover, nav a.active {
-  color: #f4b8c4;
+.nav-item:hover, .nav-item.active, .dropdown-btn:hover {
+  background: rgba(168, 139, 235, 0.18);
+  color: #ffffff;
 }
 
-/* Dropdown Menu Styling */
+/* Desktop Dropdown */
 .dropdown {
   position: relative;
-  display: inline-block;
-}
-
-.dropdown-btn {
-  color: #cbb8f6;
-  background: none;
-  border: none;
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 6px 4px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: color 0.2s ease;
-}
-
-.dropdown-btn:hover {
-  color: #f4b8c4;
 }
 
 .dropdown-content {
@@ -140,520 +102,108 @@ nav a:hover, nav a.active {
   position: absolute;
   top: 100%;
   left: 0;
-  background: rgba(22, 15, 42, 0.95);
-  backdrop-filter: blur(14px);
-  min-width: 190px;
-  border: 1px solid rgba(168, 139, 235, 0.3);
+  min-width: 220px;
+  background: rgba(20, 13, 38, 0.98);
+  border: 1px solid var(--nav-border-twilight);
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-  padding: 8px 0;
+  padding: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(18px);
+  margin-top: 6px;
   z-index: 1001;
-}
-
-.dropdown-content a {
-  color: #e2daf8;
-  padding: 10px 18px;
-  display: block;
-  font-size: 0.88rem;
-  font-weight: 500;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.dropdown-content a:hover {
-  background: rgba(244, 184, 196, 0.15);
-  color: #f4b8c4;
 }
 
 .dropdown:hover .dropdown-content {
   display: block;
-  animation: dropFade 0.2s ease;
 }
 
-@keyframes dropFade {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+.dropdown-content a {
+  color: #e2daf8;
+  padding: 8px 12px;
+  text-decoration: none;
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 600;
+  border-radius: 8px;
 }
 
-/* Theme Toggle Button */
-.theme-btn {
-  background: linear-gradient(135deg, #a88beb, #f4b8c4);
-  color: #0d0b18;
-  border: none;
-  font-weight: 700;
-  padding: 8px 18px;
-  border-radius: 20px;
+.dropdown-content a:hover {
+  background: rgba(168, 139, 235, 0.25);
+  color: #ffffff;
+}
+
+/* Mobile Hamburger Button */
+.mobile-menu-btn {
+  display: none;
+  background: rgba(168, 139, 235, 0.15);
+  border: 1px solid rgba(168, 139, 235, 0.3);
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.88rem;
-  box-shadow: 0 4px 12px rgba(168, 139, 235, 0.3);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.theme-btn:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 6px 18px rgba(244, 184, 196, 0.5);
-}
-
-/* ============================================================
-   PAGE LAYOUT & GRID CONTROLS
-   ============================================================ */
-.hero {
-  text-align: center;
-  padding: 50px 20px 30px;
-  width: 100%;
-}
-
-.hero h1 {
-  font-size: 2.8rem;
-  margin-bottom: 8px;
-}
-
-.hero-subtitle {
-  font-size: 1rem;
-  color: #cbb8f6;
-}
-
-.container {
-  max-width: 1100px;
-  margin: 0 auto 60px;
-  padding: 0 20px;
-  width: 100%;
-}
-
-.section-title {
-  margin: 30px 0 20px;
-  font-size: 1.6rem;
-  border-bottom: 1px solid rgba(168, 139, 235, 0.2);
-  padding-bottom: 8px;
-  text-align: center;
-}
-
-/* MAIN CARD GRID SYSTEM */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  width: 100%;
-}
-
-.card {
-  background: rgba(38, 28, 68, 0.65);
-  border: 1px solid rgba(168, 139, 235, 0.25);
-  border-radius: 16px;
-  padding: 24px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  display: flex;
+  padding: 8px;
   flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  gap: 4px;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(244, 184, 196, 0.5);
+.hamburger-bar {
+  width: 22px;
+  height: 2.5px;
+  background: var(--accent-pink);
+  border-radius: 2px;
+  transition: all 0.3s ease;
 }
 
-.portrait-container {
-  width: 100%;
-  height: 160px;
-  background: rgba(15, 10, 30, 0.7);
-  border-radius: 12px;
-  border: 1px dashed rgba(168, 139, 235, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 12px;
-  margin-bottom: 14px;
-}
-
-.outfit-box {
-  margin-bottom: 12px;
-  font-size: 0.8rem;
-  color: #cbb8f6;
-}
-
-.card-tag {
-  display: inline-block;
-  background: rgba(244, 184, 196, 0.15);
-  color: #f4b8c4;
-  border: 1px solid rgba(244, 184, 196, 0.3);
-  padding: 4px 10px;
-  border-radius: 10px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-  align-self: flex-start;
-}
-
-p {
-  font-size: 0.93rem;
-  line-height: 1.6;
-  color: #d1c5ed;
-  margin-bottom: 12px;
-}
-
-/* Dynamic Mode Typography */
-body.twilight-mode h1,
-body.twilight-mode .hero h1,
-body.twilight-mode .section-title,
-body.twilight-mode .card-title {
-  font-family: 'Fredoka', cursive, sans-serif;
-  color: #f4b8c4;
-  text-shadow: 0 0 12px rgba(168, 139, 235, 0.4);
-}
-
-body.basement-mode h1,
-body.basement-mode .hero h1,
-body.basement-mode .section-title,
-body.basement-mode .card-title {
-  font-family: 'Pirata One', cursive, serif;
-  letter-spacing: 2px;
-  background: linear-gradient(90deg, #ff1a1a 0%, #d8004e 50%, #990026 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 10px rgba(230, 0, 30, 0.85));
-}
-
-body.twilight-mode .hero-basement-subtitle,
-body.twilight-mode .basement-text,
-body.twilight-mode .basement-img,
-body.twilight-mode .basement-status {
-  display: none !important;
-}
-
-body.basement-mode .hero-twilight-subtitle,
-body.basement-mode .twilight-text,
-body.basement-mode .twilight-img,
-body.basement-mode .room-status {
-  display: none !important;
-}
-
-footer {
-  text-align: center;
-  padding: 30px;
-  font-size: 0.85rem;
-  color: #8b7cb6;
-  border-top: 1px solid rgba(168, 139, 235, 0.15);
-  background: rgba(15, 10, 30, 0.8);
-}
-
-/* ==========================================
-   MOBILE & TABLET RESPONSIVE NAVIGATION
-   ========================================== */
-
-@media (max-width: 850px) {
-  /* Stack the header layout vertically */
-  .navbar {
-    flex-direction: column;
-    padding: 12px 16px;
-    gap: 12px;
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVE FIX (max-width: 992px)
+   ========================================================================== */
+@media (max-width: 992px) {
+  .nav-container {
+    padding: 8px 16px; /* Compact top bar */
   }
 
-  /* Wrap navigation items neatly on small screens */
-  .navbar nav {
+  .mobile-menu-btn {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+  }
+
+  /* Slide-down Drawer Panel */
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(15, 10, 30, 0.98);
+    border-bottom: 2px solid var(--nav-border-twilight);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 16px;
     gap: 8px;
-    width: 100%;
-  }
-
-  /* Style mobile buttons & dropdown triggers */
-  .navbar nav a,
-  .dropdown .dropdown-btn,
-  .theme-btn {
-    padding: 8px 12px;
-    font-size: 0.82rem;
-    text-align: center;
-  }
-
-  /* Ensure dropdown menus center properly on touch screens */
-  .dropdown-content {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    min-width: 180px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
-  }
-
-  /* Optimize hero title font sizes for mobile phones */
-  .hero h1 {
-    font-size: 1.8rem;
-  }
-
-  .hero-subtitle {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  /* Tighten spacing for smaller phones */
-  .navbar nav a,
-  .dropdown .dropdown-btn,
-  .theme-btn {
-    padding: 6px 10px;
-    font-size: 0.78rem;
-  }
-
-  .logo-container {
-    text-align: center;
-  }
-
-  .status-badge-container {
-    display: flex;
-    justify-content: center;
-  }
-}
-
-/* ==========================================================================
-   OTAKU NEKO LOUNGE & ECHOHEART UNIVERSE - MOBILE-FRIENDLY NAVBAR STYLES
-   ========================================================================== */
-
-:root {
-  --nav-bg-twilight: rgba(18, 12, 36, 0.94);
-  --nav-bg-basement: rgba(15, 8, 22, 0.96);
-  --nav-border-twilight: rgba(168, 139, 235, 0.35);
-  --nav-border-basement: rgba(255, 77, 109, 0.45);
-  --accent-pink: #f4b8c4;
-  --accent-purple: #a88beb;
-  --accent-red: #ff4d6d;
-  --text-light: #e2daf8;
-}
-
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  width: 100%;
-  background: var(--nav-bg-twilight);
-  border-bottom: 2px solid var(--nav-border-twilight);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: background 0.4s ease, border-color 0.4s ease;
-}
-
-body.basement-mode .navbar {
-  background: var(--nav-bg-basement);
-  border-bottom-color: var(--nav-border-basement);
-}
-
-.nav-container {
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 12px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Brand Logo Styling */
-.logo-container {
-  display: flex;
-  align-items: center;
-}
-
-.logo-link {
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-}
-
-.logo-main {
-  font-family: 'Fredoka', cursive, sans-serif;
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-body.basement-mode .logo-main {
-  background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.logo-sub {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  color: var(--accent-pink);
-  opacity: 0.9;
-}
-
-body.basement-mode .logo-sub {
-  color: var(--accent-red);
-}
-
-/* Navigation Links Layout */
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.nav-item, .dropdown-btn {
-  background: transparent;
-  border: none;
-  color: #cbb8f6;
-  font-size: 0.88rem;
-  font-weight: 700;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.25s ease;
-  white-space: nowrap;
-}
-
-.nav-item:hover, .dropdown-btn:hover {
-  background: rgba(168, 139, 235, 0.18);
-  color: #ffffff;
-}
-
-/* Highlight for EchoHeart Flagship Brand */
-.highlight-brand {
-  background: rgba(168, 139, 235, 0.15);
-  border: 1px solid rgba(244, 184, 196, 0.4);
-  color: #f4b8c4;
-}
-
-.highlight-brand:hover {
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-  color: #0d0b18;
-  border-color: #f4b8c4;
-}
-
-/* Dropdown Menu Mechanics */
-.dropdown {
-  position: relative;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  min-width: 240px;
-  background: rgba(20, 13, 38, 0.97);
-  border: 1px solid var(--nav-border-twilight);
-  border-radius: 14px;
-  padding: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(18px);
-  margin-top: 6px;
-  z-index: 1001;
-}
-
-body.basement-mode .dropdown-content {
-  border-color: var(--nav-border-basement);
-  background: rgba(16, 8, 26, 0.98);
-}
-
-.dropdown:hover .dropdown-content,
-.dropdown.active-mobile .dropdown-content {
-  display: block;
-  animation: fadeInDown 0.25s ease;
-}
-
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.dropdown-content a {
-  color: #e2daf8;
-  padding: 10px 12px;
-  text-decoration: none;
-  display: block;
-  font-size: 0.84rem;
-  font-weight: 600;
-  border-radius: 8px;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.dropdown-content a:hover {
-  background: rgba(168, 139, 235, 0.25);
-  color: #ffffff;
-}
-
-/* Secret Concert Mode Toggle Button */
-.theme-btn {
-  background: linear-gradient(135deg, rgba(255, 77, 109, 0.2), rgba(168, 139, 235, 0.2));
-  border: 1px solid var(--accent-pink);
-  color: #ffffff;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.theme-btn:hover {
-  transform: scale(1.04);
-  box-shadow: 0 0 15px rgba(244, 184, 196, 0.5);
-}
-
-/* Mobile Hamburger Toggle */
-.mobile-menu-btn {
-  display: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.hamburger-bar {
-  width: 26px;
-  height: 3px;
-  background: var(--accent-pink);
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-/* ==========================================================================
-   MOBILE RESPONSIVE DRAWER (Screens under 992px)
-   ========================================================================== */
-@media (max-width: 992px) {
-  .mobile-menu-btn {
-    display: flex;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: rgba(16, 10, 32, 0.98);
-    border-bottom: 2px solid var(--nav-border-twilight);
-    flex-direction: column;
-    align-items: stretch;
-    padding: 20px;
-    gap: 10px;
-    display: none;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
-    max-height: 80vh;
+    display: none; /* Hidden by default */
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.85);
+    max-height: 75vh;
     overflow-y: auto;
   }
 
+  /* Class toggled by JavaScript when tapping Hamburger */
   .nav-links.open {
     display: flex;
+    animation: slideDownMenu 0.25s ease forwards;
+  }
+
+  @keyframes slideDownMenu {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .nav-item, .dropdown-btn {
     width: 100%;
     justify-content: space-between;
-    padding: 12px 16px;
-    font-size: 0.95rem;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    box-sizing: border-box;
+  }
+
+  /* Nested Dropdowns on Mobile */
+  .dropdown {
+    width: 100%;
   }
 
   .dropdown-content {
@@ -661,277 +211,13 @@ body.basement-mode .dropdown-content {
     display: none;
     box-shadow: none;
     background: rgba(28, 18, 54, 0.6);
-    margin-top: 6px;
-    padding-left: 14px;
+    margin-top: 4px;
+    padding-left: 12px;
+    border: none;
   }
 
-  .dropdown.active-mobile .dropdown-content {
+  /* Opened dropdown state on mobile */
+  .dropdown.mobile-expanded .dropdown-content {
     display: block;
-  }
-
-  .theme-btn {
-    margin-top: 10px;
-    text-align: center;
-    padding: 12px;
-  }
-}
-
-/* ==========================================================================
-   OTAKU NEKO LOUNGE & ECHOHEART UNIVERSE - SHARED NAVBAR STYLES
-   ========================================================================== */
-:root {
-  --nav-bg-twilight: rgba(18, 12, 36, 0.94);
-  --nav-bg-basement: rgba(15, 8, 22, 0.96);
-  --nav-border-twilight: rgba(168, 139, 235, 0.35);
-  --nav-border-basement: rgba(255, 77, 109, 0.45);
-  --accent-pink: #f4b8c4;
-  --accent-purple: #a88beb;
-  --accent-red: #ff4d6d;
-  --text-light: #e2daf8;
-}
-
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  width: 100%;
-  background: var(--nav-bg-twilight);
-  border-bottom: 2px solid var(--nav-border-twilight);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: background 0.4s ease, border-color 0.4s ease;
-}
-
-body.basement-mode .navbar {
-  background: var(--nav-bg-basement);
-  border-bottom-color: var(--nav-border-basement);
-}
-
-.nav-container {
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 12px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo-container {
-  display: flex;
-  align-items: center;
-}
-
-.logo-link {
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-}
-
-.logo-main {
-  font-family: 'Fredoka', cursive, sans-serif;
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-body.basement-mode .logo-main {
-  background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.logo-sub {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  color: var(--accent-pink);
-  opacity: 0.9;
-}
-
-body.basement-mode .logo-sub {
-  color: var(--accent-red);
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.nav-item, .dropdown-btn {
-  background: transparent;
-  border: none;
-  color: #cbb8f6;
-  font-size: 0.88rem;
-  font-weight: 700;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.25s ease;
-  white-space: nowrap;
-}
-
-.nav-item:hover, .dropdown-btn:hover {
-  background: rgba(168, 139, 235, 0.18);
-  color: #ffffff;
-}
-
-.highlight-brand {
-  background: rgba(168, 139, 235, 0.15);
-  border: 1px solid rgba(244, 184, 196, 0.4);
-  color: #f4b8c4;
-}
-
-.highlight-brand:hover {
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-  color: #0d0b18;
-  border-color: #f4b8c4;
-}
-
-.dropdown {
-  position: relative;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  min-width: 240px;
-  background: rgba(20, 13, 38, 0.97);
-  border: 1px solid var(--nav-border-twilight);
-  border-radius: 14px;
-  padding: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(18px);
-  margin-top: 6px;
-  z-index: 1001;
-}
-
-body.basement-mode .dropdown-content {
-  border-color: var(--nav-border-basement);
-  background: rgba(16, 8, 26, 0.98);
-}
-
-.dropdown:hover .dropdown-content,
-.dropdown.active-mobile .dropdown-content {
-  display: block;
-  animation: fadeInDown 0.25s ease;
-}
-
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.dropdown-content a {
-  color: #e2daf8;
-  padding: 10px 12px;
-  text-decoration: none;
-  display: block;
-  font-size: 0.84rem;
-  font-weight: 600;
-  border-radius: 8px;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.dropdown-content a:hover {
-  background: rgba(168, 139, 235, 0.25);
-  color: #ffffff;
-}
-
-.theme-btn {
-  background: linear-gradient(135deg, rgba(255, 77, 109, 0.2), rgba(168, 139, 235, 0.2));
-  border: 1px solid var(--accent-pink);
-  color: #ffffff;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.theme-btn:hover {
-  transform: scale(1.04);
-  box-shadow: 0 0 15px rgba(244, 184, 196, 0.5);
-}
-
-.mobile-menu-btn {
-  display: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.hamburger-bar {
-  width: 26px;
-  height: 3px;
-  background: var(--accent-pink);
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-@media (max-width: 992px) {
-  .mobile-menu-btn {
-    display: flex;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: rgba(16, 10, 32, 0.98);
-    border-bottom: 2px solid var(--nav-border-twilight);
-    flex-direction: column;
-    align-items: stretch;
-    padding: 20px;
-    gap: 10px;
-    display: none;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-
-  .nav-links.open {
-    display: flex;
-  }
-
-  .nav-item, .dropdown-btn {
-    width: 100%;
-    justify-content: space-between;
-    padding: 12px 16px;
-    font-size: 0.95rem;
-  }
-
-  .dropdown-content {
-    position: static;
-    display: none;
-    box-shadow: none;
-    background: rgba(28, 18, 54, 0.6);
-    margin-top: 6px;
-    padding-left: 14px;
-  }
-
-  .dropdown.active-mobile .dropdown-content {
-    display: block;
-  }
-
-  .theme-btn {
-    margin-top: 10px;
-    text-align: center;
-    padding: 12px;
   }
 }
