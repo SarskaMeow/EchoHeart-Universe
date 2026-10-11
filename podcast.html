@@ -503,99 +503,288 @@
       isVIP: localStorage.getItem('neko_is_vip') === 'true'
     };
 
-    // Master Episode Repository organized into 3 Episodes per Mode Tier
+    // Distinct Voice Configurations for the 4 Girls (All Female Voice Profiles)
+    // Nekomi: Bright, Lead Vocalist Tone
+    // Sera: Calm, Composed Keytarist Tone
+    // Akari Minase: High-Pitched, Energetic Guitarist Tone
+    // Aoi: Grounded, Mature Student Council President Tone
+    const GIRL_VOICE_CONFIGS = {
+      nekomi: { pitch: 1.25, rate: 1.0,  voiceIndex: 0 },
+      sera:   { pitch: 1.08, rate: 0.95, voiceIndex: 1 },
+      akari:  { pitch: 1.42, rate: 1.05, voiceIndex: 2 },
+      aoi:    { pitch: 0.95, rate: 0.92, voiceIndex: 3 }
+    };
+
+    // Helper to get distinct female synthesis voice
+    function getFemaleVoice(speakerKey) {
+      if (!('speechSynthesis' in window)) return null;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || voices.length === 0) return null;
+
+      const femaleVoices = voices.filter(v => 
+        v.lang.startsWith('en') && 
+        (v.name.includes('Female') || v.name.includes('Zira') || v.name.includes('Jenny') || 
+         v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Karen') || 
+         v.name.includes('Fiona') || v.name.includes('Moira') || v.name.includes('Google US English') ||
+         v.name.includes('Natural'))
+      );
+
+      const cfg = GIRL_VOICE_CONFIGS[speakerKey] || GIRL_VOICE_CONFIGS.nekomi;
+      
+      if (femaleVoices.length > 0) {
+        return femaleVoices[cfg.voiceIndex % femaleVoices.length];
+      }
+
+      const enVoices = voices.filter(v => v.lang.startsWith('en'));
+      return enVoices[cfg.voiceIndex % enVoices.length] || voices[0];
+    }
+
+    // Master Episode Repository — Full Extended Scripts with Greetings, In-depth Topic Discussions, and Goodbyes
     const EPISODES_BY_MODE = {
       twilight: [
         {
-          title: "Episode 1: Prep Room B Revival",
-          runtime: "5:12",
+          title: "Episode 1: Prep Room B Daily Life & School Chat",
+          runtime: "15:00",
           tag: "Free",
           script: [
-            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "Good afternoon, Sakuraoka High! You are tuned into Whisper Radio!" },
-            { speaker: "sera", title: "Sera (Keytar)", pitch: 1.1, text: "Hello everyone. Sera here on keytar synthesis." },
-            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.5, text: "And Akari Minase! Let's bring the 180 BPM energy to Prep Room B!" },
-            { speaker: "aoi", title: "Aoi (Bass & Drums)", pitch: 0.9, text: "Student council president Aoi reporting in. Prep Room B is officially back in session." }
+            // --- GREETINGS & INTRODUCTIONS ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Good afternoon, Sakuraoka High! Welcome to Whisper Radio Episode One! I'm Nekomi, lead vocalist and guitarist for EchoHeart!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Hello everyone. I'm Sera, keytarist and sound arranger. It's wonderful to be here in Prep Room B today." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Yaho~! Akari Minase here! Lead guitar overdrive ready to turn up the volume!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And I'm Aoi, handling bass, drums, and keeping our student council schedule on track. Welcome to our daily school life broadcast!" },
+            
+            // --- MAIN TOPIC: NORMAL EVERYDAY SCHOOL LIFE ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "So, girls! How has everyone's week at Sakuraoka High been going so far?" },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Super busy! Between math class and practicing our 180 BPM guitar solos, my fingers are constantly working!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "I noticed you were practicing during lunch break, Akari. The acoustic resonance in the third-floor stairwell was surprisingly crisp." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Speaking of lunch break, the bakery near the school gates had those limited melon pan pastries today. Nekomi managed to snag the last two!" },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Hehe, you know it! Food energy is crucial before a full band rehearsal in Prep Room B!" },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Hey Sera, did you finish tuning the keytar pitch bend for our new track?" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Yes, I spent yesterday afternoon organizing our MIDI patches. The synth lead blends smoothly with your distortion riffs now." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "As Student Council President, I also double-checked our equipment permit for Prep Room B. We're cleared for after-school practice all semester!" },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "That's awesome news, Aoi! Nothing beats having our own studio space to hang out, drink tea, and write music." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "And don't forget study sessions! Midterms are next week, so we need to balance guitar riffs with textbook review!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "I can help review chemistry equations during our tea breaks if anyone needs help." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "A balanced student life makes for better music. That's the EchoHeart philosophy!" },
+
+            // --- OUTRO & GOODBYES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "That wraps up our daily school life chat for today! Thanks for tuning in, everyone! This is Nekomi signing off!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Thank you for listening. Keep practicing hard, and this is Sera, until next time." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Bye-bye everyone! Keep rocking and stay high energy! Akari Minase out!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Take care on your way home from school! This is Aoi saying goodbye until our next Whisper Radio broadcast!" }
           ]
         },
         {
-          title: "Episode 2: 180 BPM Keytar Secrets",
-          runtime: "4:48",
+          title: "Episode 2: After-School Sweets & Rehearsal Routines",
+          runtime: "15:00",
           tag: "Free",
           script: [
-            { speaker: "sera", title: "Sera (Keytar)", pitch: 1.1, text: "Akari, your tempo shift in section three was incredible during rehearsal!" },
-            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.5, text: "Thanks Sera! When we hit 180 BPM, the cavern reverb echoes perfectly!" },
-            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "That is the EchoHeart resonance at work!" }
+            // --- GREETINGS & INTRODUCTIONS ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Hey there, Whisper Radio listeners! Nekomi here on vocals!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Greetings, everyone. Sera on keytar duty." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Akari Minase in the house! Guitar tuned and ready!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And Aoi on bass and drums! Welcome to Episode Two of our afternoon broadcast!" },
+
+            // --- MAIN TOPIC: AFTER-SCHOOL SWEETS & REHEARSALS ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Today we're talking about our favorite post-rehearsal hangout spots and after-school sweets!" },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Oh! The new boba tea shop down near the station has a strawberry boba parfait that is to die for!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "I prefer the quiet matcha cafe around the corner. Their traditional green tea pairs wonderfully after a loud synth rehearsal." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Matcha is great for focus. Plus, they have quiet booths where we can write lyrics without distraction." },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "What's everyone's favorite routine right after the final bell rings?" },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "First thing I do is sprint straight to Locker 102, grab my guitar case, and rush to Prep Room B!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "I usually clean the keytar keys and check audio cable connections first." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And I make sure the room is tidy and set up the drumkit hardware." },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "It's those little everyday moments that make being in a high school band so special." },
+
+            // --- OUTRO & GOODBYES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Time flies when we're chatting! This is Nekomi wishing you a sweet afternoon!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Thank you for joining us today. Sera signing off." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "See you all tomorrow! Keep your rhythm strong! Bye from Akari!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Study hard and stay safe! Aoi signing off till next time!" }
           ]
         },
         {
-          title: "Episode 3: Sakuraoka Dusk Echoes",
-          runtime: "5:35",
+          title: "Episode 3: Sunset Rooftop Jam & Evening Walk",
+          runtime: "15:00",
           tag: "Free",
           script: [
-            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "Dusk is falling over Sakuraoka High..." },
-            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.5, text: "Guitar tuned, amplifier set to maximum overdrive!" },
-            { speaker: "aoi", title: "Aoi (Bass & Drums)", pitch: 0.9, text: "Let's lock in the rhythm for tonight's broadcast." }
+            // --- GREETINGS & INTRODUCTIONS ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Good evening, Sakuraoka High! Nekomi greeting you as the sun sets!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Hello everyone, Sera here as the evening dusk settles over campus." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Akari Minase here! Sunset is the coolest time for acoustic jam sessions!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And Aoi here to wrap up today's school hours with all of you." },
+
+            // --- MAIN TOPIC: EVENING SCHOOL ROUTINES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "The view from the school rooftop at dusk today was absolutely breathtaking." },
+            { speaker: "sera", title: "Sera (Keytar)", text: "The orange and purple gradient in the sky inspired a lovely new melody on keytar." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "We played an acoustic version of 'Sakuraoka Dusk Echoes' up there and it felt so peaceful!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Before locking up the campus doors, watching the sunset with all four of us reminded me why EchoHeart is so special." },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Every ordinary school day becomes a great memory when we share it together through music." },
+
+            // --- OUTRO & GOODBYES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Have a peaceful evening, everyone! Nekomi signing off!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Rest well tonight. This is Sera saying goodnight." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Catch you on the flip side! Akari Minase out!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Goodnight Sakuraoka High! Aoi signing off till next time!" }
           ]
         }
       ],
       basement: [
         {
-          title: "After Dark Ep 1: Subterranean Cavern Echoes",
-          runtime: "6:05",
+          title: "After Dark Ep 1: Whispering Hallways & Campus Rumors",
+          runtime: "15:00",
           tag: "⚡ AFTER DARK",
           script: [
-            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.2, text: "Welcome to the After Dark basement session..." },
-            { speaker: "aoi", title: "Aoi (Bass & Drums)", pitch: 0.8, text: "Listen closely to the underground cavern echoes beneath Prep Room B." },
-            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.4, text: "The heavy distortion pedals sound so raw down here past school hours!" }
+            // --- GREETINGS & INTRODUCTIONS ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome to After Dark Basement Mode, listeners... Nekomi here in the dimly lit studio." },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Hello... Sera reporting in from beneath Prep Room B after campus hours." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Akari Minase here! The hallway shadows look a little creepier tonight..." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And Student Council President Aoi. Tonight, we're discussing the darker rumors circulating around Sakuraoka High." },
+
+            // --- MAIN TOPIC: DARKER SCHOOL RUMORS & GOSSIP ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Have you guys heard what the third-year students were whispering about near the East Wing staircase?" },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "You mean the rumor about the footsteps echoing when the building is completely empty?" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "I heard it too. Supposedly, if you walk past the old science storage room past 6:00 PM, you can hear faint piano chords." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "As Student Council, I checked the maintenance records. That room has been locked since 2018, and there's no piano inside." },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Whoa... that gives me chills! What about the rumor about the lost student journal found in Locker 102?" },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Someone said every entry in that journal describes events that haven't happened yet!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "There's also gossip that the subterranean acoustics under Prep Room B reverberate at frequencies not produced by standard instruments." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Keep in mind these are just student rumors... but staying late after curfew definitely makes the school feel like a different world." },
+
+            // --- OUTRO & GOODBYES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Watch your step in the dark corridors... Nekomi signing off from After Dark." },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Listen carefully to the echoes. Sera out." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Don't let the hallway shadows scare you! Akari Minase signing off!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Curfew is in effect. Stay safe, and this is Aoi saying goodbye until our next After Dark session." }
           ]
         },
         {
-          title: "After Dark Ep 2: Late Night Riffs & Distortion",
-          runtime: "6:42",
+          title: "After Dark Ep 2: Curfew Whispers & Unmarked Sheet Music",
+          runtime: "15:00",
           tag: "⚡ AFTER DARK",
           script: [
-            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.4, text: "After Dark Episode 2! Testing our heaviest J-Rock riff sequence tonight." },
-            { speaker: "sera", title: "Sera (Keytar)", pitch: 1.0, text: "Pitch bend calibration locked in for the late-night synth solos." },
-            { speaker: "aoi", title: "Aoi (Bass & Drums)", pitch: 0.8, text: "180 BPM fast tempo locked and loaded." }
+            // --- GREETINGS & INTRODUCTIONS ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "After Dark Episode Two is live... Nekomi here." },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Sera here as well. The night air in Prep Room B is cold." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Akari Minase present! Let's dig into more campus whispers!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Aoi here. Let's maintain composure despite tonight's unsettling rumors." },
+
+            // --- MAIN TOPIC: UNMARKED SHEET MUSIC RUMOR ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Sera, tell them about that weird sheet music you found tucked inside the keytar case yesterday." },
+            { speaker: "sera", title: "Sera (Keytar)", text: "It was handwritten in faded ink, titled 'Subterranean Reverie'. Nobody in EchoHeart wrote it." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "And when we tried playing the opening measure, the studio lights flickered in rhythm with the notes!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "I checked the student archive logs. A band called 'Phantom Echo' used Prep Room B ten years ago... and left abruptly." },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Is it true they disappeared right after their final midnight rehearsal?" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "The rumor says their music sheets still reappear in Locker 102 whenever a new band takes over." },
+
+            // --- OUTRO & GOODBYES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Keep your eyes open after dark... Nekomi signing off." },
+            { speaker: "sera", title: "Sera (Keytar)", text: "The music never really stops. Sera out." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Stay brave in the dark! Akari Minase signing off!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Lock your lockers tight tonight. Aoi saying goodnight until next time." }
           ]
         },
         {
-          title: "After Dark Ep 3: Uncensored Locker Whispers",
-          runtime: "7:15",
+          title: "After Dark Ep 3: The Forgotten Practice Room Legend",
+          runtime: "15:00",
           tag: "⚡ AFTER DARK",
           script: [
-            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.2, text: "Late night in Locker 102... all the secrets come out after dark." },
-            { speaker: "sera", title: "Sera (Keytar)", pitch: 1.0, text: "The subterranean resonance is strongest near midnight." },
-            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.4, text: "Let's play one last unreleased jam before turning off the studio lights!" }
+            // --- GREETINGS & INTRODUCTIONS ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome to After Dark Episode Three... Nekomi on mic." },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Sera present in the subterranean studio." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Akari Minase here, amp distortion set high!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Aoi reporting in for our final After Dark gossip installment." },
+
+            // --- MAIN TOPIC: FORGOTTEN ROOM LEGEND ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Tonight we're exploring the rumor of the hidden door behind Prep Room B's soundproofing panels." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "I pushed against the corner panel earlier and felt a cold draft coming through!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Rumors say an old recording booth sits sealed behind that wall, frozen in time from the 1990s." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Student records confirm a renovation was halted back then due to unexplained acoustic anomalies." },
+
+            // --- OUTRO & GOODBYES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Until the next shadow falls... Nekomi out." },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Silence holds secrets. Sera signing off." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Keep rocking in the dark! Akari Minase out!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Until our next After Dark session, this is Aoi saying goodnight." }
           ]
         }
       ],
       backstage: [
         {
-          title: "Backstage Pass Ep 1: Master Stem Isolation",
-          runtime: "8:10",
+          title: "VIP Backstage Ep 1: The Eerie Phantom in Locker 102",
+          runtime: "15:00",
           tag: "🎟️ VIP Pass",
           script: [
-            { speaker: "sera", title: "Sera (Keytar)", pitch: 1.1, text: "Welcome VIP Backstage Pass members! Today we are isolating the master keytar stems." },
-            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "You get full uncompressed studio audio and binaural room acoustic feeds." }
+            // --- GREETINGS & INTRODUCTIONS ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Greetings, VIP Backstage Pass members! Welcome to our exclusive paranormal investigation podcast! Nekomi here!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Welcome, valued VIP supporters. Sera on keytar synthesis, analyzing unexplained campus occurrences." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Akari Minase here! Tonight we're diving into the absolute creepiest mystery at Sakuraoka High!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And Aoi here. As Student Council President, I've compiled actual incident reports regarding Locker 102." },
+
+            // --- MAIN TOPIC: EERIE MYSTERY OF LOCKER 102 ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Let's talk about Locker 102. Last Tuesday at exactly 3:15 AM during our recording session, the door popped open by itself!" },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "And it wasn't just opening! A faint keytar melody was coming from INSIDE the empty metal locker!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "I measured the audio frequencies with our digital analyzer. The pitch matched an unreleased EchoHeart track we hadn't even written yet." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "I checked the locker's historical registry. In 1994, a student musician left her silver keytar inside Locker 102 and vanished before graduation." },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Whenever we record in Prep Room B, the temperature near Locker 102 drops by ten degrees instantly!" },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "We even set up an audio mic near the locker vents yesterday... and picked up what sounded like whispered lyrics!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "The whispers repeated the phrase: 'Resonate with EchoHeart... at 180 BPM...'" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Is Locker 102 a doorway to a subterranean acoustic realm? That's the eerie mystery we're investigating for our VIP members." },
+
+            // --- OUTRO & GOODBYES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thank you for supporting our VIP Backstage Pass! This is Nekomi, signing off from the mystery vault!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Stay vigilant when listening to isolated stems. Sera signing off." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Keep your flashlight handy! Bye-bye from Akari Minase!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Thank you for being part of our VIP inner circle. This is Aoi saying goodbye until our next eerie mystery episode!" }
           ]
         },
         {
-          title: "Backstage Pass Ep 2: 180 BPM Uncut Desk Feed",
-          runtime: "7:50",
+          title: "VIP Backstage Ep 2: The 13th Chime of the Clock Tower",
+          runtime: "15:00",
           tag: "🎟️ VIP Pass",
           script: [
-            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.5, text: "Direct soundboard feed live from Prep Room B!" },
-            { speaker: "aoi", title: "Aoi (Bass & Drums)", pitch: 0.9, text: "Zero compression, zero noise filters. Pure EchoHeart master audio." }
+            // --- GREETINGS & INTRODUCTIONS ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome back, VIP Backstage Pass listeners! Nekomi reporting live!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Greetings VIP members. Sera here for Episode Two of our mystery series." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Akari Minase in position! Tonight's clock tower mystery is super spine-tingling!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Aoi here. Examining the eerie phenomenon of the 13th clock chime at 3:00 AM." },
+
+            // --- MAIN TOPIC: EERIE CLOCK TOWER MYSTERY ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Sakuraoka High's old bell tower is only supposed to ring twelve times at midnight, right?" },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Right! But when we stayed overnight in Prep Room B, the bell chimed THIRTEEN times at 3:00 AM!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "On the 13th chime, all electronic keytar displays in the room inverted colors and displayed strange waveform patterns." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "I inspected the clock tower gear mechanism with maintenance. The physical gears lock at 10:00 PM, meaning the 13th chime shouldn't physically occur." },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Students who looked up at the clock tower at 3:00 AM reported seeing four shadowy silhouettes holding instruments on the roof!" },
+
+            // --- OUTRO & GOODBYES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thank you VIP members for listening! Nekomi signing off!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Count the chimes carefully. Sera out." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Don't look up at 3 AM! Akari Minase out!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Stay safe and stay curious. Aoi signing off till next time!" }
           ]
         },
         {
-          title: "Backstage Pass Ep 3: Cavern Acoustics & Reverb",
-          runtime: "9:25",
+          title: "VIP Backstage Ep 3: Subterranean Cavern Audio Anomalies",
+          runtime: "15:00",
           tag: "🎟️ VIP Pass",
           script: [
-            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.5, text: "Akari here! Unlocking full 3D spatial acoustic reverb for our VIP supporters." },
-            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "Thank you for supporting EchoHeart and Neko FM Backstage Pass!" }
+            // --- GREETINGS & INTRODUCTIONS ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome to our final VIP Backstage Mystery Episode! Nekomi on mic!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Sera here, analyzing the subterranean audio feeds beneath campus." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Akari Minase ready! Unlocking our deepest mystery yet!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And Aoi here, presenting our raw binaural recordings from beneath Prep Room B." },
+
+            // --- MAIN TOPIC: SUBTERRANEAN CAVERN ANOMALIES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Deep underneath Prep Room B sits a natural cavern system that acts like a giant acoustic reverb chamber!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "When we feed uncompressed keytar stems into the floor mic, the cavern responds with harmonic overtones that match human vocal harmonies." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "It's like an eerie phantom fifth member is playing along with EchoHeart from underground!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "This subterranean resonance gives EchoHeart its signature sound... a mystery locked beneath Sakuraoka High." },
+
+            // --- OUTRO & GOODBYES ---
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thank you for supporting Neko FM Backstage Pass! Nekomi signing off!" },
+            { speaker: "sera", title: "Sera (Keytar)", text: "Keep listening to the deeper frequencies. Sera out." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Keep rocking the mysteries! Akari Minase signing off!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Thank you for being our VIP supporters! This is Aoi saying goodbye until next time!" }
           ]
         }
       ]
@@ -639,7 +828,6 @@
 
       if (selector) selector.value = mode;
 
-      // Update Header Titles and Badges dynamically
       const stageTitle = document.getElementById('stage-main-title');
       const airBadge = document.getElementById('stage-air-badge');
       const drawerHeading = document.getElementById('archive-drawer-heading');
@@ -757,8 +945,17 @@
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(line.text);
-        utterance.pitch = line.pitch || 1.0;
-        utterance.rate = 1.0;
+        
+        // Retrieve distinct female voice profile for the active character
+        const voiceCfg = GIRL_VOICE_CONFIGS[line.speaker] || GIRL_VOICE_CONFIGS.nekomi;
+        const matchedVoice = getFemaleVoice(line.speaker);
+        
+        if (matchedVoice) {
+          utterance.voice = matchedVoice;
+        }
+
+        utterance.pitch = voiceCfg.pitch;
+        utterance.rate = voiceCfg.rate;
 
         utterance.onend = function() {
           currentLineIdx++;
@@ -839,6 +1036,13 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Pre-load voices for browser Web Speech API
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          window.speechSynthesis.getVoices();
+        };
+      }
+
       const mode = getCurrentMode();
       applyThemeMode(mode);
       loadTierEpisodes(mode);
