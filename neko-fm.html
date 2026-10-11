@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neko FM — 24/7 Radio Lounge & Setlist Polls</title>
+  <title>Neko FM — 24/7 Radio Lounge & Interactive Setlist Polls</title>
   <link rel="stylesheet" href="style.css">
   <style>
     :root {
@@ -392,24 +392,162 @@
       box-shadow: 0 4px 15px rgba(255, 209, 102, 0.4);
     }
 
-    .poll-item-card {
-      background: rgba(20, 14, 38, 0.7);
+    /* Enhanced Interactive Setlist Poll Styles */
+    .poll-header-banner {
+      background: rgba(15, 10, 30, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+
+    .poll-header-banner h3 { margin: 0 0 6px; color: #ffffff; font-size: 1.25rem; }
+    .poll-header-banner p { margin: 0; color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; }
+
+    .poll-card {
+      background: rgba(20, 14, 38, 0.8);
       border: 1px solid rgba(168, 139, 235, 0.25);
-      border-radius: 12px;
-      padding: 14px 18px;
-      margin-bottom: 12px;
+      border-radius: 16px;
+      padding: 18px 22px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .poll-card.voted-card {
+      border-color: #f4b8c4;
+      background: rgba(30, 18, 52, 0.9);
+      box-shadow: 0 0 16px rgba(244, 184, 196, 0.25);
+    }
+
+    body.basement-mode .poll-card.voted-card {
+      border-color: #ff4d6d;
+      box-shadow: 0 0 16px rgba(255, 77, 109, 0.3);
+    }
+
+    body.backstage-mode .poll-card.voted-card {
+      border-color: #ffd166;
+      box-shadow: 0 0 16px rgba(255, 209, 102, 0.3);
+    }
+
+    .poll-info-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .vote-count-chip {
+    .poll-title {
+      font-weight: 800;
+      font-size: 1.02rem;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .poll-badge {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 800;
       background: rgba(168, 139, 235, 0.2);
       color: #f4b8c4;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-weight: 800;
+      border: 1px solid rgba(168, 139, 235, 0.3);
+    }
+
+    .poll-stats {
       font-size: 0.85rem;
+      font-weight: 800;
+      color: #f4b8c4;
+    }
+
+    /* Animated Progress Bar */
+    .poll-progress-bg {
+      width: 100%;
+      height: 10px;
+      background: rgba(35, 25, 65, 0.8);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 12px 0;
+      position: relative;
+    }
+
+    .poll-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #a88beb, #f4b8c4);
+      border-radius: 10px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body.basement-mode .poll-progress-fill {
+      background: linear-gradient(90deg, #ff4d6d, #a88beb);
+    }
+
+    body.backstage-mode .poll-progress-fill {
+      background: linear-gradient(90deg, #ffd166, #ff007f);
+    }
+
+    .poll-actions-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .poll-performers {
+      font-size: 0.8rem;
+      color: #cbb8f6;
+      font-weight: 600;
+    }
+
+    .vote-btn {
+      background: rgba(168, 139, 235, 0.18);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      color: #ffffff;
+      padding: 6px 16px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .vote-btn:hover {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border-color: #f4b8c4;
+    }
+
+    .vote-btn.voted-btn {
+      background: #f4b8c4;
+      color: #0d0b18;
+      border-color: #f4b8c4;
+      cursor: default;
+    }
+
+    /* Suggestion Box Drawer */
+    .suggestion-box-panel {
+      background: rgba(15, 10, 30, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-top: 28px;
+    }
+
+    .form-control-poll {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(22, 15, 42, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 10px;
+      color: #ffffff;
+      margin: 10px 0 14px;
+      box-sizing: border-box;
+      outline: none;
+      font-family: inherit;
     }
 
     /* Modal Overlay Styles */
@@ -525,19 +663,24 @@
       </div>
     </section>
 
-    <!-- TAB 2: PREP ROOM BOARD & POLLS -->
+    <!-- TAB 2: PREP ROOM BOARD & SETLIST POLLS -->
     <section id="board-tab" class="tab-content">
-      <h3>📋 Weekly Broadcast Setlist Voting</h3>
-      <p>Vote on next week's broadcast song cover!</p>
-
-      <div class="poll-item-card">
-        <span>🎸 "Subterranean Resonance" (Acoustic Version)</span>
-        <span class="vote-count-chip">142 Votes</span>
+      <div class="poll-header-banner">
+        <h3>📋 Prep Room B — Weekly Setlist Voting</h3>
+        <p>Vote for next week's broadcast song cover! The winning arrangement will be performed by EchoHeart in Prep Room B and featured as the lead track on Neko FM.</p>
       </div>
 
-      <div class="poll-item-card">
-        <span>🎹 "Keytar Midnight Run" (180 BPM Remix)</span>
-        <span class="vote-count-chip">189 Votes</span>
+      <!-- Dynamic Poll List Container -->
+      <div id="poll-container">
+        <!-- Rendered via JavaScript -->
+      </div>
+
+      <!-- Fan Song Suggestion Drawer -->
+      <div class="suggestion-box-panel">
+        <h4 style="margin:0 0 6px; color:#ffffff;">💡 Suggest a Song for EchoHeart</h4>
+        <p style="font-size:0.82rem; color:#cbb8f6; margin:0;">Have a J-Rock, Vocaloid, or anime track you want Akari Minase, Nekomi, Sera, and Aoi to cover?</p>
+        <input type="text" id="song-suggestion-input" class="form-control-poll" placeholder="e.g. 'Subterranean Resonance (Keytar & Acoustic Duo)'">
+        <button class="vote-btn" onclick="submitSongSuggestion()">🌸 Submit Suggestion to Prep Room B</button>
       </div>
     </section>
   </main>
@@ -564,6 +707,38 @@
         { name: "VIP Backstage Lounge Stream", genre: "Exclusive Member Audio", url: "https://stream.zeno.fm/054a1078s0hvv" }
       ]
     };
+
+    // Interactive Setlist Poll Data State
+    let pollData = [
+      {
+        id: 0,
+        title: '🎸 "Subterranean Resonance"',
+        badge: 'Acoustic Duo',
+        performers: 'Akari Minase (Guitar) & Nekomi (Vocals)',
+        votes: 142
+      },
+      {
+        id: 1,
+        title: '🎹 "Keytar Midnight Run"',
+        badge: '180 BPM Remix',
+        performers: 'Sera (Keytar) & Aoi (Drums)',
+        votes: 189
+      },
+      {
+        id: 2,
+        title: '🌸 "Sakuraoka Dusk Echoes"',
+        badge: 'Full Band Live',
+        performers: 'EchoHeart Core Ensemble',
+        votes: 95
+      },
+      {
+        id: 3,
+        title: '⚡ "Cavern Reverb Overdrive"',
+        badge: 'Heavy J-Rock',
+        performers: 'Akari Minase (Lead Guitar) & Aoi (Drums)',
+        votes: 210
+      }
+    ];
 
     let currentMode = 'twilight';
     let selectedStationIndex = 0;
@@ -633,7 +808,7 @@
       }
     }
 
-    // Render Station Buttons
+    // Render Radio Station Buttons
     function renderStationPresets() {
       const gridContainer = document.getElementById('preset-grid');
       gridContainer.innerHTML = '';
@@ -663,6 +838,73 @@
       if (isStreaming) {
         audioPlayer.play().catch(err => console.log("Audio playback error:", err));
       }
+    }
+
+    // Render Setlist Voting Cards
+    function renderSetlistPolls() {
+      const container = document.getElementById('poll-container');
+      if (!container) return;
+
+      container.innerHTML = '';
+
+      // Calculate Total Votes
+      const totalVotes = pollData.reduce((sum, item) => sum + item.votes, 0);
+      const votedSongId = localStorage.getItem('neko_voted_poll_id');
+
+      pollData.forEach(item => {
+        const percent = totalVotes > 0 ? Math.round((item.votes / totalVotes) * 100) : 0;
+        const isVoted = votedSongId !== null && parseInt(votedSongId) === item.id;
+
+        const card = document.createElement('div');
+        card.className = `poll-card ${isVoted ? 'voted-card' : ''}`;
+        card.innerHTML = `
+          <div class="poll-info-top">
+            <span class="poll-title">${item.title} <span class="poll-badge">${item.badge}</span></span>
+            <span class="poll-stats">${item.votes} Votes (${percent}%)</span>
+          </div>
+          <div class="poll-progress-bg">
+            <div class="poll-progress-fill" style="width: ${percent}%;"></div>
+          </div>
+          <div class="poll-actions-bottom">
+            <span class="poll-performers">👥 ${item.performers}</span>
+            <button class="vote-btn ${isVoted ? 'voted-btn' : ''}" onclick="castSongVote(${item.id})">
+              ${isVoted ? '✓ Voted' : '⚡ Vote Song'}
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function castSongVote(id) {
+      const existingVote = localStorage.getItem('neko_voted_poll_id');
+
+      if (existingVote !== null) {
+        if (parseInt(existingVote) === id) {
+          alert("🌸 You've already voted for this track!");
+          return;
+        } else {
+          // Remove previous vote count
+          const prevItem = pollData.find(item => item.id === parseInt(existingVote));
+          if (prevItem && prevItem.votes > 0) prevItem.votes--;
+        }
+      }
+
+      // Add new vote
+      const currentItem = pollData.find(item => item.id === id);
+      if (currentItem) currentItem.votes++;
+
+      localStorage.setItem('neko_voted_poll_id', id);
+      renderSetlistPolls();
+    }
+
+    function submitSongSuggestion() {
+      const input = document.getElementById('song-suggestion-input');
+      const text = input ? input.value.trim() : '';
+      if (!text) return;
+
+      alert(`🌸 Suggestion received: "${text}" has been submitted to Prep Room B!`);
+      if (input) input.value = '';
     }
 
     function switchTab(tabId, btnEl) {
@@ -758,6 +1000,7 @@
       currentMode = getCurrentMode();
       applyThemeMode(currentMode);
       renderStationPresets();
+      renderSetlistPolls();
     });
   </script>
 </body>
