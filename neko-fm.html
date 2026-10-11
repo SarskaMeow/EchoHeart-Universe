@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neko FM — 24/7 Radio Lounge, Setlist Polls & Discography Hub</title>
+  <title>Neko FM — Girls Dead Phantom Radio Lounge & Discography Hub</title>
   <link rel="stylesheet" href="style.css">
   <style>
     :root {
@@ -226,7 +226,7 @@
 
     /* Studio Dashboard Container */
     .studio-dashboard {
-      max-width: 1050px;
+      max-width: 1080px;
       margin: 30px auto;
       background: rgba(22, 15, 42, 0.92);
       border: 2px solid rgba(168, 139, 235, 0.35);
@@ -447,7 +447,7 @@
       letter-spacing: 2px;
     }
 
-    /* Official EchoHeart Premiere Showcase Card */
+    /* Girls Dead Phantom Premiere Showcase Card with 10-Minute Timer Beside */
     .premiere-showcase-card {
       background: linear-gradient(135deg, rgba(35, 20, 60, 0.95), rgba(15, 8, 30, 0.95));
       border: 2px solid #a88beb;
@@ -462,6 +462,37 @@
       box-shadow: 0 8px 25px rgba(168, 139, 235, 0.25);
     }
 
+    .premiere-info-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .premiere-actions-side {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .premiere-10min-timer-badge {
+      background: rgba(255, 77, 109, 0.2);
+      border: 1px solid #ff4d6d;
+      color: #ff4d6d;
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-family: 'Fredoka', cursive, monospace;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 0 12px rgba(255, 77, 109, 0.3);
+    }
+
     .premiere-badge {
       background: linear-gradient(135deg, #a88beb, #f4b8c4);
       color: #0d0b18;
@@ -470,12 +501,12 @@
       padding: 4px 10px;
       border-radius: 8px;
       display: inline-block;
-      margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 1px;
+      width: fit-content;
     }
 
-    .premiere-title { font-size: 1.15rem; font-weight: 800; color: #ffffff; margin: 0 0 4px; }
+    .premiere-title { font-size: 1.15rem; font-weight: 800; color: #ffffff; margin: 4px 0; }
     .premiere-sub { font-size: 0.85rem; color: #cbb8f6; margin: 0; }
 
     .poll-card {
@@ -601,16 +632,7 @@
       cursor: default;
     }
 
-    .guest-restricted-note {
-      font-size: 0.78rem;
-      color: #f4b8c4;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* NEW TAB: DISCOGRAPHY & BAND HUB STYLING */
+    /* DISCOGRAPHY & 20s PREVIEW STYLING */
     .discography-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -618,7 +640,7 @@
       margin-top: 20px;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 768px) {
       .discography-grid { grid-template-columns: 1fr; }
     }
 
@@ -657,6 +679,17 @@
     .badge-twilight { background: rgba(168, 139, 235, 0.2); color: #f4b8c4; border: 1px solid rgba(168, 139, 235, 0.4); }
     .badge-basement { background: rgba(255, 77, 109, 0.2); color: #ff4d6d; border: 1px solid rgba(255, 77, 109, 0.4); }
     .badge-backstage { background: rgba(255, 209, 102, 0.2); color: #ffd166; border: 1px solid rgba(255, 209, 102, 0.4); }
+
+    .preview-active-pill {
+      background: linear-gradient(135deg, #ff4d6d, #f4b8c4);
+      color: #000;
+      font-size: 0.72rem;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 4px;
+    }
 
     .band-bio-banner {
       background: rgba(15, 10, 30, 0.85);
@@ -745,7 +778,7 @@
       <div class="logo-container">
         <a href="index.html" class="logo-link">
           <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
-          <span class="logo-sub">✦ ECHOHEART UNIVERSE</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
         </a>
       </div>
 
@@ -785,7 +818,7 @@
     <div class="dashboard-tabs">
       <button class="tab-btn active-tab" onclick="switchTab('tuner-tab', this)">📻 24/7 Radio Tuner</button>
       <button class="tab-btn" onclick="switchTab('board-tab', this)">📋 Setlist Polls</button>
-      <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 EchoHeart Discography & Hub</button>
+      <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 Girls Dead Phantom Hub</button>
     </div>
 
     <!-- TAB 1: 24/7 RADIO TUNER -->
@@ -807,30 +840,37 @@
     <!-- TAB 2: PREP ROOM BOARD & SETLIST POLLS -->
     <section id="board-tab" class="tab-content">
       
-      <!-- Poll & Live Countdown Header Banner -->
+      <!-- Poll & Hourly Live Countdown Header Banner -->
       <div class="poll-header-banner">
         <div class="poll-header-text">
-          <h3>📋 Prep Room B — Weekly Setlist Voting</h3>
-          <p>Vote for next week's broadcast song cover! The winning arrangement will be performed by EchoHeart in Prep Room B and premiered live when the countdown hits zero.</p>
+          <h3>📋 Prep Room B — Hourly Setlist Voting</h3>
+          <p>Vote for the next broadcast song cover! The winning arrangement will be performed by <strong>Girls Dead Phantom</strong> in Prep Room B.</p>
         </div>
 
-        <!-- Persistent Live Countdown Box -->
+        <!-- Persistent Hourly Countdown Box -->
         <div class="countdown-timer-box">
-          <div class="countdown-label">⚡ Broadcast Premiere In</div>
-          <div class="countdown-digits" id="poll-countdown-digits">00:45:00</div>
+          <div class="countdown-label" id="poll-timer-label">⚡ Voting Closes In</div>
+          <div class="countdown-digits" id="poll-countdown-digits">59:00</div>
         </div>
       </div>
 
-      <!-- Spotify-Style Official Track Premiere Showcase Card -->
+      <!-- Girls Dead Phantom Premiere Showcase Card with 10-Minute Timer Right Beside -->
       <div class="premiere-showcase-card">
-        <div>
-          <span class="premiere-badge">🌟 EchoHeart Poll Leader</span>
+        <div class="premiere-info-group">
+          <span class="premiere-badge">🌟 Girls Dead Phantom Leader</span>
           <h4 class="premiere-title" id="winning-track-name">"Subterranean Resonance (Official Studio Cut)"</h4>
           <p class="premiere-sub">Akari Minase (Lead Guitar) • Nekomi (Vocals) • Sera (Keytar) • Aoi (Drums)</p>
         </div>
-        <button class="vote-btn" id="play-premiere-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 20px; font-size: 0.9rem;">
-          ▶ Play Track Preview
-        </button>
+
+        <div class="premiere-actions-side">
+          <!-- 10-Minute Soundcheck Countdown Timer (Placed Right Beside Voted Song) -->
+          <div class="premiere-10min-timer-badge" id="premier-soundcheck-box">
+            ⏱️ Premiere In: <span id="soundcheck-digits">10:00</span>
+          </div>
+          <button class="vote-btn" id="play-premiere-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 18px; font-size: 0.88rem;">
+            ▶ Stream Premiere
+          </button>
+        </div>
       </div>
 
       <!-- Dynamic Poll List Container -->
@@ -840,35 +880,35 @@
 
       <!-- Fan Song Suggestion Drawer -->
       <div class="suggestion-box-panel">
-        <h4 style="margin:0 0 6px; color:#ffffff;">💡 Suggest a Song for EchoHeart</h4>
+        <h4 style="margin:0 0 6px; color:#ffffff;">💡 Suggest a Song for Girls Dead Phantom</h4>
         <p style="font-size:0.82rem; color:#cbb8f6; margin:0;">Have a J-Rock, Vocaloid, or anime track you want Akari Minase, Nekomi, Sera, and Aoi to cover?</p>
         <input type="text" id="song-suggestion-input" class="form-control-poll" placeholder="e.g. 'Subterranean Resonance (Keytar & Acoustic Duo)'">
         <button class="vote-btn" onclick="submitSongSuggestion()">🌸 Submit Suggestion to Prep Room B</button>
       </div>
     </section>
 
-    <!-- TAB 3: ECHOHEART & GIRLS DEAD PHANTOM DISCOGRAPHY HUB -->
+    <!-- TAB 3: GIRLS DEAD PHANTOM DISCOGRAPHY & PREVIEW HUB -->
     <section id="discography-tab" class="tab-content">
       
       <!-- Band Lore & Official Status Banner -->
       <div class="band-bio-banner">
-        <h3>🎸 EchoHeart (Girls Dead Phantom)</h3>
-        <p>Official Discography, Live Rehearsals, and Subterranean B-Sides. Formed in Prep Room B by <strong>Akari Minase</strong>, <strong>Nekomi</strong>, <strong>Sera</strong>, and <strong>Aoi</strong>. No new album currently scheduled — next debut single is voted live by fans on Neko FM!</p>
+        <h3>🎸 Girls Dead Phantom — Official Discography & Vault</h3>
+        <p>Full 10-track discography for <strong>Girls Dead Phantom</strong> (Akari Minase, Nekomi, Sera, and Aoi). Tap any track below to listen to a <strong>20-second official audio preview</strong>!</p>
       </div>
 
       <!-- Poll Sync "On Deck" Banner -->
       <div class="premiere-showcase-card" style="border-color: #f4b8c4;">
-        <div>
+        <div class="premiere-info-group">
           <span class="premiere-badge" style="background: linear-gradient(135deg, #ff4d6d, #f4b8c4);">⚡ QUEUED FOR NEXT PREMIERE BROADCAST</span>
           <h4 class="premiere-title" id="disco-deck-track-name">"Subterranean Resonance (Official Studio Cut)"</h4>
-          <p class="premiere-sub">Synchronized with Setlist Poll Leader • Plays automatically when poll countdown finishes</p>
+          <p class="premiere-sub">Synchronized with Girls Dead Phantom Poll Leader • Plays automatically when 10-min premiere countdown ends</p>
         </div>
-        <button class="vote-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 20px; font-size: 0.9rem;">
+        <button class="vote-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 18px; font-size: 0.88rem;">
           ▶ Stream On-Deck Track
         </button>
       </div>
 
-      <h4 style="margin: 24px 0 10px; color: #ffffff;">💿 Official Tracks & Subterranean Vault</h4>
+      <h4 style="margin: 24px 0 10px; color: #ffffff;">💿 Official Song List (10 Tracks — 20s Previews)</h4>
       <div class="discography-grid" id="discography-container">
         <!-- Rendered dynamically by JavaScript -->
       </div>
@@ -891,7 +931,7 @@
         { name: "Vocaloid Radio 24/7", genre: "180 BPM High-Energy Vocaloid", url: "https://stream.zeno.fm/054a1078s0hvv" }
       ],
       backstage: [
-        { name: "EchoHeart Uncut Stems", genre: "Studio Master Instrumentals", url: "https://listen.moe/stream" },
+        { name: "Girls Dead Phantom Stems", genre: "Studio Master Instrumentals", url: "https://listen.moe/stream" },
         { name: "180 BPM Rehearsal Feed", genre: "Prep Room B Live Feed", url: "https://stream.zeno.fm/f0p485a06chvv" },
         { name: "Subterranean Cavern Reverb", genre: "Acoustic Cavern Echoes", url: "https://stream.zeno.fm/918p426338quv" },
         { name: "VIP Backstage Lounge Stream", genre: "Exclusive Member Audio", url: "https://stream.zeno.fm/054a1078s0hvv" }
@@ -900,98 +940,35 @@
 
     // Default Fresh Poll Data (Votes Reset to 0)
     const DEFAULT_POLL_ITEMS = [
-      {
-        id: 0,
-        title: '🎸 "Subterranean Resonance"',
-        badge: 'Acoustic Duo',
-        performers: 'Akari Minase (Guitar) & Nekomi (Vocals)',
-        streamUrl: 'https://listen.moe/stream',
-        votes: 0
-      },
-      {
-        id: 1,
-        title: '🎹 "Keytar Midnight Run"',
-        badge: '180 BPM Remix',
-        performers: 'Sera (Keytar) & Aoi (Drums)',
-        streamUrl: 'https://stream.zeno.fm/f0p485a06chvv',
-        votes: 0
-      },
-      {
-        id: 2,
-        title: '🌸 "Sakuraoka Dusk Echoes"',
-        badge: 'Full Band Live',
-        performers: 'EchoHeart Core Ensemble',
-        streamUrl: 'https://stream.zeno.fm/f3wvbbqmdg8uv',
-        votes: 0
-      },
-      {
-        id: 3,
-        title: '⚡ "Cavern Reverb Overdrive"',
-        badge: 'Heavy J-Rock',
-        performers: 'Akari Minase (Lead Guitar) & Aoi (Drums)',
-        streamUrl: 'https://stream.zeno.fm/918p426338quv',
-        votes: 0
-      }
+      { id: 0, title: '🎸 "Subterranean Resonance"', badge: 'Acoustic Duo', performers: 'Akari Minase (Guitar) & Nekomi (Vocals)', streamUrl: 'https://listen.moe/stream', votes: 0 },
+      { id: 1, title: '🎹 "Keytar Midnight Run"', badge: '180 BPM Remix', performers: 'Sera (Keytar) & Aoi (Drums)', streamUrl: 'https://stream.zeno.fm/f0p485a06chvv', votes: 0 },
+      { id: 2, title: '🌸 "Sakuraoka Dusk Echoes"', badge: 'Full Band Live', performers: 'Girls Dead Phantom Ensemble', streamUrl: 'https://stream.zeno.fm/f3wvbbqmdg8uv', votes: 0 },
+      { id: 3, title: '⚡ "Cavern Reverb Overdrive"', badge: 'Heavy J-Rock', performers: 'Akari Minase (Lead Guitar) & Aoi (Drums)', streamUrl: 'https://stream.zeno.fm/918p426338quv', votes: 0 }
     ];
 
-    // Discography Songs Catalog with Tier Access Control
+    // 10 Official Songs for Girls Dead Phantom Discography
     const DISCOGRAPHY_CATALOG = [
-      {
-        id: 'disco-1',
-        title: 'Subterranean Resonance',
-        artist: 'EchoHeart (Akari Minase & Nekomi)',
-        type: 'Single (2026)',
-        tierReq: 'twilight',
-        badgeClass: 'badge-twilight',
-        tierLabel: 'Public',
-        url: 'https://listen.moe/stream'
-      },
-      {
-        id: 'disco-2',
-        title: 'Keytar Midnight Run',
-        artist: 'EchoHeart (Sera & Aoi)',
-        type: 'EP Track',
-        tierReq: 'twilight',
-        badgeClass: 'badge-twilight',
-        tierLabel: 'Public',
-        url: 'https://stream.zeno.fm/f0p485a06chvv'
-      },
-      {
-        id: 'disco-3',
-        title: 'Sakuraoka Dusk Echoes',
-        artist: 'EchoHeart Full Band',
-        type: 'Live Acoustic',
-        tierReq: 'twilight',
-        badgeClass: 'badge-twilight',
-        tierLabel: 'Public',
-        url: 'https://stream.zeno.fm/f3wvbbqmdg8uv'
-      },
-      {
-        id: 'disco-4',
-        title: 'Cavern Reverb Overdrive',
-        artist: 'Girls Dead Phantom (Underground Alias)',
-        type: 'Subterranean B-Side',
-        tierReq: 'basement',
-        badgeClass: 'badge-basement',
-        tierLabel: 'Basement 🔒',
-        url: 'https://stream.zeno.fm/918p426338quv'
-      },
-      {
-        id: 'disco-5',
-        title: '180 BPM Keytar Solo (Uncut Master Stem)',
-        artist: 'EchoHeart (Sera Keytar Direct)',
-        type: 'Master Lossless Stem',
-        tierReq: 'backstage',
-        badgeClass: 'badge-backstage',
-        tierLabel: 'VIP Pass 💎',
-        url: 'https://stream.zeno.fm/054a1078s0hvv'
-      }
+      { id: 'gdp-1', title: 'Subterranean Resonance', type: 'Debut Single (2026)', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/stream' },
+      { id: 'gdp-2', title: 'Keytar Midnight Run', type: '180 BPM Synth Remix', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.zeno.fm/f0p485a06chvv' },
+      { id: 'gdp-3', title: 'Sakuraoka Dusk Echoes', type: 'Live Acoustic Session', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.zeno.fm/f3wvbbqmdg8uv' },
+      { id: 'gdp-4', title: 'Cavern Reverb Overdrive', type: 'Subterranean B-Side', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.zeno.fm/918p426338quv' },
+      { id: 'gdp-5', title: 'Phantom Echoes in Prep Room B', type: 'Studio Cut', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.zeno.fm/k2k24q08s0hvv' },
+      { id: 'gdp-6', title: '180 BPM Velocity', type: 'Fast Tempo Rock', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.zeno.fm/088019y2eb8uv' },
+      { id: 'gdp-7', title: 'Dusk Over Sakuraoka', type: 'Melodic Punk', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/stream' },
+      { id: 'gdp-8', title: 'Locker 102 Whispers', type: 'Dark Pop Underground', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.zeno.fm/f0p485a06chvv' },
+      { id: 'gdp-9', title: 'Akari\'s Crimson Riff', type: 'Guitar Instrumental', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/918p426338quv' },
+      { id: 'gdp-10', title: 'After Dark Distortion', type: 'Uncompressed Master Stem', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/054a1078s0hvv' }
     ];
 
     let currentMode = 'twilight';
     let selectedStationIndex = 0;
     let isStreaming = false;
-    let countdownInterval = null;
+
+    // Timer Interval Engine State
+    let masterTimerInterval = null;
+    let previewTimerInterval = null;
+    let previewTimeRemaining = 0;
+    let activePreviewTrackId = null;
 
     const audioPlayer = document.getElementById('radio-audio-player');
 
@@ -1003,22 +980,16 @@
 
     function getStoredPollData() {
       try {
-        const stored = localStorage.getItem('neko_poll_votes_data');
-        if (stored) {
-          return JSON.parse(stored);
-        }
-      } catch (e) {
-        console.error("Error reading stored poll data:", e);
-      }
+        const stored = localStorage.getItem('gdp_poll_votes_data');
+        if (stored) return JSON.parse(stored);
+      } catch (e) { console.error("Error reading stored poll data:", e); }
       return DEFAULT_POLL_ITEMS;
     }
 
     function saveStoredPollData(data) {
       try {
-        localStorage.setItem('neko_poll_votes_data', JSON.stringify(data));
-      } catch (e) {
-        console.error("Error saving poll data:", e);
-      }
+        localStorage.setItem('gdp_poll_votes_data', JSON.stringify(data));
+      } catch (e) { console.error("Error saving poll data:", e); }
     }
 
     let pollData = getStoredPollData();
@@ -1046,9 +1017,7 @@
       renderStationPresets();
       renderDiscography();
 
-      if (isStreaming) {
-        selectStation(0);
-      }
+      if (isStreaming) selectStation(0);
     }
 
     function getCurrentMode() {
@@ -1069,10 +1038,10 @@
       if (badgeTitle && descText) {
         if (mode === 'basement') {
           badgeTitle.innerText = '⚡ SECRET CONCERT UNDERGROUND STATIONS';
-          descText.innerText = 'Streaming dark pop, high-energy J-Rock, and underground subterranean riffs.';
+          descText.innerText = 'Streaming dark pop, high-energy J-Rock, and subterranean Girls Dead Phantom riffs.';
         } else if (mode === 'backstage') {
           badgeTitle.innerText = '🎟️ VIP BACKSTAGE STUDIO STREAMS';
-          descText.innerText = 'Streaming unreleased EchoHeart stems, cavern acoustics, and master audio feeds.';
+          descText.innerText = 'Streaming unreleased Girls Dead Phantom stems, cavern acoustics, and master audio feeds.';
         } else {
           badgeTitle.innerText = '🌸 TWILIGHT BROADCAST STATIONS';
           descText.innerText = 'Streaming Japanese Vocaloid, Anime OSTs, and J-Pop live streams.';
@@ -1080,7 +1049,6 @@
       }
     }
 
-    // Render Radio Station Buttons
     function renderStationPresets() {
       const gridContainer = document.getElementById('preset-grid');
       gridContainer.innerHTML = '';
@@ -1112,63 +1080,79 @@
       }
     }
 
-    // Persistent Countdown Timer Management
-    function initCountdownTimer() {
-      let targetTimestamp = localStorage.getItem('neko_poll_countdown_end');
+    /* Hourly Poll & 10-Minute Pre-Show Countdown Engine */
+    function initMasterTimers() {
+      let pollTarget = localStorage.getItem('gdp_poll_end_time');
+      let soundcheckTarget = localStorage.getItem('gdp_soundcheck_end_time');
 
-      if (!targetTimestamp || parseInt(targetTimestamp) < Date.now()) {
-        targetTimestamp = Date.now() + (45 * 60 * 1000);
-        localStorage.setItem('neko_poll_countdown_end', targetTimestamp.toString());
+      // Initialize Hourly Poll Target if not set or expired
+      if (!pollTarget || parseInt(pollTarget) < Date.now()) {
+        pollTarget = Date.now() + (60 * 60 * 1000); // 60 Minutes
+        localStorage.setItem('gdp_poll_end_time', pollTarget.toString());
       }
 
-      updateCountdownDisplay();
-      if (countdownInterval) clearInterval(countdownInterval);
-      countdownInterval = setInterval(updateCountdownDisplay, 1000);
+      updateTimersLoop();
+      if (masterTimerInterval) clearInterval(masterTimerInterval);
+      masterTimerInterval = setInterval(updateTimersLoop, 1000);
     }
 
-    function updateCountdownDisplay() {
-      const timerDigits = document.getElementById('poll-countdown-digits');
-      if (!timerDigits) return;
+    function updateTimersLoop() {
+      const pollTimerDigits = document.getElementById('poll-countdown-digits');
+      const pollTimerLabel = document.getElementById('poll-timer-label');
+      const soundcheckDigits = document.getElementById('soundcheck-digits');
 
-      const targetTimestamp = parseInt(localStorage.getItem('neko_poll_countdown_end') || '0');
-      const diff = targetTimestamp - Date.now();
+      const now = Date.now();
+      const pollTarget = parseInt(localStorage.getItem('gdp_poll_end_time') || '0');
+      let soundcheckTarget = localStorage.getItem('gdp_soundcheck_end_time');
 
-      if (diff <= 0) {
-        timerDigits.innerText = "00:00:00 - LIVE!";
-        timerDigits.style.color = "#ff4d6d";
-        clearInterval(countdownInterval);
+      const pollDiff = pollTarget - now;
 
-        triggerCountdownWinnerPlayback();
-        return;
+      // PHASE 1: Poll Voting Active
+      if (pollDiff > 0) {
+        const m = Math.floor(pollDiff / (1000 * 60));
+        const s = Math.floor((pollDiff % (1000 * 60)) / 1000);
+        if (pollTimerDigits) pollTimerDigits.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        if (pollTimerLabel) pollTimerLabel.innerText = "⚡ Voting Closes In";
+
+        if (soundcheckDigits) soundcheckDigits.innerText = "10:00 (Waiting)";
+      } 
+      // PHASE 2: Poll Ended -> Start 10-Minute Pre-Show Countdown Beside Winner Track
+      else {
+        if (!soundcheckTarget || parseInt(soundcheckTarget) < now) {
+          // Trigger 10-Minute Soundcheck Countdown Timer
+          soundcheckTarget = (now + (10 * 60 * 1000)).toString();
+          localStorage.setItem('gdp_soundcheck_end_time', soundcheckTarget);
+        }
+
+        const soundcheckDiff = parseInt(soundcheckTarget) - now;
+
+        if (pollTimerDigits) pollTimerDigits.innerText = "LOCKED";
+        if (pollTimerLabel) pollTimerLabel.innerText = "🔒 Voting Closed";
+
+        if (soundcheckDiff > 0) {
+          const scM = Math.floor(soundcheckDiff / (1000 * 60));
+          const scS = Math.floor((soundcheckDiff % (1000 * 60)) / 1000);
+          if (soundcheckDigits) soundcheckDigits.innerText = `${scM.toString().padStart(2, '0')}:${scS.toString().padStart(2, '0')}`;
+        } else {
+          // PHASE 3: 10-Minute Soundcheck Complete -> Reset Hourly Poll Cycle
+          if (soundcheckDigits) soundcheckDigits.innerText = "00:00 - LIVE!";
+          
+          // Reset Poll Timer for next hour & clear 10-min soundcheck state
+          localStorage.setItem('gdp_poll_end_time', (now + (60 * 60 * 1000)).toString());
+          localStorage.removeItem('gdp_soundcheck_end_time');
+          
+          // Reset votes to 0 for fair hourly cycle
+          pollData.forEach(item => item.votes = 0);
+          localStorage.removeItem('neko_voted_poll_id');
+          saveStoredPollData(pollData);
+          renderSetlistPolls();
+        }
       }
-
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-      const hh = hours.toString().padStart(2, '0');
-      const mm = minutes.toString().padStart(2, '0');
-      const ss = seconds.toString().padStart(2, '0');
-
-      timerDigits.innerText = `${hh}:${mm}:${ss}`;
-    }
-
-    function triggerCountdownWinnerPlayback() {
-      const winner = getWinningTrack();
-      const trackTitleEl = document.getElementById('winning-track-name');
-      const playBtn = document.getElementById('play-premiere-btn');
-
-      if (trackTitleEl) trackTitleEl.innerText = `${winner.title} (Broadcast Premiere Winner!)`;
-      if (playBtn) playBtn.innerText = "🎉 Stream Winner Song!";
-      
-      playOfficialSongPremiere();
     }
 
     function getWinningTrack() {
       let highest = pollData[0];
-      pollData.forEach(item => {
-        if (item.votes > highest.votes) highest = item;
-      });
+      pollData.forEach(item => { if (item.votes > highest.votes) highest = item; });
       return highest;
     }
 
@@ -1176,11 +1160,13 @@
       const winner = getWinningTrack();
       const btn = document.getElementById('play-premiere-btn');
 
+      stopActivePreview();
+
       if (audioPlayer.src !== winner.streamUrl || audioPlayer.paused) {
         audioPlayer.src = winner.streamUrl;
         audioPlayer.play().then(() => {
           isStreaming = true;
-          if (btn) btn.innerText = "⏸ Pause Track";
+          if (btn) btn.innerText = "⏸ Pause Premiere";
         }).catch(err => {
           console.log("Audio play error:", err);
           alert(`🌸 Now Premiering: ${winner.title}! Click again if blocked by browser audio settings.`);
@@ -1188,27 +1174,52 @@
       } else {
         audioPlayer.pause();
         isStreaming = false;
-        if (btn) btn.innerText = "▶ Play Track Preview";
+        if (btn) btn.innerText = "▶ Stream Premiere";
       }
     }
 
-    function playDiscographyTrack(url, trackTitle) {
-      if (audioPlayer.src !== url || audioPlayer.paused) {
-        audioPlayer.src = url;
-        audioPlayer.play().then(() => {
-          isStreaming = true;
-          alert(`🎵 Now Streaming: ${trackTitle}`);
-        }).catch(err => {
-          console.log("Playback error:", err);
-          alert(`Click again to allow playback for ${trackTitle}`);
-        });
-      } else {
-        audioPlayer.pause();
-        isStreaming = false;
+    /* 15-20 Second Preview Function for Discography */
+    function play20sTrackPreview(trackId, url, trackTitle) {
+      if (activePreviewTrackId === trackId && !audioPlayer.paused) {
+        stopActivePreview();
+        return;
       }
+
+      stopActivePreview();
+
+      audioPlayer.src = url;
+      audioPlayer.play().then(() => {
+        isStreaming = true;
+        activePreviewTrackId = trackId;
+        previewTimeRemaining = 20;
+
+        renderDiscography();
+
+        if (previewTimerInterval) clearInterval(previewTimerInterval);
+        previewTimerInterval = setInterval(() => {
+          previewTimeRemaining--;
+          const timerEl = document.getElementById(`preview-timer-${trackId}`);
+          if (timerEl) timerEl.innerText = `${previewTimeRemaining}s`;
+
+          if (previewTimeRemaining <= 0) {
+            stopActivePreview();
+          }
+        }, 1000);
+      }).catch(err => {
+        console.log("Playback error:", err);
+        alert(`Click again to start 20s preview for "${trackTitle}"`);
+      });
     }
 
-    // Render Setlist Voting Cards
+    function stopActivePreview() {
+      if (previewTimerInterval) clearInterval(previewTimerInterval);
+      audioPlayer.pause();
+      isStreaming = false;
+      activePreviewTrackId = null;
+      previewTimeRemaining = 0;
+      renderDiscography();
+    }
+
     function renderSetlistPolls() {
       const container = document.getElementById('poll-container');
       if (!container) return;
@@ -1218,7 +1229,6 @@
       const totalVotes = pollData.reduce((sum, item) => sum + item.votes, 0);
       const votedSongId = localStorage.getItem('neko_voted_poll_id');
 
-      // Update Top Winning Track Showcase on Both Tabs
       const winner = getWinningTrack();
       const trackTitleEl = document.getElementById('winning-track-name');
       const discoDeckEl = document.getElementById('disco-deck-track-name');
@@ -1238,7 +1248,7 @@
                           </button>`;
 
         if (!userState.isLoggedIn) {
-          buttonHTML = `<button class="vote-btn" onclick="showAuthModal('Google Login Required', 'Sign in with Google to cast your vote for EchoHeart\'s next broadcast setlist!')">
+          buttonHTML = `<button class="vote-btn" onclick="showAuthModal('Google Login Required', 'Sign in with Google to cast your vote for Girls Dead Phantom\'s next broadcast setlist!')">
                           🔒 Sign in to Vote
                         </button>`;
         }
@@ -1262,7 +1272,7 @@
 
     function castSongVote(id) {
       if (!userState.isLoggedIn) {
-        showAuthModal('Google Login Required', 'Sign in with Google to cast your vote for EchoHeart\'s next broadcast setlist!');
+        showAuthModal('Google Login Required', 'Sign in with Google to cast your vote for Girls Dead Phantom\'s next broadcast setlist!');
         return;
       }
 
@@ -1294,13 +1304,22 @@
 
       DISCOGRAPHY_CATALOG.forEach(track => {
         let actionHTML = '';
+        const isPreviewingThis = activePreviewTrackId === track.id;
 
         if (track.tierReq === 'basement' && !userState.isLoggedIn) {
-          actionHTML = `<button class="vote-btn" onclick="showAuthModal('Google Login Required', 'Sign in to unlock Basement B-Sides!')">🔒 Unlock</button>`;
+          actionHTML = `<button class="vote-btn" onclick="showAuthModal('Google Login Required', 'Sign in to unlock Basement B-Side previews!')">🔒 Unlock</button>`;
         } else if (track.tierReq === 'backstage' && !userState.isVIP) {
-          actionHTML = `<button class="vote-btn" onclick="showVIPModal('Backstage Pass Required', 'Unlock VIP Lossless Master Stems!')">💎 VIP Pass</button>`;
+          actionHTML = `<button class="vote-btn" onclick="showVIPModal('Backstage Pass Required', 'Unlock VIP Lossless Master Stem previews!')">💎 VIP Pass</button>`;
         } else {
-          actionHTML = `<button class="vote-btn" onclick="playDiscographyTrack('${track.url}', '${track.title}')">▶ Play</button>`;
+          if (isPreviewingThis) {
+            actionHTML = `<button class="vote-btn" style="background:#ff4d6d; color:#fff;" onclick="stopActivePreview()">
+                            ⏸ Stop (<span id="preview-timer-${track.id}">${previewTimeRemaining}s</span>)
+                          </button>`;
+          } else {
+            actionHTML = `<button class="vote-btn" onclick="play20sTrackPreview('${track.id}', '${track.url}', '${track.title}')">
+                            ▶ 20s Preview
+                          </button>`;
+          }
         }
 
         const card = document.createElement('div');
@@ -1308,7 +1327,8 @@
         card.innerHTML = `
           <div>
             <div class="disco-title">${track.title}</div>
-            <div class="disco-meta">${track.artist} • <span class="disco-tier-badge ${track.badgeClass}">${track.tierLabel}</span></div>
+            <div class="disco-meta">${track.type} • <span class="disco-tier-badge ${track.badgeClass}">${track.tierLabel}</span></div>
+            ${isPreviewingThis ? `<span class="preview-active-pill">🎵 Previewing Live</span>` : ''}
           </div>
           ${actionHTML}
         `;
@@ -1335,6 +1355,8 @@
     function toggleRadioStream() {
       const btn = document.getElementById('radio-play-btn');
       const stations = RADIO_STATIONS[currentMode] || RADIO_STATIONS.twilight;
+
+      stopActivePreview();
 
       if (!isStreaming) {
         audioPlayer.src = stations[selectedStationIndex].url;
@@ -1420,7 +1442,7 @@
       renderStationPresets();
       renderSetlistPolls();
       renderDiscography();
-      initCountdownTimer();
+      initMasterTimers();
     });
   </script>
 </body>
