@@ -203,6 +203,17 @@
       border-radius: 18px;
       padding: 28px;
       box-shadow: 0 0 30px rgba(244, 184, 196, 0.25);
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    body.basement-mode .wide-stage {
+      border-color: #ff4d6d;
+      box-shadow: 0 0 30px rgba(255, 77, 109, 0.3);
+    }
+
+    body.backstage-mode .wide-stage {
+      border-color: #ffd166;
+      box-shadow: 0 0 30px rgba(255, 209, 102, 0.35);
     }
 
     .on-air-badge {
@@ -213,6 +224,15 @@
       font-size: 0.78rem;
       font-weight: 900;
       letter-spacing: 1.5px;
+    }
+
+    body.basement-mode .on-air-badge {
+      background: linear-gradient(135deg, #ff4d6d, #a88beb);
+    }
+
+    body.backstage-mode .on-air-badge {
+      background: linear-gradient(135deg, #ffd166, #ff007f);
+      color: #000;
     }
 
     .speaker-booth-wide {
@@ -259,6 +279,16 @@
       box-shadow: 0 0 18px rgba(244, 184, 196, 0.8);
     }
 
+    body.basement-mode .speaker-avatar.speaking .speaker-icon-box {
+      border-color: #ff4d6d;
+      box-shadow: 0 0 18px rgba(255, 77, 109, 0.8);
+    }
+
+    body.backstage-mode .speaker-avatar.speaking .speaker-icon-box {
+      border-color: #ffd166;
+      box-shadow: 0 0 18px rgba(255, 209, 102, 0.8);
+    }
+
     .script-transcript-box {
       background: rgba(15, 10, 30, 0.9);
       border-left: 5px solid #a88beb;
@@ -268,7 +298,13 @@
       margin-bottom: 20px;
     }
 
+    body.basement-mode .script-transcript-box { border-left-color: #ff4d6d; }
+    body.backstage-mode .script-transcript-box { border-left-color: #ffd166; }
+
     .current-speaker-title { color: #f4b8c4; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 6px; }
+    body.basement-mode .current-speaker-title { color: #ff4d6d; }
+    body.backstage-mode .current-speaker-title { color: #ffd166; }
+
     .current-dialogue-line { font-size: 1.05rem; font-style: italic; line-height: 1.5; }
 
     .progress-bar-container {
@@ -281,6 +317,8 @@
     }
 
     .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #a88beb, #f4b8c4); transition: width 0.3s ease; }
+    body.basement-mode .progress-bar-fill { background: linear-gradient(90deg, #ff4d6d, #a88beb); }
+    body.backstage-mode .progress-bar-fill { background: linear-gradient(90deg, #ffd166, #ff007f); }
 
     .action-btn {
       width: 100%;
@@ -294,12 +332,18 @@
       font-size: 1rem;
     }
 
+    body.basement-mode .action-btn { background: linear-gradient(135deg, #ff4d6d, #a88beb); color: #ffffff; }
+    body.backstage-mode .action-btn { background: linear-gradient(135deg, #ffd166, #ff007f); color: #000000; }
+
     .archive-drawer {
       background: rgba(22, 15, 42, 0.9);
       border: 1px solid rgba(168, 139, 235, 0.3);
       border-radius: 18px;
       padding: 20px;
     }
+
+    body.basement-mode .archive-drawer { border-color: rgba(255, 77, 109, 0.4); }
+    body.backstage-mode .archive-drawer { border-color: rgba(255, 209, 102, 0.4); }
 
     .ep-card {
       background: rgba(15, 10, 30, 0.7);
@@ -312,6 +356,8 @@
     }
 
     .ep-card:hover, .ep-card.active { border-color: #f4b8c4; background: rgba(35, 25, 65, 0.9); }
+    body.basement-mode .ep-card:hover, body.basement-mode .ep-card.active { border-color: #ff4d6d; background: rgba(40, 12, 35, 0.9); }
+    body.backstage-mode .ep-card:hover, body.backstage-mode .ep-card.active { border-color: #ffd166; background: rgba(30, 10, 40, 0.9); }
 
     /* Modal Styles */
     .modal-overlay {
@@ -403,9 +449,9 @@
   <main class="podcast-container">
     <!-- LEFT: LIVE PODCAST STAGE -->
     <section class="wide-stage">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2>🎙️ WHISPER RADIO STUDIO STAGE</h2>
-        <span class="on-air-badge">ON AIR</span>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <h2 id="stage-main-title">🎙️ WHISPER RADIO STUDIO STAGE</h2>
+        <span id="stage-air-badge" class="on-air-badge">ON AIR</span>
       </div>
 
       <!-- 4 Speaker Character Avatars -->
@@ -443,18 +489,9 @@
 
     <!-- RIGHT: EPISODE ARCHIVE DRAWER -->
     <aside class="archive-drawer">
-      <h3>📻 Episode Archives</h3>
-      <div id="ep-0" class="ep-card active" onclick="selectEpisode(0)">
-        <strong>Episode 1: Prep Room B Revival</strong>
-        <p style="font-size: 0.8rem; margin: 4px 0 0; color: #a88beb;">Runtime: 5:12 • Free</p>
-      </div>
-      <div id="ep-1" class="ep-card" onclick="selectEpisode(1)">
-        <strong>Episode 2: 180 BPM Keytar Secrets</strong>
-        <p style="font-size: 0.8rem; margin: 4px 0 0; color: #a88beb;">Runtime: 4:48 • Free</p>
-      </div>
-      <div id="ep-2" class="ep-card" onclick="selectEpisode(2)">
-        <strong>Subterranean Ep 1: Cavern Echoes</strong>
-        <p style="font-size: 0.8rem; margin: 4px 0 0; color: #ff4d6d;">Runtime: 6:05 • Backstage Pass</p>
+      <h3 id="archive-drawer-heading">📻 Episode Archives</h3>
+      <div id="archive-episode-list">
+        <!-- Rendered via JavaScript per active tier -->
       </div>
     </aside>
   </main>
@@ -466,23 +503,127 @@
       isVIP: localStorage.getItem('neko_is_vip') === 'true'
     };
 
+    // Master Episode Repository organized into 3 Episodes per Mode Tier
+    const EPISODES_BY_MODE = {
+      twilight: [
+        {
+          title: "Episode 1: Prep Room B Revival",
+          runtime: "5:12",
+          tag: "Free",
+          script: [
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "Good afternoon, Sakuraoka High! You are tuned into Whisper Radio!" },
+            { speaker: "sera", title: "Sera (Keytar)", pitch: 1.1, text: "Hello everyone. Sera here on keytar synthesis." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.5, text: "And Akari Minase! Let's bring the 180 BPM energy to Prep Room B!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", pitch: 0.9, text: "Student council president Aoi reporting in. Prep Room B is officially back in session." }
+          ]
+        },
+        {
+          title: "Episode 2: 180 BPM Keytar Secrets",
+          runtime: "4:48",
+          tag: "Free",
+          script: [
+            { speaker: "sera", title: "Sera (Keytar)", pitch: 1.1, text: "Akari, your tempo shift in section three was incredible during rehearsal!" },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.5, text: "Thanks Sera! When we hit 180 BPM, the cavern reverb echoes perfectly!" },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "That is the EchoHeart resonance at work!" }
+          ]
+        },
+        {
+          title: "Episode 3: Sakuraoka Dusk Echoes",
+          runtime: "5:35",
+          tag: "Free",
+          script: [
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "Dusk is falling over Sakuraoka High..." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.5, text: "Guitar tuned, amplifier set to maximum overdrive!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", pitch: 0.9, text: "Let's lock in the rhythm for tonight's broadcast." }
+          ]
+        }
+      ],
+      basement: [
+        {
+          title: "After Dark Ep 1: Subterranean Cavern Echoes",
+          runtime: "6:05",
+          tag: "⚡ AFTER DARK",
+          script: [
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.2, text: "Welcome to the After Dark basement session..." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", pitch: 0.8, text: "Listen closely to the underground cavern echoes beneath Prep Room B." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.4, text: "The heavy distortion pedals sound so raw down here past school hours!" }
+          ]
+        },
+        {
+          title: "After Dark Ep 2: Late Night Riffs & Distortion",
+          runtime: "6:42",
+          tag: "⚡ AFTER DARK",
+          script: [
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.4, text: "After Dark Episode 2! Testing our heaviest J-Rock riff sequence tonight." },
+            { speaker: "sera", title: "Sera (Keytar)", pitch: 1.0, text: "Pitch bend calibration locked in for the late-night synth solos." },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", pitch: 0.8, text: "180 BPM fast tempo locked and loaded." }
+          ]
+        },
+        {
+          title: "After Dark Ep 3: Uncensored Locker Whispers",
+          runtime: "7:15",
+          tag: "⚡ AFTER DARK",
+          script: [
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.2, text: "Late night in Locker 102... all the secrets come out after dark." },
+            { speaker: "sera", title: "Sera (Keytar)", pitch: 1.0, text: "The subterranean resonance is strongest near midnight." },
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.4, text: "Let's play one last unreleased jam before turning off the studio lights!" }
+          ]
+        }
+      ],
+      backstage: [
+        {
+          title: "Backstage Pass Ep 1: Master Stem Isolation",
+          runtime: "8:10",
+          tag: "🎟️ VIP Pass",
+          script: [
+            { speaker: "sera", title: "Sera (Keytar)", pitch: 1.1, text: "Welcome VIP Backstage Pass members! Today we are isolating the master keytar stems." },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "You get full uncompressed studio audio and binaural room acoustic feeds." }
+          ]
+        },
+        {
+          title: "Backstage Pass Ep 2: 180 BPM Uncut Desk Feed",
+          runtime: "7:50",
+          tag: "🎟️ VIP Pass",
+          script: [
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.5, text: "Direct soundboard feed live from Prep Room B!" },
+            { speaker: "aoi", title: "Aoi (Bass & Drums)", pitch: 0.9, text: "Zero compression, zero noise filters. Pure EchoHeart master audio." }
+          ]
+        },
+        {
+          title: "Backstage Pass Ep 3: Cavern Acoustics & Reverb",
+          runtime: "9:25",
+          tag: "🎟️ VIP Pass",
+          script: [
+            { speaker: "akari", title: "Akari Minase (Lead Guitar)", pitch: 1.5, text: "Akari here! Unlocking full 3D spatial acoustic reverb for our VIP supporters." },
+            { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "Thank you for supporting EchoHeart and Neko FM Backstage Pass!" }
+          ]
+        }
+      ]
+    };
+
+    let currentEpisodeIdx = 0;
+    let currentLineIdx = 0;
+    let isPlaying = false;
+    let playbackTimer = null;
+
     function handleModeChange(targetMode) {
       const selector = document.getElementById('mode-selector');
 
       if (targetMode === 'basement' && !userState.isLoggedIn) {
         if (selector) selector.value = getCurrentMode();
-        showAuthModal('Google Login Required', 'Sign in with Google to access After-Hours Basement streams and community profiles.');
+        showAuthModal('Google Login Required', 'Sign in with Google to access After-Hours Basement Podcast episodes and community profiles.');
         return;
       }
 
       if (targetMode === 'backstage' && !userState.isVIP) {
         if (selector) selector.value = getCurrentMode();
-        showVIPModal('Backstage Pass Required', 'Unlock exclusive subterranean audio, stem mixers, live chat posting, and high-res Atelier downloads.');
+        showVIPModal('Backstage Pass Required', 'Unlock VIP uncompressed studio stem downloads, binaural acoustic sessions, and live chat posting.');
         return;
       }
 
       localStorage.setItem('neko_active_mode', targetMode);
       applyThemeMode(targetMode);
+      loadTierEpisodes(targetMode);
     }
 
     function getCurrentMode() {
@@ -497,6 +638,143 @@
       body.classList.add(`${mode}-mode`);
 
       if (selector) selector.value = mode;
+
+      // Update Header Titles and Badges dynamically
+      const stageTitle = document.getElementById('stage-main-title');
+      const airBadge = document.getElementById('stage-air-badge');
+      const drawerHeading = document.getElementById('archive-drawer-heading');
+
+      if (mode === 'basement') {
+        if (stageTitle) stageTitle.innerText = '⚡ AFTER DARK SESSIONS — BASEMENT STAGE';
+        if (airBadge) airBadge.innerText = '⚡ AFTER DARK ON AIR';
+        if (drawerHeading) drawerHeading.innerText = '⚡ AFTER DARK ARCHIVES';
+      } else if (mode === 'backstage') {
+        if (stageTitle) stageTitle.innerText = '🎟️ VIP BACKSTAGE STUDIO STAGE';
+        if (airBadge) airBadge.innerText = '🎟️ VIP LIVE';
+        if (drawerHeading) drawerHeading.innerText = '🎟️ VIP STEM ARCHIVES';
+      } else {
+        if (stageTitle) stageTitle.innerText = '🎙️ WHISPER RADIO STUDIO STAGE';
+        if (airBadge) airBadge.innerText = 'ON AIR';
+        if (drawerHeading) drawerHeading.innerText = '📻 Episode Archives';
+      }
+    }
+
+    function loadTierEpisodes(mode) {
+      stopPlayback();
+      const container = document.getElementById('archive-episode-list');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const episodes = EPISODES_BY_MODE[mode] || EPISODES_BY_MODE.twilight;
+
+      episodes.forEach((ep, index) => {
+        const tagColor = mode === 'basement' ? '#ff4d6d' : (mode === 'backstage' ? '#ffd166' : '#a88beb');
+        
+        const card = document.createElement('div');
+        card.id = `ep-${index}`;
+        card.className = `ep-card ${index === 0 ? 'active' : ''}`;
+        card.onclick = () => selectEpisode(index);
+        card.innerHTML = `
+          <strong>${ep.title}</strong>
+          <p style="font-size: 0.8rem; margin: 4px 0 0; color: ${tagColor};">Runtime: ${ep.runtime} • ${ep.tag}</p>
+        `;
+        container.appendChild(card);
+      });
+
+      selectEpisode(0);
+    }
+
+    function selectEpisode(index) {
+      stopPlayback();
+      currentEpisodeIdx = index;
+      currentLineIdx = 0;
+
+      const currentMode = getCurrentMode();
+      const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
+
+      document.querySelectorAll('.ep-card').forEach((card, idx) => {
+        if (idx === index) card.classList.add('active');
+        else card.classList.remove('active');
+      });
+
+      const ep = episodes[currentEpisodeIdx];
+      if (ep) {
+        document.getElementById('speaker-title-display').innerText = `🎙️ ${ep.title.toUpperCase()}`;
+        document.getElementById('dialogue-line-display').innerText = `"Press broadcast to start listening!"`;
+        document.getElementById('ep-progress-fill').style.width = '0%';
+      }
+    }
+
+    function togglePodcastPlayback() {
+      if (isPlaying) {
+        stopPlayback();
+      } else {
+        startPlayback();
+      }
+    }
+
+    function startPlayback() {
+      isPlaying = true;
+      document.getElementById('podcast-play-btn').innerText = '⏸ Pause Broadcast';
+      playNextLine();
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      if (playbackTimer) clearTimeout(playbackTimer);
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      
+      document.getElementById('podcast-play-btn').innerText = '▶ Start Episode Broadcast';
+      document.querySelectorAll('.speaker-avatar').forEach(avatar => avatar.classList.remove('speaking'));
+    }
+
+    function playNextLine() {
+      if (!isPlaying) return;
+
+      const currentMode = getCurrentMode();
+      const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
+      const ep = episodes[currentEpisodeIdx];
+
+      if (!ep || currentLineIdx >= ep.script.length) {
+        currentLineIdx = 0;
+        stopPlayback();
+        document.getElementById('dialogue-line-display').innerText = `"Episode broadcast complete! Select another episode to play."`;
+        return;
+      }
+
+      const line = ep.script[currentLineIdx];
+
+      document.querySelectorAll('.speaker-avatar').forEach(avatar => avatar.classList.remove('speaking'));
+      const activeAvatar = document.getElementById(`spk-${line.speaker}`);
+      if (activeAvatar) activeAvatar.classList.add('speaking');
+
+      document.getElementById('speaker-title-display').innerText = `🎙️ ${line.title}`;
+      document.getElementById('dialogue-line-display').innerText = `"${line.text}"`;
+
+      const progressPercent = ((currentLineIdx + 1) / ep.script.length) * 100;
+      document.getElementById('ep-progress-fill').style.width = `${progressPercent}%`;
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(line.text);
+        utterance.pitch = line.pitch || 1.0;
+        utterance.rate = 1.0;
+
+        utterance.onend = function() {
+          currentLineIdx++;
+          if (isPlaying) playbackTimer = setTimeout(playNextLine, 600);
+        };
+
+        utterance.onerror = function() {
+          currentLineIdx++;
+          if (isPlaying) playbackTimer = setTimeout(playNextLine, 2500);
+        };
+
+        window.speechSynthesis.speak(utterance);
+      } else {
+        currentLineIdx++;
+        playbackTimer = setTimeout(playNextLine, 3500);
+      }
     }
 
     function showAuthModal(title, message) {
@@ -555,140 +833,23 @@
       handleModeChange('backstage');
     }
 
-    // Master Episode Script Archive
-    const EPISODES = [
-      {
-        title: "Episode 1: Prep Room B Revival",
-        script: [
-          { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "Good afternoon, Sakuraoka High! You are tuned into Whisper Radio!" },
-          { speaker: "sera", title: "Sera (Keytar)", pitch: 1.1, text: "Hello everyone. Sera here on keytar synthesis." },
-          { speaker: "akari", title: "Akari Minase (Drums)", pitch: 1.5, text: "And Akari Minase on drums! Let's bring the 180 BPM energy today!" },
-          { speaker: "aoi", title: "Aoi (Bass)", pitch: 0.9, text: "Student council president Aoi reporting in. Prep Room B is officially back in session." }
-        ]
-      },
-      {
-        title: "Episode 2: 180 BPM Keytar Secrets",
-        script: [
-          { speaker: "sera", title: "Sera (Keytar)", pitch: 1.1, text: "Akari, your tempo shift in section three was incredible during rehearsal!" },
-          { speaker: "akari", title: "Akari Minase (Drums)", pitch: 1.5, text: "Thanks Sera! When we hit 180 BPM, the cavern reverb echoes perfectly!" },
-          { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.3, text: "That is the EchoHeart resonance at work!" }
-        ]
-      },
-      {
-        title: "Subterranean Ep 1: Cavern Echoes",
-        script: [
-          { speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", pitch: 1.2, text: "Welcome to the basement after-hours broadcast..." },
-          { speaker: "aoi", title: "Aoi (Bass)", pitch: 0.8, text: "Listen closely to the ancient echoes beneath Prep Room B..." }
-        ]
-      }
-    ];
-
-    let currentEpisodeIdx = 0;
-    let currentLineIdx = 0;
-    let isPlaying = false;
-    let playbackTimer = null;
-
     function toggleMobileMenu() {
       const navMenu = document.getElementById('nav-menu');
       if (navMenu) navMenu.classList.toggle('open');
     }
 
-    document.addEventListener('click', function(event) {
-      const navMenu = document.getElementById('nav-menu');
-      const isInsideNavbar = event.target.closest('.navbar');
-      if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
-        navMenu.classList.remove('open');
-      }
-    });
-
-    function selectEpisode(index) {
-      stopPlayback();
-      currentEpisodeIdx = index;
-      currentLineIdx = 0;
-
-      document.querySelectorAll('.ep-card').forEach((card, idx) => {
-        if (idx === index) card.classList.add('active');
-        else card.classList.remove('active');
-      });
-
-      const ep = EPISODES[currentEpisodeIdx];
-      document.getElementById('speaker-title-display').innerText = `🎙️ ${ep.title.toUpperCase()}`;
-      document.getElementById('dialogue-line-display').innerText = `"Press broadcast to start listening!"`;
-      document.getElementById('ep-progress-fill').style.width = '0%';
-    }
-
-    function togglePodcastPlayback() {
-      if (isPlaying) {
-        stopPlayback();
-      } else {
-        startPlayback();
-      }
-    }
-
-    function startPlayback() {
-      isPlaying = true;
-      document.getElementById('podcast-play-btn').innerText = '⏸ Pause Broadcast';
-      playNextLine();
-    }
-
-    function stopPlayback() {
-      isPlaying = false;
-      if (playbackTimer) clearTimeout(playbackTimer);
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      
-      document.getElementById('podcast-play-btn').innerText = '▶ Start Episode Broadcast';
-      document.querySelectorAll('.speaker-avatar').forEach(avatar => avatar.classList.remove('speaking'));
-    }
-
-    function playNextLine() {
-      if (!isPlaying) return;
-
-      const ep = EPISODES[currentEpisodeIdx];
-      if (currentLineIdx >= ep.script.length) {
-        currentLineIdx = 0;
-        stopPlayback();
-        document.getElementById('dialogue-line-display').innerText = `"Episode broadcast complete! Select another episode to play."`;
-        return;
-      }
-
-      const line = ep.script[currentLineIdx];
-
-      document.querySelectorAll('.speaker-avatar').forEach(avatar => avatar.classList.remove('speaking'));
-      const activeAvatar = document.getElementById(`spk-${line.speaker}`);
-      if (activeAvatar) activeAvatar.classList.add('speaking');
-
-      document.getElementById('speaker-title-display').innerText = `🎙️ ${line.title}`;
-      document.getElementById('dialogue-line-display').innerText = `"${line.text}"`;
-
-      const progressPercent = ((currentLineIdx + 1) / ep.script.length) * 100;
-      document.getElementById('ep-progress-fill').style.width = `${progressPercent}%`;
-
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(line.text);
-        utterance.pitch = line.pitch || 1.0;
-        utterance.rate = 1.0;
-
-        utterance.onend = function() {
-          currentLineIdx++;
-          if (isPlaying) playbackTimer = setTimeout(playNextLine, 600);
-        };
-
-        utterance.onerror = function() {
-          currentLineIdx++;
-          if (isPlaying) playbackTimer = setTimeout(playNextLine, 2500);
-        };
-
-        window.speechSynthesis.speak(utterance);
-      } else {
-        currentLineIdx++;
-        playbackTimer = setTimeout(playNextLine, 3500);
-      }
-    }
-
-    // Initialize mode on load
     document.addEventListener('DOMContentLoaded', () => {
-      applyThemeMode(getCurrentMode());
+      const mode = getCurrentMode();
+      applyThemeMode(mode);
+      loadTierEpisodes(mode);
+
+      document.addEventListener('click', function(event) {
+        const navMenu = document.getElementById('nav-menu');
+        const isInsideNavbar = event.target.closest('.navbar');
+        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
+          navMenu.classList.remove('open');
+        }
+      });
     });
   </script>
 </body>
