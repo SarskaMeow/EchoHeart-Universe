@@ -1,49 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Universal Header Navigation -->
-<header class="navbar">
-  <div class="nav-container">
-    
-    <!-- Brand Logo -->
-    <div class="logo-container">
-      <a href="index.html" class="logo-link">
-        <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
-        <span class="logo-sub">✦ ECHOHEART UNIVERSE</span>
-      </a>
-    </div>
-
-    <!-- Mobile Hamburger Button -->
-    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-      <span class="hamburger-bar"></span>
-      <span class="hamburger-bar"></span>
-      <span class="hamburger-bar"></span>
-    </button>
-
-    <!-- Navigation Links & 3-Tier Mode Selector -->
-    <nav class="nav-links" id="nav-menu">
-      <a href="index.html" class="nav-item">🏠 Home</a>
-      <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
-      <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-      <a href="chat.html" class="nav-item">💬 Live Chat</a>
-      <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
-
-      <!-- 3-Tier Access Mode Switcher -->
-      <div class="mode-selector-wrapper">
-        <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-          <option value="twilight">🌸 Twilight (Public)</option>
-          <option value="basement">⚡ Basement 🔒</option>
-          <option value="backstage">🎟️ Backstage Pass 💎</option>
-        </select>
-      </div>
-    </nav>
-
-  </div>
-</header>
-
-  </div>
-</header>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EchoHeart & Girls Phantom Dead — Otaku Neko Lounge</title>
@@ -64,9 +21,26 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
+      transition: background 0.4s ease, color 0.4s ease;
     }
 
-    /* Navbar Base Styles */
+    /* 3-Tier Mode Themes */
+    body.twilight-mode { background: #0d0b18; color: #e2daf8; }
+    body.basement-mode { background: #08030f; color: #fce8ec; }
+    body.backstage-mode { background: #05020a; color: #ffffff; }
+
+    body.basement-mode .navbar {
+      background: rgba(15, 8, 22, 0.96);
+      border-bottom-color: rgba(255, 77, 109, 0.45);
+    }
+
+    body.backstage-mode .navbar {
+      background: rgba(10, 4, 16, 0.98);
+      border-bottom: 2px solid #ff007f;
+      box-shadow: 0 4px 20px rgba(255, 0, 127, 0.3);
+    }
+
+    /* Universal Navbar Base Styles */
     .navbar {
       position: sticky;
       top: 0;
@@ -77,6 +51,7 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       box-sizing: border-box;
+      transition: background 0.4s ease, border-color 0.4s ease;
     }
 
     .nav-container {
@@ -110,6 +85,18 @@
       -webkit-text-fill-color: transparent;
     }
 
+    body.basement-mode .logo-main {
+      background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body.backstage-mode .logo-main {
+      background: linear-gradient(135deg, #ffd166, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
     .logo-sub {
       font-size: 0.72rem;
       font-weight: 800;
@@ -117,6 +104,9 @@
       color: var(--accent-pink);
       opacity: 0.9;
     }
+
+    body.basement-mode .logo-sub { color: var(--accent-red); }
+    body.backstage-mode .logo-sub { color: #ffd166; }
 
     .nav-links {
       display: flex;
@@ -140,15 +130,72 @@
       color: #ffffff;
     }
 
+    /* Mode Select Dropdown Styling */
+    .mode-select-dropdown {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding: 8px 32px 8px 14px;
+      border-radius: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.3s ease;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 16px;
+    }
+
+    body.twilight-mode .mode-select-dropdown {
+      background-color: rgba(28, 18, 52, 0.95);
+      border: 1px solid rgba(168, 139, 235, 0.45);
+      color: #e2daf8;
+      box-shadow: 0 0 12px rgba(168, 139, 235, 0.2);
+    }
+
+    body.basement-mode .mode-select-dropdown {
+      background-color: rgba(20, 8, 28, 0.95);
+      border: 1px solid rgba(255, 77, 109, 0.5);
+      color: #ff4d6d;
+      box-shadow: 0 0 12px rgba(255, 77, 109, 0.25);
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    }
+
+    body.backstage-mode .mode-select-dropdown {
+      background-color: rgba(14, 6, 22, 0.98);
+      border: 1px solid #ffd166;
+      color: #ffd166;
+      box-shadow: 0 0 15px rgba(255, 209, 102, 0.35);
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    }
+
+    .mode-select-dropdown option {
+      background-color: #120924;
+      color: #e2daf8;
+      padding: 10px;
+      font-weight: 700;
+    }
+
+    body.basement-mode .mode-select-dropdown option {
+      background-color: #0b0414;
+      color: #ff4d6d;
+    }
+
+    body.backstage-mode .mode-select-dropdown option {
+      background-color: #080210;
+      color: #ffd166;
+    }
+
     .mobile-menu-btn {
       display: none;
     }
 
-    /* Mobile Collapsible Menu Fix */
+    /* Mobile Collapsible Navigation */
     @media (max-width: 992px) {
-      .nav-container {
-        padding: 10px 16px;
-      }
+      .nav-container { padding: 10px 16px; }
 
       .mobile-menu-btn {
         display: flex !important;
@@ -168,7 +215,6 @@
         border-radius: 2px;
       }
 
-      /* Hide menu drawer on mobile until hamburger is tapped */
       .nav-links {
         display: none !important;
         position: absolute;
@@ -183,16 +229,9 @@
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
       }
 
-      /* Slide down drawer when opened */
-      .nav-links.open {
-        display: flex !important;
-      }
-
-      .nav-item {
-        width: 100%;
-        padding: 10px 14px;
-        box-sizing: border-box;
-      }
+      .nav-links.open { display: flex !important; }
+      .nav-item, .mode-selector-wrapper { width: 100%; box-sizing: border-box; }
+      .mode-select-dropdown { width: 100%; text-align: center; }
     }
 
     /* Hero Banner */
@@ -205,7 +244,11 @@
       border: 2px solid rgba(168, 139, 235, 0.35);
       border-radius: 24px;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      transition: border-color 0.4s ease;
     }
+
+    body.basement-mode .hero-container { border-color: rgba(255, 77, 109, 0.5); }
+    body.backstage-mode .hero-container { border-color: #ffd166; }
 
     .hero-badge {
       display: inline-block;
@@ -254,6 +297,9 @@
       box-shadow: 0 4px 20px rgba(168, 139, 235, 0.4);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
+    body.basement-mode .cta-btn-primary { background: linear-gradient(135deg, #ff4d6d, #a88beb); color: #ffffff; }
+    body.backstage-mode .cta-btn-primary { background: linear-gradient(135deg, #ffd166, #ff007f); color: #000000; }
 
     .cta-btn-secondary {
       background: rgba(35, 25, 65, 0.8);
@@ -325,11 +371,55 @@
       align-items: center;
       gap: 6px;
     }
+
+    /* Modal Overlay Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5, 2, 12, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: rgba(22, 15, 42, 0.96);
+      border: 2px solid #a88beb;
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+    }
+
+    .vip-modal-card { border-color: #ff007f; box-shadow: 0 0 30px rgba(255, 0, 127, 0.4); }
+    .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.3rem; }
+    .modal-card p { color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
+    .modal-price-tag {
+      background: rgba(255, 209, 102, 0.15);
+      border: 1px solid #ffd166;
+      color: #ffd166;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
+    .google-btn { background: #ffffff; color: #111; }
+    .stripe-btn { background: linear-gradient(135deg, #ff007f, #ffd166); color: #000; }
+    .close-btn { background: transparent; color: #a88beb; border: 1px solid rgba(168, 139, 235, 0.3); }
   </style>
 </head>
-<body>
+<body class="twilight-mode">
 
-  <!-- Universal Header Navbar -->
+  <!-- Universal Header Navigation -->
   <header class="navbar">
     <div class="nav-container">
       
@@ -342,19 +432,28 @@
       </div>
 
       <!-- Mobile Hamburger Toggle Button -->
-      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Menu" onclick="toggleMobileMenu()">
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
         <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>
       </button>
 
-      <!-- Navigation Links -->
+      <!-- Navigation Links & 3-Tier Mode Selector -->
       <nav class="nav-links" id="nav-menu">
         <a href="index.html" class="nav-item active">🏠 Home</a>
         <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
         <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
         <a href="chat.html" class="nav-item">💬 Live Chat</a>
         <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+
+        <!-- 3-Tier Access Mode Switcher -->
+        <div class="mode-selector-wrapper">
+          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
+            <option value="twilight">🌸 Twilight (Public)</option>
+            <option value="basement">⚡ Basement 🔒</option>
+            <option value="backstage">🎟️ Backstage Pass 💎</option>
+          </select>
+        </div>
       </nav>
 
     </div>
@@ -413,22 +512,116 @@
   </main>
 
   <script>
-    // Mobile Hamburger Navigation Controller
-    function toggleMobileMenu() {
-      const navMenu = document.getElementById('nav-menu');
-      if (navMenu) {
-        navMenu.classList.toggle('open');
+    // User Auth & Tier State
+    let userState = {
+      isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
+      isVIP: localStorage.getItem('neko_is_vip') === 'true'
+    };
+
+    function handleModeChange(targetMode) {
+      const selector = document.getElementById('mode-selector');
+
+      if (targetMode === 'basement' && !userState.isLoggedIn) {
+        if (selector) selector.value = getCurrentMode();
+        showAuthModal('Google Login Required', 'Sign in with Google to access After-Hours Basement streams and community profiles.');
+        return;
       }
+
+      if (targetMode === 'backstage' && !userState.isVIP) {
+        if (selector) selector.value = getCurrentMode();
+        showVIPModal('Backstage Pass Required', 'Unlock exclusive subterranean audio, stem mixers, live chat posting, and high-res Atelier downloads.');
+        return;
+      }
+
+      localStorage.setItem('neko_active_mode', targetMode);
+      applyThemeMode(targetMode);
     }
 
-    // Auto-close menu when tapping outside the navbar
-    document.addEventListener('click', function(event) {
+    function getCurrentMode() {
+      return localStorage.getItem('neko_active_mode') || 'twilight';
+    }
+
+    function applyThemeMode(mode) {
+      const body = document.body;
+      const selector = document.getElementById('mode-selector');
+
+      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
+      body.classList.add(`${mode}-mode`);
+
+      if (selector) selector.value = mode;
+    }
+
+    function showAuthModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card">
+            <h3>🔑 ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-actions">
+              <button class="modal-btn google-btn" onclick="simulateGoogleLogin()">Sign In with Google</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function showVIPModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card vip-modal-card">
+            <h3>🎟️ ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-price-tag">$4.99 / month • Backstage Pass</div>
+            <div class="modal-actions">
+              <button class="modal-btn stripe-btn" onclick="simulateStripeCheckout()">Unlock Backstage Pass</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function removeExistingModals() {
+      const existing = document.getElementById('neko-gate-modal');
+      if (existing) existing.remove();
+    }
+
+    function simulateGoogleLogin() {
+      userState.isLoggedIn = true;
+      localStorage.setItem('neko_logged_in', 'true');
+      removeExistingModals();
+      handleModeChange('basement');
+    }
+
+    function simulateStripeCheckout() {
+      userState.isLoggedIn = true;
+      userState.isVIP = true;
+      localStorage.setItem('neko_logged_in', 'true');
+      localStorage.setItem('neko_is_vip', 'true');
+      removeExistingModals();
+      handleModeChange('backstage');
+    }
+
+    function toggleMobileMenu() {
       const navMenu = document.getElementById('nav-menu');
-      const isInsideNavbar = event.target.closest('.navbar');
-      
-      if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
-        navMenu.classList.remove('open');
-      }
+      if (navMenu) navMenu.classList.toggle('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyThemeMode(getCurrentMode());
+
+      document.addEventListener('click', function(event) {
+        const navMenu = document.getElementById('nav-menu');
+        const isInsideNavbar = event.target.closest('.navbar');
+        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
+          navMenu.classList.remove('open');
+        }
+      });
     });
   </script>
 </body>
