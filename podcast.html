@@ -589,7 +589,7 @@
       return 180;
     }
 
-    // Master Episode Repository — Exact Time-Synced Dialogue Lines
+    // Master Episode Repository — Exact Time-Synced Dialogue Lines Matched to Your Script
     const EPISODES_BY_MODE = {
       twilight: [
         {
@@ -598,18 +598,26 @@
           audioUrl: "assets/audio/EchoHeart Whisper Podcast EP-1.mp3",
           tag: "Free",
           script: [
-            { startTime: 0, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome, welcome, everyone! You're tuned into the very first official broadcast of EchoHeart Whisper Radio! I'm your lead vocalist, Nekomi!" },
-            { startTime: 18, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Yaho~! Akari Minase here, lead guitar overdrive ready to turn every quiet afternoon into a rock concert!" },
-            { startTime: 32, speaker: "sera", title: "Sera (Keytar)", text: "Sera... keytarist and audio monitor. Frequency check looks clean." },
-            { startTime: 42, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And I'm Aoi, keeping our band on schedule. Whether you're listening between classes or after practice, thanks for dropping in!" },
-            { startTime: 60, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Okay, team, let's jump straight into today's big story! Did anyone else notice the utter chaos outside the main cafeteria at 12:15 PM today?" },
-            { startTime: 79, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Oh, I saw it! It was an absolute stampede! The line for the new limited-edition Strawberry Shortcake Parfait was longer than our festival queue!" },
-            { startTime: 98, speaker: "sera", title: "Sera (Keytar)", text: "It sold out in exactly forty-two seconds... I was three people away from the counter. A tragedy." },
-            { startTime: 112, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "A tragedy might be an exaggeration, Sera, but the rumor is someone bought the last three parfaits all at once and sprinted out toward the music wing." },
-            { startTime: 132, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Wait... toward our wing?! Are you saying the Parfait Bandit is a musician?" },
-            { startTime: 143, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Hey, don't look at me! Though... if whoever took them wants to trade one for a guitar solo, my door is open!" },
-            { startTime: 159, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Alright, let me clear the air. The three parfaits were purchased by me as a treat for locking down our rehearsal schedule!" },
-            { startTime: 175, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "What?! Aoi, you're an absolute legend! First dibs on the extra strawberries! See you next time, everyone! Bye-bye~!" }
+            { startTime: 0, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome, welcome, everyone! You're tuned into the very first official broadcast of EchoHeart Whisper Radio! I'm your lead vocalist, and Guitarist, Nekomi!" },
+            { startTime: 10, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Yaho~! Akari Minase here, Drums overdrive ready to turn every quiet afternoon into a rock concert!" },
+            { startTime: 20, speaker: "sera", title: "Sera (Keytar)", text: "Sera... keytarist and audio monitor. Frequency check looks clean." },
+            { startTime: 28, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And I'm Aoi, I'm the bassist and I'm keeping our band on schedule. Whether you're listening between classes or after practice, thanks for dropping in for our 3-minute campus catch-up!" },
+            { startTime: 40, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Okay, team, let's jump straight into today's big story! Did anyone else notice the utter chaos outside the main cafeteria at 12:15 PM today?" },
+            { startTime: 50, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Oh, I saw it! It was an absolute stampede! The line for the new limited-edition Strawberry Shortcake Parfait was longer than our festival queue!" },
+            { startTime: 61, speaker: "sera", title: "Sera (Keytar)", text: "It sold out in exactly forty-two seconds... I was three people away from the counter. A tragedy." },
+            { startTime: 72, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "A tragedy might be an exaggeration, Sera, but the rumor is someone bought the last three parfaits all at once and sprinted out the side doors toward the music wing." },
+            { startTime: 85, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Wait... toward our wing?! Are you saying the Parfait Bandit is a musician?" },
+            { startTime: 93, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Hey, don't look at me! I was stuck tuning my amp in the storage closet during lunch! Though... if whoever took them wants to trade one for a guitar solo, my door is open!" },
+            { startTime: 108, speaker: "sera", title: "Sera (Keytar)", text: "Actually... I checked the audio logs on my soundboard. I heard heavy footsteps in the hallway right around twelve-twenty... followed by the sound of plastic spoons." },
+            { startTime: 122, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Alright, alright, let me clear the air before this turns into a full investigation. The three parfaits were purchased by me." },
+            { startTime: 133, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "What?! Aoi, you're the Parfait Bandit?!" },
+            { startTime: 139, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "I am not a bandit! I bought them for all of us as a treat for locking down our rehearsal schedule this week! They're in the prep room mini-fridge right now." },
+            { startTime: 151, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Whaaat?! Aoi, you're an absolute legend! First dibs on the extra strawberries!" },
+            { startTime: 160, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "And that's our very first piece of good news on Whisper Radio! Case closed, and dessert secured!" },
+            { startTime: 168, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Remember to check back next week for more daily news around school. Now, let me make sure Akari doesn't eat all three parfaits before practice starts." },
+            { startTime: 178, speaker: "sera", title: "Sera (Keytar)", text: "Save one for me... Goodbye, everyone. Keep your headphones warm." },
+            { startTime: 184, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Catch ya later, everyone! Don't forget to turn the volume all the way up next week! Bye-bye!" },
+            { startTime: 191, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thanks for tuning in! See you next time, everyone! Bye-bye~!" }
           ]
         },
         {
