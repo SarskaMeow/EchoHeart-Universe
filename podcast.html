@@ -192,7 +192,7 @@
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 24px;
-      padding: 0 20px;
+      padding: 0 20px 100px; /* Padding for persistent mini-player bar */
     }
 
     @media (max-width: 900px) { .podcast-container { grid-template-columns: 1fr; } }
@@ -534,6 +534,35 @@
     </aside>
   </main>
 
+  <!-- Docked Persistent Floating Mini-Player -->
+  <div id="persistent-player-bar" class="mini-player-bar hidden">
+    <div class="mini-player-content">
+      
+      <!-- Track & Speaker Info -->
+      <div class="mini-track-info">
+        <div class="mini-speaker-avatar" id="mini-avatar-box">🎙️</div>
+        <div class="mini-text-details">
+          <span class="mini-track-title" id="mini-track-title">Whisper Radio Studio</span>
+          <span class="mini-speaker-name" id="mini-speaker-name">Ready to play</span>
+        </div>
+      </div>
+
+      <!-- Center Playback Controls & Progress Bar -->
+      <div class="mini-player-controls">
+        <button id="mini-play-btn" class="mini-control-btn" onclick="toggleGlobalPlayback()">▶</button>
+        <div class="mini-progress-wrapper" onclick="seekGlobalAudio(event)">
+          <span id="mini-time-current" class="mini-time">00:00</span>
+          <div class="mini-progress-track">
+            <div id="mini-progress-fill" class="mini-progress-fill"></div>
+          </div>
+          <span id="mini-time-total" class="mini-time">03:12</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="global-player.js"></script>
   <script>
     // User Auth & Tier State
     let userState = {
@@ -812,6 +841,13 @@
       const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
       const ep = episodes[currentEpisodeIdx];
 
+      // Save podcast track details to localStorage for global persistence & mini-player
+      if (ep) {
+        localStorage.setItem('echo_audio_src', ep.audioUrl || '');
+        localStorage.setItem('echo_audio_title', ep.title || 'Whisper Radio Episode');
+        localStorage.setItem('echo_audio_mode', 'podcast');
+      }
+
       if (ep && ep.audioUrl && audioElement.src) {
         audioElement.play().then(() => {
           syncSpeakerDialogue();
@@ -824,6 +860,7 @@
           totalSeconds = Math.floor(audioElement.duration) || parseRuntimeSeconds(ep.runtime);
           updateTimeUI(elapsedSeconds, totalSeconds);
           syncSpeakerDialogue();
+          localStorage.setItem('echo_audio_time', elapsedSeconds);
         };
 
         audioElement.onended = () => {
@@ -891,6 +928,10 @@
 
         document.getElementById('speaker-title-display').innerText = `🎙️ ${line.title}`;
         document.getElementById('dialogue-line-display').innerText = `"${line.text}"`;
+
+        // Sync active speaker & avatar asset to localStorage for global mini-player
+        localStorage.setItem('echo_audio_speaker', line.title);
+        localStorage.setItem('echo_audio_avatar', `assets/${line.speaker}.jpeg`);
       }
     }
 
