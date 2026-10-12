@@ -232,7 +232,7 @@
       display: grid;
       grid-template-columns: 1fr 360px;
       gap: 24px;
-      padding: 0 20px;
+      padding: 0 20px 100px; /* Bottom padding so content doesn't get covered by persistent player */
     }
 
     @media (max-width: 850px) { .chat-container { grid-template-columns: 1fr; } }
@@ -443,6 +443,35 @@
     </aside>
   </main>
 
+  <!-- Docked Persistent Floating Mini-Player -->
+  <div id="persistent-player-bar" class="mini-player-bar hidden">
+    <div class="mini-player-content">
+      
+      <!-- Track & Speaker Info -->
+      <div class="mini-track-info">
+        <div class="mini-speaker-avatar" id="mini-avatar-box">🎙️</div>
+        <div class="mini-text-details">
+          <span class="mini-track-title" id="mini-track-title">Whisper Radio Studio</span>
+          <span class="mini-speaker-name" id="mini-speaker-name">Ready to play</span>
+        </div>
+      </div>
+
+      <!-- Center Playback Controls & Progress Bar -->
+      <div class="mini-player-controls">
+        <button id="mini-play-btn" class="mini-control-btn" onclick="toggleGlobalPlayback()">▶</button>
+        <div class="mini-progress-wrapper" onclick="seekGlobalAudio(event)">
+          <span id="mini-time-current" class="mini-time">00:00</span>
+          <div class="mini-progress-track">
+            <div id="mini-progress-fill" class="mini-progress-fill"></div>
+          </div>
+          <span id="mini-time-total" class="mini-time">03:12</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="global-player.js"></script>
   <script>
     // User Auth & Tier State
     let userState = {
@@ -599,10 +628,22 @@
         appendMessageDOM(msg.author, msg.text, msg.cssClass, msg.badge);
       });
 
-      // Start live NPC auto-stream for non-VIP modes or live feed ambient
-      if (mode !== 'backstage') {
-        npcStreamInterval = setInterval(triggerRandomClassmateNPCMessage, 4500);
+      // Start dynamic, variable-interval NPC chat stream (runs every 2.5s - 5.5s)
+      startDynamicNPCStream();
+    }
+
+    function startDynamicNPCStream() {
+      function scheduleNextNPCMessage() {
+        const currentMode = getCurrentMode();
+        if (currentMode !== 'backstage') {
+          triggerRandomClassmateNPCMessage();
+        }
+        // Randomize timer interval to feel like natural live chatter
+        const randomDelay = Math.floor(Math.random() * 3000) + 2500;
+        npcStreamInterval = setTimeout(scheduleNextNPCMessage, randomDelay);
       }
+
+      scheduleNextNPCMessage();
     }
 
     function triggerRandomClassmateNPCMessage() {
