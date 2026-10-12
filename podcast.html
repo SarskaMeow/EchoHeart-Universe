@@ -269,9 +269,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
       margin: 0 auto 6px;
+      overflow: hidden;
       transition: all 0.3s ease;
+    }
+
+    .speaker-icon-box img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
     }
 
     .speaker-avatar.speaking .speaker-icon-box {
@@ -469,22 +477,30 @@
         <span id="stage-air-badge" class="on-air-badge">ON AIR</span>
       </div>
 
-      <!-- 4 Speaker Character Avatars -->
+      <!-- 4 Speaker Character Avatars Connected to Asset Images -->
       <div class="speaker-booth-wide">
         <div id="spk-nekomi" class="speaker-avatar">
-          <div class="speaker-icon-box">🎸</div>
+          <div class="speaker-icon-box">
+            <img src="assets/images/nekomi.png" alt="Nekomi">
+          </div>
           <strong>Nekomi</strong>
         </div>
         <div id="spk-sera" class="speaker-avatar">
-          <div class="speaker-icon-box">🎹</div>
+          <div class="speaker-icon-box">
+            <img src="assets/images/sera.png" alt="Sera">
+          </div>
           <strong>Sera</strong>
         </div>
         <div id="spk-akari" class="speaker-avatar">
-          <div class="speaker-icon-box">🥁</div>
+          <div class="speaker-icon-box">
+            <img src="assets/images/akari.png" alt="Akari Minase">
+          </div>
           <strong>Akari Minase</strong>
         </div>
         <div id="spk-aoi" class="speaker-avatar">
-          <div class="speaker-icon-box">🎸</div>
+          <div class="speaker-icon-box">
+            <img src="assets/images/aoi.png" alt="Aoi">
+          </div>
           <strong>Aoi</strong>
         </div>
       </div>
