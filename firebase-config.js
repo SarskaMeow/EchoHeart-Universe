@@ -2,14 +2,14 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-app.firebaseapp.com",
-  projectId: "your-app-id",
-  storageBucket: "your-app.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef"
+  apiKey: "AIzaSyCnJX6OKFrDA2PB-qYywbuv14UBc-1Vfu8",
+  authDomain: "otaku-lounge-d9890.firebaseapp.com",
+  projectId: "otaku-lounge-d9890",
+  storageBucket: "otaku-lounge-d9890.firebasestorage.app",
+  messagingSenderId: "411795669078",
+  appId: "1:411795669078:web:bc20864cbd31ebdc3f3bf7",
+  measurementId: "G-27C7DZYKLZ"
 };
 
 const app = initializeApp(firebaseConfig);
