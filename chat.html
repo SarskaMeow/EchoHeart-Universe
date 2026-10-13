@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Locker 102 Live Chat — EchoHeart</title>
+  <title>Locker 102 Live Chat — Otaku Overload</title>
   <link rel="stylesheet" href="style.css">
+  
   <style>
     :root {
       --nav-bg-twilight: rgba(18, 12, 36, 0.94);
@@ -16,8 +17,7 @@
       --accent-red: #ff4d6d;
       --text-light: #e2daf8;
     }
-    <script type="module" src="firebase-config.js"></script>
-    
+
     body {
       background: #0d0b18;
       color: var(--text-light);
@@ -233,7 +233,7 @@
       display: grid;
       grid-template-columns: 1fr 360px;
       gap: 24px;
-      padding: 0 20px 100px; /* Bottom padding so content doesn't get covered by persistent player */
+      padding: 0 20px 100px;
     }
 
     @media (max-width: 850px) { .chat-container { grid-template-columns: 1fr; } }
@@ -375,51 +375,50 @@
 </head>
 <body class="twilight-mode">
 
- <!-- Universal Header Navigation Bar -->
-<header class="navbar">
-  <div class="nav-container">
-    
-    <!-- Brand Logo -->
-    <div class="logo-container">
-      <a href="index.html" class="logo-link">
-        <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
-        <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
-      </a>
-    </div>
-
-    <!-- Mobile Hamburger Toggle Button -->
-    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-      <span class="hamburger-bar"></span>
-      <span class="hamburger-bar"></span>
-      <span class="hamburger-bar"></span>
-    </button>
-
-    <!-- 6 Main Destinations & 3-Tier Mode Selector -->
-    <nav class="nav-links" id="nav-menu">
-      <a href="index.html" class="nav-item">🏠 Home</a>
-      <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
-      <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-      <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
-      <a href="chat.html" class="nav-item">💬 Live Chat</a>
-      <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
-
-<button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
-  🔑 Login
-</button>
-
-      <!-- 3-Tier Access Mode Switcher -->
-      <div class="mode-selector-wrapper">
-        <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-          <option value="twilight">🌸 Twilight (Public)</option>
-          <option value="basement">⚡ Basement 🔒</option>
-          <option value="backstage">🎟️ Backstage Pass 💎</option>
-        </select>
+  <!-- Universal Header Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">🌸 OTAKU OVERLOAD</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
+        </a>
       </div>
-    </nav>
 
-  </div>
-</header>
+      <!-- Mobile Hamburger Toggle Button -->
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
 
+      <!-- Main Destinations & Access Mode Selector -->
+      <nav class="nav-links" id="nav-menu">
+        <a href="index.html" class="nav-item">🏠 Home</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+        <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
+        <a href="chat.html" class="nav-item active">💬 Live Chat</a>
+        <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+
+        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
+          🔑 Login
+        </button>
+
+        <!-- 3-Tier Access Mode Switcher -->
+        <div class="mode-selector-wrapper">
+          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
+            <option value="twilight">🌸 Twilight (Public)</option>
+            <option value="basement">⚡ Basement 🔒</option>
+            <option value="backstage">🎟️ Backstage Pass 💎</option>
+          </select>
+        </div>
+      </nav>
+
+    </div>
+  </header>
 
   <!-- Live Chat Stage -->
   <main class="chat-container">
@@ -441,7 +440,7 @@
     <!-- Post Note Drawer -->
     <aside class="post-panel">
       <h3>📮 Send a Note</h3>
-      <p id="posting-access-note" style="font-size: 0.82rem; color: #a88beb;">🔒 Live message posting requires an active Backstage Pass to ensure SFW community safety.</p>
+      <p id="posting-access-note" style="font-size: 0.82rem; color: #a88beb;">🔒 Live message posting requires a logged-in account to ensure SFW community safety.</p>
       
       <input type="text" id="chat-handle" class="form-control" placeholder="Your Student Name">
       <textarea id="chat-text" class="form-control" rows="4" placeholder="Write a message to the band..."></textarea>
@@ -449,6 +448,9 @@
       <button class="action-btn" onclick="handleLivePost()">🌸 Post to Locker 102</button>
     </aside>
   </main>
+
+  <!-- Firebase Script Integration -->
+  <script type="module" src="firebase-config.js"></script>
 
   <script>
     // User Auth & Tier State
@@ -459,7 +461,6 @@
 
     // Sensible, Grounded High-School Classmate NPC Message Pool
     const NPC_CLASSMATE_MESSAGES = [
-      // --- COMMON SCHOOL CLASSMATES & LOCKERS (82% Probability) ---
       { type: 'common', author: 'Locker_12', text: 'Has anyone seen the updated setlist poll on Neko FM today?' },
       { type: 'common', author: 'Locker_22', text: 'Prep Room B was echoing all through the East hallway during 4th period! 🎸' },
       { type: 'common', author: 'Locker_31', text: 'Akari’s new guitar intro on track 2 sounds so clean!' },
@@ -482,7 +483,6 @@
       { type: 'common', author: 'Audio_Club_President', text: 'The audio clarity on the Prep Room B feed has been amazing lately.' },
       { type: 'common', author: 'Hallway_Runner', text: 'Almost missed the bell trying to catch the end of the sound check!' },
 
-      // --- RARE BAND MEMBERS (12% Probability - Reduced Frequency) ---
       { type: 'rare', author: 'Akari Minase', text: 'Thanks for tuning in everyone! Fine-tuning the lead guitar melody in Prep Room B right now 🎸' },
       { type: 'rare', author: 'Akari Minase', text: 'Testing out a new chord progression for the next chapter’s theme! What do you all think?' },
       { type: 'rare', author: 'Akari Minase', text: 'Prep Room B is quiet tonight, perfect time to polish the intro solo 🌸' },
@@ -498,7 +498,6 @@
       { type: 'rare', author: 'Aoi', text: '180 BPM tempo locked in! Let’s go!' },
       { type: 'rare', author: 'Aoi', text: 'Practicing drum fills for the chorus transition—tempo is feeling punchy!' },
 
-      // --- ULTRA-RARE CAVERN & LORE ECHOES (6% Probability) ---
       { type: 'ultra', author: 'Cavern_Echo_Voice', text: '✦ Resonance frequency detected beneath Sakuraoka High... ⚡' },
       { type: 'ultra', author: 'Cavern_Echo_Voice', text: '✦ The subterranean echoes grow clearer as midnight approaches...' },
       { type: 'ultra', author: 'Phantom_Stagehand', text: 'Who left the amplifier dials on 11 down in the cavern hall? 👻' }
@@ -522,9 +521,8 @@
     };
 
     let npcStreamInterval = null;
-    let recentIndexes = []; // Anti-repetition tracker
+    let recentIndexes = [];
 
-    // Local Storage Persistent Chat Manager
     function getStoredChatHistory(mode) {
       try {
         const data = localStorage.getItem(`neko_chat_history_${mode}`);
@@ -545,15 +543,13 @@
     function handleModeChange(targetMode) {
       const selector = document.getElementById('mode-selector');
 
-      if (targetMode === 'basement' && !userState.isLoggedIn) {
+      if (targetMode === 'basement' && (!window.currentUser || (window.userData && !window.userData.ageVerified17))) {
         if (selector) selector.value = getCurrentMode();
-        showAuthModal('Google Login Required', 'Sign in with Google to access After-Hours Basement streams and community profiles.');
-        return;
-      }
-
-      if (targetMode === 'backstage' && !userState.isVIP) {
-        if (selector) selector.value = getCurrentMode();
-        showVIPModal('Backstage Pass Required', 'Unlock live message posting in Locker 102, exclusive subterranean audio, and stem mixers.');
+        if (typeof window.handleContentAccess === "function") {
+          window.handleContentAccess('basement');
+        } else {
+          showAuthModal('Sign-In Required', 'Sign in with Google to access After-Hours Basement streams.');
+        }
         return;
       }
 
@@ -589,24 +585,20 @@
         note.innerHTML = '✨ <strong style="color:#ffd166;">VIP Active:</strong> Live message posting enabled for Backstage Pass members.';
       } else {
         heading.innerText = '💬 Locker 102 Live Classmate Feed';
-        note.innerHTML = '🔒 Live message posting requires an active Backstage Pass to ensure SFW community safety.';
+        note.innerHTML = '🔒 Live message posting requires an active account to ensure SFW community safety.';
       }
 
-      // Check if persistent history exists for this mode
       let history = getStoredChatHistory(mode);
 
       if (!history || history.length === 0) {
-        // First load defaults
         history = DEFAULT_STARTER_MESSAGES[mode] || DEFAULT_STARTER_MESSAGES.twilight;
         saveChatHistory(mode, history);
       }
 
-      // Render stored messages
       history.forEach(msg => {
         appendMessageDOM(msg.author, msg.text, msg.cssClass, msg.badge);
       });
 
-      // Start dynamic, variable-interval NPC chat stream (runs every 2.5s - 5.5s)
       startDynamicNPCStream();
     }
 
@@ -616,7 +608,6 @@
         if (currentMode !== 'backstage') {
           triggerRandomClassmateNPCMessage();
         }
-        // Randomize timer interval to feel like natural live chatter
         const randomDelay = Math.floor(Math.random() * 3000) + 2500;
         npcStreamInterval = setTimeout(scheduleNextNPCMessage, randomDelay);
       }
@@ -631,16 +622,14 @@
       const roll = Math.random();
       let targetType = 'common';
 
-      // Probabilities: 82% Common Classmates, 12% Rare Band Members, 6% Ultra-Rare Cavern
       if (roll < 0.82) {
         targetType = 'common';
       } else if (roll < 0.94) {
-        targetType = 'rare'; // Band members chat less often
+        targetType = 'rare';
       } else {
         targetType = 'ultra';
       }
 
-      // Filter candidates and exclude recently shown indexes
       let candidateIndexes = [];
       NPC_CLASSMATE_MESSAGES.forEach((m, idx) => {
         if (m.type === targetType && !recentIndexes.includes(idx)) {
@@ -678,7 +667,6 @@
 
       history.push(newMsg);
 
-      // Keep maximum 40 messages to maintain clean performance & localStorage
       if (history.length > 40) {
         history.shift();
       }
@@ -704,17 +692,18 @@
     }
 
     function handleLivePost() {
-      if (!userState.isVIP) {
-        showVIPModal('Backstage Pass Required', '🔒 Locker 102 Live Message Posting is reserved for Backstage Pass holders to ensure a safe, troll-free community!');
+      if (!window.currentUser) {
+        showAuthModal('Sign In Required', '🔒 Live message posting requires you to log in with your account!');
         return;
       }
       
-      const handle = document.getElementById('chat-handle').value.trim() || 'Anonymous Student';
+      const handleInput = document.getElementById('chat-handle').value.trim();
+      const handle = handleInput || (window.userData ? window.userData.displayName : 'Lounge Member');
       const text = document.getElementById('chat-text').value.trim();
       if (!text) return;
 
       const activeMode = getCurrentMode();
-      addAndPersistMessage(activeMode, handle, text, 'msg-card vip-user', '<span class="vip-badge">VIP Pass</span>');
+      addAndPersistMessage(activeMode, handle, text, 'msg-card vip-user', '<span class="vip-badge">Member</span>');
       document.getElementById('chat-text').value = '';
     }
 
@@ -730,25 +719,7 @@
             <h3>🔑 ${title}</h3>
             <p>${message}</p>
             <div class="modal-actions">
-              <button class="modal-btn google-btn" onclick="simulateGoogleLogin()">Sign In with Google</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function showVIPModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card vip-modal-card">
-            <h3>🎟️ ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-price-tag">$4.99 / month • Backstage Pass</div>
-            <div class="modal-actions">
-              <button class="modal-btn stripe-btn" onclick="simulateStripeCheckout()">Unlock Backstage Pass</button>
+              <button class="modal-btn google-btn" onclick="if(window.loginWithGoogle) window.loginWithGoogle()">Sign In with Google</button>
               <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
             </div>
           </div>
@@ -760,22 +731,6 @@
     function removeExistingModals() {
       const existing = document.getElementById('neko-gate-modal');
       if (existing) existing.remove();
-    }
-
-    function simulateGoogleLogin() {
-      userState.isLoggedIn = true;
-      localStorage.setItem('neko_logged_in', 'true');
-      removeExistingModals();
-      handleModeChange('basement');
-    }
-
-    function simulateStripeCheckout() {
-      userState.isLoggedIn = true;
-      userState.isVIP = true;
-      localStorage.setItem('neko_logged_in', 'true');
-      localStorage.setItem('neko_is_vip', 'true');
-      removeExistingModals();
-      handleModeChange('backstage');
     }
 
     function toggleMobileMenu() {
