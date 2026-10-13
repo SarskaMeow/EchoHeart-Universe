@@ -1,15 +1,20 @@
 // firebase-config.js
+
+// 1. Group all ES6 Imports at the top
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app-check.js";
 import { 
   getAuth, 
   signInWithPopup, 
   signInWithRedirect, 
   GoogleAuthProvider, 
+  FacebookAuthProvider,
   signOut, 
   onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// 2. Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCnJX6OKFrDA2PB-qYywbuv14UBc-1Vfu8",
   authDomain: "otaku-lounge-d9890.firebaseapp.com",
@@ -20,8 +25,16 @@ const firebaseConfig = {
   measurementId: "G-27C7DZYKLZ"
 };
 
-// Initialize Firebase Services
+// 3. Initialize Firebase App
 const app = initializeApp(firebaseConfig);
+
+// 4. Enable Fraud Defense / reCAPTCHA Enterprise Bot Shield
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaEnterpriseProvider('6LfOse0tAAAAAIfKhHlTDRbxLaTqY3bH1FHznTTn'),
+  isTokenAutoRefreshEnabled: true
+});
+
+// 5. Initialize Auth & Firestore
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
@@ -29,13 +42,12 @@ export const db = getFirestore(app);
 window.currentUser = null;
 window.userData = null;
 
-// Track auth state automatically across all pages and sync mode permissions
+// Track auth state automatically across all pages
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     console.log("Logged in user detected:", user.email);
     window.currentUser = user;
 
-    // Sync local storage and page userState for Basement/Backstage mode switcher
     localStorage.setItem('neko_logged_in', 'true');
     if (typeof userState !== 'undefined') {
       userState.isLoggedIn = true;
@@ -43,7 +55,6 @@ onAuthStateChanged(auth, async (user) => {
 
     await loadOrCreateUserProfile(user);
 
-    // Automatically close the login modal if open
     const modal = document.getElementById('neko-gate-modal');
     if (modal) modal.remove();
 
@@ -53,7 +64,6 @@ onAuthStateChanged(auth, async (user) => {
     window.currentUser = null;
     window.userData = null;
 
-    // Clear session flags & reset stored mode theme back to Twilight
     localStorage.removeItem('neko_logged_in');
     localStorage.removeItem('neko_is_vip');
     localStorage.setItem('neko_active_mode', 'twilight');
@@ -63,7 +73,6 @@ onAuthStateChanged(auth, async (user) => {
       userState.isVIP = false;
     }
 
-    // Reset visual theme back to Twilight Mode
     if (typeof applyThemeMode === "function") {
       applyThemeMode('twilight');
     }
@@ -72,7 +81,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Google Login Function with Redirect Fallback
+// Google Login Function
 window.loginWithGoogle = async () => {
   console.log("Attempting Google Sign-In...");
   const provider = new GoogleAuthProvider();
@@ -85,7 +94,6 @@ window.loginWithGoogle = async () => {
     console.warn("Popup warning/error code:", error.code);
 
     if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
-      console.log("Popup blocked or interrupted. Attempting redirect sign-in...");
       try {
         await signInWithRedirect(auth, provider);
       } catch (redirectError) {
@@ -93,7 +101,7 @@ window.loginWithGoogle = async () => {
         alert("Sign-in failed: " + redirectError.message);
       }
     } else if (error.code === 'auth/unauthorized-domain') {
-      alert("Domain not authorized! Make sure your GitHub Pages link is added to Firebase Auth Settings > Authorized Domains.");
+      alert("Domain not authorized! Make sure your domain is added to Firebase Auth Settings > Authorized Domains.");
     } else if (error.code !== 'auth/popup-closed-by-user') {
       alert("Login Error: " + error.message);
     }
@@ -106,7 +114,6 @@ window.logoutUser = async () => {
     await signOut(auth);
     console.log("Signed out successfully from Firebase.");
 
-    // If logged out while on account.html, send user back to home
     if (window.location.pathname.includes("account.html")) {
       window.location.href = "index.html";
     }
@@ -115,7 +122,7 @@ window.logoutUser = async () => {
   }
 };
 
-// Load existing user profile or initialize new member profile in Firestore
+// Firestore User Profile Handler
 async function loadOrCreateUserProfile(user) {
   try {
     const userRef = doc(db, "users", user.uid);
@@ -132,6 +139,7 @@ async function loadOrCreateUserProfile(user) {
         photoURL: user.photoURL || "",
         orbs: 250,
         isVIP: false,
+        isAgeVerified: false,
         equippedFrame: "none",
         equippedGlow: "none",
         inventory: ["none"]
