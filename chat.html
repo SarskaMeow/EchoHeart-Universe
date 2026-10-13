@@ -252,6 +252,15 @@
     body.basement-mode .chat-feed-box { border-color: rgba(255, 77, 109, 0.5); }
     body.backstage-mode .chat-feed-box { border-color: #ffd166; }
 
+    <!-- Channel Selector Tabs -->
+<div style="display: flex; gap: 10px; margin-bottom: 16px;">
+  <button id="tab-twilight" onclick="switchChatChannel('twilight')" class="emote-btn" style="padding: 10px 18px; font-weight: 800; background: var(--accent-purple); color: #000;">
+    🌸 Twilight Channel (13+)
+  </button>
+  <button id="tab-basement" onclick="switchChatChannel('basement')" class="emote-btn" style="padding: 10px 18px; font-weight: 800; background: rgba(255, 77, 109, 0.2); color: #ff4d6d; border: 1px solid #ff4d6d;">
+    ⚡ Basement Channel (17+) 🔒
+  </button>
+</div>
     .chat-messages {
       flex: 1;
       overflow-y: auto;
