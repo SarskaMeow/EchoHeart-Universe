@@ -558,22 +558,13 @@
       if (selector) selector.value = mode;
     }
 
-    function showAuthModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3>🔑 ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-actions">
-              <button class="modal-btn google-btn" onclick="simulateGoogleLogin()">Sign In with Google</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
+function simulateGoogleLogin() {
+  if (window.loginWithGoogle) {
+    window.loginWithGoogle();
+  } else {
+    alert("Firebase is still loading... please try again in a moment.");
+  }
+}
 
     function showVIPModal(title, message) {
       removeExistingModals();
