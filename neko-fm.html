@@ -1081,7 +1081,7 @@
       <!-- Discography Section Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
-          💿 Official Studio Tracklist <span style="font-size: 0.8rem; color: #f4b8c4; font-weight: 600;">(20s Preview Teasers)</span>
+          CD Official Studio Tracklist <span style="font-size: 0.8rem; color: #f4b8c4; font-weight: 600;">(20s Preview Teasers)</span>
         </h3>
         <span style="font-size: 0.8rem; color: #cbb8f6;">Showing 10 Tracks</span>
       </div>
@@ -1145,14 +1145,6 @@
       ]
     };
 
-    // Default Poll Data
-    const DEFAULT_POLL_ITEMS = [
-      { id: 0, title: '🎸 "Subterranean Resonance"', badge: 'Acoustic Duo', performers: 'Akari (Drums) & Nekomi (Vocals)', streamUrl: 'https://listen.moe/fallback', votes: 0 },
-      { id: 1, title: '🎹 "Keytar Midnight Run"', badge: '180 BPM Remix', performers: 'Sera (Keytar) & Aoi (Bass)', streamUrl: 'https://stream.zeno.fm/f0p485a06chvv', votes: 0 },
-      { id: 2, title: '🌸 "Sakuraoka Dusk Echoes"', badge: 'Full Band Live', performers: 'Girls Dead Phantom Ensemble', streamUrl: 'https://stream.zeno.fm/f3wvbbqmdg8uv', votes: 0 },
-      { id: 3, title: '⚡ "Cavern Reverb Overdrive"', badge: 'Heavy J-Rock', performers: 'Akari Minase (Drums) & Aoi (Bass)', streamUrl: 'https://stream.zeno.fm/918p426338quv', votes: 0 }
-    ];
-
     // 10 Official Songs for Girls Dead Phantom Discography
     const DISCOGRAPHY_CATALOG = [
       { id: 'gdp-1', trackNo: '01', title: 'Subterranean Resonance', type: 'Debut Single (2026)', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/fallback' },
@@ -1166,6 +1158,28 @@
       { id: 'gdp-9', trackNo: '09', title: 'Akari\'s Crimson Riff', type: 'Guitar Instrumental', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/918p426338quv' },
       { id: 'gdp-10', trackNo: '10', title: 'After Dark Distortion', type: 'Uncompressed Master Stem', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/054a1078s0hvv' }
     ];
+
+    // Helper: Generate 4 random songs from the catalog for the hourly poll
+    function generateRandomPollItems() {
+      const performerOptions = [
+        'Akari (Drums) & Nekomi (Vocals)',
+        'Sera (Keytar) & Aoi (Bass)',
+        'Girls Dead Phantom Ensemble',
+        'Akari Minase (Drums) & Aoi (Bass)'
+      ];
+
+      const shuffled = [...DISCOGRAPHY_CATALOG].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, 4);
+
+      return selected.map((track, idx) => ({
+        id: idx,
+        title: `"${track.title}"`,
+        badge: track.type,
+        performers: performerOptions[idx % performerOptions.length],
+        streamUrl: track.url,
+        votes: 0
+      }));
+    }
 
     let currentMode = 'twilight';
     let selectedStationIndex = 0;
@@ -1189,9 +1203,12 @@
     function getStoredPollData() {
       try {
         const stored = localStorage.getItem('gdp_poll_votes_data');
-        if (stored) return JSON.parse(stored);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
       } catch (e) { console.error("Error reading stored poll data:", e); }
-      return DEFAULT_POLL_ITEMS;
+      return generateRandomPollItems();
     }
 
     function saveStoredPollData(data) {
@@ -1315,9 +1332,9 @@
       const currentMsInHour = now % hourMs;
       const votingDurationMs = 50 * 60 * 1000; // 50 minutes voting, 10 minutes soundcheck
 
-      // Auto-reset votes at the start of every new hour
+      // Auto-reset votes & select 4 new random songs from the catalog at the start of every new hour
       if (lastProcessedHour !== null && parseInt(lastProcessedHour, 10) !== currentHourIndex) {
-        pollData.forEach(item => item.votes = 0);
+        pollData = generateRandomPollItems();
         localStorage.removeItem('neko_voted_poll_id');
         saveStoredPollData(pollData);
         renderSetlistPolls();
@@ -1354,6 +1371,7 @@
     }
 
     function getWinningTrack() {
+      if (!pollData || pollData.length === 0) return { title: "Subterranean Resonance", badge: "Studio Cut", streamUrl: "https://listen.moe/fallback", performers: "Girls Dead Phantom" };
       let highest = pollData[0];
       pollData.forEach(item => { if (item.votes > highest.votes) highest = item; });
       return highest;
