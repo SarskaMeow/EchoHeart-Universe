@@ -434,7 +434,7 @@
       letter-spacing: 2px;
     }
 
-    /* Seasonal Anime Grid */
+    /* Seasonal Anime & Manga Grid */
     .anime-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -516,6 +516,38 @@
       padding: 18px 22px;
       margin-bottom: 16px;
       transition: all 0.3s ease;
+    }
+
+    /* Pagination Buttons Styling */
+    .page-btn-nav {
+      background: rgba(35, 25, 65, 0.9);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      color: #cbb8f6;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .page-btn-nav:hover:not(:disabled) {
+      background: linear-gradient(135deg, #ff4d6d, #f4b8c4);
+      color: #000;
+      border-color: #f4b8c4;
+      transform: translateY(-2px);
+    }
+
+    .page-btn-nav.active-page {
+      background: linear-gradient(135deg, #ff4d6d, #a88beb);
+      color: #ffffff;
+      border-color: #ff4d6d;
+      box-shadow: 0 0 12px rgba(255, 77, 109, 0.4);
+    }
+
+    .page-btn-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
     }
 
     /* Modal Overlay Styles */
@@ -683,11 +715,11 @@
       <!-- Host Banner -->
       <div class="host-hero-banner" style="border-color: rgba(255, 77, 109, 0.5);">
         <span class="host-badge-tag" style="background: linear-gradient(135deg, #ff4d6d, #f4b8c4); color: #000;">🥁 AOI'S READING NOOK</span>
-        <h2 style="margin: 0; color: #ffffff; font-family: 'Fredoka', cursive;">Manga & Reading Vault</h2>
-        <p style="margin: 4px 0 0; color: #cbb8f6; font-size: 0.9rem;">Trending Manga Catalog • Search Database • Cozy Music Reader</p>
+        <h2 style="margin: 0; color: #ffffff; font-family: 'Fredoka', cursive;">Manga & Library Vault</h2>
+        <p style="margin: 4px 0 0; color: #cbb8f6; font-size: 0.9rem;">50,000+ Title Database • Multi-Page Browser • Cozy Reading Reader</p>
         
         <div class="sera-note-box" style="border-left-color: #ff4d6d;">
-          💬 <strong>Aoi:</strong> "Welcome to my quiet reading vault! Search through thousands of manga titles or check out my featured pick below."
+          💬 <strong>Aoi:</strong> "Welcome to my giant reading vault! Browse through thousands of manga titles or read my featured pick below."
         </div>
       </div>
 
@@ -723,14 +755,20 @@
 
       <!-- Manga Results Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem;" id="manga-grid-title">🔥 Popular Manga Releases</h3>
-        <span style="font-size: 0.8rem; color: #cbb8f6;" id="manga-count-label">Showing Top Picks</span>
+        <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem;" id="manga-grid-title">🔥 Popular Manga Library</h3>
+        <span style="font-size: 0.8rem; color: #cbb8f6;" id="manga-count-label">Loading library...</span>
       </div>
 
       <!-- Live AniList Manga Grid -->
       <div class="anime-grid" id="manga-card-grid">
         <!-- Rendered dynamically via JavaScript -->
       </div>
+
+      <!-- Multi-Page Pagination Controls -->
+      <div id="manga-pagination-controls" style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 28px; flex-wrap: wrap;">
+        <!-- Pagination Buttons Rendered Dynamically via JavaScript -->
+      </div>
+
     </section>
 
     <!-- SUB-TAB 3: NEKOMI'S J-CULTURE & SLANG -->
@@ -761,6 +799,44 @@
     </section>
 
   </main>
+
+  <!-- In-House Full Manga Detail Modal Card Overlay -->
+  <div id="manga-detail-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card" style="max-width: 720px; text-align: left; max-height: 85vh; display: flex; flex-direction: column; background: rgba(18, 12, 34, 0.98); border: 2px solid #a88beb; box-shadow: 0 0 35px rgba(168, 139, 235, 0.35); border-radius: 20px; padding: 24px;">
+      
+      <!-- Modal Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(168, 139, 235, 0.3); padding-bottom: 14px; margin-bottom: 16px;">
+        <div>
+          <span class="host-badge-tag" style="background: linear-gradient(135deg, #a88beb, #f4b8c4); color: #0d0b18; margin-bottom: 4px;">📖 AOI'S MANGA VAULT</span>
+          <h3 style="margin: 4px 0 0; color: #ffffff; font-family: 'Fredoka', cursive; font-size: 1.35rem;" id="modal-manga-title">Manga Title Details</h3>
+        </div>
+        <button onclick="closeMangaDetails()" style="background: rgba(168, 139, 235, 0.2); border: 1px solid rgba(168, 139, 235, 0.4); color: #f4b8c4; font-size: 1.2rem; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;">✕</button>
+      </div>
+
+      <!-- Modal Body Grid -->
+      <div style="overflow-y: auto; flex: 1; padding-right: 8px;">
+        <div style="display: grid; grid-template-columns: 180px 1fr; gap: 20px; margin-bottom: 18px;" id="manga-modal-layout">
+          <img id="modal-manga-cover" src="" alt="Manga Cover" style="width: 100%; height: 250px; object-fit: cover; border-radius: 12px; border: 2px solid rgba(168, 139, 235, 0.4);">
+          <div>
+            <div id="modal-manga-genres" class="genre-pill-group" style="margin-bottom: 12px;"></div>
+            
+            <div style="background: rgba(30, 18, 52, 0.85); border: 1px solid rgba(168, 139, 235, 0.3); border-radius: 12px; padding: 12px; font-size: 0.85rem; color: #cbb8f6; display: flex; flex-direction: column; gap: 6px;">
+              <div>📌 <strong>Status:</strong> <span id="modal-manga-status" style="color: #ffffff;">Publishing</span></div>
+              <div>📖 <strong>Chapters:</strong> <span id="modal-manga-chapters" style="color: #ffffff;">Unknown</span></div>
+              <div>📚 <strong>Volumes:</strong> <span id="modal-manga-volumes" style="color: #ffffff;">Unknown</span></div>
+              <div>⭐ <strong>Community Score:</strong> <span id="modal-manga-score" style="color: #ffd166;">N/A</span></div>
+            </div>
+          </div>
+        </div>
+
+        <h4 style="color: #ffffff; margin: 16px 0 8px; font-size: 1.05rem; border-bottom: 1px dashed rgba(168, 139, 235, 0.3); padding-bottom: 4px;">Synopsis & Overview</h4>
+        <div id="modal-manga-description" style="font-size: 0.92rem; line-height: 1.6; color: #e2daf8;">
+          Loading overview text...
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- Interactive EchoHeart Chapter Preview Reader Modal -->
   <div id="chapter-reader-modal" class="modal-overlay" style="display: none;">
@@ -827,6 +903,11 @@
   <script src="global-player.js"></script>
   <script>
     let currentMode = 'twilight';
+
+    // Pagination & Active Catalog State for Manga Vault
+    let currentMangaPage = 1;
+    let currentMangaSearch = '';
+    let loadedMangaList = [];
 
     // User Auth & Tier State
     let userState = {
@@ -962,19 +1043,30 @@
       });
     }
 
-    /* Free AniList Manga GraphQL Fetch Engine */
-    async function fetchMangaCatalog(searchQuery = '') {
+    /* Paginated Free AniList Manga GraphQL Fetch Engine */
+    async function fetchMangaCatalog(searchQuery = '', page = 1) {
+      currentMangaSearch = searchQuery;
+      currentMangaPage = page;
+
       const gridContainer = document.getElementById('manga-card-grid');
       const titleLabel = document.getElementById('manga-grid-title');
       const countLabel = document.getElementById('manga-count-label');
+      const paginationContainer = document.getElementById('manga-pagination-controls');
 
       if (!gridContainer) return;
 
-      gridContainer.innerHTML = '<div style="color:#cbb8f6; padding:20px; text-align:center;">🔍 Searching AniList database...</div>';
+      gridContainer.innerHTML = '<div style="color:#cbb8f6; padding:30px; text-align:center;">🔍 Loading AniList Manga Library...</div>';
+      if (paginationContainer) paginationContainer.innerHTML = '';
 
       const query = `
         query ($search: String, $page: Int, $perPage: Int) {
           Page(page: $page, perPage: $perPage) {
+            pageInfo {
+              total
+              currentPage
+              lastPage
+              hasNextPage
+            }
             media(type: MANGA, search: $search, sort: [POPULARITY_DESC]) {
               id
               title { romaji english }
@@ -984,13 +1076,14 @@
               chapters
               volumes
               status
+              averageScore
               siteUrl
             }
           }
         }
       `;
 
-      const variables = { page: 1, perPage: 12 };
+      const variables = { page: page, perPage: 16 };
       if (searchQuery.trim() !== '') {
         variables.search = searchQuery;
       }
@@ -1003,12 +1096,14 @@
         });
 
         const data = await response.json();
+        const pageInfo = data?.data?.Page?.pageInfo || {};
         const mangaList = data?.data?.Page?.media || [];
+        loadedMangaList = mangaList; // Store current page in memory
 
         if (mangaList.length > 0) {
           gridContainer.innerHTML = '';
-          if (titleLabel) titleLabel.innerText = searchQuery ? `🔍 Results for "${searchQuery}"` : '🔥 Popular Manga Releases';
-          if (countLabel) countLabel.innerText = `Found ${mangaList.length} Titles`;
+          if (titleLabel) titleLabel.innerText = searchQuery ? `🔍 Search Results for "${searchQuery}"` : '🔥 Popular Manga Library';
+          if (countLabel) countLabel.innerText = `Page ${pageInfo.currentPage} of ${pageInfo.lastPage.toLocaleString()} (${pageInfo.total.toLocaleString()} Titles)`;
 
           mangaList.forEach(manga => {
             const title = manga.title.english || manga.title.romaji;
@@ -1026,33 +1121,128 @@
                 <div class="airing-timer-badge" style="background: rgba(255, 77, 109, 0.2); border-color: rgba(255, 77, 109, 0.4); color: #f4b8c4;">
                   📖 ${chaptersText}
                 </div>
-                <a href="${manga.siteUrl}" target="_blank" class="vote-btn" style="text-align:center; text-decoration:none; margin-top:10px; padding:6px;">
-                  View Details ↗
-                </a>
+                <button onclick="openMangaDetails(${manga.id})" class="vote-btn" style="text-align:center; margin-top:10px; padding:6px; cursor:pointer;">
+                  📖 View Details
+                </button>
               </div>
             `;
             gridContainer.appendChild(card);
           });
+
+          renderMangaPagination(pageInfo);
           return;
         } else {
-          gridContainer.innerHTML = '<div style="color:#cbb8f6; padding:20px; text-align:center;">No manga titles found. Try searching another name!</div>';
+          gridContainer.innerHTML = '<div style="color:#cbb8f6; padding:30px; text-align:center;">No manga titles found. Try searching another name!</div>';
         }
       } catch (err) {
         console.error("AniList Manga Fetch Error:", err);
-        gridContainer.innerHTML = '<div style="color:#ff4d6d; padding:20px; text-align:center;">Unable to load live database. Check internet connection.</div>';
+        gridContainer.innerHTML = '<div style="color:#ff4d6d; padding:30px; text-align:center;">Unable to load live database. Check internet connection.</div>';
       }
+    }
+
+    function renderMangaPagination(pageInfo) {
+      const container = document.getElementById('manga-pagination-controls');
+      if (!container) return;
+
+      const { currentPage, lastPage, hasNextPage } = pageInfo;
+      let html = '';
+
+      if (currentPage > 1) {
+        html += `<button class="page-btn-nav" onclick="changeMangaPage(${currentPage - 1})">◀ Prev</button>`;
+      } else {
+        html += `<button class="page-btn-nav" disabled>◀ Prev</button>`;
+      }
+
+      if (currentPage > 2) {
+        html += `<button class="page-btn-nav" onclick="changeMangaPage(1)">1</button>`;
+        if (currentPage > 3) html += `<span style="color:#cbb8f6; align-self:center;">...</span>`;
+      }
+
+      if (currentPage > 1) {
+        html += `<button class="page-btn-nav" onclick="changeMangaPage(${currentPage - 1})">${currentPage - 1}</button>`;
+      }
+
+      html += `<button class="page-btn-nav active-page">${currentPage}</button>`;
+
+      if (hasNextPage && currentPage < lastPage) {
+        html += `<button class="page-btn-nav" onclick="changeMangaPage(${currentPage + 1})">${currentPage + 1}</button>`;
+      }
+
+      if (currentPage < lastPage - 1) {
+        if (currentPage < lastPage - 2) html += `<span style="color:#cbb8f6; align-self:center;">...</span>`;
+        html += `<button class="page-btn-nav" onclick="changeMangaPage(${lastPage})">${lastPage.toLocaleString()}</button>`;
+      }
+
+      if (hasNextPage) {
+        html += `<button class="page-btn-nav" onclick="changeMangaPage(${currentPage + 1})">Next ▶</button>`;
+      } else {
+        html += `<button class="page-btn-nav" disabled>Next ▶</button>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function changeMangaPage(newPage) {
+      fetchMangaCatalog(currentMangaSearch, newPage);
+      const vaultTab = document.getElementById('manga-vault-tab');
+      if (vaultTab) vaultTab.scrollIntoView({ behavior: 'smooth' });
     }
 
     function triggerMangaSearch() {
       const input = document.getElementById('manga-search-input');
       const query = input ? input.value.trim() : '';
-      fetchMangaCatalog(query);
+      fetchMangaCatalog(query, 1);
     }
 
     function resetMangaList() {
       const input = document.getElementById('manga-search-input');
       if (input) input.value = '';
-      fetchMangaCatalog('');
+      fetchMangaCatalog('', 1);
+    }
+
+    /* In-House Manga Detail Modal Controls */
+    function openMangaDetails(mangaId) {
+      const manga = loadedMangaList.find(item => item.id === mangaId);
+      if (!manga) return;
+
+      const title = manga.title.english || manga.title.romaji;
+      const img = manga.coverImage.extraLarge || manga.coverImage.large;
+      const status = manga.status || 'Unknown';
+      const chapters = manga.chapters ? `${manga.chapters} Chapters` : 'Ongoing / Unknown';
+      const volumes = manga.volumes ? `${manga.volumes} Volumes` : 'Ongoing / Unknown';
+      const score = manga.averageScore ? `${manga.averageScore} / 100` : 'N/A';
+      
+      // Strip raw HTML formatting from description if present
+      let rawDesc = manga.description || 'No description available for this title.';
+      rawDesc = rawDesc.replace(/<br\s*[\/]?>/gi, '<br>').replace(/<i>/gi, '<em>').replace(/<\/i>/gi, '</em>');
+
+      document.getElementById('modal-manga-title').innerText = title;
+      document.getElementById('modal-manga-cover').src = img;
+      document.getElementById('modal-manga-status').innerText = status;
+      document.getElementById('modal-manga-chapters').innerText = chapters;
+      document.getElementById('modal-manga-volumes').innerText = volumes;
+      document.getElementById('modal-manga-score').innerText = score;
+      document.getElementById('modal-manga-description').innerHTML = rawDesc;
+
+      // Render genres
+      const genreContainer = document.getElementById('modal-manga-genres');
+      genreContainer.innerHTML = '';
+      if (manga.genres) {
+        manga.genres.forEach(g => {
+          const pill = document.createElement('span');
+          pill.className = 'genre-pill';
+          pill.innerText = g;
+          genreContainer.appendChild(pill);
+        });
+      }
+
+      const modal = document.getElementById('manga-detail-modal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeMangaDetails() {
+      const modal = document.getElementById('manga-detail-modal');
+      if (modal) modal.style.display = 'none';
     }
 
     /* Chapter Preview Modal Controls */
@@ -1138,7 +1328,7 @@
       currentMode = getCurrentMode();
       applyThemeMode(currentMode);
       fetchSeasonalAnime();
-      fetchMangaCatalog();
+      fetchMangaCatalog('', 1);
 
       const searchInput = document.getElementById('manga-search-input');
       if (searchInput) {
