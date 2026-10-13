@@ -53,9 +53,19 @@ onAuthStateChanged(auth, async (user) => {
     window.currentUser = null;
     window.userData = null;
 
+    // Clear session flags & reset stored mode theme back to Twilight
     localStorage.removeItem('neko_logged_in');
+    localStorage.removeItem('neko_is_vip');
+    localStorage.setItem('neko_active_mode', 'twilight');
+
     if (typeof userState !== 'undefined') {
       userState.isLoggedIn = false;
+      userState.isVIP = false;
+    }
+
+    // Reset visual theme back to Twilight Mode
+    if (typeof applyThemeMode === "function") {
+      applyThemeMode('twilight');
     }
 
     if (typeof updatePageUI === "function") updatePageUI();
@@ -90,41 +100,16 @@ window.loginWithGoogle = async () => {
   }
 };
 
-// Logout Function with complete session reset and redirect
+// Logout Function
 window.logoutUser = async () => {
   try {
     await signOut(auth);
-    console.log("Signed out successfully.");
+    console.log("Signed out successfully from Firebase.");
 
-    // 1. Clear session flags from browser storage
-    localStorage.removeItem('neko_logged_in');
-    localStorage.removeItem('neko_is_vip');
-
-    // 2. Reset global memory variables
-    window.currentUser = null;
-    window.userData = null;
-    if (typeof userState !== 'undefined') {
-      userState.isLoggedIn = false;
-      userState.isVIP = false;
-    }
-
-    // 3. Reset theme mode back to Twilight
-    if (typeof applyThemeMode === "function") {
-      applyThemeMode('twilight');
-    }
-
-    // 4. Update navbar UI
-    if (typeof updatePageUI === "function") {
-      updatePageUI();
-    }
-
-    // 5. If on account page, redirect to home; otherwise refresh page state
+    // If logged out while on account.html, send user back to home
     if (window.location.pathname.includes("account.html")) {
       window.location.href = "index.html";
-    } else {
-      window.location.reload();
     }
-
   } catch (error) {
     console.error("Logout Error:", error);
   }
