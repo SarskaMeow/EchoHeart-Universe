@@ -429,44 +429,46 @@
   <!-- Hidden HTML5 Audio Element for Podcast MP3 Files -->
   <audio id="audio-player" style="display: none;"></audio>
 
-  <!-- Universal Header Navigation -->
-  <header class="navbar">
-    <div class="nav-container">
-      
-      <!-- Brand Logo -->
-      <div class="logo-container">
-        <a href="index.html" class="logo-link">
-          <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
-          <span class="logo-sub">✦ ECHOHEART UNIVERSE</span>
-        </a>
-      </div>
-
-      <!-- Hamburger Toggle Button -->
-      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-      </button>
-
-      <!-- Navigation Links & 3-Tier Mode Selector -->
-      <nav class="nav-links" id="nav-menu">
-        <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="podcast.html" class="nav-item active">🎙️ Podcast</a>
-        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-        <a href="chat.html" class="nav-item">💬 Live Chat</a>
-        <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
-
-        <div class="mode-selector-wrapper">
-          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-            <option value="twilight">🌸 Twilight (Public)</option>
-            <option value="basement">⚡ Basement 🔒</option>
-            <option value="backstage">🎟️ Backstage Pass 💎</option>
-          </select>
-        </div>
-      </nav>
-
+ <!-- Universal Header Navigation Bar -->
+<header class="navbar">
+  <div class="nav-container">
+    
+    <!-- Brand Logo -->
+    <div class="logo-container">
+      <a href="index.html" class="logo-link">
+        <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
+        <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
+      </a>
     </div>
-  </header>
+
+    <!-- Mobile Hamburger Toggle Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+    </button>
+
+    <!-- 6 Main Destinations & 3-Tier Mode Selector -->
+    <nav class="nav-links" id="nav-menu">
+      <a href="index.html" class="nav-item">🏠 Home</a>
+      <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+      <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+      <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
+      <a href="chat.html" class="nav-item">💬 Live Chat</a>
+      <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+
+      <!-- 3-Tier Access Mode Switcher -->
+      <div class="mode-selector-wrapper">
+        <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
+          <option value="twilight">🌸 Twilight (Public)</option>
+          <option value="basement">⚡ Basement 🔒</option>
+          <option value="backstage">🎟️ Backstage Pass 💎</option>
+        </select>
+      </div>
+    </nav>
+
+  </div>
+</header>
 
   <!-- Podcast Stage & Archive Layout -->
   <main class="podcast-container">
