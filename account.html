@@ -1,50 +1,57 @@
-<div class="account-dashboard-card" style="background: rgba(22, 15, 42, 0.95); border: 2px solid #a88beb; border-radius: 20px; padding: 24px; max-width: 800px; margin: 30px auto;">
+<div class="account-dashboard-card" style="background: rgba(22, 15, 42, 0.95); border: 2px solid #a88beb; border-radius: 20px; padding: 24px; max-width: 800px; margin: 30px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   
   <!-- Profile Banner & Header -->
-  <div style="display: flex; align-items: center; gap: 20px; border-bottom: 1px solid rgba(168, 139, 235, 0.3); padding-bottom: 20px; margin-bottom: 20px;">
+  <div style="display: flex; align-items: center; gap: 20px; border-bottom: 1px solid rgba(168, 139, 235, 0.3); padding-bottom: 20px; margin-bottom: 20px; flex-wrap: wrap;">
     <div style="position: relative; width: 80px; height: 80px;">
-      <img id="user-avatar-img" src="https://via.placeholder.com/80" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-      <div id="user-avatar-frame-overlay" style="position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border-radius: 50%; pointer-events: none;"></div>
+      <img id="user-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Lounge" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #120924;">
+      <div id="user-avatar-frame-overlay" style="position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border-radius: 50%; pointer-events: none; border: 2px solid transparent; transition: all 0.3s ease;"></div>
     </div>
 
-    <div style="flex: 1;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <h2 id="user-display-name" style="margin: 0; color: #fff;">Guest User</h2>
+    <div style="flex: 1; min-width: 200px;">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <h2 id="user-display-name" style="margin: 0; color: #fff; font-size: 1.4rem;">Guest User</h2>
         <span id="user-vip-badge" style="display: none; background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; font-size: 0.7rem; font-weight: 900; padding: 2px 8px; border-radius: 6px;">⚡ VIP MEMBER</span>
       </div>
       <p id="user-email-text" style="margin: 4px 0 0; color: #cbb8f6; font-size: 0.88rem;">Sign in to sync your profile</p>
     </div>
 
-    <!-- Orb Currency Display -->
-    <div style="background: rgba(35, 20, 60, 0.9); border: 1px solid #ffd166; border-radius: 14px; padding: 10px 18px; text-align: center;">
-      <span style="font-size: 0.72rem; color: #ffd166; font-weight: 800; display: block;">YOUR ORB BALANCE</span>
-      <span id="user-orb-count" style="font-size: 1.4rem; font-weight: 900; color: #fff;">🔮 0</span>
+    <!-- Orb Currency Display & Sign Out Button -->
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="background: rgba(35, 20, 60, 0.9); border: 1px solid #ffd166; border-radius: 14px; padding: 10px 18px; text-align: center;">
+        <span style="font-size: 0.72rem; color: #ffd166; font-weight: 800; display: block;">YOUR ORB BALANCE</span>
+        <span id="user-orb-count" style="font-size: 1.4rem; font-weight: 900; color: #fff;">🔮 0</span>
+      </div>
+      <button onclick="window.logoutUser().then(() => window.location.href='index.html')" style="background: rgba(255, 77, 109, 0.2); border: 1px solid #ff4d6d; color: #ff4d6d; padding: 10px 14px; border-radius: 12px; font-weight: 800; cursor: pointer;">Sign Out</button>
     </div>
   </div>
 
   <!-- Earn Free Orbs Activity Box -->
   <div style="background: rgba(255, 209, 102, 0.1); border: 1px solid rgba(255, 209, 102, 0.4); border-radius: 14px; padding: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
     <div>
-      <h4 style="margin: 0; color: #ffd166;">🎁 Daily Lounge Reward</h4>
-      <p style="margin: 2px 0 0; font-size: 0.82rem; color: #e2daf8;">Claim +50 free Orbs every 24 hours just for stopping by!</p>
+      <h4 style="margin: 0; color: #ffd166; font-size: 1.05rem;">🎁 Daily Lounge Reward</h4>
+      <p id="daily-claim-status" style="margin: 2px 0 0; font-size: 0.82rem; color: #e2daf8;">Claim +50 free Orbs every 24 hours just for stopping by!</p>
     </div>
-    <button id="claim-daily-btn" onclick="claimDailyBonus()" class="vote-btn" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; border: none; padding: 10px 20px;">Claim +50 Orbs</button>
+    <button id="claim-daily-btn" onclick="claimDailyBonus()" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: opacity 0.3s ease;">Claim +50 Orbs</button>
   </div>
 
   <!-- Equipped Inventory Customizer -->
-  <h3 style="color: #fff; margin-bottom: 12px;">🎨 Wardrobe & Cosmetics</h3>
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+  <h3 style="color: #fff; margin-bottom: 12px; font-size: 1.1rem;">🎨 Wardrobe & Cosmetics</h3>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
     <div>
       <label style="color: #cbb8f6; font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 6px;">Equipped Avatar Border</label>
-      <select id="equip-frame-select" onchange="equipSelectedItem('frame', this.value)" style="width: 100%; padding: 10px; background: rgba(30, 20, 50, 0.9); border: 1px solid rgba(168, 139, 235, 0.4); border-radius: 10px; color: #fff;">
+      <select id="equip-frame-select" onchange="equipSelectedItem('frame', this.value)" style="width: 100%; padding: 10px; background: rgba(30, 20, 50, 0.9); border: 1px solid rgba(168, 139, 235, 0.4); border-radius: 10px; color: #fff; cursor: pointer;">
         <option value="none">None</option>
+        <option value="neon_purple">🔮 Neon Cavern (Purple)</option>
+        <option value="gold_aura">✨ Backstage Gold</option>
       </select>
     </div>
 
     <div>
       <label style="color: #cbb8f6; font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 6px;">Equipped Chat Name Glow</label>
-      <select id="equip-glow-select" onchange="equipSelectedItem('glow', this.value)" style="width: 100%; padding: 10px; background: rgba(30, 20, 50, 0.9); border: 1px solid rgba(168, 139, 235, 0.4); border-radius: 10px; color: #fff;">
+      <select id="equip-glow-select" onchange="equipSelectedItem('glow', this.value)" style="width: 100%; padding: 10px; background: rgba(30, 20, 50, 0.9); border: 1px solid rgba(168, 139, 235, 0.4); border-radius: 10px; color: #fff; cursor: pointer;">
         <option value="none">Standard Text</option>
+        <option value="pink_glow">🌸 Pink Echo Glow</option>
+        <option value="gold_glow">⚡ VIP Golden Glow</option>
       </select>
     </div>
   </div>
