@@ -3,24 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile & Account — Otaku Neko Lounge</title>
+  <title>User Profile & Account Hub — Otaku Overload</title>
   <link rel="stylesheet" href="style.css">
   <style>
     :root {
       --nav-bg-twilight: rgba(18, 12, 36, 0.94);
       --nav-border-twilight: rgba(168, 139, 235, 0.35);
+      --bg-dark: #0d0b18;
+      --card-bg: #160f2a;
+      --sidebar-bg: #120924;
       --accent-pink: #f4b8c4;
       --accent-purple: #a88beb;
+      --accent-gold: #ffd166;
       --accent-red: #ff4d6d;
       --text-light: #e2daf8;
+      --text-muted: #a092c0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      background: #0d0b18;
+      background: var(--bg-dark);
       color: var(--text-light);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
     }
 
     /* Universal Navbar Base Styles */
@@ -33,11 +46,10 @@
       border-bottom: 2px solid var(--nav-border-twilight);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      box-sizing: border-box;
     }
 
     .nav-container {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 12px 20px;
       display: flex;
@@ -82,6 +94,259 @@
       background: rgba(168, 139, 235, 0.18);
       color: #ffffff;
     }
+
+    /* Fullscreen Dashboard Wrapper */
+    .dashboard-wrapper {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 65px);
+      overflow: hidden;
+    }
+
+    /* Left Sidebar */
+    .account-sidebar {
+      width: 320px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--nav-border-twilight);
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar-user-card {
+      background: rgba(22, 15, 42, 0.95);
+      border: 1px solid var(--nav-border-twilight);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin-bottom: 12px;
+    }
+
+    .avatar-wrapper img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #120924;
+    }
+
+    .avatar-frame-overlay {
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      right: -6px;
+      bottom: -6px;
+      border-radius: 50%;
+      pointer-events: none;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .user-name {
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .user-email {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      word-break: break-all;
+      margin-bottom: 12px;
+    }
+
+    .orb-pill {
+      background: rgba(35, 20, 60, 0.9);
+      border: 1px solid var(--accent-gold);
+      border-radius: 20px;
+      padding: 8px 16px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Nav Side Tabs */
+    .side-tabs-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      background: rgba(168, 139, 235, 0.12);
+      color: #fff;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(168, 139, 235, 0.25), rgba(244, 184, 196, 0.25));
+      border: 1px solid var(--accent-purple);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-signout {
+      margin-top: auto;
+      background: rgba(255, 77, 109, 0.15);
+      border: 1px solid var(--accent-red);
+      color: var(--accent-red);
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-signout:hover {
+      background: var(--accent-red);
+      color: #fff;
+    }
+
+    /* Main Content Display Area */
+    .dashboard-content {
+      flex: 1;
+      padding: 32px 40px;
+      overflow-y: auto;
+    }
+
+    .tab-panel {
+      display: none;
+      max-width: 950px;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-header {
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--nav-border-twilight);
+      padding-bottom: 16px;
+    }
+
+    .panel-header h2 {
+      color: #fff;
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    .panel-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .content-card {
+      background: var(--card-bg);
+      border: 1px solid var(--nav-border-twilight);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--accent-purple);
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      background: #120924;
+      border: 1px solid var(--nav-border-twilight);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-purple);
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      color: #000;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-action:hover {
+      opacity: 0.9;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .store-item-card {
+      background: #120924;
+      border: 1px solid var(--nav-border-twilight);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .store-item-card img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      margin-bottom: 12px;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
@@ -91,7 +356,7 @@
     <div class="nav-container">
       <div class="logo-container">
         <a href="index.html" style="text-decoration: none; display: flex; flex-direction: column;">
-          <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
+          <span class="logo-main">🌸 OTAKU OVERLOAD</span>
           <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
         </a>
       </div>
@@ -111,74 +376,159 @@
     </div>
   </header>
 
-  <!-- Main Dashboard Card -->
-  <main style="padding: 20px;">
-    <div class="account-dashboard-card" style="background: rgba(22, 15, 42, 0.95); border: 2px solid #a88beb; border-radius: 20px; padding: 24px; max-width: 800px; margin: 30px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-      
-      <!-- Profile Banner & Header -->
-      <div style="display: flex; align-items: center; gap: 20px; border-bottom: 1px solid rgba(168, 139, 235, 0.3); padding-bottom: 20px; margin-bottom: 20px; flex-wrap: wrap;">
-        <div style="position: relative; width: 80px; height: 80px;">
-          <img id="user-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Lounge" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #120924;">
-          <div id="user-avatar-frame-overlay" style="position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border-radius: 50%; pointer-events: none; border: 2px solid transparent; transition: all 0.3s ease;"></div>
+  <!-- Fullscreen Dashboard Interface -->
+  <div class="dashboard-wrapper">
+    
+    <!-- Left Sidebar Menu -->
+    <aside class="account-sidebar">
+      <div class="sidebar-user-card">
+        <div class="avatar-wrapper">
+          <img id="user-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Lounge" alt="Avatar">
+          <div id="user-avatar-frame-overlay" class="avatar-frame-overlay"></div>
+        </div>
+        <div id="user-display-name" class="user-name">Syncing Profile...</div>
+        <div id="user-email-text" class="user-email">Connecting...</div>
+        <div class="orb-pill">
+          <span>🔮</span>
+          <span id="user-orb-count">--</span> Orbs
+        </div>
+      </div>
+
+      <nav class="side-tabs-menu">
+        <button class="tab-btn active" onclick="switchDashboardTab('profile')">👤 Profile & Customization</button>
+        <button class="tab-btn" onclick="switchDashboardTab('wardrobe')">🎨 Wardrobe & Inventory</button>
+        <button class="tab-btn" onclick="switchDashboardTab('shop')">🛍️ Orb Emporium</button>
+        <button class="tab-btn" onclick="switchDashboardTab('rewards')">🎁 Earn Orbs & Rewards</button>
+        <button class="tab-btn" onclick="switchDashboardTab('safety')">⚙️ Account & Safety</button>
+      </nav>
+
+      <button onclick="window.logoutUser()" class="btn-signout">Sign Out</button>
+    </aside>
+
+    <!-- Main Right Content Panels -->
+    <main class="dashboard-content">
+
+      <!-- PANEL 1: PROFILE EDIT -->
+      <section id="panel-profile" class="tab-panel active">
+        <div class="panel-header">
+          <h2>Profile & Public Identity</h2>
+          <p>Update your public display name and avatar details across the Otaku Overload lounge.</p>
         </div>
 
-        <div style="flex: 1; min-width: 200px;">
-          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <h2 id="user-display-name" style="margin: 0; color: #fff; font-size: 1.4rem;">Syncing Profile...</h2>
-            <span id="user-vip-badge" style="display: none; background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; font-size: 0.7rem; font-weight: 900; padding: 2px 8px; border-radius: 6px;">⚡ VIP MEMBER</span>
+        <div class="content-card">
+          <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" id="edit-display-name-input" class="form-control" placeholder="Enter username...">
           </div>
-          <p id="user-email-text" style="margin: 4px 0 0; color: #cbb8f6; font-size: 0.88rem;">Connecting to Firebase...</p>
+
+          <button onclick="window.updateDisplayName()" class="btn-action">Save Display Name</button>
+        </div>
+      </section>
+
+      <!-- PANEL 2: WARDROBE -->
+      <section id="panel-wardrobe" class="tab-panel">
+        <div class="panel-header">
+          <h2>Wardrobe & Equipped Styles</h2>
+          <p>Select which cosmetic items to equip on your avatar and chat messages.</p>
         </div>
 
-        <!-- Orb Currency Display & Sign Out Button -->
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="background: rgba(35, 20, 60, 0.9); border: 1px solid #ffd166; border-radius: 14px; padding: 10px 18px; text-align: center;">
-            <span style="font-size: 0.72rem; color: #ffd166; font-weight: 800; display: block;">YOUR ORB BALANCE</span>
-            <span id="user-orb-count" style="font-size: 1.4rem; font-weight: 900; color: #fff;">🔮 --</span>
+        <div class="content-card">
+          <div class="grid-2col">
+            <div>
+              <label style="color: var(--accent-purple); font-size: 0.85rem; font-weight: 800; display: block; margin-bottom: 8px;">EQUIPPED AVATAR BORDER</label>
+              <select id="equip-frame-select" onchange="window.equipSelectedItem('frame', this.value)" class="form-control">
+                <option value="none">None</option>
+                <option value="neon_purple">🔮 Neon Cavern (Purple)</option>
+                <option value="gold_aura">✨ Backstage Gold</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="color: var(--accent-purple); font-size: 0.85rem; font-weight: 800; display: block; margin-bottom: 8px;">EQUIPPED CHAT NAME GLOW</label>
+              <select id="equip-glow-select" onchange="window.equipSelectedItem('glow', this.value)" class="form-control">
+                <option value="none">Standard Text</option>
+                <option value="pink_glow">🌸 Pink Echo Glow</option>
+                <option value="gold_glow">⚡ Golden Glow</option>
+              </select>
+            </div>
           </div>
-          <button onclick="window.logoutUser()" style="background: rgba(255, 77, 109, 0.2); border: 1px solid #ff4d6d; color: #ff4d6d; padding: 10px 14px; border-radius: 12px; font-weight: 800; cursor: pointer;">Sign Out</button>
         </div>
-      </div>
+      </section>
 
-      <!-- Earn Free Orbs Activity Box -->
-      <div style="background: rgba(255, 209, 102, 0.1); border: 1px solid rgba(255, 209, 102, 0.4); border-radius: 14px; padding: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-        <div>
-          <h4 style="margin: 0; color: #ffd166; font-size: 1.05rem;">🎁 Daily Lounge Reward</h4>
-          <p id="daily-claim-status" style="margin: 2px 0 0; font-size: 0.82rem; color: #e2daf8;">Claim +50 free Orbs every 24 hours just for stopping by!</p>
-        </div>
-        <button id="claim-daily-btn" onclick="window.claimDailyBonus()" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: opacity 0.3s ease;">Claim +50 Orbs</button>
-      </div>
-
-      <!-- Equipped Inventory Customizer -->
-      <h3 style="color: #fff; margin-bottom: 12px; font-size: 1.1rem;">🎨 Wardrobe & Cosmetics</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
-        <div>
-          <label style="color: #cbb8f6; font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 6px;">Equipped Avatar Border</label>
-          <select id="equip-frame-select" onchange="window.equipSelectedItem('frame', this.value)" style="width: 100%; padding: 10px; background: rgba(30, 20, 50, 0.9); border: 1px solid rgba(168, 139, 235, 0.4); border-radius: 10px; color: #fff; cursor: pointer;">
-            <option value="none">None</option>
-            <option value="neon_purple">🔮 Neon Cavern (Purple)</option>
-            <option value="gold_aura">✨ Backstage Gold</option>
-          </select>
+      <!-- PANEL 3: ORB SHOP -->
+      <section id="panel-shop" class="tab-panel">
+        <div class="panel-header">
+          <h2>Orb Emporium</h2>
+          <p>Spend your hard-earned Orbs to unlock exclusive avatars and chat cosmetics!</p>
         </div>
 
-        <div>
-          <label style="color: #cbb8f6; font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 6px;">Equipped Chat Name Glow</label>
-          <select id="equip-glow-select" onchange="window.equipSelectedItem('glow', this.value)" style="width: 100%; padding: 10px; background: rgba(30, 20, 50, 0.9); border: 1px solid rgba(168, 139, 235, 0.4); border-radius: 10px; color: #fff; cursor: pointer;">
-            <option value="none">Standard Text</option>
-            <option value="pink_glow">🌸 Pink Echo Glow</option>
-            <option value="gold_glow">⚡ VIP Golden Glow</option>
-          </select>
-        </div>
-      </div>
+        <div class="grid-2col">
+          <div class="store-item-card">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=CyberNeko" alt="Cyber Neko">
+            <strong style="color: #fff; margin-bottom: 4px;">Cyber Neko Avatar</strong>
+            <span style="color: var(--accent-gold); font-weight: 800; margin-bottom: 12px;">🔮 250 Orbs</span>
+            <button onclick="window.buyCosmeticItem('avatar_cyber', 250)" class="btn-action" style="width: 100%;">Buy Avatar</button>
+          </div>
 
-    </div>
-  </main>
+          <div class="store-item-card">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=TwilightMage" alt="Twilight Mage">
+            <strong style="color: #fff; margin-bottom: 4px;">Twilight Mage Avatar</strong>
+            <span style="color: var(--accent-gold); font-weight: 800; margin-bottom: 12px;">🔮 450 Orbs</span>
+            <button onclick="window.buyCosmeticItem('avatar_twilight', 450)" class="btn-action" style="width: 100%;">Buy Avatar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 4: EARN ORBS & REWARDS -->
+      <section id="panel-rewards" class="tab-panel">
+        <div class="panel-header">
+          <h2>Earn Currency & Rewards</h2>
+          <p>Collect free daily login rewards and watch optional video ads to fill your Orb pouch.</p>
+        </div>
+
+        <div class="content-card" style="border-color: var(--accent-gold);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <h3 style="color: var(--accent-gold); margin-bottom: 4px;">🎁 Daily Lounge Reward</h3>
+              <p id="daily-claim-status" style="font-size: 0.88rem; color: var(--text-light);">Claim +50 free Orbs every 24 hours!</p>
+            </div>
+            <button id="claim-daily-btn" onclick="window.claimDailyBonus()" class="btn-action" style="background: linear-gradient(135deg, var(--accent-gold), #ff9f1c);">Claim +50 Orbs</button>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <h3 style="color: var(--accent-purple); margin-bottom: 4px;">🎬 Watch Sponsored Video (+50 Orbs)</h3>
+              <p style="font-size: 0.88rem; color: var(--text-muted);">Watch a quick 15-30 second ad to earn instant Orbs.</p>
+            </div>
+            <button onclick="window.triggerRewardedAd()" class="btn-action">Watch Video Ad</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 5: SAFETY & AGE VERIFICATION -->
+      <section id="panel-safety" class="tab-panel">
+        <div class="panel-header">
+          <h2>Account Security & Verification Flags</h2>
+          <p>Verify your access tiers for community chatrooms.</p>
+        </div>
+
+        <div class="content-card">
+          <p style="margin-bottom: 12px;"><strong>Google Email:</strong> <span id="safety-email-display">Loading...</span></p>
+          <p style="margin-bottom: 12px;"><strong>Twilight Mode (13+ Chat Access):</strong> <span id="safety-13-status">❌ Not Verified</span></p>
+          <p style="margin-bottom: 0;"><strong>Basement Mode (17+ Cavern Access):</strong> <span id="safety-17-status">❌ Not Verified</span></p>
+        </div>
+      </section>
+
+    </main>
+  </div>
 
   <!-- Single Unified Script for Account Page -->
   <script type="module">
     import { auth, db } from './firebase-config.js?v=3';
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { doc, updateDoc, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     // 1. Listen directly to Firebase Auth changes on load
     onAuthStateChanged(auth, (user) => {
@@ -189,6 +539,38 @@
         window.location.href = "index.html";
       }
     });
+
+    // Tab Switcher Function
+    window.switchDashboardTab = function(tabName) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+      const targetPanel = document.getElementById(`panel-${tabName}`);
+      if (targetPanel) targetPanel.classList.add('active');
+      event.currentTarget.classList.add('active');
+    };
+
+    // Update Display Name
+    window.updateDisplayName = async function() {
+      const input = document.getElementById('edit-display-name-input');
+      const newName = input ? input.value.trim() : '';
+
+      if (!newName) {
+        alert("Please enter a valid display name.");
+        return;
+      }
+
+      try {
+        const userRef = doc(db, "users", window.currentUser.uid);
+        await updateDoc(userRef, { displayName: newName });
+        window.userData.displayName = newName;
+        alert("Display name updated successfully!");
+        window.updatePageUI();
+      } catch (err) {
+        console.error("Failed to update display name:", err);
+        alert("Error saving name: " + err.message);
+      }
+    };
 
     // 2. Claim Daily Bonus Function
     window.claimDailyBonus = async function() {
@@ -245,15 +627,59 @@
       }
     };
 
+    // Buy Cosmetic Item Function
+    window.buyCosmeticItem = async function(itemId, cost) {
+      if (!window.currentUser || !window.userData) return;
+
+      if ((window.userData.orbs || 0) < cost) {
+        alert(`You need ${cost} Orbs to buy this cosmetic item!`);
+        return;
+      }
+
+      try {
+        const userRef = doc(db, "users", window.currentUser.uid);
+        await updateDoc(userRef, {
+          orbs: increment(-cost),
+          inventory: arrayUnion(itemId)
+        });
+
+        window.userData.orbs -= cost;
+        alert("Purchase successful! Item added to your inventory.");
+        window.updatePageUI();
+      } catch (err) {
+        console.error("Purchase error:", err);
+      }
+    };
+
+    // Rewarded Ad Simulator
+    window.triggerRewardedAd = function() {
+      alert("Sponsor Ad playing... (15 seconds)");
+      setTimeout(async () => {
+        try {
+          const userRef = doc(db, "users", window.currentUser.uid);
+          await updateDoc(userRef, { orbs: increment(50) });
+          window.userData.orbs = (window.userData.orbs || 0) + 50;
+          alert("Ad finished! +50 Orbs credited to your pouch 🔮");
+          window.updatePageUI();
+        } catch (err) {
+          console.error("Ad reward failed:", err);
+        }
+      }, 1500);
+    };
+
     // 4. Update Profile Page Elements
     window.updatePageUI = function() {
       const nameEl = document.getElementById('user-display-name');
       const emailEl = document.getElementById('user-email-text');
       const orbEl = document.getElementById('user-orb-count');
       const avatarEl = document.getElementById('user-avatar-img');
-      const vipBadge = document.getElementById('user-vip-badge');
       const claimBtn = document.getElementById('claim-daily-btn');
       const navBtn = document.getElementById('nav-auth-btn');
+
+      const inputName = document.getElementById('edit-display-name-input');
+      const safetyEmail = document.getElementById('safety-email-display');
+      const safety13 = document.getElementById('safety-13-status');
+      const safety17 = document.getElementById('safety-17-status');
 
       if (navBtn) {
         if (window.currentUser && window.userData) {
@@ -268,9 +694,13 @@
       if (window.currentUser && window.userData) {
         if (nameEl) nameEl.innerText = window.userData.displayName || "Lounge Member";
         if (emailEl) emailEl.innerText = window.userData.email || "";
-        if (orbEl) orbEl.innerText = `🔮 ${window.userData.orbs || 0}`;
+        if (orbEl) orbEl.innerText = `${window.userData.orbs || 0}`;
         if (avatarEl) avatarEl.src = window.userData.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${window.userData.uid}`;
-        if (vipBadge) vipBadge.style.display = window.userData.isVIP ? 'inline-block' : 'none';
+
+        if (inputName) inputName.value = window.userData.displayName || "";
+        if (safetyEmail) safetyEmail.innerText = window.userData.email || window.currentUser.email;
+        if (safety13) safety13.innerText = window.userData.ageVerified13 ? "✅ Verified (13+)" : "❌ Not Verified";
+        if (safety17) safety17.innerText = window.userData.ageVerified17 ? "✅ Verified (17+)" : "❌ Not Verified";
 
         const now = Date.now();
         const lastClaim = window.userData.lastDailyClaim || 0;
