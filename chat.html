@@ -443,35 +443,6 @@
     </aside>
   </main>
 
-  <!-- Docked Persistent Floating Mini-Player -->
-  <div id="persistent-player-bar" class="mini-player-bar hidden">
-    <div class="mini-player-content">
-      
-      <!-- Track & Speaker Info -->
-      <div class="mini-track-info">
-        <div class="mini-speaker-avatar" id="mini-avatar-box">🎙️</div>
-        <div class="mini-text-details">
-          <span class="mini-track-title" id="mini-track-title">Whisper Radio Studio</span>
-          <span class="mini-speaker-name" id="mini-speaker-name">Ready to play</span>
-        </div>
-      </div>
-
-      <!-- Center Playback Controls & Progress Bar -->
-      <div class="mini-player-controls">
-        <button id="mini-play-btn" class="mini-control-btn" onclick="toggleGlobalPlayback()">▶</button>
-        <div class="mini-progress-wrapper" onclick="seekGlobalAudio(event)">
-          <span id="mini-time-current" class="mini-time">00:00</span>
-          <div class="mini-progress-track">
-            <div id="mini-progress-fill" class="mini-progress-fill"></div>
-          </div>
-          <span id="mini-time-total" class="mini-time">03:12</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <script src="global-player.js"></script>
   <script>
     // User Auth & Tier State
     let userState = {
@@ -819,6 +790,6 @@
       });
     });
   </script>
-    <script src="global-player.js"></script>
+  <script src="global-player.js"></script>
 </body>
 </html>
