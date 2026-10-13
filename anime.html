@@ -491,6 +491,33 @@
       margin-top: auto;
     }
 
+    .vote-btn {
+      background: rgba(168, 139, 235, 0.18);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      color: #ffffff;
+      padding: 6px 16px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .vote-btn:hover {
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      color: #0d0b18;
+      border-color: #f4b8c4;
+    }
+
+    .poll-card {
+      background: rgba(20, 14, 38, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 16px;
+      padding: 18px 22px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+
     /* Modal Overlay Styles */
     .modal-overlay {
       position: fixed;
@@ -652,33 +679,56 @@
 
     <!-- SUB-TAB 2: AOI'S MANGA VAULT -->
     <section id="manga-vault-tab" class="tab-content">
+      
+      <!-- Host Banner -->
       <div class="host-hero-banner" style="border-color: rgba(255, 77, 109, 0.5);">
         <span class="host-badge-tag" style="background: linear-gradient(135deg, #ff4d6d, #f4b8c4); color: #000;">🥁 AOI'S READING NOOK</span>
         <h2 style="margin: 0; color: #ffffff; font-family: 'Fredoka', cursive;">Manga & Reading Vault</h2>
-        <p style="margin: 4px 0 0; color: #cbb8f6; font-size: 0.9rem;">Weekly Chapter Release Calendar • Cozy Reading J-Music Player</p>
+        <p style="margin: 4px 0 0; color: #cbb8f6; font-size: 0.9rem;">Trending Manga Catalog • Search Database • Cozy Music Reader</p>
         
         <div class="sera-note-box" style="border-left-color: #ff4d6d;">
-          💬 <strong>Aoi:</strong> "Welcome to my quiet corner. Here are the top weekly manga chapter drops. Grab your reader app and turn on Neko FM for cozy acoustic background vibes."
+          💬 <strong>Aoi:</strong> "Welcome to my quiet reading vault! Search through thousands of manga titles or check out my featured pick below."
         </div>
       </div>
 
+      <!-- Featured Spotlight Card: EchoHeart -->
       <div class="spotlight-anime-card" style="border-color: #ff4d6d;">
-        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&q=80" alt="Manga Cover" class="spotlight-poster">
+        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&q=80" alt="EchoHeart Cover" class="spotlight-poster">
         <div>
-          <span class="host-badge-tag" style="background: #ff4d6d; color: #fff;">📖 AOI'S MANGA PICK</span>
-          <h3 class="spotlight-title">Lily of the Valley — Chapter 12</h3>
+          <span class="host-badge-tag" style="background: #ff4d6d; color: #fff;">📖 AOI'S FEATURED PICK</span>
+          <h3 class="spotlight-title">EchoHeart</h3>
           <div class="genre-pill-group">
-            <span class="genre-pill" style="border-color: #ff4d6d; color: #ff4d6d;">Romance</span>
-            <span class="genre-pill">Small-Town Drama</span>
-            <span class="genre-pill">Oakhaven Stories</span>
+            <span class="genre-pill" style="border-color: #ff4d6d; color: #ff4d6d;">Music</span>
+            <span class="genre-pill">School Life</span>
+            <span class="genre-pill">Prep Room B Lore</span>
           </div>
           <p style="font-size: 0.88rem; color: #cbb8f6; line-height: 1.5; margin: 0 0 12px;">
-            Set in the quiet mountain town of Oakhaven. Follow Lily and Sloane as secrets at "The Open Page" bookstore come to light in this week's chapter update!
+            Follow Nekomi and Sera in their early school days as they team up for a soft duet, forming the initial heartbeat that leads to Sakuraoka High's underground band!
           </p>
           <div class="stream-btn-group">
-            <a href="#" onclick="alert('🌸 Redirecting to Official Reader Portal!'); return false;" class="stream-btn" style="background: linear-gradient(135deg, #ff4d6d, #f4b8c4);">📖 Read Chapter 12</a>
+            <a href="hub.html" class="stream-btn" style="background: linear-gradient(135deg, #ff4d6d, #f4b8c4);">📖 Read Preview in Universe Hub</a>
           </div>
         </div>
+      </div>
+
+      <!-- Manga Search & Filter Bar -->
+      <div style="background: rgba(15, 10, 30, 0.85); border: 1px solid rgba(168, 139, 235, 0.3); border-radius: 16px; padding: 18px 22px; margin-bottom: 24px;">
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+          <input type="text" id="manga-search-input" placeholder="🔍 Search any manga (e.g., 'One Piece', 'Bocchi the Rock', 'Frieren')..." style="margin: 0; flex: 1; min-width: 240px; padding: 10px 14px; background: rgba(22, 15, 42, 0.8); border: 1px solid rgba(168, 139, 235, 0.3); border-radius: 10px; color: #ffffff; outline: none; font-family: inherit;">
+          <button class="vote-btn" onclick="triggerMangaSearch()" style="padding: 10px 20px;">Search Database</button>
+          <button class="vote-btn" onclick="resetMangaList()" style="background: rgba(168, 139, 235, 0.2); border-color: rgba(168, 139, 235, 0.4);">🔥 Popular Trending</button>
+        </div>
+      </div>
+
+      <!-- Manga Results Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem;" id="manga-grid-title">🔥 Popular Manga Releases</h3>
+        <span style="font-size: 0.8rem; color: #cbb8f6;" id="manga-count-label">Showing Top Picks</span>
+      </div>
+
+      <!-- Live AniList Manga Grid -->
+      <div class="anime-grid" id="manga-card-grid">
+        <!-- Rendered dynamically via JavaScript -->
       </div>
     </section>
 
@@ -790,7 +840,7 @@
       if (navMenu) navMenu.classList.toggle('open');
     }
 
-    /* Free AniList GraphQL API Fetch Engine */
+    /* Free AniList GraphQL API Fetch Engine - Anime */
     async function fetchSeasonalAnime() {
       const gridContainer = document.getElementById('anime-card-grid');
       if (!gridContainer) return;
@@ -844,7 +894,6 @@
         console.log("AniList fetch fallback:", err);
       }
 
-      // Fallback Cards if offline or API restricted
       renderFallbackAnimeCards();
     }
 
@@ -871,6 +920,99 @@
         `;
         gridContainer.appendChild(card);
       });
+    }
+
+    /* Free AniList Manga GraphQL Fetch Engine */
+    async function fetchMangaCatalog(searchQuery = '') {
+      const gridContainer = document.getElementById('manga-card-grid');
+      const titleLabel = document.getElementById('manga-grid-title');
+      const countLabel = document.getElementById('manga-count-label');
+
+      if (!gridContainer) return;
+
+      gridContainer.innerHTML = '<div style="color:#cbb8f6; padding:20px; text-align:center;">🔍 Searching AniList database...</div>';
+
+      const query = `
+        query ($search: String, $page: Int, $perPage: Int) {
+          Page(page: $page, perPage: $perPage) {
+            media(type: MANGA, search: $search, sort: [POPULARITY_DESC]) {
+              id
+              title { romaji english }
+              coverImage { extraLarge large }
+              description(asHtml: false)
+              genres
+              chapters
+              volumes
+              status
+              siteUrl
+            }
+          }
+        }
+      `;
+
+      const variables = { page: 1, perPage: 12 };
+      if (searchQuery.trim() !== '') {
+        variables.search = searchQuery;
+      }
+
+      try {
+        const response = await fetch('https://graphql.anilist.co', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ query, variables })
+        });
+
+        const data = await response.json();
+        const mangaList = data?.data?.Page?.media || [];
+
+        if (mangaList.length > 0) {
+          gridContainer.innerHTML = '';
+          if (titleLabel) titleLabel.innerText = searchQuery ? `🔍 Results for "${searchQuery}"` : '🔥 Popular Manga Releases';
+          if (countLabel) countLabel.innerText = `Found ${mangaList.length} Titles`;
+
+          mangaList.forEach(manga => {
+            const title = manga.title.english || manga.title.romaji;
+            const img = manga.coverImage.extraLarge || manga.coverImage.large;
+            const chaptersText = manga.chapters ? `${manga.chapters} Chapters` : (manga.status || 'Publishing');
+            const genresText = manga.genres ? manga.genres.slice(0, 2).join(' • ') : 'Manga';
+
+            const card = document.createElement('div');
+            card.className = 'anime-card';
+            card.innerHTML = `
+              <img src="${img}" alt="${title}" class="anime-card-img" style="height: 260px;">
+              <div class="anime-card-body">
+                <h4 class="anime-card-title">${title}</h4>
+                <div style="font-size:0.75rem; color:#cbb8f6; margin-bottom: 8px;">${genresText}</div>
+                <div class="airing-timer-badge" style="background: rgba(255, 77, 109, 0.2); border-color: rgba(255, 77, 109, 0.4); color: #f4b8c4;">
+                  📖 ${chaptersText}
+                </div>
+                <a href="${manga.siteUrl}" target="_blank" class="vote-btn" style="text-align:center; text-decoration:none; margin-top:10px; padding:6px;">
+                  View Details ↗
+                </a>
+              </div>
+            `;
+            gridContainer.appendChild(card);
+          });
+          return;
+        } else {
+          gridContainer.innerHTML = '<div style="color:#cbb8f6; padding:20px; text-align:center;">No manga titles found. Try searching another name!</div>';
+        }
+      } catch (err) {
+        console.error("AniList Manga Fetch Error:", err);
+        gridContainer.innerHTML = '<div style="color:#ff4d6d; padding:20px; text-align:center;">Unable to load live database. Check internet connection.</div>';
+      }
+    }
+
+    function triggerMangaSearch() {
+      const input = document.getElementById('manga-search-input');
+      const query = input ? input.value.trim() : '';
+      fetchMangaCatalog(query);
+    }
+
+    function resetMangaList() {
+      const input = document.getElementById('manga-search-input');
+      if (input) input.value = '';
+      fetchMangaCatalog('');
     }
 
     /* Native Web Speech Pronunciation */
@@ -945,6 +1087,14 @@
       currentMode = getCurrentMode();
       applyThemeMode(currentMode);
       fetchSeasonalAnime();
+      fetchMangaCatalog();
+
+      const searchInput = document.getElementById('manga-search-input');
+      if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') triggerMangaSearch();
+        });
+      }
     });
   </script>
 </body>
