@@ -102,3 +102,30 @@ async function loadOrCreateUserProfile(user) {
     console.error("Firestore user profile error:", err);
   }
 }
+
+// Nav Auth Button Handler
+window.openAuthOrAccount = function() {
+  if (window.currentUser) {
+    window.location.href = "account.html";
+  } else {
+    if (typeof showAuthModal === "function") {
+      showAuthModal("Welcome to Otaku Lounge", "Sign in with Google to earn Orbs, unlock avatar frames, and chat live!");
+    } else {
+      window.loginWithGoogle();
+    }
+  }
+};
+
+// Automatic Navbar Button UI Update
+window.updatePageUI = function() {
+  const btn = document.getElementById('nav-auth-btn');
+  if (!btn) return;
+
+  if (window.currentUser && window.userData) {
+    btn.innerHTML = `👤 Profile (🔮 ${window.userData.orbs || 0})`;
+    btn.style.borderColor = '#ffd166';
+  } else {
+    btn.innerHTML = `🔑 Login`;
+    btn.style.borderColor = '#a88beb';
+  }
+};
