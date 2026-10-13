@@ -15,7 +15,9 @@
       --accent-pink: #f4b8c4;
       --accent-purple: #a88beb;
       --accent-red: #ff4d6d;
+      --accent-gold: #ffd166;
       --text-light: #e2daf8;
+      --text-muted: #a092c0;
     }
 
     body {
@@ -177,16 +179,6 @@
       font-weight: 700;
     }
 
-    body.basement-mode .mode-select-dropdown option {
-      background-color: #0b0414;
-      color: #ff4d6d;
-    }
-
-    body.backstage-mode .mode-select-dropdown option {
-      background-color: #080210;
-      color: #ffd166;
-    }
-
     /* Mobile Hamburger Toggle Button */
     .mobile-menu-btn {
       display: none;
@@ -245,22 +237,29 @@
       padding: 24px;
       display: flex;
       flex-direction: column;
-      height: 520px;
+      height: 560px;
       transition: border-color 0.4s ease;
     }
 
     body.basement-mode .chat-feed-box { border-color: rgba(255, 77, 109, 0.5); }
     body.backstage-mode .chat-feed-box { border-color: #ffd166; }
 
-    <!-- Channel Selector Tabs -->
-<div style="display: flex; gap: 10px; margin-bottom: 16px;">
-  <button id="tab-twilight" onclick="switchChatChannel('twilight')" class="emote-btn" style="padding: 10px 18px; font-weight: 800; background: var(--accent-purple); color: #000;">
-    🌸 Twilight Channel (13+)
-  </button>
-  <button id="tab-basement" onclick="switchChatChannel('basement')" class="emote-btn" style="padding: 10px 18px; font-weight: 800; background: rgba(255, 77, 109, 0.2); color: #ff4d6d; border: 1px solid #ff4d6d;">
-    ⚡ Basement Channel (17+) 🔒
-  </button>
-</div>
+    .channel-tabs-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .channel-tab-btn {
+      padding: 10px 18px;
+      font-weight: 800;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+    }
+
     .chat-messages {
       flex: 1;
       overflow-y: auto;
@@ -270,47 +269,32 @@
       gap: 12px;
     }
 
-    .msg-card {
-      background: rgba(15, 10, 30, 0.7);
-      border: 1px solid rgba(168, 139, 235, 0.25);
-      border-radius: 12px;
-      padding: 12px 16px;
-      animation: fadeInMsg 0.35s ease forwards;
+    /* Avatar Frame Overlays */
+    .frame-neon_purple {
+      border: 2px solid var(--accent-purple) !important;
+      box-shadow: 0 0 8px var(--accent-purple);
+      border-radius: 50%;
+      position: absolute;
+      top: -3px; left: -3px; right: -3px; bottom: -3px;
+      pointer-events: none;
     }
 
-    @keyframes fadeInMsg {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+    .frame-gold_aura {
+      border: 2px solid var(--accent-gold) !important;
+      box-shadow: 0 0 10px var(--accent-gold);
+      border-radius: 50%;
+      position: absolute;
+      top: -3px; left: -3px; right: -3px; bottom: -3px;
+      pointer-events: none;
     }
 
-    .msg-card.vip-user {
-      border-color: #ff007f;
-      background: rgba(25, 10, 35, 0.85);
-      box-shadow: 0 0 14px rgba(255, 0, 127, 0.25);
-    }
+    /* Name Glow Styles */
+    .glow-pink_glow { text-shadow: 0 0 8px var(--accent-pink); color: var(--accent-pink) !important; }
+    .glow-gold_glow { text-shadow: 0 0 8px var(--accent-gold); color: var(--accent-gold) !important; }
 
-    .msg-card.rare-char {
-      border-color: #ffd166;
-      background: rgba(35, 25, 15, 0.85);
-      box-shadow: 0 0 14px rgba(255, 209, 102, 0.3);
-    }
-
-    .msg-card.ultra-rare {
-      border-color: #a88beb;
-      background: rgba(30, 15, 55, 0.9);
-      box-shadow: 0 0 18px rgba(168, 139, 235, 0.4);
-    }
-
-    .msg-author { font-size: 0.82rem; color: #f4b8c4; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; }
-    .msg-card.rare-char .msg-author { color: #ffd166; }
-    .msg-card.ultra-rare .msg-author { color: #a88beb; }
-
-    .vip-badge { background: #ff007f; color: #fff; padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; margin-left: 6px; }
-    .rare-badge { background: #ffd166; color: #000; padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; margin-left: 6px; font-weight: 900; }
-    .lore-badge { background: #a88beb; color: #0d0b18; padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; margin-left: 6px; font-weight: 900; }
-
-    .emote-bar { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
-    .emote-btn { background: rgba(35, 25, 65, 0.8); border: 1px solid rgba(168, 139, 235, 0.3); color: #fff; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+    .emote-bar { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .emote-btn { background: rgba(35, 25, 65, 0.8); border: 1px solid rgba(168, 139, 235, 0.3); color: #fff; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+    .emote-btn:hover { background: var(--accent-purple); color: #000; }
 
     .post-panel {
       background: rgba(22, 15, 42, 0.92);
@@ -324,62 +308,35 @@
     body.backstage-mode .post-panel { border-color: #ffd166; }
 
     .form-control {
-      width: 100%; padding: 10px; background: rgba(15, 10, 30, 0.7);
-      border: 1px solid rgba(168, 139, 235, 0.3); border-radius: 8px; color: #fff; margin-bottom: 12px; box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 10px;
+      color: #fff;
+      margin-bottom: 12px;
+      box-sizing: border-box;
       outline: none;
+      font-size: 0.92rem;
     }
 
     .action-btn {
-      width: 100%; padding: 12px; background: linear-gradient(135deg, #a88beb, #f4b8c4);
-      border: none; border-radius: 10px; color: #0d0b18; font-weight: 800; cursor: pointer;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none;
+      border-radius: 10px;
+      color: #0d0b18;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: opacity 0.2s ease;
     }
+
+    .action-btn:hover { opacity: 0.9; }
 
     body.basement-mode .action-btn { background: linear-gradient(135deg, #ff4d6d, #a88beb); color: #ffffff; }
     body.backstage-mode .action-btn { background: linear-gradient(135deg, #ffd166, #ff007f); color: #000000; }
-
-    /* Modal Overlay Styles */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(5, 2, 12, 0.85);
-      backdrop-filter: blur(10px);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-card {
-      background: rgba(22, 15, 42, 0.96);
-      border: 2px solid #a88beb;
-      border-radius: 20px;
-      padding: 28px;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.8);
-    }
-
-    .vip-modal-card { border-color: #ff007f; box-shadow: 0 0 30px rgba(255, 0, 127, 0.4); }
-    .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.3rem; }
-    .modal-card p { color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
-    .modal-price-tag {
-      background: rgba(255, 209, 102, 0.15);
-      border: 1px solid #ffd166;
-      color: #ffd166;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-      display: inline-block;
-    }
-    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
-    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
-    .google-btn { background: #ffffff; color: #111; }
-    .stripe-btn { background: linear-gradient(135deg, #ff007f, #ffd166); color: #000; }
-    .close-btn { background: transparent; color: #a88beb; border: 1px solid rgba(168, 139, 235, 0.3); }
   </style>
 </head>
 <body class="twilight-mode">
@@ -418,10 +375,9 @@
 
         <!-- 3-Tier Access Mode Switcher -->
         <div class="mode-selector-wrapper">
-          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-            <option value="twilight">🌸 Twilight (Public)</option>
-            <option value="basement">⚡ Basement 🔒</option>
-            <option value="backstage">🎟️ Backstage Pass 💎</option>
+          <select id="mode-selector" class="mode-select-dropdown" onchange="window.switchChatChannel(this.value)">
+            <option value="twilight">🌸 Twilight Channel (13+)</option>
+            <option value="basement">⚡ Basement Channel (17+) 🔒</option>
           </select>
         </div>
       </nav>
@@ -432,333 +388,66 @@
   <!-- Live Chat Stage -->
   <main class="chat-container">
     <section class="chat-feed-box">
-      <h3 id="chat-title-heading">💬 Locker 102 Live Classmate Feed</h3>
-      <div id="chat-stream" class="chat-messages">
-        <!-- Live Chat & NPC Message Feed Populates Here -->
+      
+      <!-- Channel Selector Tabs -->
+      <div class="channel-tabs-bar">
+        <button id="tab-twilight" onclick="window.switchChatChannel('twilight')" class="channel-tab-btn" style="background: var(--accent-purple); color: #000;">
+          🌸 Twilight Channel (13+)
+        </button>
+        <button id="tab-basement" onclick="window.switchChatChannel('basement')" class="channel-tab-btn" style="background: rgba(255, 77, 109, 0.2); color: #ff4d6d; border: 1px solid #ff4d6d;">
+          ⚡ Basement Channel (17+) 🔒
+        </button>
       </div>
 
-      <!-- Band Emote Selector -->
+      <!-- Real-Time Messages Display -->
+      <div id="messages-display" class="chat-messages">
+        <!-- Live Firestore stream loads here via chat.js -->
+      </div>
+
+      <!-- Quick Band Emote Bar -->
       <div class="emote-bar">
-        <button class="emote-btn" onclick="insertEmote('🎸')">🎸 Guitar</button>
-        <button class="emote-btn" onclick="insertEmote('🎹')">🎹 Keytar</button>
-        <button class="emote-btn" onclick="insertEmote('🥁')">🥁 Drums</button>
-        <button class="emote-btn" onclick="insertEmote('🌸')">🌸 Cherry</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode('🎸')">🎸 Guitar</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode('🎹')">🎹 Keytar</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode('🥁')">🥁 Drums</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode('🌸')">🌸 Cherry</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode('🍓')">🍓 Strawberry</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode(':neko_wave:')">:neko_wave:</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode(':cat_pog:')">:cat_pog:</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode(':orb_hype:')">:orb_hype:</button>
       </div>
     </section>
 
-    <!-- Post Note Drawer -->
+    <!-- Post Message Panel -->
     <aside class="post-panel">
-      <h3>📮 Send a Note</h3>
-      <p id="posting-access-note" style="font-size: 0.82rem; color: #a88beb;">🔒 Live message posting requires a logged-in account to ensure SFW community safety.</p>
+      <h3>📮 Send a Message</h3>
+      <p id="posting-access-note" style="font-size: 0.82rem; color: #a092c0; margin-bottom: 16px;">
+        🔒 Messages are moderated by Neko-Guard 🐾 to ensure a safe community environment.
+      </p>
       
-      <input type="text" id="chat-handle" class="form-control" placeholder="Your Student Name">
-      <textarea id="chat-text" class="form-control" rows="4" placeholder="Write a message to the band..."></textarea>
-      
-      <button class="action-btn" onclick="handleLivePost()">🌸 Post to Locker 102</button>
+      <form id="chat-form" onsubmit="window.handleSendChatMessage(event)">
+        <textarea id="chat-input" class="form-control" rows="4" placeholder="Write a message to the lounge..." required></textarea>
+        <button type="submit" class="action-btn">🌸 Send Message</button>
+      </form>
     </aside>
   </main>
 
-  <!-- Firebase Script Integration -->
+  <!-- Universal Scripts -->
   <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="moderation.js"></script>
+  <script type="module" src="chat.js"></script>
 
   <script>
-    // User Auth & Tier State
-    let userState = {
-      isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
-      isVIP: localStorage.getItem('neko_is_vip') === 'true'
-    };
-
-    // Sensible, Grounded High-School Classmate NPC Message Pool
-    const NPC_CLASSMATE_MESSAGES = [
-      { type: 'common', author: 'Locker_12', text: 'Has anyone seen the updated setlist poll on Neko FM today?' },
-      { type: 'common', author: 'Locker_22', text: 'Prep Room B was echoing all through the East hallway during 4th period! 🎸' },
-      { type: 'common', author: 'Locker_31', text: 'Akari’s new guitar intro on track 2 sounds so clean!' },
-      { type: 'common', author: 'Locker_45', text: 'Did someone leave a spare bass pick on top of Locker 102?' },
-      { type: 'common', author: 'Locker_51', text: 'Sera’s keytar synth solo in the rehearsal stream gave me chills 🎹' },
-      { type: 'common', author: 'Locker_64', text: 'Can’t wait to see which song wins the weekly broadcast vote!' },
-      { type: 'common', author: 'Locker_77', text: 'Listening to Neko FM while finishing my art assignment 🌸' },
-      { type: 'common', author: 'Locker_88', text: 'Aoi’s drum fills during the chorus shift were so punchy!' },
-      { type: 'common', author: 'Locker_99', text: 'Is anyone going down to the basement rehearsal room after school?' },
-      { type: 'common', author: 'Locker_102', text: 'Nekomi’s vocals in the acoustic version were so peaceful ✨' },
-      { type: 'common', author: 'Locker_114', text: 'Sakuraoka High’s music wing is definitely best after school hours.' },
-      { type: 'common', author: 'Locker_150', text: 'Saved the new audio drama episode to listen to on the bus tomorrow!' },
-      { type: 'common', author: 'Locker_180', text: 'I put my vote in for the 180 BPM keytar remix!' },
-      { type: 'common', author: 'Locker_204', text: 'The reverb in the cavern acoustic recordings is so cool.' },
-      { type: 'common', author: 'Locker_215', text: 'Someone left an EchoHeart sticker on Locker 88 haha.' },
-      { type: 'common', author: 'Locker_309', text: 'Class 2-B is all talking about the new chapter drop in the Hub.' },
-      { type: 'common', author: 'Class_2B_Student', text: 'Hope they play the full band version on Friday’s broadcast!' },
-      { type: 'common', author: 'Class_1A_Listener', text: 'Headphones on, study mode activated with Neko FM 🎧' },
-      { type: 'common', author: 'Class_3C_Student', text: 'Did anyone else catch that subtle synth layer in the background?' },
-      { type: 'common', author: 'Audio_Club_President', text: 'The audio clarity on the Prep Room B feed has been amazing lately.' },
-      { type: 'common', author: 'Hallway_Runner', text: 'Almost missed the bell trying to catch the end of the sound check!' },
-
-      { type: 'rare', author: 'Akari Minase', text: 'Thanks for tuning in everyone! Fine-tuning the lead guitar melody in Prep Room B right now 🎸' },
-      { type: 'rare', author: 'Akari Minase', text: 'Testing out a new chord progression for the next chapter’s theme! What do you all think?' },
-      { type: 'rare', author: 'Akari Minase', text: 'Prep Room B is quiet tonight, perfect time to polish the intro solo 🌸' },
-      { type: 'rare', author: 'Akari Minase', text: 'Akari here! Don’t forget to cast your vote on the new setlist poll on Neko FM!' },
-      { type: 'rare', author: 'Nekomi', text: 'Don’t forget to cast your vote on the weekly Neko FM setlist poll! 🌸' },
-      { type: 'rare', author: 'Nekomi', text: 'Welcome to the lounge, everyone! Keep the cozy vibes going ✨' },
-      { type: 'rare', author: 'Nekomi', text: 'Sera and I are tweaking the broadcast audio levels for tonight’s stream!' },
-      { type: 'rare', author: 'Nekomi', text: 'Reading everyone’s song suggestions in the board drawer—you all have great taste!' },
-      { type: 'rare', author: 'Sera', text: 'Keytar synth lead calibration complete. Prep Room B sound check ready! 🎹' },
-      { type: 'rare', author: 'Sera', text: 'Adding some subtle cavern reverb to the synth pad layer.' },
-      { type: 'rare', author: 'Sera', text: 'Adjusting the pitch bend settings on my keytar for the fast solo section ⚡' },
-      { type: 'rare', author: 'Aoi', text: 'Drums tuned! Let’s turn up the volume for the broadcast feed 🥁' },
-      { type: 'rare', author: 'Aoi', text: '180 BPM tempo locked in! Let’s go!' },
-      { type: 'rare', author: 'Aoi', text: 'Practicing drum fills for the chorus transition—tempo is feeling punchy!' },
-
-      { type: 'ultra', author: 'Cavern_Echo_Voice', text: '✦ Resonance frequency detected beneath Sakuraoka High... ⚡' },
-      { type: 'ultra', author: 'Cavern_Echo_Voice', text: '✦ The subterranean echoes grow clearer as midnight approaches...' },
-      { type: 'ultra', author: 'Phantom_Stagehand', text: 'Who left the amplifier dials on 11 down in the cavern hall? 👻' }
-    ];
-
-    const DEFAULT_STARTER_MESSAGES = {
-      twilight: [
-        { author: 'Locker_42', text: 'Anyone down at Prep Room B today?', cssClass: 'msg-card', badge: '' },
-        { author: 'Class_2B_Student', text: 'The keytar riff is stuck in my head all afternoon 🎹', cssClass: 'msg-card', badge: '' },
-        { author: 'Sakuraoka_Guitarist', text: 'Voted for the acoustic version in the setlist poll! 🌸', cssClass: 'msg-card', badge: '' }
-      ],
-      basement: [
-        { author: 'Subterranean_Lurker', text: 'Underground stream signal locked in. Turn up the bass! ⚡', cssClass: 'msg-card', badge: '' },
-        { author: 'Class_3C_Student', text: '180 BPM J-Rock rehearsal track is heavy tonight 🎸', cssClass: 'msg-card', badge: '' }
-      ],
-      backstage: [
-        { author: 'Student_Akari_Fan', text: 'The drum tempo shift in Episode 2 was insane! 🥁⚡', cssClass: 'msg-card vip-user', badge: '<span class="vip-badge">VIP Pass</span>' },
-        { author: 'Sera_Keytar_Listener', text: 'Hoping we get an acoustic version of the cavern track next week!', cssClass: 'msg-card vip-user', badge: '<span class="vip-badge">VIP Pass</span>' },
-        { author: 'VIP_Backstage_Pass', text: 'Master stem downloads in the Hub are sounding crisp today 💎', cssClass: 'msg-card vip-user', badge: '<span class="vip-badge">VIP Pass</span>' }
-      ]
-    };
-
-    let npcStreamInterval = null;
-    let recentIndexes = [];
-
-    function getStoredChatHistory(mode) {
-      try {
-        const data = localStorage.getItem(`neko_chat_history_${mode}`);
-        return data ? JSON.parse(data) : null;
-      } catch (e) {
-        return null;
-      }
-    }
-
-    function saveChatHistory(mode, messagesArray) {
-      try {
-        localStorage.setItem(`neko_chat_history_${mode}`, JSON.stringify(messagesArray));
-      } catch (e) {
-        console.error("Storage save error:", e);
-      }
-    }
-
-    function handleModeChange(targetMode) {
-      const selector = document.getElementById('mode-selector');
-
-      if (targetMode === 'basement' && (!window.currentUser || (window.userData && !window.userData.ageVerified17))) {
-        if (selector) selector.value = getCurrentMode();
-        if (typeof window.handleContentAccess === "function") {
-          window.handleContentAccess('basement');
-        } else {
-          showAuthModal('Sign-In Required', 'Sign in with Google to access After-Hours Basement streams.');
-        }
-        return;
-      }
-
-      localStorage.setItem('neko_active_mode', targetMode);
-      applyThemeMode(targetMode);
-      loadChatFeedForMode(targetMode);
-    }
-
-    function getCurrentMode() {
-      return localStorage.getItem('neko_active_mode') || 'twilight';
-    }
-
-    function applyThemeMode(mode) {
-      const body = document.body;
-      const selector = document.getElementById('mode-selector');
-
-      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
-      body.classList.add(`${mode}-mode`);
-
-      if (selector) selector.value = mode;
-    }
-
-    function loadChatFeedForMode(mode) {
-      const stream = document.getElementById('chat-stream');
-      const heading = document.getElementById('chat-title-heading');
-      const note = document.getElementById('posting-access-note');
-      
-      stream.innerHTML = '';
-      if (npcStreamInterval) clearInterval(npcStreamInterval);
-
-      if (mode === 'backstage') {
-        heading.innerText = '🎟️ Locker 102 Backstage VIP Live Stream';
-        note.innerHTML = '✨ <strong style="color:#ffd166;">VIP Active:</strong> Live message posting enabled for Backstage Pass members.';
-      } else {
-        heading.innerText = '💬 Locker 102 Live Classmate Feed';
-        note.innerHTML = '🔒 Live message posting requires an active account to ensure SFW community safety.';
-      }
-
-      let history = getStoredChatHistory(mode);
-
-      if (!history || history.length === 0) {
-        history = DEFAULT_STARTER_MESSAGES[mode] || DEFAULT_STARTER_MESSAGES.twilight;
-        saveChatHistory(mode, history);
-      }
-
-      history.forEach(msg => {
-        appendMessageDOM(msg.author, msg.text, msg.cssClass, msg.badge);
-      });
-
-      startDynamicNPCStream();
-    }
-
-    function startDynamicNPCStream() {
-      function scheduleNextNPCMessage() {
-        const currentMode = getCurrentMode();
-        if (currentMode !== 'backstage') {
-          triggerRandomClassmateNPCMessage();
-        }
-        const randomDelay = Math.floor(Math.random() * 3000) + 2500;
-        npcStreamInterval = setTimeout(scheduleNextNPCMessage, randomDelay);
-      }
-
-      scheduleNextNPCMessage();
-    }
-
-    function triggerRandomClassmateNPCMessage() {
-      const currentMode = getCurrentMode();
-      if (currentMode === 'backstage') return;
-
-      const roll = Math.random();
-      let targetType = 'common';
-
-      if (roll < 0.82) {
-        targetType = 'common';
-      } else if (roll < 0.94) {
-        targetType = 'rare';
-      } else {
-        targetType = 'ultra';
-      }
-
-      let candidateIndexes = [];
-      NPC_CLASSMATE_MESSAGES.forEach((m, idx) => {
-        if (m.type === targetType && !recentIndexes.includes(idx)) {
-          candidateIndexes.push(idx);
-        }
-      });
-
-      if (candidateIndexes.length === 0) {
-        candidateIndexes = NPC_CLASSMATE_MESSAGES.map((_, idx) => idx);
-      }
-
-      const selectedIdx = candidateIndexes[Math.floor(Math.random() * candidateIndexes.length)];
-      const msg = NPC_CLASSMATE_MESSAGES[selectedIdx];
-
-      recentIndexes.push(selectedIdx);
-      if (recentIndexes.length > 18) recentIndexes.shift();
-
-      let cssClass = 'msg-card';
-      let badge = '';
-
-      if (msg.type === 'rare') {
-        cssClass = 'msg-card rare-char';
-        badge = '<span class="rare-badge">Band Member</span>';
-      } else if (msg.type === 'ultra') {
-        cssClass = 'msg-card ultra-rare';
-        badge = '<span class="lore-badge">Lore Echo</span>';
-      }
-
-      addAndPersistMessage(currentMode, msg.author, msg.text, cssClass, badge);
-    }
-
-    function addAndPersistMessage(mode, author, text, cssClass = 'msg-card', badgeHTML = '') {
-      let history = getStoredChatHistory(mode) || [];
-      const newMsg = { author, text, cssClass, badge: badgeHTML };
-
-      history.push(newMsg);
-
-      if (history.length > 40) {
-        history.shift();
-      }
-
-      saveChatHistory(mode, history);
-      appendMessageDOM(author, text, cssClass, badgeHTML);
-    }
-
-    function appendMessageDOM(author, text, cssClass = 'msg-card', badgeHTML = '') {
-      const stream = document.getElementById('chat-stream');
-      if (!stream) return;
-
-      const card = document.createElement('div');
-      card.className = cssClass;
-      card.innerHTML = `<div class="msg-author"><span>${author}</span> ${badgeHTML}</div><div>"${text}"</div>`;
-      stream.appendChild(card);
-
-      if (stream.children.length > 40) {
-        stream.removeChild(stream.firstChild);
-      }
-
-      stream.scrollTop = stream.scrollHeight;
-    }
-
-    function handleLivePost() {
-      if (!window.currentUser) {
-        showAuthModal('Sign In Required', '🔒 Live message posting requires you to log in with your account!');
-        return;
-      }
-      
-      const handleInput = document.getElementById('chat-handle').value.trim();
-      const handle = handleInput || (window.userData ? window.userData.displayName : 'Lounge Member');
-      const text = document.getElementById('chat-text').value.trim();
-      if (!text) return;
-
-      const activeMode = getCurrentMode();
-      addAndPersistMessage(activeMode, handle, text, 'msg-card vip-user', '<span class="vip-badge">Member</span>');
-      document.getElementById('chat-text').value = '';
-    }
-
-    function insertEmote(emote) {
-      document.getElementById('chat-text').value += ' ' + emote;
-    }
-
-    function showAuthModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3>🔑 ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-actions">
-              <button class="modal-btn google-btn" onclick="if(window.loginWithGoogle) window.loginWithGoogle()">Sign In with Google</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function removeExistingModals() {
-      const existing = document.getElementById('neko-gate-modal');
-      if (existing) existing.remove();
-    }
-
     function toggleMobileMenu() {
       const navMenu = document.getElementById('nav-menu');
       if (navMenu) navMenu.classList.toggle('open');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const activeMode = getCurrentMode();
-      applyThemeMode(activeMode);
-      loadChatFeedForMode(activeMode);
-
-      document.addEventListener('click', function(event) {
-        const navMenu = document.getElementById('nav-menu');
-        const isInsideNavbar = event.target.closest('.navbar');
-        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
-          navMenu.classList.remove('open');
-        }
-      });
+    document.addEventListener('click', function(event) {
+      const navMenu = document.getElementById('nav-menu');
+      const isInsideNavbar = event.target.closest('.navbar');
+      if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
+        navMenu.classList.remove('open');
+      }
     });
   </script>
   <script src="global-player.js"></script>
