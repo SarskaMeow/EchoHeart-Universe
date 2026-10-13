@@ -65,16 +65,14 @@ onAuthStateChanged(auth, async (user) => {
     window.userData = null;
 
     localStorage.removeItem('neko_logged_in');
-    localStorage.removeItem('neko_is_vip');
-    localStorage.setItem('neko_active_mode', 'twilight');
+    localStorage.setItem('neko_active_mode', 'echoheart'); // Default to EchoHeart Mode
 
     if (typeof userState !== 'undefined') {
       userState.isLoggedIn = false;
-      userState.isVIP = false;
     }
 
     if (typeof applyThemeMode === "function") {
-      applyThemeMode('twilight');
+      applyThemeMode('echoheart');
     }
 
     if (typeof updatePageUI === "function") updatePageUI();
@@ -122,7 +120,7 @@ window.logoutUser = async () => {
   }
 };
 
-// Firestore User Profile Handler
+// Firestore User Profile Handler (Orbs + Age Verification)
 async function loadOrCreateUserProfile(user) {
   try {
     const userRef = doc(db, "users", user.uid);
@@ -137,12 +135,13 @@ async function loadOrCreateUserProfile(user) {
         displayName: user.displayName || "Lounge Member",
         email: user.email,
         photoURL: user.photoURL || "",
-        orbs: 250,
-        isVIP: false,
-        isAgeVerified: false,
+        orbs: 250, // Starting currency balance for cosmetics
+        ageVerified13: false, // Core Chat (EchoHeart Mode)
+        ageVerified17: false, // Basement Mode / Cavern Chat
+        equippedAvatar: "default",
         equippedFrame: "none",
         equippedGlow: "none",
-        inventory: ["none"]
+        inventory: ["default_avatar"]
       };
       await setDoc(userRef, defaultData);
       window.userData = defaultData;
