@@ -1,290 +1,595 @@
-/* ==========================================================================
-   MASTER COLOR PALETTE & MODE VARIABLES (style.css)
-   ========================================================================== */
-:root {
-  /* Twilight Mode (Default) */
-  --bg-twilight: #0d0b18;
-  --card-twilight: rgba(22, 15, 42, 0.88);
-  --accent-pink: #f4b8c4;
-  --accent-purple: #a88beb;
-  --text-twilight: #e2daf8;
-  --border-twilight: rgba(168, 139, 235, 0.35);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EchoHeart & Girls Phantom Dead — Otaku Overload</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="firebase-config.js?v=2"></script>
+  <style>
+    :root {
+      /* Twilight Mode Palette */
+      --bg-dark: #0b0818;
+      --card-bg: rgba(22, 15, 42, 0.88);
+      --nav-bg: rgba(18, 12, 36, 0.94);
+      --nav-border: rgba(168, 139, 235, 0.35);
+      --accent-purple: #a88beb;
+      --accent-pink: #f4b8c4;
+      --accent-glow: rgba(168, 139, 235, 0.35);
+      --text-main: #e2daf8;
+      --text-muted: #cbb8f6;
+      --btn-grad: linear-gradient(135deg, #a88beb 0%, #f4b8c4 100%);
+      --btn-text: #0b0818;
+      --card-border: rgba(168, 139, 235, 0.3);
+      --card-hover-border: #f4b8c4;
+      --card-hover-shadow: rgba(244, 184, 196, 0.25);
+    }
 
-  /* Secret Concert Mode (Basement / After Hours) */
-  --bg-basement: #08030f;
-  --card-basement: rgba(20, 10, 30, 0.95);
-  --accent-red: #ff4d6d;
-  --accent-rose: #ff3355;
-  --text-basement: #fce8ec;
-  --border-basement: rgba(255, 77, 109, 0.5);
+    /* Basement Mode Color Overrides (17+ Subterranean) */
+    body.basement-mode {
+      --bg-dark: #05020c;
+      --card-bg: rgba(18, 7, 28, 0.92);
+      --nav-bg: rgba(14, 5, 20, 0.96);
+      --nav-border: rgba(255, 77, 109, 0.5);
+      --accent-purple: #ff4d6d;
+      --accent-pink: #ff007f;
+      --accent-glow: rgba(255, 77, 109, 0.45);
+      --text-main: #fce8ec;
+      --text-muted: #e0b0bb;
+      --btn-grad: linear-gradient(135deg, #ff4d6d 0%, #7209b7 100%);
+      --btn-text: #ffffff;
+      --card-border: rgba(255, 77, 109, 0.4);
+      --card-hover-border: #ff007f;
+      --card-hover-shadow: rgba(255, 0, 127, 0.35);
+    }
 
-  /* Backstage Pass Tier (VIP Paid Status) */
-  --vip-gold: #ffd166;
-  --vip-magenta: #ff007f;
-  --vip-card-bg: rgba(12, 8, 18, 0.95);
-  --vip-border: rgba(255, 0, 127, 0.5);
-}
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
 
-/* Automatic Theme Switching Classes */
-body.twilight-mode {
-  background: var(--bg-twilight);
-  color: var(--text-twilight);
-}
+    /* Universal Navbar Styling */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: var(--nav-bg);
+      border-bottom: 2px solid var(--nav-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-sizing: border-box;
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
 
-body.basement-mode {
-  background: var(--bg-basement);
-  color: var(--text-basement);
-}
+    body.basement-mode .navbar {
+      box-shadow: 0 4px 20px rgba(255, 77, 109, 0.18);
+    }
 
-body.backstage-mode {
-  background: #05020a;
-  color: #ffffff;
-}
+    .nav-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
 
-/* VIP Paid Element Highlight */
-.vip-card {
-  background: var(--vip-card-bg) !important;
-  border: 1px solid var(--vip-border) !important;
-  box-shadow: 0 8px 25px rgba(255, 0, 127, 0.25);
-}
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
 
-.vip-card:hover {
-  border-color: var(--vip-gold) !important;
-  box-shadow: 0 10px 30px rgba(255, 209, 102, 0.35);
-}
+    .logo-link {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+    }
 
-/* ==========================================================================
-   3-TIER MODE SELECTOR DROPDOWN STYLES
-   ========================================================================== */
+    .logo-main {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: background 0.4s ease;
+    }
 
-.mode-select-dropdown {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding: 8px 32px 8px 14px;
-  border-radius: 20px;
-  font-family: 'Segoe UI', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 800;
-  cursor: pointer;
-  outline: none;
-  transition: all 0.3s ease;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 16px;
-}
+    .logo-sub {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--accent-pink);
+      opacity: 0.95;
+      transition: color 0.4s ease;
+    }
 
-/* 🌸 Tier 1: Twilight Mode Dropdown */
-body.twilight-mode .mode-select-dropdown {
-  background-color: var(--card-twilight);
-  border: 1px solid var(--border-twilight);
-  color: var(--text-twilight);
-  box-shadow: 0 0 12px rgba(168, 139, 235, 0.2);
-}
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-body.twilight-mode .mode-select-dropdown:hover {
-  border-color: var(--accent-pink);
-  box-shadow: 0 0 16px rgba(244, 184, 196, 0.4);
-}
+    .nav-item {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
 
-/* ⚡ Tier 2: Basement Mode Dropdown */
-body.basement-mode .mode-select-dropdown {
-  background-color: var(--card-basement);
-  border: 1px solid var(--border-basement);
-  color: var(--accent-red);
-  box-shadow: 0 0 12px rgba(255, 77, 109, 0.25);
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-}
+    .nav-item:hover, .nav-item.active {
+      background: rgba(168, 139, 235, 0.18);
+      color: #ffffff;
+    }
 
-body.basement-mode .mode-select-dropdown:hover {
-  border-color: var(--accent-rose);
-  box-shadow: 0 0 18px rgba(255, 51, 85, 0.5);
-}
+    body.basement-mode .nav-item:hover, 
+    body.basement-mode .nav-item.active {
+      background: rgba(255, 77, 109, 0.2);
+    }
 
-/* 🎟️ Tier 3: Backstage Pass Dropdown */
-body.backstage-mode .mode-select-dropdown {
-  background-color: var(--vip-card-bg);
-  border: 1px solid var(--vip-gold);
-  color: var(--vip-gold);
-  box-shadow: 0 0 15px rgba(255, 209, 102, 0.35);
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-}
+    /* Mode Select Dropdown Styling */
+    .mode-select-dropdown {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding: 8px 32px 8px 14px;
+      border-radius: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.3s ease;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 16px;
+    }
 
-body.backstage-mode .mode-select-dropdown:hover {
-  border-color: var(--vip-magenta);
-  box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
-}
+    body.twilight-mode .mode-select-dropdown {
+      background-color: rgba(28, 18, 52, 0.95);
+      border: 1px solid rgba(168, 139, 235, 0.45);
+      color: #e2daf8;
+      box-shadow: 0 0 12px rgba(168, 139, 235, 0.25);
+    }
 
-/* Mobile Dropdown Options List Fix */
-.mode-select-dropdown option {
-  background-color: #120924;
-  color: #e2daf8;
-  padding: 10px;
-  font-weight: 700;
-}
+    body.basement-mode .mode-select-dropdown {
+      background-color: rgba(24, 8, 32, 0.95);
+      border: 1px solid rgba(255, 77, 109, 0.6);
+      color: #ff4d6d;
+      box-shadow: 0 0 14px rgba(255, 77, 109, 0.35);
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    }
 
-body.basement-mode .mode-select-dropdown option {
-  background-color: #0b0414;
-  color: #ff4d6d;
-}
+    .mode-select-dropdown option {
+      background-color: #120924;
+      color: #e2daf8;
+      padding: 10px;
+      font-weight: 700;
+    }
 
-body.backstage-mode .mode-select-dropdown option {
-  background-color: #080210;
-  color: #ffd166;
-}
+    body.basement-mode .mode-select-dropdown option {
+      background-color: #0b0414;
+      color: #ff4d6d;
+    }
 
-/* ==========================================================================
-   PERSISTENT FLOATING MINI-PLAYER STYLES
-   ========================================================================== */
+    .mobile-menu-btn {
+      display: none;
+    }
 
-.mini-player-bar {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 900px;
-  background: rgba(18, 12, 36, 0.95);
-  border: 1px solid rgba(168, 139, 235, 0.4);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.75), 0 0 20px rgba(168, 139, 235, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 16px;
-  padding: 10px 20px;
-  z-index: 9999;
-  transition: all 0.3s ease;
-}
+    /* Mobile Collapsible Navigation */
+    @media (max-width: 992px) {
+      .nav-container { padding: 10px 16px; }
 
-.mini-player-bar.hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, 30px);
-}
+      .mobile-menu-btn {
+        display: flex !important;
+        background: rgba(168, 139, 235, 0.15);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        padding: 8px;
+        flex-direction: column;
+        gap: 4px;
+        cursor: pointer;
+      }
 
-.mini-player-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
+      .hamburger-bar {
+        width: 22px;
+        height: 2.5px;
+        background: var(--accent-pink);
+        border-radius: 2px;
+      }
 
-.mini-track-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 220px;
-}
+      .nav-links {
+        display: none !important;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--nav-bg);
+        border-bottom: 2px solid var(--nav-border);
+        flex-direction: column;
+        padding: 16px;
+        gap: 10px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
+      }
 
-.mini-speaker-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: rgba(35, 25, 65, 0.9);
-  border: 1.5px solid #f4b8c4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  font-size: 1.2rem;
-}
+      .nav-links.open { display: flex !important; }
+      .nav-item, .mode-selector-wrapper { width: 100%; box-sizing: border-box; }
+      .mode-select-dropdown { width: 100%; text-align: center; }
+    }
 
-.mini-speaker-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+    /* Hero Banner */
+    .hero-container {
+      max-width: 1200px;
+      margin: 40px auto 20px;
+      padding: 48px 24px;
+      text-align: center;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px var(--accent-glow);
+      transition: all 0.4s ease;
+    }
 
-.mini-text-details {
-  display: flex;
-  flex-direction: column;
-}
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(168, 139, 235, 0.15);
+      border: 1px solid var(--card-border);
+      color: var(--accent-pink);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
 
-.mini-track-title {
-  font-weight: 800;
-  font-size: 0.88rem;
-  color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 180px;
-}
+    .hero-title {
+      font-size: 3rem;
+      margin: 0 0 16px;
+      background: linear-gradient(135deg, #ffffff 20%, var(--accent-pink) 60%, var(--accent-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
 
-.mini-speaker-name {
-  font-size: 0.75rem;
-  color: #f4b8c4;
-  font-weight: 700;
-}
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 750px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
 
-.mini-player-controls {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-grow: 1;
-}
+    .hero-cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
 
-.mini-control-btn {
-  background: linear-gradient(135deg, #a88beb, #f4b8c4);
-  border: none;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  color: #0d0b18;
-  font-weight: 900;
-  font-size: 0.95rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  flex-shrink: 0;
-}
+    .cta-btn-primary {
+      background: var(--btn-grad);
+      color: var(--btn-text);
+      font-weight: 800;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px var(--accent-glow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-.mini-control-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 12px rgba(244, 184, 196, 0.6);
-}
+    .cta-btn-secondary {
+      background: rgba(35, 25, 65, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      font-weight: 800;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
 
-.mini-progress-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  cursor: pointer;
-}
+    body.basement-mode .cta-btn-secondary {
+      background: rgba(28, 10, 38, 0.8);
+    }
 
-.mini-time {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #cbb8f6;
-  min-width: 36px;
-}
+    .cta-btn-primary:hover { 
+      transform: translateY(-3px); 
+      box-shadow: 0 8px 28px var(--card-hover-shadow); 
+    }
+    .cta-btn-secondary:hover { 
+      background: rgba(168, 139, 235, 0.25); 
+      color: #ffffff; 
+      border-color: var(--card-hover-border);
+    }
 
-.mini-progress-track {
-  flex-grow: 1;
-  height: 6px;
-  background: rgba(168, 139, 235, 0.25);
-  border-radius: 3px;
-  overflow: hidden;
-}
+    /* Gateway Grid Cards */
+    .gateway-grid {
+      max-width: 1200px;
+      margin: 30px auto 50px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+    }
 
-.mini-progress-fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #a88beb, #f4b8c4);
-  transition: width 0.1s linear;
-}
+    .gateway-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 26px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.35s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(10px);
+    }
 
-@media (max-width: 600px) {
-  .mini-player-bar {
-    width: 95%;
-    padding: 8px 12px;
-    bottom: 12px;
-  }
-  .mini-track-title {
-    max-width: 110px;
-  }
-  .mini-time {
-    font-size: 0.7rem;
-  }
-}
+    .gateway-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--card-hover-border);
+      box-shadow: 0 12px 32px var(--card-hover-shadow);
+    }
+
+    .gateway-icon {
+      font-size: 2.5rem;
+      margin-bottom: 14px;
+    }
+
+    .gateway-card h3 {
+      font-size: 1.25rem;
+      margin: 0 0 8px;
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .gateway-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0 0 18px;
+    }
+
+    .gateway-link-text {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--accent-pink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap 0.2s ease;
+    }
+
+    .gateway-card:hover .gateway-link-text {
+      gap: 10px;
+    }
+
+    /* Modal Overlay Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5, 2, 12, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 2px solid var(--accent-purple);
+      border-radius: 22px;
+      padding: 30px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 25px var(--accent-glow);
+    }
+
+    .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.35rem; font-weight: 800; }
+    .modal-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; margin-bottom: 22px; }
+    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
+    .google-btn { background: #ffffff; color: #111; }
+    .close-btn { background: transparent; color: var(--accent-purple); border: 1px solid var(--card-border); }
+  </style>
+</head>
+<body class="twilight-mode">
+
+  <!-- Universal Header Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">🌸 OTAKU OVERLOAD</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Toggle Button -->
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+
+      <!-- Main Destinations & Access Mode Selector -->
+      <nav class="nav-links" id="nav-menu">
+        <a href="index.html" class="nav-item active">🏠 Home</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+        <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
+        <a href="chat.html" class="nav-item">💬 Live Chat</a>
+        <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+
+        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid var(--accent-purple); cursor: pointer;">
+          🔑 Login
+        </button>
+
+        <!-- 2-Tier Access Mode Switcher -->
+        <div class="mode-selector-wrapper">
+          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
+            <option value="twilight">🌸 Twilight (Public 13+)</option>
+            <option value="basement">⚡ Basement (17+ 🔒)</option>
+          </select>
+        </div>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero-container">
+    <span class="hero-badge">✦ Official Audio Drama & Fan Portal</span>
+    <h1 class="hero-title">EchoHeart & Girls Phantom Dead</h1>
+    <p class="hero-subtitle">
+      Step into Sakuraoka High's Prep Room B. Listen to weekly audio drama broadcasts, stream 24/7 J-Rock radio, chat with fellow listeners, and explore cavern lore.
+    </p>
+    <div class="hero-cta-group">
+      <a href="podcast.html" class="cta-btn-primary">🎙️ Listen to Podcast</a>
+      <a href="chat.html" class="cta-btn-secondary">💬 Enter Locker 102 Chat</a>
+    </div>
+  </section>
+
+  <!-- Primary Feature Gateway Grid -->
+  <main class="gateway-grid">
+    <a href="podcast.html" class="gateway-card">
+      <div>
+        <div class="gateway-icon">🎙️</div>
+        <h3>Whisper Radio Podcast Studio</h3>
+        <p>Full-length audio drama episodes featuring Nekomi, Sera, Akari Minase, and Aoi.</p>
+      </div>
+      <span class="gateway-link-text">Launch Studio Stage →</span>
+    </a>
+
+    <a href="neko-fm.html" class="gateway-card">
+      <div>
+        <div class="gateway-icon">📻</div>
+        <h3>24/7 Neko FM Radio Lounge</h3>
+        <p>Continuous J-Pop/J-Rock streams, station tuner presets, and setlist voting polls.</p>
+      </div>
+      <span class="gateway-link-text">Tune In Now →</span>
+    </a>
+
+    <a href="chat.html" class="gateway-card">
+      <div>
+        <div class="gateway-icon">💬</div>
+        <h3>Locker 102 Live Community</h3>
+        <p>Moderated community chat, custom avatar cosmetics, and real-time classmate feed.</p>
+      </div>
+      <span class="gateway-link-text">Open Live Chat →</span>
+    </a>
+
+    <a href="hub.html" class="gateway-card">
+      <div>
+        <div class="gateway-icon">🌌</div>
+        <h3>Universe Hub Portal</h3>
+        <p>Light novel lore, character bio archives, stem mixer, and Atelier asset downloads.</p>
+      </div>
+      <span class="gateway-link-text">Explore Portal →</span>
+    </a>
+  </main>
+
+  <script>
+    function handleModeChange(targetMode) {
+      const selector = document.getElementById('mode-selector');
+
+      if (targetMode === 'basement') {
+        if (!window.currentUser) {
+          if (selector) selector.value = getCurrentMode();
+          showAuthModal('Sign-In Required', 'Sign in with Google to access After-Hours Basement streams.');
+          return;
+        }
+
+        if (window.userData && !window.userData.ageVerified17) {
+          if (selector) selector.value = getCurrentMode();
+          if (typeof window.handleContentAccess === "function") {
+            window.handleContentAccess('basement');
+          } else {
+            alert("The Basement Channel requires 17+ age verification.");
+          }
+          return;
+        }
+      }
+
+      localStorage.setItem('neko_active_mode', targetMode);
+      applyThemeMode(targetMode);
+    }
+
+    function getCurrentMode() {
+      return localStorage.getItem('neko_active_mode') || 'twilight';
+    }
+
+    function applyThemeMode(mode) {
+      const body = document.body;
+      const selector = document.getElementById('mode-selector');
+
+      body.classList.remove('twilight-mode', 'basement-mode');
+      body.classList.add(`${mode}-mode`);
+
+      if (selector) selector.value = mode;
+    }
+
+    function showAuthModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card">
+            <h3>🔑 ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-actions">
+              <button class="modal-btn google-btn" onclick="if (window.loginWithGoogle) { window.loginWithGoogle(); }">Sign In with Google</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function removeExistingModals() {
+      const existing = document.getElementById('neko-gate-modal');
+      if (existing) existing.remove();
+    }
+
+    function toggleMobileMenu() {
+      const navMenu = document.getElementById('nav-menu');
+      if (navMenu) navMenu.classList.toggle('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyThemeMode(getCurrentMode());
+
+      document.addEventListener('click', function(event) {
+        const navMenu = document.getElementById('nav-menu');
+        const isInsideNavbar = event.target.closest('.navbar');
+        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
+          navMenu.classList.remove('open');
+        }
+      });
+    });
+  </script>
+
+  <script src="global-player.js"></script>
+</body>
+</html>
