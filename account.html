@@ -3,7 +3,252 @@
   <!-- Profile Banner & Header -->
   <div style="display: flex; align-items: center; gap: 20px; border-bottom: 1px solid rgba(168, 139, 235, 0.3); padding-bottom: 20px; margin-bottom: 20px; flex-wrap: wrap;">
     <div style="position: relative; width: 80px; height: 80px;">
-      <img id="user-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Lounge" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #120924;">
+      <img id="user-avat<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile & Account — Otaku Neko Lounge</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="firebase-config.js?v=3"></script>
+  <style>
+    :root {
+      --nav-bg-twilight: rgba(18, 12, 36, 0.94);
+      --nav-border-twilight: rgba(168, 139, 235, 0.35);
+      --accent-pink: #f4b8c4;
+      --accent-purple: #a88beb;
+      --accent-red: #ff4d6d;
+      --text-light: #e2daf8;
+    }
+
+    body {
+      background: #0d0b18;
+      color: var(--text-light);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Universal Navbar Base Styles */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: var(--nav-bg-twilight);
+      border-bottom: 2px solid var(--nav-border-twilight);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-sizing: border-box;
+    }
+
+    .nav-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-main {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-sub {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--accent-pink);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .nav-item {
+      color: #cbb8f6;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(168, 139, 235, 0.18);
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Universal Header Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo-container">
+        <a href="index.html" style="text-decoration: none; display: flex; flex-direction: column;">
+          <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
+        </a>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">🏠 Home</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+        <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
+        <a href="chat.html" class="nav-item">💬 Live Chat</a>
+        <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+
+        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
+          🔑 Login
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Card -->
+  <main style="padding: 20px;">
+    <div class="account-dashboard-card" style="background: rgba(22, 15, 42, 0.95); border: 2px solid #a88beb; border-radius: 20px; padding: 24px; max-width: 800px; margin: 30px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+      
+      <!-- Profile Banner & Header -->
+      <div style="display: flex; align-items: center; gap: 20px; border-bottom: 1px solid rgba(168, 139, 235, 0.3); padding-bottom: 20px; margin-bottom: 20px; flex-wrap: wrap;">
+        <div style="position: relative; width: 80px; height: 80px;">
+          <img id="user-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Lounge" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #120924;">
+          <div id="user-avatar-frame-overlay" style="position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border-radius: 50%; pointer-events: none; border: 2px solid transparent; transition: all 0.3s ease;"></div>
+        </div>
+
+        <div style="flex: 1; min-width: 200px;">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <h2 id="user-display-name" style="margin: 0; color: #fff; font-size: 1.4rem;">Guest User</h2>
+            <span id="user-vip-badge" style="display: none; background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; font-size: 0.7rem; font-weight: 900; padding: 2px 8px; border-radius: 6px;">⚡ VIP MEMBER</span>
+          </div>
+          <p id="user-email-text" style="margin: 4px 0 0; color: #cbb8f6; font-size: 0.88rem;">Sign in to sync your profile</p>
+        </div>
+
+        <!-- Orb Currency Display & Sign Out Button -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="background: rgba(35, 20, 60, 0.9); border: 1px solid #ffd166; border-radius: 14px; padding: 10px 18px; text-align: center;">
+            <span style="font-size: 0.72rem; color: #ffd166; font-weight: 800; display: block;">YOUR ORB BALANCE</span>
+            <span id="user-orb-count" style="font-size: 1.4rem; font-weight: 900; color: #fff;">🔮 0</span>
+          </div>
+          <button onclick="window.logoutUser()" style="background: rgba(255, 77, 109, 0.2); border: 1px solid #ff4d6d; color: #ff4d6d; padding: 10px 14px; border-radius: 12px; font-weight: 800; cursor: pointer;">Sign Out</button>
+        </div>
+      </div>
+
+      <!-- Earn Free Orbs Activity Box -->
+      <div style="background: rgba(255, 209, 102, 0.1); border: 1px solid rgba(255, 209, 102, 0.4); border-radius: 14px; padding: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h4 style="margin: 0; color: #ffd166; font-size: 1.05rem;">🎁 Daily Lounge Reward</h4>
+          <p id="daily-claim-status" style="margin: 2px 0 0; font-size: 0.82rem; color: #e2daf8;">Claim +50 free Orbs every 24 hours just for stopping by!</p>
+        </div>
+        <button id="claim-daily-btn" onclick="window.claimDailyBonus()" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: opacity 0.3s ease;">Claim +50 Orbs</button>
+      </div>
+
+      <!-- Equipped Inventory Customizer -->
+      <h3 style="color: #fff; margin-bottom: 12px; font-size: 1.1rem;">🎨 Wardrobe & Cosmetics</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+        <div>
+          <label style="color: #cbb8f6; font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 6px;">Equipped Avatar Border</label>
+          <select id="equip-frame-select" onchange="window.equipSelectedItem('frame', this.value)" style="width: 100%; padding: 10px; background: rgba(30, 20, 50, 0.9); border: 1px solid rgba(168, 139, 235, 0.4); border-radius: 10px; color: #fff; cursor: pointer;">
+            <option value="none">None</option>
+            <option value="neon_purple">🔮 Neon Cavern (Purple)</option>
+            <option value="gold_aura">✨ Backstage Gold</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="color: #cbb8f6; font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 6px;">Equipped Chat Name Glow</label>
+          <select id="equip-glow-select" onchange="window.equipSelectedItem('glow', this.value)" style="width: 100%; padding: 10px; background: rgba(30, 20, 50, 0.9); border: 1px solid rgba(168, 139, 235, 0.4); border-radius: 10px; color: #fff; cursor: pointer;">
+            <option value="none">Standard Text</option>
+            <option value="pink_glow">🌸 Pink Echo Glow</option>
+            <option value="gold_glow">⚡ VIP Golden Glow</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Account Script Module -->
+  <script type="module">
+    import { db } from './firebase-config.js?v=3';
+    import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // 1. Claim Daily Bonus Function attached to window
+    window.claimDailyBonus = async function() {
+      if (!window.currentUser || !window.userData) {
+        alert("Please log in to claim daily Orbs!");
+        return;
+      }
+
+      const now = Date.now();
+      const lastClaim = window.userData.lastDailyClaim || 0;
+      const cooldown = 24 * 60 * 60 * 1000;
+
+      if (now - lastClaim < cooldown) {
+        const hoursLeft = Math.ceil((cooldown - (now - lastClaim)) / (1000 * 60 * 60));
+        alert(`You already claimed today's reward! Come back in ${hoursLeft} hours.`);
+        return;
+      }
+
+      try {
+        const userRef = doc(db, "users", window.currentUser.uid);
+        await updateDoc(userRef, {
+          orbs: increment(50),
+          lastDailyClaim: now
+        });
+
+        window.userData.orbs = (window.userData.orbs || 0) + 50;
+        window.userData.lastDailyClaim = now;
+
+        alert("🎉 Daily Bonus Claimed! +50 Orbs added to your account.");
+        if (typeof window.updatePageUI === "function") window.updatePageUI();
+      } catch (err) {
+        console.error("Failed to claim daily reward:", err);
+        alert("Error claiming reward: " + err.message);
+      }
+    };
+
+    // 2. Equip Cosmetic Item attached to window
+    window.equipSelectedItem = async function(type, value) {
+      if (!window.currentUser) return;
+
+      try {
+        const userRef = doc(db, "users", window.currentUser.uid);
+        if (type === 'frame') {
+          await updateDoc(userRef, { equippedFrame: value });
+          window.userData.equippedFrame = value;
+        } else if (type === 'glow') {
+          await updateDoc(userRef, { equippedGlow: value });
+          window.userData.equippedGlow = value;
+        }
+
+        updateAvatarFramePreview(window.userData.equippedFrame);
+      } catch (err) {
+        console.error("Failed to update equipment:", err);
+      }
+    };
+
+    // 3. Page UI Updater
+    window.updatePageUI = function() {
+      const nameEl = document.getElementById('user-display-name');
+      const emailEl = document.getElementById('user-email-text');
+      const orbEl = document.getElementById('user-orb-count');
+      const avatarEl = document.getElementById('user-avatar-img');
+      const vipBadge = document.getElementById('user-vip-badge');
+      const claimBtn = document.getElementById('claim-daily-btn');
+      const navBtn = document.getElementById('nav-auth-ar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Lounge" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #120924;">
       <div id="user-avatar-frame-overlay" style="position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border-radius: 50%; pointer-events: none; border: 2px solid transparent; transition: all 0.3s ease;"></div>
     </div>
 
