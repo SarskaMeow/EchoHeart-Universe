@@ -982,7 +982,7 @@
         <!-- Persistent Hourly Countdown Box -->
         <div class="countdown-timer-box">
           <div class="countdown-label" id="poll-timer-label">⚡ Voting Closes In</div>
-          <div class="countdown-digits" id="poll-countdown-digits">59:00</div>
+          <div class="countdown-digits" id="poll-countdown-digits">50:00</div>
         </div>
       </div>
 
@@ -996,7 +996,7 @@
 
         <div class="premiere-actions-side">
           <div class="premiere-10min-timer-badge" id="premier-soundcheck-box">
-            ⏱️ Premiere In: <span id="soundcheck-digits">10:00</span>
+            ⏱️ Premiere In: <span id="soundcheck-digits">10:00 (Waiting)</span>
           </div>
           <button class="vote-btn" id="play-premiere-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 18px; font-size: 0.88rem;">
             ▶ Stream Premiere
@@ -1070,7 +1070,7 @@
 
         <div class="premiere-actions-side">
           <div class="premiere-10min-timer-badge">
-            ⏱️ Premiere In: <span id="hub-soundcheck-digits">10:00</span>
+            ⏱️ Premiere In: <span id="hub-soundcheck-digits">10:00 (Waiting)</span>
           </div>
           <button class="vote-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 20px; font-size: 0.9rem;">
             ▶ Stream On-Deck Track
@@ -1171,11 +1171,12 @@
     let selectedStationIndex = 0;
     let isStreaming = false;
 
-    // Timer Interval Engine State
+    // Timer Engine State
     let masterTimerInterval = null;
     let previewTimerInterval = null;
     let previewTimeRemaining = 0;
     let activePreviewTrackId = null;
+    let lastProcessedHour = localStorage.getItem('gdp_last_processed_hour');
 
     const audioPlayer = document.getElementById('radio-audio-player');
 
@@ -1295,16 +1296,8 @@
       }
     }
 
-    /* Hourly Poll & Countdown Engine */
+    /* 24/7 Clock-Synchronized Timer Engine (Global System-Clock Based) */
     function initMasterTimers() {
-      let pollTarget = localStorage.getItem('gdp_poll_end_time');
-      let soundcheckTarget = localStorage.getItem('gdp_soundcheck_end_time');
-
-      if (!pollTarget || parseInt(pollTarget) < Date.now()) {
-        pollTarget = Date.now() + (60 * 60 * 1000); // 60 Minutes
-        localStorage.setItem('gdp_poll_end_time', pollTarget.toString());
-      }
-
       updateTimersLoop();
       if (masterTimerInterval) clearInterval(masterTimerInterval);
       masterTimerInterval = setInterval(updateTimersLoop, 1000);
@@ -1317,15 +1310,26 @@
       const hubSoundcheckDigits = document.getElementById('hub-soundcheck-digits');
 
       const now = Date.now();
-      const pollTarget = parseInt(localStorage.getItem('gdp_poll_end_time') || '0');
-      let soundcheckTarget = localStorage.getItem('gdp_soundcheck_end_time');
+      const hourMs = 60 * 60 * 1000;
+      const currentHourIndex = Math.floor(now / hourMs);
+      const currentMsInHour = now % hourMs;
+      const votingDurationMs = 50 * 60 * 1000; // 50 minutes voting, 10 minutes soundcheck
 
-      const pollDiff = pollTarget - now;
+      // Auto-reset votes at the start of every new hour
+      if (lastProcessedHour !== null && parseInt(lastProcessedHour, 10) !== currentHourIndex) {
+        pollData.forEach(item => item.votes = 0);
+        localStorage.removeItem('neko_voted_poll_id');
+        saveStoredPollData(pollData);
+        renderSetlistPolls();
+      }
+      lastProcessedHour = currentHourIndex.toString();
+      localStorage.setItem('gdp_last_processed_hour', lastProcessedHour);
 
-      // PHASE 1: Poll Voting Active
-      if (pollDiff > 0) {
-        const m = Math.floor(pollDiff / (1000 * 60));
-        const s = Math.floor((pollDiff % (1000 * 60)) / 1000);
+      // PHASE 1: Active Voting (:00 to :50 of every hour)
+      if (currentMsInHour < votingDurationMs) {
+        const diff = votingDurationMs - currentMsInHour;
+        const m = Math.floor(diff / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
         const timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 
         if (pollTimerDigits) pollTimerDigits.innerText = timeStr;
@@ -1334,38 +1338,18 @@
         if (soundcheckDigits) soundcheckDigits.innerText = "10:00 (Waiting)";
         if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = "10:00 (Waiting)";
       } 
-      // PHASE 2: Poll Ended -> Start 10-Minute Pre-Show Countdown
+      // PHASE 2: Voting Locked & Soundcheck Premiere Countdown (:50 to :00 of every hour)
       else {
-        if (!soundcheckTarget || parseInt(soundcheckTarget) < now) {
-          soundcheckTarget = (now + (10 * 60 * 1000)).toString();
-          localStorage.setItem('gdp_soundcheck_end_time', soundcheckTarget);
-        }
-
-        const soundcheckDiff = parseInt(soundcheckTarget) - now;
+        const diff = hourMs - currentMsInHour;
+        const scM = Math.floor(diff / (1000 * 60));
+        const scS = Math.floor((diff % (1000 * 60)) / 1000);
+        const scTimeStr = `${scM.toString().padStart(2, '0')}:${scS.toString().padStart(2, '0')}`;
 
         if (pollTimerDigits) pollTimerDigits.innerText = "LOCKED";
         if (pollTimerLabel) pollTimerLabel.innerText = "🔒 Voting Closed";
 
-        if (soundcheckDiff > 0) {
-          const scM = Math.floor(soundcheckDiff / (1000 * 60));
-          const scS = Math.floor((soundcheckDiff % (1000 * 60)) / 1000);
-          const scTimeStr = `${scM.toString().padStart(2, '0')}:${scS.toString().padStart(2, '0')}`;
-
-          if (soundcheckDigits) soundcheckDigits.innerText = scTimeStr;
-          if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = scTimeStr;
-        } else {
-          // PHASE 3: Complete -> Reset
-          if (soundcheckDigits) soundcheckDigits.innerText = "00:00 - LIVE!";
-          if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = "00:00 - LIVE!";
-          
-          localStorage.setItem('gdp_poll_end_time', (now + (60 * 60 * 1000)).toString());
-          localStorage.removeItem('gdp_soundcheck_end_time');
-          
-          pollData.forEach(item => item.votes = 0);
-          localStorage.removeItem('neko_voted_poll_id');
-          saveStoredPollData(pollData);
-          renderSetlistPolls();
-        }
+        if (soundcheckDigits) soundcheckDigits.innerText = scTimeStr;
+        if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = scTimeStr;
       }
     }
 
