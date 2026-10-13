@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Basement Cavern Chat (17+) — Otaku Overload</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    :root {
+      --nav-bg-basement: rgba(15, 8, 22, 0.96);
+      --nav-border-basement: rgba(255, 77, 109, 0.45);
+      --accent-pink: #f4b8c4;
+      --accent-purple: #a88beb;
+      --accent-red: #ff4d6d;
+      --accent-gold: #ffd166;
+      --text-light: #fce8ec;
+      --text-muted: #b59bb0;
+      --bg-dark: #08030f;
+      --card-bg: #140822;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Universal Header Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: var(--nav-bg-basement);
+      border-bottom: 2px solid var(--nav-border-basement);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-sizing: border-box;
+    }
+
+    .nav-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-link {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-main {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, var(--accent-red), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-sub {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--accent-red);
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 14px; }
+
+    .nav-item {
+      color: #e0b8cc;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(255, 77, 109, 0.2);
+      color: #ffffff;
+    }
+
+    /* Mode Dropdown */
+    .mode-select-dropdown {
+      appearance: none;
+      padding: 8px 32px 8px 14px;
+      border-radius: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      outline: none;
+      background-color: rgba(20, 8, 28, 0.95);
+      border: 1px solid rgba(255, 77, 109, 0.5);
+      color: var(--accent-red);
+      box-shadow: 0 0 12px rgba(255, 77, 109, 0.25);
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 16px;
+    }
+
+    .mode-select-dropdown option {
+      background-color: #0b0414;
+      color: #ff4d6d;
+    }
+
+    /* Layout */
+    .chat-container {
+      max-width: 1100px;
+      margin: 30px auto;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      padding: 0 20px 100px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 850px) { .chat-container { grid-template-columns: 1fr; } }
+
+    .chat-feed-box {
+      background: var(--card-bg);
+      border: 2px solid rgba(255, 77, 109, 0.45);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      height: 540px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 77, 109, 0.2);
+      padding-bottom: 12px;
+    }
+
+    .chat-header h3 {
+      margin: 0;
+      color: #fff;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-17 {
+      background: rgba(255, 77, 109, 0.2);
+      color: var(--accent-red);
+      border: 1px solid var(--accent-red);
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-weight: 800;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .msg-card {
+      background: rgba(10, 4, 18, 0.8);
+      border: 1px solid rgba(255, 77, 109, 0.25);
+      border-radius: 12px;
+      padding: 12px 16px;
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-author {
+      font-size: 0.85rem;
+      color: var(--accent-red);
+      font-weight: 800;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .msg-time {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: normal;
+    }
+
+    .msg-text {
+      color: #fce8ec;
+      font-size: 0.94rem;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .post-panel {
+      background: var(--card-bg);
+      border: 2px solid rgba(255, 77, 109, 0.45);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      background: rgba(10, 4, 18, 0.8);
+      border: 1px solid rgba(255, 77, 109, 0.3);
+      border-radius: 10px;
+      color: #fff;
+      margin-bottom: 14px;
+      box-sizing: border-box;
+      outline: none;
+      font-size: 0.92rem;
+    }
+
+    .form-control:focus { border-color: var(--accent-red); }
+
+    .action-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent-red), var(--accent-purple));
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: opacity 0.2s ease;
+    }
+
+    .action-btn:hover { opacity: 0.9; }
+
+    /* Verification Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5, 2, 12, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: #140822;
+      border: 2px solid var(--accent-red);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255, 77, 109, 0.3);
+    }
+
+    .modal-card h3 { margin: 0 0 12px; color: #fff; font-size: 1.4rem; }
+    .modal-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 24px; }
+
+    .modal-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 800;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .btn-verify { background: var(--accent-red); color: #fff; }
+    .btn-cancel { background: transparent; color: var(--text-muted); border: 1px solid rgba(255,77,109,0.3); }
+  </style>
+</head>
+<body>
+
+  <!-- Universal Header Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo-container">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">⚡ OTAKU OVERLOAD</span>
+          <span class="logo-sub">✦ BASEMENT CAVERN</span>
+        </a>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">🏠 Home</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+        <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
+        <a href="chat.html" class="nav-item">💬 Twilight Chat</a>
+        <a href="basement-chat.html" class="nav-item active">⚡ Basement (17+)</a>
+
+        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(255, 77, 109, 0.25); border: 1px solid #ff4d6d; cursor: pointer;">
+          🔑 Login
+        </button>
+
+        <div class="mode-selector-wrapper">
+          <select id="mode-selector" class="mode-select-dropdown" onchange="window.location.href = this.value === 'twilight' ? 'chat.html' : 'basement-chat.html'">
+            <option value="basement">⚡ Basement Mode (17+)</option>
+            <option value="twilight">🌸 Twilight Mode (13+)</option>
+          </select>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Live Cavern Chat Area -->
+  <main class="chat-container">
+    <section class="chat-feed-box">
+      <div class="chat-header">
+        <h3>⚡ Basement Cavern Live Feed <span class="badge-17">17+ Restricted</span></h3>
+        <span style="font-size: 0.78rem; color: var(--text-muted);">Unmoderated Channel</span>
+      </div>
+
+      <div id="basement-chat-stream" class="chat-messages">
+        <div style="text-align: center; color: var(--text-muted); padding: 30px;">
+          Checking 17+ age verification status...
+        </div>
+      </div>
+    </section>
+
+    <!-- Post Note Drawer -->
+    <aside class="post-panel">
+      <h3 style="color:#fff; margin-top:0;">⚡ Send Cavern Note</h3>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
+        Posts sent here transmit directly to the subterranean late-night audio stream channel.
+      </p>
+
+      <form id="basement-form" onsubmit="window.handleSendBasementMessage(event)">
+        <textarea id="basement-input" class="form-control" rows="5" placeholder="Write a message to the cavern feed..." required></textarea>
+        <button type="submit" class="action-btn">Transmit to Cavern</button>
+      </form>
+    </aside>
+  </main>
+
+  <!-- Verification Gate Modal Container -->
+  <div id="gate-modal-container"></div>
+
+  <!-- Firebase Integration -->
+  <script type="module" src="firebase-config.js"></script>
+
+  <script type="module">
+    import { auth, db } from './firebase-config.js';
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      collection, 
+      addDoc, 
+      query, 
+      orderBy, 
+      limit, 
+      onSnapshot, 
+      serverTimestamp,
+      doc,
+      updateDoc
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    let unsubscribeBasement = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        window.updatePageUI();
+        checkAgeVerification17();
+      } else {
+        renderGateModal("Sign-In & 17+ Verification Required", "The Basement Cavern requires a logged-in account with verified 17+ access.");
+      }
+    });
+
+    // Check if user has ageVerified17 flag set
+    function checkAgeVerification17() {
+      if (window.userData && window.userData.ageVerified17) {
+        removeGateModal();
+        startBasementChatStream();
+      } else {
+        renderGateModal("17+ Age Gate Confirmation", "The Basement Chat is intended strictly for members aged 17 and older. Please confirm your birth year to unlock access.");
+      }
+    }
+
+    // Render Gatekeeper Modal
+    function renderGateModal(title, text) {
+      const container = document.getElementById('gate-modal-container');
+      container.innerHTML = `
+        <div class="modal-overlay">
+          <div class="modal-card">
+            <h3>⚡ ${title}</h3>
+            <p>${text}</p>
+            ${window.currentUser ? `
+              <button class="modal-btn btn-verify" onclick="window.confirm17Age()">I am 17+ (Confirm Access)</button>
+              <button class="modal-btn btn-cancel" onclick="window.location.href='chat.html'">Return to Twilight Chat (13+)</button>
+            ` : `
+              <button class="modal-btn btn-verify" onclick="if(window.loginWithGoogle) window.loginWithGoogle()">Sign In with Google</button>
+              <button class="modal-btn btn-cancel" onclick="window.location.href='index.html'">Return Home</button>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function removeGateModal() {
+      const container = document.getElementById('gate-modal-container');
+      if (container) container.innerHTML = '';
+    }
+
+    // Confirm Age Handler
+    window.confirm17Age = async function() {
+      if (!window.currentUser) return;
+
+      try {
+        const userRef = doc(db, "users", window.currentUser.uid);
+        await updateDoc(userRef, { ageVerified17: true });
+        if (window.userData) window.userData.ageVerified17 = true;
+
+        removeGateModal();
+        startBasementChatStream();
+      } catch (err) {
+        console.error("Failed to verify age:", err);
+        alert("Error updating verification status: " + err.message);
+      }
+    };
+
+    // Live Stream Listener for basement_chat_messages
+    function startBasementChatStream() {
+      const streamContainer = document.getElementById('basement-chat-stream');
+      const messagesQuery = query(
+        collection(db, "basement_chat_messages"),
+        orderBy("timestamp", "asc"),
+        limit(100)
+      );
+
+      if (unsubscribeBasement) unsubscribeBasement();
+
+      unsubscribeBasement = onSnapshot(messagesQuery, (snapshot) => {
+        streamContainer.innerHTML = '';
+
+        if (snapshot.empty) {
+          streamContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 30px;">The subterranean feed is quiet. Post the first cavern echo!</div>`;
+          return;
+        }
+
+        snapshot.forEach((docSnap) => {
+          const msg = docSnap.data();
+          const cardHTML = renderBasementMsgRow(msg);
+          streamContainer.insertAdjacentHTML('beforeend', cardHTML);
+        });
+
+        streamContainer.scrollTop = streamContainer.scrollHeight;
+      });
+    }
+
+    function renderBasementMsgRow(msg) {
+      const author = escapeHTML(msg.authorName || "Cavern Member");
+      const text = escapeHTML(msg.text || "");
+      let timeStr = "Late Night";
+
+      if (msg.timestamp && msg.timestamp.toDate) {
+        timeStr = msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+
+      return `
+        <div class="msg-card">
+          <div class="msg-author">
+            <span>⚡ ${author}</span>
+            <span class="msg-time">${timeStr}</span>
+          </div>
+          <div class="msg-text">${text}</div>
+        </div>
+      `;
+    }
+
+    // Post Basement Message
+    window.handleSendBasementMessage = async function(event) {
+      event.preventDefault();
+      const input = document.getElementById('basement-input');
+      const text = input ? input.value.trim() : '';
+
+      if (!text) return;
+      if (!window.currentUser || !window.userData || !window.userData.ageVerified17) {
+        alert("You must be logged in and 17+ verified to post in the cavern.");
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "basement_chat_messages"), {
+          authorUid: window.currentUser.uid,
+          authorName: window.userData.displayName || "Cavern Member",
+          text: text,
+          timestamp: serverTimestamp()
+        });
+
+        input.value = '';
+      } catch (err) {
+        console.error("Failed to transmit cavern message:", err);
+        alert("Transmission failed. Please check your verification status.");
+      }
+    };
+
+    function escapeHTML(str) {
+      const p = document.createElement('p');
+      p.textContent = str;
+      return p.innerHTML;
+    }
+  </script>
+</body>
+</html>
