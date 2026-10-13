@@ -1,6 +1,13 @@
 // firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { 
+  getAuth, 
+  signInWithPopup, 
+  signInWithRedirect, 
+  GoogleAuthProvider, 
+  signOut, 
+  onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -22,13 +29,20 @@ export const db = getFirestore(app);
 window.currentUser = null;
 window.userData = null;
 
-// Track auth state automatically across all pages
+// Track auth state automatically across all pages and sync mode permissions
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     console.log("Logged in user detected:", user.email);
     window.currentUser = user;
+
+    // Sync local storage and page userState for Basement/Backstage mode switcher
+    localStorage.setItem('neko_logged_in', 'true');
+    if (typeof userState !== 'undefined') {
+      userState.isLoggedIn = true;
+    }
+
     await loadOrCreateUserProfile(user);
-    
+
     // Automatically close the login modal if open
     const modal = document.getElementById('neko-gate-modal');
     if (modal) modal.remove();
@@ -38,25 +52,38 @@ onAuthStateChanged(auth, async (user) => {
     console.log("User logged out or guest state.");
     window.currentUser = null;
     window.userData = null;
+
+    localStorage.removeItem('neko_logged_in');
+    if (typeof userState !== 'undefined') {
+      userState.isLoggedIn = false;
+    }
+
     if (typeof updatePageUI === "function") updatePageUI();
   }
 });
 
-// Google Login Function
+// Google Login Function with Redirect Fallback
 window.loginWithGoogle = async () => {
   console.log("Attempting Google Sign-In...");
   const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+
   try {
     const result = await signInWithPopup(auth, provider);
     console.log("Google login successful:", result.user.displayName);
   } catch (error) {
-    console.error("Google Sign-In Error Code:", error.code);
-    console.error("Google Sign-In Error Message:", error.message);
-    
-    if (error.code === 'auth/unauthorized-domain') {
+    console.warn("Popup warning/error code:", error.code);
+
+    if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+      console.log("Popup blocked or interrupted. Attempting redirect sign-in...");
+      try {
+        await signInWithRedirect(auth, provider);
+      } catch (redirectError) {
+        console.error("Redirect Login Error:", redirectError);
+        alert("Sign-in failed: " + redirectError.message);
+      }
+    } else if (error.code === 'auth/unauthorized-domain') {
       alert("Domain not authorized! Make sure your GitHub Pages link is added to Firebase Auth Settings > Authorized Domains.");
-    } else if (error.code === 'auth/popup-blocked') {
-      alert("Popup blocked by browser. Please allow popups for this website and try again.");
     } else if (error.code !== 'auth/popup-closed-by-user') {
       alert("Login Error: " + error.message);
     }
