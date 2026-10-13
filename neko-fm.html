@@ -1081,7 +1081,7 @@
       <!-- Discography Section Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
-          CD Official Studio Tracklist <span style="font-size: 0.8rem; color: #f4b8c4; font-weight: 600;">(20s Preview Teasers)</span>
+          💿 Official Studio Tracklist <span style="font-size: 0.8rem; color: #f4b8c4; font-weight: 600;">(20s Preview Teasers & Stem Downloads)</span>
         </h3>
         <span style="font-size: 0.8rem; color: #cbb8f6;">Showing 10 Tracks</span>
       </div>
@@ -1406,7 +1406,7 @@
       }
     }
 
-    /* 20-Second Preview Function for Discography */
+    /* 20-Second Preview & Full VIP Stream Function for Discography */
     function play20sTrackPreview(trackId, url, trackTitle) {
       if (activePreviewTrackId === trackId && !audioPlayer.paused) {
         stopActivePreview();
@@ -1415,10 +1415,10 @@
 
       stopActivePreview();
 
-      // Sync preview to localStorage for global mini-player
+      // Sync preview/stream to localStorage for global mini-player
       localStorage.setItem('echo_audio_src', url);
       localStorage.setItem('echo_audio_title', trackTitle);
-      localStorage.setItem('echo_audio_speaker', 'Girls Dead Phantom Teaser');
+      localStorage.setItem('echo_audio_speaker', userState.isVIP ? 'Girls Dead Phantom VIP Lossless Audio' : 'Girls Dead Phantom Teaser');
       localStorage.setItem('echo_audio_avatar', '💿');
       localStorage.setItem('echo_audio_mode', 'radio');
 
@@ -1426,8 +1426,14 @@
       audioPlayer.play().then(() => {
         isStreaming = true;
         activePreviewTrackId = trackId;
-        previewTimeRemaining = 20;
+        
+        // VIP gets full stream without 20s auto-stop
+        if (userState.isVIP) {
+          renderDiscography();
+          return;
+        }
 
+        previewTimeRemaining = 20;
         renderDiscography();
 
         if (previewTimerInterval) clearInterval(previewTimerInterval);
@@ -1442,8 +1448,16 @@
         }, 1000);
       }).catch(err => {
         console.log("Playback error:", err);
-        alert(`Click again to start 20s preview for "${trackTitle}"`);
+        alert(`Click again to start playback for "${trackTitle}"`);
       });
+    }
+
+    function downloadVIPStems(trackTitle) {
+      if (!userState.isVIP) {
+        showVIPModal('Backstage Pass Required', 'Unlock VIP Lossless Master Stem downloads for Girls Dead Phantom!');
+        return;
+      }
+      alert(`💎 VIP Stem Package for "${trackTitle}" (Drums, Keytar, Lead Guitar & Bass Stems) is preparing for download!`);
     }
 
     function stopActivePreview() {
@@ -1478,8 +1492,15 @@
         const card = document.createElement('div');
         card.className = `poll-card ${isVoted ? 'voted-card' : ''}`;
         
+        let voteBtnText = '⚡ Vote Song';
+        if (isVoted) {
+          voteBtnText = '✓ Voted';
+        } else if (userState.isVIP) {
+          voteBtnText = '💎 2x VIP Vote';
+        }
+
         let buttonHTML = `<button class="vote-btn ${isVoted ? 'voted-btn' : ''}" onclick="castSongVote(${item.id})">
-                            ${isVoted ? '✓ Voted' : '⚡ Vote Song'}
+                            ${voteBtnText}
                           </button>`;
 
         if (!userState.isLoggedIn) {
@@ -1512,6 +1533,7 @@
       }
 
       const existingVote = localStorage.getItem('neko_voted_poll_id');
+      const voteWeight = userState.isVIP ? 2 : 1;
 
       if (existingVote !== null) {
         if (parseInt(existingVote) === id) {
@@ -1519,12 +1541,14 @@
           return;
         } else {
           const prevItem = pollData.find(item => item.id === parseInt(existingVote));
-          if (prevItem && prevItem.votes > 0) prevItem.votes--;
+          if (prevItem && prevItem.votes > 0) {
+            prevItem.votes = Math.max(0, prevItem.votes - voteWeight);
+          }
         }
       }
 
       const currentItem = pollData.find(item => item.id === id);
-      if (currentItem) currentItem.votes++;
+      if (currentItem) currentItem.votes += voteWeight;
 
       localStorage.setItem('neko_voted_poll_id', id);
       saveStoredPollData(pollData);
@@ -1546,14 +1570,28 @@
         } else if (track.tierReq === 'backstage' && !userState.isVIP) {
           actionHTML = `<button class="vote-btn" onclick="showVIPModal('Backstage Pass Required', 'Unlock VIP Lossless Master Stem previews!')">💎 VIP Pass</button>`;
         } else {
-          if (isPreviewingThis) {
-            actionHTML = `<button class="vote-btn" style="background:#ff4d6d; color:#fff;" onclick="stopActivePreview()">
-                            ⏸ Stop (<span id="preview-timer-${track.id}">${previewTimeRemaining}s</span>)
-                          </button>`;
+          if (userState.isVIP) {
+            // Backstage Pass VIPs get full streaming + stem download buttons
+            actionHTML = `
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                ${isPreviewingThis ? 
+                  `<button class="vote-btn" style="background:#ff4d6d; color:#fff;" onclick="stopActivePreview()">⏸ Stop</button>` :
+                  `<button class="vote-btn" onclick="play20sTrackPreview('${track.id}', '${track.url}', '${track.title}')">▶ Full Stream</button>`
+                }
+                <button class="vote-btn" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000;" onclick="downloadVIPStems('${track.title}')">📥 Stems</button>
+              </div>
+            `;
           } else {
-            actionHTML = `<button class="vote-btn" onclick="play20sTrackPreview('${track.id}', '${track.url}', '${track.title}')">
-                            ▶ 20s Preview
-                          </button>`;
+            // Standard Twilight & Basement users get 20s teasers
+            if (isPreviewingThis) {
+              actionHTML = `<button class="vote-btn" style="background:#ff4d6d; color:#fff;" onclick="stopActivePreview()">
+                              ⏸ Stop (<span id="preview-timer-${track.id}">${previewTimeRemaining}s</span>)
+                            </button>`;
+            } else {
+              actionHTML = `<button class="vote-btn" onclick="play20sTrackPreview('${track.id}', '${track.url}', '${track.title}')">
+                              ▶ 20s Preview
+                            </button>`;
+            }
           }
         }
 
@@ -1564,7 +1602,7 @@
           <div style="flex: 1;">
             <div class="disco-title">${track.trackNo}. ${track.title}</div>
             <div class="disco-meta">${track.type} • <span class="disco-tier-badge ${track.badgeClass}">${track.tierLabel}</span></div>
-            ${isPreviewingThis ? `<span class="preview-active-pill">🎵 Previewing Live</span>` : ''}
+            ${isPreviewingThis ? `<span class="preview-active-pill">🎵 ${userState.isVIP ? 'VIP Full Stream' : 'Previewing Live'}</span>` : ''}
           </div>
           ${actionHTML}
         `;
@@ -1577,7 +1615,14 @@
       const text = input ? input.value.trim() : '';
       if (!text) return;
 
-      alert(`🌸 Suggestion received: "${text}" has been submitted to Prep Room B!`);
+      if (userState.isVIP) {
+        alert(`🔥 VIP Priority Request received: "${text}" has been tagged with Priority Status for Akari & Nekomi in Prep Room B!`);
+      } else if (userState.isLoggedIn) {
+        alert(`🌸 Suggestion received: "${text}" has been submitted to Prep Room B!`);
+      } else {
+        showAuthModal('Google Login Required', 'Sign in to submit song cover suggestions to Girls Dead Phantom!');
+        return;
+      }
       if (input) input.value = '';
     }
 
