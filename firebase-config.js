@@ -65,14 +65,14 @@ onAuthStateChanged(auth, async (user) => {
     window.userData = null;
 
     localStorage.removeItem('neko_logged_in');
-    localStorage.setItem('neko_active_mode', 'echoheart'); // Default to EchoHeart Mode
+    localStorage.setItem('neko_active_mode', 'twilight'); // Default to Twilight Mode
 
     if (typeof userState !== 'undefined') {
       userState.isLoggedIn = false;
     }
 
     if (typeof applyThemeMode === "function") {
-      applyThemeMode('echoheart');
+      applyThemeMode('twilight');
     }
 
     if (typeof updatePageUI === "function") updatePageUI();
@@ -120,7 +120,7 @@ window.logoutUser = async () => {
   }
 };
 
-// Firestore User Profile Handler (Orbs + Age Verification)
+// Firestore User Profile Handler (Orbs + Dual Age Verification)
 async function loadOrCreateUserProfile(user) {
   try {
     const userRef = doc(db, "users", user.uid);
@@ -136,7 +136,7 @@ async function loadOrCreateUserProfile(user) {
         email: user.email,
         photoURL: user.photoURL || "",
         orbs: 250, // Starting currency balance for cosmetics
-        ageVerified13: false, // Core Chat (EchoHeart Mode)
+        ageVerified13: false, // Core Chat (Twilight Mode)
         ageVerified17: false, // Basement Mode / Cavern Chat
         equippedAvatar: "default",
         equippedFrame: "none",
