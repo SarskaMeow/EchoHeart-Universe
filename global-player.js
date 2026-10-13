@@ -3,25 +3,18 @@
    ============================================================ */
 
 (function () {
-  // Determine current page filename
   const currentPage = window.location.pathname.split('/').pop().toLowerCase() || 'index.html';
 
-  // EXCLUSION RULE 1: Completely disable persistent player on Podcast page
+  // EXCLUSION RULE: Disable persistent mini-player on Podcast page
   if (currentPage === 'podcast.html') {
     const existingBar = document.getElementById('persistent-player-bar');
     if (existingBar) existingBar.remove();
     return;
   }
 
-  // EXCLUSION RULE 2: Hide floating mini-player on Neko FM page (uses main station UI instead)
-  if (currentPage === 'neko-fm.html') {
-    const existingBar = document.getElementById('persistent-player-bar');
-    if (existingBar) existingBar.style.display = 'none';
-    return;
-  }
-
-  // Inject Mini-Player UI automatically if not present on current page
+  // Auto-inject Mini-Player UI on Home, Chat, Hub, etc. (excluded on Neko FM page)
   function injectMiniPlayerUI() {
+    if (currentPage === 'neko-fm.html') return;
     if (document.getElementById('persistent-player-bar')) return;
 
     const playerHTML = `
@@ -51,28 +44,22 @@
     document.body.insertAdjacentHTML('beforeend', playerHTML);
   }
 
-  // Global Audio Engine Instantiation
+  // Global Shared Audio Object
   window.globalAudio = window.globalAudio || new Audio();
   window.globalAudio.crossOrigin = "anonymous";
 
   document.addEventListener('DOMContentLoaded', () => {
     injectMiniPlayerUI();
-    syncPlayerStateFromStorage();
+    syncPlayerStateFromStorage(true); // Automatically resume stream on load
     bindAudioEvents();
   });
 
-  // Sync state across browser tabs and page navigations
-  window.addEventListener('storage', (e) => {
-    if (e.key.startsWith('echo_audio_')) {
-      syncPlayerStateFromStorage();
-    }
-  });
-
-  function syncPlayerStateFromStorage() {
+  function syncPlayerStateFromStorage(shouldAutoResume = false) {
     const src = localStorage.getItem('echo_audio_src');
     const title = localStorage.getItem('echo_audio_title');
     const speaker = localStorage.getItem('echo_audio_speaker');
     const avatar = localStorage.getItem('echo_audio_avatar');
+    const wasPlaying = localStorage.getItem('echo_audio_playing') === 'true';
 
     const titleEl = document.getElementById('mini-track-title');
     const speakerEl = document.getElementById('mini-speaker-name');
@@ -82,18 +69,37 @@
     if (speakerEl && speaker) speakerEl.innerText = speaker;
     if (avatarEl && avatar) avatarEl.innerText = avatar;
 
-    if (src && window.globalAudio.src !== src) {
-      window.globalAudio.src = src;
-    }
+    if (src) {
+      if (window.globalAudio.src !== src) {
+        window.globalAudio.src = src;
+      }
 
-    updatePlayButtonUI(!window.globalAudio.paused);
+      // Resume playing if music was active before switching pages
+      if (shouldAutoResume && wasPlaying && window.globalAudio.paused) {
+        window.globalAudio.play().then(() => {
+          updatePlayButtonUI(true);
+        }).catch(err => {
+          console.log("Autoplay blocked by browser policy until user interaction:", err);
+          updatePlayButtonUI(false);
+        });
+      } else {
+        updatePlayButtonUI(!window.globalAudio.paused);
+      }
+    }
   }
 
   function bindAudioEvents() {
     const audio = window.globalAudio;
 
-    audio.addEventListener('play', () => updatePlayButtonUI(true));
-    audio.addEventListener('pause', () => updatePlayButtonUI(false));
+    audio.addEventListener('play', () => {
+      localStorage.setItem('echo_audio_playing', 'true');
+      updatePlayButtonUI(true);
+    });
+
+    audio.addEventListener('pause', () => {
+      localStorage.setItem('echo_audio_playing', 'false');
+      updatePlayButtonUI(false);
+    });
 
     audio.addEventListener('timeupdate', () => {
       const cur = document.getElementById('mini-time-current');
@@ -114,17 +120,23 @@
     const audio = window.globalAudio;
     const src = localStorage.getItem('echo_audio_src') || 'https://listen.moe/fallback';
 
-    if (!audio.src || audio.src === 'about:blank') {
+    if (!audio.src || audio.src === 'about:blank' || audio.src !== src) {
       audio.src = src;
-      localStorage.setItem('echo_audio_src', src);
-      localStorage.setItem('echo_audio_title', 'LISTEN.moe 24/7 Stream');
-      localStorage.setItem('echo_audio_speaker', 'Anime & Vocaloid');
+      if (!localStorage.getItem('echo_audio_src')) {
+        localStorage.setItem('echo_audio_src', src);
+        localStorage.setItem('echo_audio_title', 'LISTEN.moe 24/7 Stream');
+        localStorage.setItem('echo_audio_speaker', 'Anime & Vocaloid');
+      }
     }
 
     if (audio.paused) {
-      audio.play().then(() => updatePlayButtonUI(true)).catch(err => console.log("Playback error:", err));
+      audio.play().then(() => {
+        localStorage.setItem('echo_audio_playing', 'true');
+        updatePlayButtonUI(true);
+      }).catch(err => console.log("Playback error:", err));
     } else {
       audio.pause();
+      localStorage.setItem('echo_audio_playing', 'false');
       updatePlayButtonUI(false);
     }
   };
@@ -142,8 +154,14 @@
   };
 
   function updatePlayButtonUI(isPlaying) {
-    const btn = document.getElementById('mini-play-btn');
-    if (btn) btn.innerText = isPlaying ? '⏸' : '▶';
+    const miniBtn = document.getElementById('mini-play-btn');
+    if (miniBtn) miniBtn.innerText = isPlaying ? '⏸' : '▶';
+
+    // Synchronize Neko FM page button if present
+    const nekoBtn = document.getElementById('radio-play-btn');
+    if (nekoBtn) {
+      nekoBtn.innerText = isPlaying ? '⏸ Pause Radio Stream' : '▶ Stream Live Signal';
+    }
   }
 
   function formatTime(secs) {
