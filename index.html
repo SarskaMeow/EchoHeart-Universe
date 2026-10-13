@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EchoHeart & Girls Phantom Dead — Otaku Neko Lounge</title>
+  <title>EchoHeart & Girls Phantom Dead — Otaku Overload</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="firebase-config.js?v=2"></script>
   <style>
@@ -25,20 +25,13 @@
       transition: background 0.4s ease, color 0.4s ease;
     }
 
-    /* 3-Tier Mode Themes */
+    /* 2-Tier Mode Themes */
     body.twilight-mode { background: #0d0b18; color: #e2daf8; }
     body.basement-mode { background: #08030f; color: #fce8ec; }
-    body.backstage-mode { background: #05020a; color: #ffffff; }
 
     body.basement-mode .navbar {
       background: rgba(15, 8, 22, 0.96);
       border-bottom-color: rgba(255, 77, 109, 0.45);
-    }
-
-    body.backstage-mode .navbar {
-      background: rgba(10, 4, 16, 0.98);
-      border-bottom: 2px solid #ff007f;
-      box-shadow: 0 4px 20px rgba(255, 0, 127, 0.3);
     }
 
     /* Universal Navbar Base Styles */
@@ -92,12 +85,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    body.backstage-mode .logo-main {
-      background: linear-gradient(135deg, #ffd166, #ff007f);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
     .logo-sub {
       font-size: 0.72rem;
       font-weight: 800;
@@ -107,7 +94,6 @@
     }
 
     body.basement-mode .logo-sub { color: var(--accent-red); }
-    body.backstage-mode .logo-sub { color: #ffd166; }
 
     .nav-links {
       display: flex;
@@ -165,14 +151,6 @@
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     }
 
-    body.backstage-mode .mode-select-dropdown {
-      background-color: rgba(14, 6, 22, 0.98);
-      border: 1px solid #ffd166;
-      color: #ffd166;
-      box-shadow: 0 0 15px rgba(255, 209, 102, 0.35);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    }
-
     .mode-select-dropdown option {
       background-color: #120924;
       color: #e2daf8;
@@ -183,11 +161,6 @@
     body.basement-mode .mode-select-dropdown option {
       background-color: #0b0414;
       color: #ff4d6d;
-    }
-
-    body.backstage-mode .mode-select-dropdown option {
-      background-color: #080210;
-      color: #ffd166;
     }
 
     .mobile-menu-btn {
@@ -249,7 +222,6 @@
     }
 
     body.basement-mode .hero-container { border-color: rgba(255, 77, 109, 0.5); }
-    body.backstage-mode .hero-container { border-color: #ffd166; }
 
     .hero-badge {
       display: inline-block;
@@ -300,7 +272,6 @@
     }
 
     body.basement-mode .cta-btn-primary { background: linear-gradient(135deg, #ff4d6d, #a88beb); color: #ffffff; }
-    body.backstage-mode .cta-btn-primary { background: linear-gradient(135deg, #ffd166, #ff007f); color: #000000; }
 
     .cta-btn-secondary {
       background: rgba(35, 25, 65, 0.8);
@@ -397,73 +368,59 @@
       box-shadow: 0 12px 40px rgba(0,0,0,0.8);
     }
 
-    .vip-modal-card { border-color: #ff007f; box-shadow: 0 0 30px rgba(255, 0, 127, 0.4); }
     .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.3rem; }
     .modal-card p { color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
-    .modal-price-tag {
-      background: rgba(255, 209, 102, 0.15);
-      border: 1px solid #ffd166;
-      color: #ffd166;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-      display: inline-block;
-    }
     .modal-actions { display: flex; flex-direction: column; gap: 10px; }
     .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
     .google-btn { background: #ffffff; color: #111; }
-    .stripe-btn { background: linear-gradient(135deg, #ff007f, #ffd166); color: #000; }
     .close-btn { background: transparent; color: #a88beb; border: 1px solid rgba(168, 139, 235, 0.3); }
   </style>
 </head>
 <body class="twilight-mode">
 
   <!-- Universal Header Navigation Bar -->
-<header class="navbar">
-  <div class="nav-container">
-    
-    <!-- Brand Logo -->
-    <div class="logo-container">
-      <a href="index.html" class="logo-link">
-        <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
-        <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
-      </a>
-    </div>
+  <header class="navbar">
+    <div class="nav-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">🌸 OTAKU OVERLOAD</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
+        </a>
+      </div>
 
-    <!-- Mobile Hamburger Toggle Button -->
-    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-      <span class="hamburger-bar"></span>
-      <span class="hamburger-bar"></span>
-      <span class="hamburger-bar"></span>
-    </button>
-
-    <!-- 6 Main Destinations & 3-Tier Mode Selector -->
-    <nav class="nav-links" id="nav-menu">
-      <a href="index.html" class="nav-item">🏠 Home</a>
-      <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
-      <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-      <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
-      <a href="chat.html" class="nav-item">💬 Live Chat</a>
-      <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
-
-      <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
-        🔑 Login
+      <!-- Mobile Hamburger Toggle Button -->
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
       </button>
 
-      <!-- 3-Tier Access Mode Switcher -->
-      <div class="mode-selector-wrapper">
-        <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-          <option value="twilight">🌸 Twilight (Public)</option>
-          <option value="basement">⚡ Basement 🔒</option>
-          <option value="backstage">🎟️ Backstage Pass 💎</option>
-        </select>
-      </div>
-    </nav>
+      <!-- Main Destinations & Access Mode Selector -->
+      <nav class="nav-links" id="nav-menu">
+        <a href="index.html" class="nav-item active">🏠 Home</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+        <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
+        <a href="chat.html" class="nav-item">💬 Live Chat</a>
+        <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
 
-  </div>
-</header>
+        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
+          🔑 Login
+        </button>
+
+        <!-- 2-Tier Access Mode Switcher -->
+        <div class="mode-selector-wrapper">
+          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
+            <option value="twilight">🌸 Twilight (Public 13+)</option>
+            <option value="basement">⚡ Basement (17+ 🔒)</option>
+          </select>
+        </div>
+      </nav>
+
+    </div>
+  </header>
 
   <!-- Hero Banner -->
   <section class="hero-container">
@@ -483,7 +440,7 @@
     <a href="podcast.html" class="gateway-card">
       <div>
         <div class="gateway-icon">🎙️</div>
-        <h3>Whisper Radio Podcast Studio</h3>
+        <div class="gateway-title">Whisper Radio Podcast Studio</div>
         <p>Full-length audio drama episodes featuring Nekomi, Sera, Akari Minase, and Aoi.</p>
       </div>
       <span class="gateway-link-text">Launch Studio Stage →</span>
@@ -492,7 +449,7 @@
     <a href="neko-fm.html" class="gateway-card">
       <div>
         <div class="gateway-icon">📻</div>
-        <h3>24/7 Neko FM Radio Lounge</h3>
+        <div class="gateway-title">24/7 Neko FM Radio Lounge</div>
         <p>Continuous J-Pop/J-Rock streams, station tuner presets, and setlist voting polls.</p>
       </div>
       <span class="gateway-link-text">Tune In Now →</span>
@@ -501,8 +458,8 @@
     <a href="chat.html" class="gateway-card">
       <div>
         <div class="gateway-icon">💬</div>
-        <h3>Locker 102 Live Community</h3>
-        <p>Moderated SFW chat, band emote selector, and Backstage Pass VIP message board.</p>
+        <div class="gateway-title">Locker 102 Live Community</div>
+        <p>Moderated community chat, custom avatar cosmetics, and real-time classmate feed.</p>
       </div>
       <span class="gateway-link-text">Open Live Chat →</span>
     </a>
@@ -510,7 +467,7 @@
     <a href="hub.html" class="gateway-card">
       <div>
         <div class="gateway-icon">🌌</div>
-        <h3>Universe Hub Portal</h3>
+        <div class="gateway-title">Universe Hub Portal</div>
         <p>Light novel lore, character bio archives, stem mixer, and Atelier asset downloads.</p>
       </div>
       <span class="gateway-link-text">Explore Portal →</span>
@@ -518,25 +475,25 @@
   </main>
 
   <script>
-    // User Auth & Tier State
-    let userState = {
-      isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
-      isVIP: localStorage.getItem('neko_is_vip') === 'true'
-    };
-
     function handleModeChange(targetMode) {
       const selector = document.getElementById('mode-selector');
 
-      if (targetMode === 'basement' && !userState.isLoggedIn) {
-        if (selector) selector.value = getCurrentMode();
-        showAuthModal('Google Login Required', 'Sign in with Google to access After-Hours Basement streams and community profiles.');
-        return;
-      }
+      if (targetMode === 'basement') {
+        if (!window.currentUser) {
+          if (selector) selector.value = getCurrentMode();
+          showAuthModal('Sign-In Required', 'Sign in with Google to access After-Hours Basement streams.');
+          return;
+        }
 
-      if (targetMode === 'backstage' && !userState.isVIP) {
-        if (selector) selector.value = getCurrentMode();
-        showVIPModal('Backstage Pass Required', 'Unlock exclusive subterranean audio, stem mixers, live chat posting, and high-res Atelier downloads.');
-        return;
+        if (window.userData && !window.userData.ageVerified17) {
+          if (selector) selector.value = getCurrentMode();
+          if (typeof window.handleContentAccess === "function") {
+            window.handleContentAccess('basement');
+          } else {
+            alert("The Basement Channel requires 17+ age verification.");
+          }
+          return;
+        }
       }
 
       localStorage.setItem('neko_active_mode', targetMode);
@@ -551,7 +508,7 @@
       const body = document.body;
       const selector = document.getElementById('mode-selector');
 
-      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
+      body.classList.remove('twilight-mode', 'basement-mode');
       body.classList.add(`${mode}-mode`);
 
       if (selector) selector.value = mode;
@@ -565,25 +522,7 @@
             <h3>🔑 ${title}</h3>
             <p>${message}</p>
             <div class="modal-actions">
-              <button class="modal-btn google-btn" onclick="if (window.loginWithGoogle) { window.loginWithGoogle(); } else { simulateGoogleLogin(); }">Sign In with Google</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function showVIPModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card vip-modal-card">
-            <h3>🎟️ ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-price-tag">$4.99 / month • Backstage Pass</div>
-            <div class="modal-actions">
-              <button class="modal-btn stripe-btn" onclick="simulateStripeCheckout()">Unlock Backstage Pass</button>
+              <button class="modal-btn google-btn" onclick="if (window.loginWithGoogle) { window.loginWithGoogle(); }">Sign In with Google</button>
               <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
             </div>
           </div>
@@ -595,23 +534,6 @@
     function removeExistingModals() {
       const existing = document.getElementById('neko-gate-modal');
       if (existing) existing.remove();
-    }
-
-    function simulateGoogleLogin() {
-      if (window.loginWithGoogle) {
-        window.loginWithGoogle();
-      } else {
-        alert("Firebase is still loading... please try again in a moment.");
-      }
-    }
-
-    function simulateStripeCheckout() {
-      userState.isLoggedIn = true;
-      userState.isVIP = true;
-      localStorage.setItem('neko_logged_in', 'true');
-      localStorage.setItem('neko_is_vip', 'true');
-      removeExistingModals();
-      handleModeChange('backstage');
     }
 
     function toggleMobileMenu() {
