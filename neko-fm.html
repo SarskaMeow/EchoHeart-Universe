@@ -1102,7 +1102,7 @@
           <!-- Main LCD Screen -->
           <div class="lcd-screen">
             <div class="lcd-meta">
-              <div class="lcd-station-name" id="yt-channel-title">LISTEN.moe (Anime & Vocaloid HQ) 🌸</div>
+              <div class="lcd-station-name" id="yt-channel-title">J-Pop Powerplay Kawaii 🌸</div>
               <div class="lcd-status-msg" id="yt-status-text">SYSTEM READY • PURE DIRECT STREAM</div>
             </div>
             <div class="lcd-eq-bars" id="yt-eq-visualizer">
@@ -1112,10 +1112,10 @@
 
           <!-- Station Preset Selector Buttons -->
           <div class="station-presets">
-            <button class="preset-btn active" onclick="selectSynthPreset(0)">🌸 LISTEN.moe HQ</button>
-            <button class="preset-btn" onclick="selectSynthPreset(1)">⚡ Nightwave Cyber Synth</button>
-            <button class="preset-btn" onclick="selectSynthPreset(2)">🎤 Gensokyo J-Rock HQ</button>
-            <button class="preset-btn" onclick="selectSynthPreset(3)">🎙️ R/a/dio Anime Stream</button>
+            <button class="preset-btn active" onclick="selectSynthPreset(0)">🌸 J-Pop Kawaii</button>
+            <button class="preset-btn" onclick="selectSynthPreset(1)">⚡ J-Rock Powerplay</button>
+            <button class="preset-btn" onclick="selectSynthPreset(2)">🎤 J-Club Hip Hop</button>
+            <button class="preset-btn" onclick="selectSynthPreset(3)">🎙️ Japan Hits</button>
           </div>
 
           <!-- Controls & Volume -->
@@ -1255,15 +1255,14 @@
     // NEKO SYNTH DECK ENGINE STATE & CONTROLLER
     // ==========================================
     const synthPresets = [
-      { name: "LISTEN.moe (Anime & Vocaloid HQ) 🌸", url: "https://kathy.torontocast.com:3350/stream", desc: "24/7 Anime OSTs, Vocaloid & J-Pop Stream" },
-      { name: "NIGHTWAVE PLAZA (Cyber Synth) ⚡", url: "https://kathy.torontocast.com/powerplay", desc: "80s City Pop, Synthwave & Vaporwave Radio" },
-      { name: "GENSOKYO RADIO (J-Rock HQ) 🎤", url: "https://quincy.torontocast.com:2020/stream", desc: "Doujin Rock, Fast Beats & Arrangements" },
-      { name: "R/A/DIO (24/7 Anime Radio) 🎙️", url: "https://relay0.r-a-d.io/main.mp3", desc: "Community Anime & J-Pop Continuous Broadcast" }
+      { name: "J-Pop Powerplay Kawaii 🌸", url: "https://kathy.torontocast.com:3060/stream", desc: "Asia DREAM Radio • Kawaii J-Pop" },
+      { name: "J-Rock Powerplay ⚡", url: "https://kathy.torontocast.com:3340/stream", desc: "Asia DREAM Radio • High-Energy J-Rock" },
+      { name: "J-Club Hip Hop 🎤", url: "https://kathy.torontocast.com:3350/stream", desc: "Asia DREAM Radio • J-Club & Urban" },
+      { name: "Japan Hits 🎙️", url: "https://quincy.torontocast.com:2020/stream", desc: "Asia DREAM Radio • Top Japanese Hits" }
     ];
 
     let currentSynthPresetIdx = 0;
     let isSynthPlaying = false;
-    let listenMoeWs = null;
     const synthAudioPlayer = document.getElementById('synth-deck-audio');
 
     function syncRadioState(isPlaying, url, title, speaker) {
@@ -1271,35 +1270,6 @@
       if (url) localStorage.setItem('neko_radio_url', url);
       if (title) localStorage.setItem('neko_radio_title', title);
       if (speaker) localStorage.setItem('neko_radio_speaker', speaker);
-    }
-
-    // Live LISTEN.moe Metadata Tracker via WebSocket API
-    function connectListenMoeMetadata() {
-      if (listenMoeWs) {
-        try { listenMoeWs.close(); } catch(e){}
-      }
-      
-      listenMoeWs = new WebSocket('wss://listen.moe/gateway_v2');
-      listenMoeWs.onmessage = function(event) {
-        try {
-          const packet = JSON.parse(event.data);
-          // Opcode 0 is dispatch/song update
-          if (packet.op === 0 && packet.d && packet.d.song && currentSynthPresetIdx === 0 && isSynthPlaying) {
-            const songName = packet.d.song.title;
-            const artists = packet.d.song.artists.map(a => a.name).join(', ');
-            
-            const titleEl = document.getElementById('yt-channel-title');
-            if (titleEl) {
-              titleEl.innerText = `🎵 ${songName} — ${artists}`;
-            }
-          }
-        } catch (e) {
-          console.error("Metadata parse error:", e);
-        }
-      };
-      listenMoeWs.onclose = function() {
-        setTimeout(connectListenMoeMetadata, 10000);
-      };
     }
 
     function toggleSynthPower() {
@@ -1328,11 +1298,6 @@
           if (statusMsg) statusMsg.innerText = "STREAMING • " + preset.desc;
           if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
           if (eqVisualizer) eqVisualizer.classList.add('playing');
-
-          // Trigger live song tracking if LISTEN.moe preset is active
-          if (currentSynthPresetIdx === 0) {
-            connectListenMoeMetadata();
-          }
         }).catch(err => {
           console.error("Playback error:", err);
           alert("Click PLAY again to allow browser audio playback!");
@@ -1356,10 +1321,6 @@
           syncRadioState(true, selected.url, selected.name, selected.desc);
           const statusMsg = document.getElementById('yt-status-text');
           if (statusMsg) statusMsg.innerText = "STREAMING • " + selected.desc;
-
-          if (presetIndex === 0) {
-            connectListenMoeMetadata();
-          }
         }).catch(err => console.error(err));
       } else {
         const statusMsg = document.getElementById('yt-status-text');
@@ -1373,90 +1334,43 @@
       }
     }
 
-    // Shazam-Style Audio Fingerprinting Engine
-    // Station Live API Endpoints for Artist & Title
-const STATION_API_ENDPOINTS = {
-  0: { // LISTEN.moe
-    url: 'https://listen.moe/api/v2/get',
-    parse: (data) => {
-      if (data.song) {
-        const title = data.song.title || 'Unknown Track';
-        const artist = data.song.artists ? data.song.artists.map(a => a.name).join(', ') : 'Unknown Artist';
-        return { title, artist };
+    /**
+     * Fetches live artist and song title from TorontoCast Icecast status API via CORS proxy
+     */
+    async function triggerShazamFingerprint() {
+      const statusMsgEl = document.getElementById('yt-status-text');
+      const titleEl = document.getElementById('yt-channel-title');
+
+      if (statusMsgEl) statusMsgEl.innerText = "🔍 FETCHING LIVE TRACK INFO...";
+
+      const currentPreset = synthPresets[currentSynthPresetIdx];
+      const portIdx = currentPreset.url.lastIndexOf(':');
+      const slashIdx = currentPreset.url.indexOf('/', 8);
+      const serverHost = currentPreset.url.substring(0, portIdx > 8 ? portIdx : slashIdx);
+      const statsUrl = `https://corsproxy.io/?${encodeURIComponent(serverHost + '/status-json.xsl')}`;
+
+      try {
+        const res = await fetch(statsUrl);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        
+        let source = null;
+        if (data && data.icestats && data.icestats.source) {
+          source = Array.isArray(data.icestats.source) ? data.icestats.source[0] : data.icestats.source;
+        }
+
+        if (source && source.title) {
+          if (titleEl) titleEl.innerText = `🎵 ${source.title}`;
+          if (statusMsgEl) statusMsgEl.innerText = `🎤 ASIA DREAM RADIO • LIVE STREAM`;
+        } else {
+          if (statusMsgEl) statusMsgEl.innerText = "⚠️ METADATA NOT AVAILABLE";
+        }
+      } catch (err) {
+        console.error("TorontoCast metadata fetch failed:", err);
+        if (statusMsgEl) statusMsgEl.innerText = "⚠️ COULD NOT FETCH TRACK INFO";
       }
-      return null;
     }
-  },
-  1: { // Nightwave Plaza
-    url: 'https://api.plaza.one/status',
-    parse: (data) => {
-      if (data.song) {
-        return {
-          title: data.song.title || 'Unknown Track',
-          artist: data.song.artist || 'Unknown Artist'
-        };
-      }
-      return null;
-    }
-  },
-  2: { // Gensokyo Radio
-    url: 'https://gensokyoradio.net/api/station/playing/',
-    parse: (data) => {
-      if (data.songinfo) {
-        return {
-          title: data.songinfo.title || 'Unknown Track',
-          artist: data.songinfo.artist || 'Unknown Artist'
-        };
-      }
-      return null;
-    }
-  },
-  3: { // R/a/dio
-    url: 'https://r-a-d.io/api',
-    parse: (data) => {
-      if (data.main && data.main.np) {
-        const parts = data.main.np.split(' - ');
-        return {
-          artist: parts[0] || 'R/a/dio Broadcast',
-          title: parts.slice(1).join(' - ') || data.main.np
-        };
-      }
-      return null;
-    }
-  }
-};
 
-/**
- * Fetches live artist and song title directly from active station API
- */
-async function triggerShazamFingerprint() {
-  const statusMsgEl = document.getElementById('yt-status-text');
-  const titleEl = document.getElementById('yt-channel-title');
-
-  if (statusMsgEl) statusMsgEl.innerText = "🔍 FETCHING LIVE TRACK INFO...";
-
-  const config = STATION_API_ENDPOINTS[currentSynthPresetIdx];
-  if (!config) {
-    if (statusMsgEl) statusMsgEl.innerText = "⚠️ STATION METADATA NOT AVAILABLE";
-    return;
-  }
-
-  try {
-    const response = await fetch(config.url);
-    const data = await response.json();
-    const info = config.parse(data);
-
-    if (info && info.title) {
-      if (titleEl) titleEl.innerText = `🎵 ${info.title}`;
-      if (statusMsgEl) statusMsgEl.innerText = `🎤 ${info.artist} • LIVE STREAM`;
-    } else {
-      if (statusMsgEl) statusMsgEl.innerText = "⚠️ COULD NOT PARSE STATION METADATA";
-    }
-  } catch (err) {
-    console.error("Station API fetch failed:", err);
-    if (statusMsgEl) statusMsgEl.innerText = "⚠️ METADATA FETCH BLOCKED BY BROWSER";
-  }
-}
     // Helper: Generate 4 random songs from the catalog for the hourly poll
     function generateRandomPollItems() {
       const performerOptions = [
