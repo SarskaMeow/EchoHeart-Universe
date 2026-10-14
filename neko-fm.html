@@ -1741,5 +1741,72 @@
       initMasterTimers();
     });
   </script>
+
+  <div class="neko-radio-deck">
+  <!-- Radio Mode Selector Tabs -->
+  <div class="radio-nav-tabs">
+    <button class="radio-tab-btn active" id="tab-btn-direct" onclick="switchRadioTab('direct')">
+      📻 Direct Streams
+    </button>
+    <button class="radio-tab-btn" id="tab-btn-youtube" onclick="switchRadioTab('youtube')">
+      📺 Neko Tube 24/7
+    </button>
+  </div>
+
+  <!-- TAB 1: Original Audio Stream Player (Kept Intact) -->
+  <div id="radio-tab-direct" class="radio-tab-pane active">
+    <!-- Keep your existing audio stream controls/player markup here -->
+    <div style="padding: 15px; text-align: center; color: #a092c0; font-style: italic;">
+      [ Your existing direct radio player lives here ]
+    </div>
+  </div>
+
+  <!-- TAB 2: Custom YouTube 24/7 Radio Player -->
+  <div id="radio-tab-youtube" class="radio-tab-pane">
+    <div class="yt-radio-card">
+      <!-- Player LCD Display Header -->
+      <div class="lcd-header">
+        <span class="live-indicator"><span class="pulse-dot"></span> LIVE BROADCAST</span>
+        <span class="deck-model">NEKO-88 SYNTH DECK</span>
+      </div>
+
+      <!-- Main LCD Screen -->
+      <div class="lcd-screen">
+        <div class="lcd-meta">
+          <div class="lcd-station-name" id="yt-channel-title">COZY GHIBLI PIANO 🎹</div>
+          <div class="lcd-status-msg" id="yt-status-text">SYSTEM READY • CHOOSE FREQUENCY</div>
+        </div>
+        <div class="lcd-eq-bars" id="yt-eq-visualizer">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- Station Preset Selector Buttons -->
+      <div class="station-presets">
+        <button class="preset-btn active" onclick="selectYTPreset(0)">🎹 Ghibli Piano</button>
+        <button class="preset-btn" onclick="selectYTPreset(1)">🌸 Lofi Anime</button>
+        <button class="preset-btn" onclick="selectYTPreset(2)">🎤 24/7 J-Pop</button>
+        <button class="preset-btn" onclick="selectYTPreset(3)">⚡ Cyber Synth</button>
+      </div>
+
+      <!-- Controls & Volume -->
+      <div class="radio-deck-controls">
+        <button id="yt-power-btn" class="power-btn" onclick="toggleYTRadioPower()">
+          ▶ PLAY
+        </button>
+        
+        <div class="volume-slider-group">
+          <span class="vol-icon">🔊</span>
+          <input type="range" id="yt-vol-slider" min="0" max="100" value="70" oninput="changeYTRadioVolume(this.value)">
+        </div>
+      </div>
+
+      <!-- Invisible YouTube Engine Target -->
+      <div class="hidden-yt-engine">
+        <div id="yt-audio-player-mount"></div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
