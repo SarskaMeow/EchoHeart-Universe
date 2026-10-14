@@ -408,12 +408,20 @@
     <!-- Post Message Panel -->
     <aside class="post-panel">
       <h3>📮 Send a Message</h3>
-      <p id="posting-access-note" style="font-size: 0.82rem; color: #a092c0; margin-bottom: 16px;">
+      <p id="posting-access-note" style="font-size: 0.82rem; color: #a092c0; margin-bottom: 12px;">
         🔒 Messages are moderated by Neko-Guard 🐾 to ensure a safe community environment.
       </p>
+
+      <!-- Admin Overdrive / Dev Trigger Panel -->
+      <div style="background: rgba(255, 77, 109, 0.15); border: 1px solid rgba(255, 77, 109, 0.4); border-radius: 12px; padding: 10px; margin-bottom: 14px; text-align: center;">
+        <span style="font-size: 0.78rem; font-weight: 800; color: #ff4d6d; display: block; margin-bottom: 6px;">⚡ Dev / Admin Tools</span>
+        <button type="button" onclick="window.triggerManualNPCChatter()" style="background: #ff4d6d; color: #fff; border: none; border-radius: 8px; padding: 6px 12px; font-weight: 800; font-size: 0.78rem; cursor: pointer; width: 100%;">
+          🤖 Trigger Locker / Core 4 NPC Chat
+        </button>
+      </div>
       
       <form id="chat-form" onsubmit="window.handleSendChatMessage(event)">
-        <textarea id="chat-input" class="form-control" rows="4" placeholder="Write a message to the lounge..." required></textarea>
+        <textarea id="chat-input" class="form-control" rows="4" placeholder="Write a message to the lounge... (type /admin for dev overdrive)" required></textarea>
         <button type="submit" class="action-btn">🌸 Send Message</button>
       </form>
     </aside>
