@@ -6,6 +6,7 @@
   <title>EchoHeart & Girls Phantom Dead — Otaku Overload</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="firebase-config.js?v=2"></script>
+  <script type="module" src="age-gate.js"></script>
   <style>
     :root {
       --nav-bg-twilight: rgba(18, 12, 36, 0.94);
@@ -13,6 +14,7 @@
       --accent-pink: #f4b8c4;
       --accent-purple: #a88beb;
       --accent-red: #ff4d6d;
+      --accent-gold: #ffd166;
       --text-light: #e2daf8;
     }
     
@@ -25,13 +27,20 @@
       transition: background 0.4s ease, color 0.4s ease;
     }
 
-    /* 2-Tier Mode Themes */
+    /* 3-Tier Mode Themes */
     body.twilight-mode { background: #0d0b18; color: #e2daf8; }
     body.basement-mode { background: #08030f; color: #fce8ec; }
+    body.backstage-mode { background: #05020a; color: #ffffff; }
 
     body.basement-mode .navbar {
       background: rgba(15, 8, 22, 0.96);
       border-bottom-color: rgba(255, 77, 109, 0.45);
+    }
+
+    body.backstage-mode .navbar {
+      background: rgba(14, 6, 22, 0.98);
+      border-bottom: 2px solid var(--accent-gold);
+      box-shadow: 0 4px 20px rgba(255, 209, 102, 0.25);
     }
 
     /* Universal Navbar Base Styles */
@@ -85,6 +94,12 @@
       -webkit-text-fill-color: transparent;
     }
 
+    body.backstage-mode .logo-main {
+      background: linear-gradient(135deg, var(--accent-gold), #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
     .logo-sub {
       font-size: 0.72rem;
       font-weight: 800;
@@ -94,6 +109,7 @@
     }
 
     body.basement-mode .logo-sub { color: var(--accent-red); }
+    body.backstage-mode .logo-sub { color: var(--accent-gold); }
 
     .nav-links {
       display: flex;
@@ -151,6 +167,14 @@
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     }
 
+    body.backstage-mode .mode-select-dropdown {
+      background-color: rgba(22, 12, 38, 0.98);
+      border: 1px solid rgba(255, 209, 102, 0.6);
+      color: #ffd166;
+      box-shadow: 0 0 14px rgba(255, 209, 102, 0.3);
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    }
+
     .mode-select-dropdown option {
       background-color: #120924;
       color: #e2daf8;
@@ -161,6 +185,11 @@
     body.basement-mode .mode-select-dropdown option {
       background-color: #0b0414;
       color: #ff4d6d;
+    }
+
+    body.backstage-mode .mode-select-dropdown option {
+      background-color: #0e0616;
+      color: #ffd166;
     }
 
     .mobile-menu-btn {
@@ -222,6 +251,7 @@
     }
 
     body.basement-mode .hero-container { border-color: rgba(255, 77, 109, 0.5); }
+    body.backstage-mode .hero-container { border-color: rgba(255, 209, 102, 0.5); }
 
     .hero-badge {
       display: inline-block;
@@ -272,6 +302,7 @@
     }
 
     body.basement-mode .cta-btn-primary { background: linear-gradient(135deg, #ff4d6d, #a88beb); color: #ffffff; }
+    body.backstage-mode .cta-btn-primary { background: linear-gradient(135deg, #ffd166, #ff007f); color: #000000; }
 
     .cta-btn-secondary {
       background: rgba(35, 25, 65, 0.8);
@@ -322,8 +353,9 @@
       margin-bottom: 14px;
     }
 
-    .gateway-card h3 {
+    .gateway-title {
       font-size: 1.2rem;
+      font-weight: 800;
       margin: 0 0 8px;
       color: #ffffff;
     }
@@ -410,11 +442,12 @@
           🔑 Login
         </button>
 
-        <!-- 2-Tier Access Mode Switcher -->
+        <!-- 3-Tier Access Mode Switcher -->
         <div class="mode-selector-wrapper">
           <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
             <option value="twilight">🌸 Twilight (Public 13+)</option>
             <option value="basement">⚡ Basement (17+ 🔒)</option>
+            <option value="backstage">👑 Backstage VIP ✦</option>
           </select>
         </div>
       </nav>
@@ -475,8 +508,13 @@
   </main>
 
   <script>
-    function handleModeChange(targetMode) {
+    async function handleModeChange(targetMode) {
       const selector = document.getElementById('mode-selector');
+
+      if (targetMode === 'twilight') {
+        applyThemeMode('twilight');
+        return;
+      }
 
       if (targetMode === 'basement') {
         if (!window.currentUser) {
@@ -485,19 +523,39 @@
           return;
         }
 
-        if (window.userData && !window.userData.ageVerified17) {
-          if (selector) selector.value = getCurrentMode();
-          if (typeof window.handleContentAccess === "function") {
-            window.handleContentAccess('basement');
-          } else {
-            alert("The Basement Channel requires 17+ age verification.");
-          }
+        if (window.userData && window.userData.ageVerified17) {
+          applyThemeMode('basement');
           return;
         }
+
+        if (typeof window.handleContentAccess === "function") {
+          const allowed = await window.handleContentAccess('basement');
+          if (allowed) {
+            applyThemeMode('basement');
+          } else if (selector) {
+            selector.value = getCurrentMode();
+          }
+        } else {
+          if (selector) selector.value = getCurrentMode();
+          alert("The Basement Channel requires 17+ age verification.");
+        }
+        return;
       }
 
-      localStorage.setItem('neko_active_mode', targetMode);
-      applyThemeMode(targetMode);
+      if (targetMode === 'backstage') {
+        if (!window.currentUser) {
+          if (selector) selector.value = getCurrentMode();
+          showAuthModal('Sign-In Required', 'Sign in with Google to check your VIP Backstage status.');
+          return;
+        }
+
+        if (window.userData && window.userData.isVIP) {
+          applyThemeMode('backstage');
+        } else {
+          if (selector) selector.value = getCurrentMode();
+          showVIPPromoModal();
+        }
+      }
     }
 
     function getCurrentMode() {
@@ -505,13 +563,40 @@
     }
 
     function applyThemeMode(mode) {
+      localStorage.setItem('neko_active_mode', mode);
       const body = document.body;
       const selector = document.getElementById('mode-selector');
 
-      body.classList.remove('twilight-mode', 'basement-mode');
+      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
       body.classList.add(`${mode}-mode`);
 
       if (selector) selector.value = mode;
+    }
+
+    function showVIPPromoModal() {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card" style="border-color: #ffd166;">
+            <span style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; font-weight: 900; font-size: 0.72rem; padding: 4px 12px; border-radius: 20px; text-transform: uppercase;">Backstage Pass Locked</span>
+            <h3 style="margin: 14px 0 8px; color: #ffd166;">👑 VIP Backstage Access</h3>
+            <p style="color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px;">
+              Get access to exclusive stem mixers, gold name glows, custom avatar frames, and private band lounge chats!
+            </p>
+            <div style="background: rgba(30, 20, 50, 0.6); padding: 14px; border-radius: 12px; border: 1px solid rgba(255, 209, 102, 0.2); margin-bottom: 18px; text-align: left; font-size: 0.82rem;">
+              <div style="font-weight: 800; color: #ffd166; margin-bottom: 6px;">🎁 How to get 30 Days Free:</div>
+              • Vote in daily <b>Neko FM Setlist Polls</b><br>
+              • Catch random <b>Golden Key drops</b> in Live Chat<br>
+              • Win weekly <b>Prep Room B Trivia Events</b>
+            </div>
+            <div class="modal-actions">
+              <a href="neko-fm.html" class="modal-btn" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; text-decoration: none; display: block; box-sizing: border-box;">📊 Vote in Polls & Earn VIP</a>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Close</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
 
     function showAuthModal(title, message) {
