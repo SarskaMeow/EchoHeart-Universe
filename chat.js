@@ -1,4 +1,4 @@
-// chat.js — Live Firestore Chat Feed & Core 4 + Locker NPC Chatter Engine
+// chat.js — Live Firestore Chat Feed, 3-Tier Access, Admin Overdrive & NPC Chatter Engine
 import { db, auth } from './firebase-config.js';
 import { 
   collection, 
@@ -12,7 +12,13 @@ import {
 
 let chatUnsubscribe = null;
 
-// Determine active channel collection across 3 tiers
+// Helper to check if current user has Admin Overdrive privileges
+function isUserAdmin() {
+  if (localStorage.getItem('neko_admin_override') === 'true') return true;
+  return !!(window.userData && (window.userData.isAdmin || window.userData.role === 'admin'));
+}
+
+// Determine active channel collection
 function getActiveCollectionName() {
   const mode = localStorage.getItem('neko_active_mode') || 'twilight';
   if (mode === 'backstage') return 'backstage_chat_messages';
@@ -20,7 +26,7 @@ function getActiveCollectionName() {
   return 'chat_messages';
 }
 
-// 1. Initialize Real-Time Chat Listener
+// 1. Initialize Real-Time Chat Listener (Capped at 75)
 export function initChatFeed() {
   if (chatUnsubscribe) chatUnsubscribe();
 
@@ -35,10 +41,14 @@ export function initChatFeed() {
     
     const messages = [];
     snapshot.forEach((doc) => messages.push({ id: doc.id, ...doc.data() }));
-    messages.reverse(); // Chronological order
+    messages.reverse(); // Chronological display
 
     if (messages.length === 0) {
-      messagesDisplay.innerHTML = `<div style="text-align:center; color:#a092c0; padding:40px; font-style:italic;">No messages in this channel yet. Say hi to Prep Room B! 🌸</div>`;
+      messagesDisplay.innerHTML = `
+        <div style="text-align:center; color:#a092c0; padding:40px; font-style:italic;">
+          No messages in this channel yet. Say hi to Prep Room B! 🌸
+        </div>
+      `;
       return;
     }
 
@@ -50,15 +60,18 @@ export function initChatFeed() {
 function renderMessageHTML(msg) {
   const isCore4 = ['Nekomi 🎸', 'Sera 🎹', 'Akari Minase 🎤', 'Aoi 🥁'].includes(msg.senderName);
   const isVIPMsg = msg.isVIP;
+  const isAdminMsg = msg.isAdmin;
 
   let badge = '';
   if (isCore4) {
     badge = `<span style="background:rgba(244,184,196,0.2); border:1px solid #f4b8c4; color:#f4b8c4; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">BAND</span>`;
+  } else if (isAdminMsg) {
+    badge = `<span style="background:rgba(255,77,109,0.25); border:1px solid #ff4d6d; color:#ff4d6d; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">ADMIN</span>`;
   } else if (isVIPMsg) {
     badge = `<span class="vip-badge" style="margin-left:6px;">👑 VIP</span>`;
   }
 
-  const borderAccent = isVIPMsg ? '#ffd166' : (msg.color || '#a88beb');
+  const borderAccent = isAdminMsg ? '#ff4d6d' : (isVIPMsg ? '#ffd166' : (msg.color || '#a88beb'));
 
   return `
     <div class="chat-msg-item" style="background: rgba(15,10,30,0.6); padding: 12px 16px; border-radius: 12px; border-left: 4px solid ${borderAccent}; margin-bottom: 8px;">
@@ -66,7 +79,9 @@ function renderMessageHTML(msg) {
         <span class="${msg.nameGlow || ''}" style="font-weight: 800; color: ${borderAccent}; font-size: 0.9rem;">
           ${msg.senderName} ${badge}
         </span>
-        <span style="font-size: 0.72rem; color: #a092c0;">${msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}</span>
+        <span style="font-size: 0.72rem; color: #a092c0;">
+          ${msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}
+        </span>
       </div>
       <div style="color: #e2daf8; font-size: 0.92rem; line-height: 1.4; word-break: break-word;">
         ${escapeHTML(msg.text)}
@@ -82,10 +97,16 @@ function escapeHTML(str) {
   );
 }
 
-// 2. Global 3-Tier Channel Switcher with Verification & VIP Permission Checks
+// 2. Global Channel Switcher with Admin Permission Overrides
 window.switchChatChannel = async function(mode) {
   if (mode === 'twilight') {
     setModeState('twilight');
+    return;
+  }
+
+  // Admin bypass check
+  if (isUserAdmin()) {
+    setModeState(mode);
     return;
   }
 
@@ -158,7 +179,7 @@ function revertModeSelectorUI() {
   if (selector) selector.value = current;
 }
 
-// 3. User Message Sender with Multi-Tier Gate Checks
+// 3. User Message Sender & Secret Commands
 window.handleSendChatMessage = async function(event) {
   event.preventDefault();
   const input = document.getElementById('chat-input');
@@ -166,30 +187,51 @@ window.handleSendChatMessage = async function(event) {
 
   const text = input.value.trim();
 
-  if (!window.currentUser) {
+  // Secret Admin Overdrive Code
+  if (text.toLowerCase() === '/admin') {
+    const current = localStorage.getItem('neko_admin_override') === 'true';
+    localStorage.setItem('neko_admin_override', (!current).toString());
+    alert(current ? "🔴 Admin Overdrive Disabled" : "⚡ Secret Admin Overdrive Activated! Unlocked all channels & posting permissions.");
+    input.value = '';
+    return;
+  }
+
+  // Secret NPC Chat Command
+  if (text.toLowerCase() === '/npc') {
+    triggerNPCChatter();
+    input.value = '';
+    return;
+  }
+
+  if (!window.currentUser && !isUserAdmin()) {
     alert("Please log in with Google to post messages!");
     return;
   }
 
   const currentMode = localStorage.getItem('neko_active_mode') || 'twilight';
 
-  if (currentMode === 'basement' && (!window.userData || !window.userData.ageVerified17)) {
-    alert("You must complete 17+ age verification to post in Basement Channel!");
-    return;
-  }
-  if (currentMode === 'backstage' && (!window.userData || !window.userData.isVIP)) {
-    alert("👑 Active VIP Backstage pass required to post in this channel!");
-    return;
+  if (!isUserAdmin()) {
+    if (currentMode === 'basement' && (!window.userData || !window.userData.ageVerified17)) {
+      alert("You must complete 17+ age verification to post in Basement Channel!");
+      return;
+    }
+    if (currentMode === 'backstage' && (!window.userData || !window.userData.isVIP)) {
+      alert("👑 Active VIP Backstage pass required to post in this channel!");
+      return;
+    }
   }
 
   try {
     const collectionName = getActiveCollectionName();
+    const isAdmin = isUserAdmin();
+
     await addDoc(collection(db, collectionName), {
-      senderName: window.userData?.displayName || window.currentUser.displayName || 'Classmate',
+      senderName: window.userData?.displayName || window.currentUser?.displayName || (isAdmin ? 'Dev / Admin' : 'Classmate'),
       text: text,
-      color: window.userData?.nameColor || (window.userData?.isVIP ? '#ffd166' : '#a88beb'),
-      nameGlow: window.userData?.nameGlow || (window.userData?.isVIP ? 'glow-gold_glow' : ''),
-      isVIP: !!window.userData?.isVIP,
+      color: isAdmin ? '#ff4d6d' : (window.userData?.nameColor || (window.userData?.isVIP ? '#ffd166' : '#a88beb')),
+      nameGlow: isAdmin ? 'glow-pink_glow' : (window.userData?.nameGlow || (window.userData?.isVIP ? 'glow-gold_glow' : '')),
+      isVIP: !!window.userData?.isVIP || isAdmin,
+      isAdmin: isAdmin,
       isNPC: false,
       timestamp: serverTimestamp()
     });
@@ -322,7 +364,6 @@ const lockerNPCs = [
 ];
 
 export async function triggerNPCChatter() {
-  // 15% Core 4 (Rare), 85% Locker NPCs (Frequent)
   const roll = Math.floor(Math.random() * 100) + 1;
   const isCore4 = roll <= 15;
 
@@ -345,7 +386,11 @@ export async function triggerNPCChatter() {
   }
 }
 
-// Post an automated NPC message every 3 to 5 minutes
+window.triggerManualNPCChatter = function() {
+  triggerNPCChatter();
+};
+
+// Automated 24/7 background chatter every 3 to 5 minutes
 setInterval(() => {
   triggerNPCChatter();
 }, Math.floor(Math.random() * 120000) + 180000);
