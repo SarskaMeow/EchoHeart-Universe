@@ -1259,6 +1259,7 @@
 
     let currentSynthPresetIdx = 0;
     let isSynthPlaying = false;
+    let listenMoeWs = null;
     const synthAudioPlayer = document.getElementById('synth-deck-audio');
 
     function syncRadioState(isPlaying, url, title, speaker) {
@@ -1266,6 +1267,35 @@
       if (url) localStorage.setItem('neko_radio_url', url);
       if (title) localStorage.setItem('neko_radio_title', title);
       if (speaker) localStorage.setItem('neko_radio_speaker', speaker);
+    }
+
+    // Live LISTEN.moe Metadata Tracker via WebSocket API
+    function connectListenMoeMetadata() {
+      if (listenMoeWs) {
+        try { listenMoeWs.close(); } catch(e){}
+      }
+      
+      listenMoeWs = new WebSocket('wss://listen.moe/gateway_v2');
+      listenMoeWs.onmessage = function(event) {
+        try {
+          const packet = JSON.parse(event.data);
+          // Opcode 0 is dispatch/song update
+          if (packet.op === 0 && packet.d && packet.d.song && currentSynthPresetIdx === 0 && isSynthPlaying) {
+            const songName = packet.d.song.title;
+            const artists = packet.d.song.artists.map(a => a.name).join(', ');
+            
+            const titleEl = document.getElementById('yt-channel-title');
+            if (titleEl) {
+              titleEl.innerText = `🎵 ${songName} — ${artists}`;
+            }
+          }
+        } catch (e) {
+          console.error("Metadata parse error:", e);
+        }
+      };
+      listenMoeWs.onclose = function() {
+        setTimeout(connectListenMoeMetadata, 10000);
+      };
     }
 
     function toggleSynthPower() {
@@ -1294,6 +1324,11 @@
           if (statusMsg) statusMsg.innerText = "STREAMING • " + preset.desc;
           if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
           if (eqVisualizer) eqVisualizer.classList.add('playing');
+
+          // Trigger live song tracking if LISTEN.moe preset is active
+          if (currentSynthPresetIdx === 0) {
+            connectListenMoeMetadata();
+          }
         }).catch(err => {
           console.error("Playback error:", err);
           alert("Click PLAY again to allow browser audio playback!");
@@ -1317,6 +1352,10 @@
           syncRadioState(true, selected.url, selected.name, selected.desc);
           const statusMsg = document.getElementById('yt-status-text');
           if (statusMsg) statusMsg.innerText = "STREAMING • " + selected.desc;
+
+          if (presetIndex === 0) {
+            connectListenMoeMetadata();
+          }
         }).catch(err => console.error(err));
       } else {
         const statusMsg = document.getElementById('yt-status-text');
