@@ -1335,7 +1335,7 @@
     }
 
     /**
-     * Fetches live artist and song title from TorontoCast Icecast status API via CORS proxy
+     * Fetches live artist and song title from TorontoCast Icecast status API via CORS proxy fallbacks
      */
     async function triggerShazamFingerprint() {
       const statusMsgEl = document.getElementById('yt-status-text');
@@ -1344,16 +1344,31 @@
       if (statusMsgEl) statusMsgEl.innerText = "🔍 FETCHING LIVE TRACK INFO...";
 
       const currentPreset = synthPresets[currentSynthPresetIdx];
-      const portIdx = currentPreset.url.lastIndexOf(':');
-      const slashIdx = currentPreset.url.indexOf('/', 8);
-      const serverHost = currentPreset.url.substring(0, portIdx > 8 ? portIdx : slashIdx);
-      const statsUrl = `https://corsproxy.io/?${encodeURIComponent(serverHost + '/status-json.xsl')}`;
+      const baseUrl = currentPreset.url.substring(0, currentPreset.url.lastIndexOf('/'));
+      const icecastStatsUrl = baseUrl + '/status-json.xsl';
+
+      const proxies = [
+        (target) => `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`,
+        (target) => `https://corsproxy.io/?${encodeURIComponent(target)}`,
+        (target) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(target)}`
+      ];
+
+      let data = null;
+
+      for (const getProxyUrl of proxies) {
+        try {
+          const proxyUrl = getProxyUrl(icecastStatsUrl);
+          const res = await fetch(proxyUrl);
+          if (res.ok) {
+            data = await res.json();
+            if (data) break;
+          }
+        } catch (e) {
+          console.warn("Proxy attempt failed:", e);
+        }
+      }
 
       try {
-        const res = await fetch(statsUrl);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        
         let source = null;
         if (data && data.icestats && data.icestats.source) {
           source = Array.isArray(data.icestats.source) ? data.icestats.source[0] : data.icestats.source;
@@ -1367,7 +1382,7 @@
         }
       } catch (err) {
         console.error("TorontoCast metadata fetch failed:", err);
-        if (statusMsgEl) statusMsgEl.innerText = "⚠️ COULD NOT FETCH TRACK INFO";
+        if (statusMsgEl) statusMsgEl.innerText = "⚠️ COULD NOT PARSE TRACK INFO";
       }
     }
 
