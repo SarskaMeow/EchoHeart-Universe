@@ -12,10 +12,12 @@ import {
 
 let chatUnsubscribe = null;
 
-// Determine active channel collection
+// Determine active channel collection across 3 tiers
 function getActiveCollectionName() {
   const mode = localStorage.getItem('neko_active_mode') || 'twilight';
-  return mode === 'basement' ? 'basement_chat_messages' : 'chat_messages';
+  if (mode === 'backstage') return 'backstage_chat_messages';
+  if (mode === 'basement') return 'basement_chat_messages';
+  return 'chat_messages';
 }
 
 // 1. Initialize Real-Time Chat Listener
@@ -47,12 +49,21 @@ export function initChatFeed() {
 
 function renderMessageHTML(msg) {
   const isCore4 = ['Nekomi 🎸', 'Sera 🎹', 'Akari Minase 🎤', 'Aoi 🥁'].includes(msg.senderName);
-  const badge = isCore4 ? `<span style="background:rgba(244,184,196,0.2); border:1px solid #f4b8c4; color:#f4b8c4; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">BAND</span>` : '';
+  const isVIPMsg = msg.isVIP;
+
+  let badge = '';
+  if (isCore4) {
+    badge = `<span style="background:rgba(244,184,196,0.2); border:1px solid #f4b8c4; color:#f4b8c4; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">BAND</span>`;
+  } else if (isVIPMsg) {
+    badge = `<span class="vip-badge" style="margin-left:6px;">👑 VIP</span>`;
+  }
+
+  const borderAccent = isVIPMsg ? '#ffd166' : (msg.color || '#a88beb');
 
   return `
-    <div class="chat-msg-item" style="background: rgba(15,10,30,0.6); padding: 12px 16px; border-radius: 12px; border-left: 4px solid ${msg.color || '#a88beb'}; margin-bottom: 8px;">
+    <div class="chat-msg-item" style="background: rgba(15,10,30,0.6); padding: 12px 16px; border-radius: 12px; border-left: 4px solid ${borderAccent}; margin-bottom: 8px;">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
-        <span class="${msg.nameGlow || ''}" style="font-weight: 800; color: ${msg.color || '#a88beb'}; font-size: 0.9rem;">
+        <span class="${msg.nameGlow || ''}" style="font-weight: 800; color: ${borderAccent}; font-size: 0.9rem;">
           ${msg.senderName} ${badge}
         </span>
         <span style="font-size: 0.72rem; color: #a092c0;">${msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}</span>
@@ -71,19 +82,83 @@ function escapeHTML(str) {
   );
 }
 
-// 2. Global Channel Switcher
-window.switchChatChannel = function(mode) {
+// 2. Global 3-Tier Channel Switcher with Verification & VIP Permission Checks
+window.switchChatChannel = async function(mode) {
+  if (mode === 'twilight') {
+    setModeState('twilight');
+    return;
+  }
+
+  if (mode === 'basement') {
+    if (!window.currentUser) {
+      alert("Sign in with Google to enter Basement Mode.");
+      revertModeSelectorUI();
+      return;
+    }
+
+    if (window.userData && window.userData.ageVerified17) {
+      setModeState('basement');
+      return;
+    }
+
+    if (typeof window.handleContentAccess === "function") {
+      const allowed = await window.handleContentAccess('basement');
+      if (allowed) {
+        setModeState('basement');
+      } else {
+        revertModeSelectorUI();
+      }
+    } else {
+      alert("17+ Age Verification required.");
+      revertModeSelectorUI();
+    }
+    return;
+  }
+
+  if (mode === 'backstage') {
+    if (!window.currentUser) {
+      alert("Sign in with Google to view VIP Backstage status.");
+      revertModeSelectorUI();
+      return;
+    }
+
+    if (window.userData && window.userData.isVIP) {
+      setModeState('backstage');
+    } else {
+      revertModeSelectorUI();
+      if (typeof window.showVIPPromoModal === "function") {
+        window.showVIPPromoModal();
+      } else {
+        alert("👑 VIP Backstage Pass required to enter this channel!");
+      }
+    }
+  }
+};
+
+function setModeState(mode) {
   localStorage.setItem('neko_active_mode', mode);
-  document.body.classList.remove('twilight-mode', 'basement-mode');
+  document.body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
   document.body.classList.add(`${mode}-mode`);
 
   const selector = document.getElementById('mode-selector');
   if (selector) selector.value = mode;
 
-  initChatFeed();
-};
+  const tabs = ['twilight', 'basement', 'backstage'];
+  tabs.forEach(t => {
+    const btn = document.getElementById(`tab-${t}`);
+    if (btn) btn.classList.toggle('active', t === mode);
+  });
 
-// 3. User Message Sender
+  initChatFeed();
+}
+
+function revertModeSelectorUI() {
+  const current = localStorage.getItem('neko_active_mode') || 'twilight';
+  const selector = document.getElementById('mode-selector');
+  if (selector) selector.value = current;
+}
+
+// 3. User Message Sender with Multi-Tier Gate Checks
 window.handleSendChatMessage = async function(event) {
   event.preventDefault();
   const input = document.getElementById('chat-input');
@@ -96,13 +171,25 @@ window.handleSendChatMessage = async function(event) {
     return;
   }
 
+  const currentMode = localStorage.getItem('neko_active_mode') || 'twilight';
+
+  if (currentMode === 'basement' && (!window.userData || !window.userData.ageVerified17)) {
+    alert("You must complete 17+ age verification to post in Basement Channel!");
+    return;
+  }
+  if (currentMode === 'backstage' && (!window.userData || !window.userData.isVIP)) {
+    alert("👑 Active VIP Backstage pass required to post in this channel!");
+    return;
+  }
+
   try {
     const collectionName = getActiveCollectionName();
     await addDoc(collection(db, collectionName), {
       senderName: window.userData?.displayName || window.currentUser.displayName || 'Classmate',
       text: text,
-      color: window.userData?.nameColor || '#a88beb',
-      nameGlow: window.userData?.nameGlow || '',
+      color: window.userData?.nameColor || (window.userData?.isVIP ? '#ffd166' : '#a88beb'),
+      nameGlow: window.userData?.nameGlow || (window.userData?.isVIP ? 'glow-gold_glow' : ''),
+      isVIP: !!window.userData?.isVIP,
       isNPC: false,
       timestamp: serverTimestamp()
     });
