@@ -6,6 +6,7 @@
   <title>EchoHeart & Girls Phantom Dead — Otaku Overload</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="firebase-config.js?v=2"></script>
+  <script type="module" src="age-gate.js"></script>
   <style>
     :root {
       /* Twilight Mode Palette */
@@ -43,6 +44,24 @@
       --card-hover-shadow: rgba(255, 0, 127, 0.35);
     }
 
+    /* Backstage VIP Mode Color Overrides */
+    body.backstage-mode {
+      --bg-dark: #05020a;
+      --card-bg: rgba(22, 12, 38, 0.92);
+      --nav-bg: rgba(14, 6, 22, 0.98);
+      --nav-border: rgba(255, 209, 102, 0.5);
+      --accent-purple: #ffd166;
+      --accent-pink: #ff007f;
+      --accent-glow: rgba(255, 209, 102, 0.45);
+      --text-main: #ffffff;
+      --text-muted: #e2daf8;
+      --btn-grad: linear-gradient(135deg, #ffd166 0%, #ff007f 100%);
+      --btn-text: #000000;
+      --card-border: rgba(255, 209, 102, 0.4);
+      --card-hover-border: #ffd166;
+      --card-hover-shadow: rgba(255, 209, 102, 0.35);
+    }
+
     body {
       background-color: var(--bg-dark);
       color: var(--text-main);
@@ -68,6 +87,10 @@
 
     body.basement-mode .navbar {
       box-shadow: 0 4px 20px rgba(255, 77, 109, 0.18);
+    }
+
+    body.backstage-mode .navbar {
+      box-shadow: 0 4px 20px rgba(255, 209, 102, 0.25);
     }
 
     .nav-container {
@@ -138,50 +161,9 @@
       background: rgba(255, 77, 109, 0.2);
     }
 
-    /* Mode Select Dropdown Styling */
-    .mode-select-dropdown {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      padding: 8px 32px 8px 14px;
-      border-radius: 20px;
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 800;
-      cursor: pointer;
-      outline: none;
-      transition: all 0.3s ease;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      background-size: 16px;
-    }
-
-    body.twilight-mode .mode-select-dropdown {
-      background-color: rgba(28, 18, 52, 0.95);
-      border: 1px solid rgba(168, 139, 235, 0.45);
-      color: #e2daf8;
-      box-shadow: 0 0 12px rgba(168, 139, 235, 0.25);
-    }
-
-    body.basement-mode .mode-select-dropdown {
-      background-color: rgba(24, 8, 32, 0.95);
-      border: 1px solid rgba(255, 77, 109, 0.6);
-      color: #ff4d6d;
-      box-shadow: 0 0 14px rgba(255, 77, 109, 0.35);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    }
-
-    .mode-select-dropdown option {
-      background-color: #120924;
-      color: #e2daf8;
-      padding: 10px;
-      font-weight: 700;
-    }
-
-    body.basement-mode .mode-select-dropdown option {
-      background-color: #0b0414;
-      color: #ff4d6d;
+    body.backstage-mode .nav-item:hover, 
+    body.backstage-mode .nav-item.active {
+      background: rgba(255, 209, 102, 0.2);
     }
 
     .mobile-menu-btn {
@@ -225,8 +207,7 @@
       }
 
       .nav-links.open { display: flex !important; }
-      .nav-item, .mode-selector-wrapper { width: 100%; box-sizing: border-box; }
-      .mode-select-dropdown { width: 100%; text-align: center; }
+      .nav-item, .tier-switcher-pill { width: 100%; box-sizing: border-box; justify-content: center; }
     }
 
     /* Hero Banner */
@@ -303,9 +284,8 @@
       transition: background 0.2s ease, border-color 0.2s ease;
     }
 
-    body.basement-mode .cta-btn-secondary {
-      background: rgba(28, 10, 38, 0.8);
-    }
+    body.basement-mode .cta-btn-secondary { background: rgba(28, 10, 38, 0.8); }
+    body.backstage-mode .cta-btn-secondary { background: rgba(38, 20, 50, 0.8); }
 
     .cta-btn-primary:hover { 
       transform: translateY(-3px); 
@@ -376,9 +356,7 @@
       transition: gap 0.2s ease;
     }
 
-    .gateway-card:hover .gateway-link-text {
-      gap: 10px;
-    }
+    .gateway-card:hover .gateway-link-text { gap: 10px; }
 
     /* Modal Overlay Styles */
     .modal-overlay {
@@ -433,7 +411,7 @@
         <span class="hamburger-bar"></span>
       </button>
 
-      <!-- Main Destinations & Access Mode Selector -->
+      <!-- Main Destinations & Access Mode Switcher -->
       <nav class="nav-links" id="nav-menu">
         <a href="index.html" class="nav-item active">🏠 Home</a>
         <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
@@ -446,12 +424,11 @@
           🔑 Login
         </button>
 
-        <!-- 2-Tier Access Mode Switcher -->
-        <div class="mode-selector-wrapper">
-          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-            <option value="twilight">🌸 Twilight (Public 13+)</option>
-            <option value="basement">⚡ Basement (17+ 🔒)</option>
-          </select>
+        <!-- Segmented 3-Tier Access Switcher Pill -->
+        <div class="tier-switcher-pill">
+          <button type="button" class="tier-btn" data-mode="twilight" onclick="handleModeChange('twilight')">🌸 Twilight</button>
+          <button type="button" class="tier-btn" data-mode="basement" onclick="handleModeChange('basement')">⚡ Basement 🔒</button>
+          <button type="button" class="tier-btn vip" data-mode="backstage" onclick="handleModeChange('backstage')">👑 VIP ✦</button>
         </div>
       </nav>
 
@@ -511,29 +488,44 @@
   </main>
 
   <script>
-    function handleModeChange(targetMode) {
-      const selector = document.getElementById('mode-selector');
+    async function handleModeChange(targetMode) {
+      if (targetMode === 'twilight') {
+        applyThemeMode('twilight');
+        return;
+      }
 
       if (targetMode === 'basement') {
         if (!window.currentUser) {
-          if (selector) selector.value = getCurrentMode();
           showAuthModal('Sign-In Required', 'Sign in with Google to access After-Hours Basement streams.');
           return;
         }
 
-        if (window.userData && !window.userData.ageVerified17) {
-          if (selector) selector.value = getCurrentMode();
-          if (typeof window.handleContentAccess === "function") {
-            window.handleContentAccess('basement');
-          } else {
-            alert("The Basement Channel requires 17+ age verification.");
-          }
+        if (window.userData && window.userData.ageVerified17) {
+          applyThemeMode('basement');
           return;
         }
+
+        if (typeof window.handleContentAccess === "function") {
+          const allowed = await window.handleContentAccess('basement');
+          if (allowed) applyThemeMode('basement');
+        } else {
+          alert("The Basement Channel requires 17+ age verification.");
+        }
+        return;
       }
 
-      localStorage.setItem('neko_active_mode', targetMode);
-      applyThemeMode(targetMode);
+      if (targetMode === 'backstage') {
+        if (!window.currentUser) {
+          showAuthModal('Sign-In Required', 'Sign in with Google to check your VIP Backstage Pass status.');
+          return;
+        }
+
+        if (window.userData && window.userData.isVIP) {
+          applyThemeMode('backstage');
+        } else {
+          showVIPPromoModal();
+        }
+      }
     }
 
     function getCurrentMode() {
@@ -541,13 +533,41 @@
     }
 
     function applyThemeMode(mode) {
+      localStorage.setItem('neko_active_mode', mode);
       const body = document.body;
-      const selector = document.getElementById('mode-selector');
 
-      body.classList.remove('twilight-mode', 'basement-mode');
+      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
       body.classList.add(`${mode}-mode`);
 
-      if (selector) selector.value = mode;
+      document.querySelectorAll('.tier-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+      });
+    }
+
+    function showVIPPromoModal() {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card" style="border-color: #ffd166;">
+            <span style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; font-weight: 900; font-size: 0.72rem; padding: 4px 12px; border-radius: 20px; text-transform: uppercase;">Backstage Pass Locked</span>
+            <h3 style="margin: 14px 0 8px; color: #ffd166;">👑 VIP Backstage Access</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px;">
+              Get access to exclusive stem mixers, gold name glows, custom avatar frames, and private band lounge chats!
+            </p>
+            <div style="background: rgba(35, 20, 60, 0.6); padding: 14px; border-radius: 12px; border: 1px solid rgba(255, 209, 102, 0.2); margin-bottom: 18px; text-align: left; font-size: 0.82rem;">
+              <div style="font-weight: 800; color: #ffd166; margin-bottom: 6px;">🎁 How to get 30 Days Free:</div>
+              • Vote in daily <b>Neko FM Setlist Polls</b><br>
+              • Catch random <b>Golden Key drops</b> in Live Chat<br>
+              • Win weekly <b>Prep Room B Trivia Events</b>
+            </div>
+            <div class="modal-actions">
+              <a href="neko-fm.html" class="modal-btn" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; text-decoration: none; display: block; box-sizing: border-box;">📊 Vote in Polls & Earn VIP</a>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Close</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
 
     function showAuthModal(title, message) {
