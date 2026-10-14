@@ -25,6 +25,25 @@ function getActiveCollectionName() {
   return 'chat_messages';
 }
 
+// Helper to safely convert any timestamp format to numeric milliseconds
+function parseTimestampToMillis(rawTimestamp) {
+  if (!rawTimestamp) return Date.now();
+  
+  // Firestore Timestamp object (.toDate())
+  if (typeof rawTimestamp.toDate === 'function') {
+    return rawTimestamp.toDate().getTime();
+  }
+  
+  // Already a numeric timestamp
+  if (typeof rawTimestamp === 'number') {
+    return rawTimestamp;
+  }
+
+  // String or Date instance fallback
+  const parsed = new Date(rawTimestamp).getTime();
+  return isNaN(parsed) ? Date.now() : parsed;
+}
+
 // 1. Initialize Real-Time Chat Listener
 export function initChatFeed() {
   if (chatUnsubscribe) {
@@ -34,7 +53,8 @@ export function initChatFeed() {
 
   const collectionName = getActiveCollectionName();
   const chatRef = collection(db, collectionName);
-  // Fetch latest documents without rigid Firestore index sorting to prevent document exclusion
+  
+  // Fetch up to 75 latest messages without strict database-side data-type indexing
   const q = query(chatRef, limit(75));
 
   const messagesDisplay = document.getElementById('messages-display');
@@ -45,23 +65,20 @@ export function initChatFeed() {
     const messages = [];
     snapshot.forEach((doc) => {
       const data = doc.data();
-      let ts = data.timestamp;
-      
-      // Normalize timestamps to numeric milliseconds for reliable client-side sorting
-      if (ts && typeof ts.toDate === 'function') {
-        ts = ts.toDate().getTime();
-      } else if (typeof ts !== 'number') {
-        ts = Date.now();
-      }
-
-      messages.push({ id: doc.id, ...data, _parsedTs: ts });
+      const timeMs = parseTimestampToMillis(data.timestamp);
+      messages.push({ id: doc.id, ...data, _timeMs: timeMs });
     });
 
     // Sort chronologically (oldest at top, newest at bottom)
-    messages.sort((a, b) => a._parsedTs - b._parsedTs);
+    messages.sort((a, b) => a._timeMs - b._timeMs);
 
     if (messages.length === 0 && !isSeeding) {
       isSeeding = true;
+      messagesDisplay.innerHTML = `
+        <div style="text-align:center; color:#a092c0; padding:40px; font-style:italic;">
+          Initializing Locker 102 Chatter... 🌸
+        </div>
+      `;
       await seedInitialNPCChatter();
       isSeeding = false;
       return;
@@ -70,7 +87,7 @@ export function initChatFeed() {
     if (messages.length > 0) {
       messagesDisplay.innerHTML = messages.map(msg => renderMessageHTML(msg)).join('');
       
-      // Smoothly scroll down to show the latest messages
+      // Auto-scroll to the bottom of the feed for live chat behavior
       setTimeout(() => {
         messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
       }, 50);
@@ -97,11 +114,8 @@ function renderMessageHTML(msg) {
   const borderAccent = isAdminMsg ? '#ff4d6d' : (isVIPMsg ? '#ffd166' : (msg.color || '#a88beb'));
 
   let formattedTime = 'Just now';
-  if (msg._parsedTs) {
-    const rawDate = new Date(msg._parsedTs);
-    if (!isNaN(rawDate.getTime())) {
-      formattedTime = rawDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
+  if (msg._timeMs) {
+    formattedTime = new Date(msg._timeMs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
   return `
@@ -404,7 +418,6 @@ async function postNPCMessage(character) {
   }
 }
 
-// Initial seed if feed is completely empty
 async function seedInitialNPCChatter() {
   const seed1 = lockerNPCs[Math.floor(Math.random() * lockerNPCs.length)];
   const seed2 = core4NPCs[Math.floor(Math.random() * core4NPCs.length)];
