@@ -1088,7 +1088,7 @@
   <!-- Audio Engine Player (Hidden) -->
   <audio id="radio-audio-player" crossorigin="anonymous"></audio>
 
-  <!-- Studio Dashboard Navigation Tabs -->
+  <!-- Studio Dashboard Container -->
   <main class="studio-dashboard">
     <div class="dashboard-tabs">
       <button class="tab-btn active-tab" onclick="switchTab('tuner-tab', this)">📻 24/7 Radio Tuner</button>
@@ -1137,7 +1137,7 @@
         <div class="premiere-info-group">
           <span class="premiere-badge">🌟 Girls Dead Phantom Leader</span>
           <h4 class="premiere-title" id="winning-track-name">"Subterranean Resonance (Official Studio Cut)"</h4>
-          <p class="premiere-sub">Akari (Drums) • Nekomi (Vocals & Lead Guitar) • Sera (Keytar) • Aoi (Bass)</p>
+          <p class="premiere-sub">Akari Minase (Drums) • Nekomi (Vocals & Lead Guitar) • Sera (Keytar) • Aoi (Bass)</p>
         </div>
 
         <div class="premiere-actions-side">
@@ -1238,7 +1238,7 @@
 
         <!-- Band Member Roster Chips -->
         <div class="gdp-roster-chips">
-          <div class="member-chip">🥁 Akari <span class="member-role">(Drums)</span></div>
+          <div class="member-chip">🥁 Akari Minase <span class="member-role">(Drums)</span></div>
           <div class="member-chip">🎙️ Nekomi <span class="member-role">(Vocals & Guitar)</span></div>
           <div class="member-chip">🎹 Sera <span class="member-role">(Keytar & Vocals)</span></div>
           <div class="member-chip">🎸 Aoi <span class="member-role">(Bass)</span></div>
@@ -1358,10 +1358,26 @@
     // YOUTUBE 24/7 RADIO ENGINE STATE & CONTROLLER
     // ==========================================
     const ytRadioPresets = [
-      { name: "COZY GHIBLI PIANO 🎹", videoId: "36YnV9STBkc", desc: "Studio Ghibli Relaxing Piano Live" },
-      { name: "LOFI ANIME BEATS 🌸", videoId: "jfKfPfyJRdk", desc: "24/7 Chill Lofi Hip Hop Study Radio" },
-      { name: "24/7 J-POP & ANISON 🎤", videoId: "4xDzrJKXOOY", desc: "Live J-Pop & Anime Opening Hits" },
-      { name: "CYBER SYNTHWAVE ⚡", videoId: "5qap5aO4i9A", desc: "Retro Synthwave & J-Rock Radio" }
+      { 
+        name: "COZY GHIBLI PIANO 🎹", 
+        videoId: "36YnV9STBkc", 
+        desc: "Studio Ghibli Relaxing Piano Mix (10-Hour Loop)" 
+      },
+      { 
+        name: "LOFI ANIME BEATS 🌸", 
+        videoId: "jfKfPfyJRdk", 
+        desc: "Lofi Hip Hop & Chill Anime Study Beats" 
+      },
+      { 
+        name: "24/7 J-POP & ANISON 🎤", 
+        videoId: "4xDzrJKXOOY", 
+        desc: "Japanese Pop & Anime OST Compilation" 
+      },
+      { 
+        name: "CYBER SYNTHWAVE ⚡", 
+        videoId: "5qap5aO4i9A", 
+        desc: "10-Hour Retro Synthwave & Cyberpunk Mix" 
+      }
     ];
 
     let ytPlayerInstance = null;
@@ -1381,15 +1397,18 @@
     }
 
     window.onYouTubeIframeAPIReady = function() {
+      const initialTrack = ytRadioPresets[0];
       ytPlayerInstance = new YT.Player('yt-audio-player-mount', {
-        videoId: ytRadioPresets[0].videoId,
+        videoId: initialTrack.videoId,
         playerVars: {
           'autoplay': 0,
           'controls': 0,
           'disablekb': 1,
           'fs': 0,
           'modestbranding': 1,
-          'playsinline': 1
+          'playsinline': 1,
+          'loop': 1,
+          'playlist': initialTrack.videoId // Required by YT API to loop single videos continuous
         },
         events: {
           'onReady': (evt) => evt.target.setVolume(70),
@@ -1408,12 +1427,20 @@
         if (statusMsg) statusMsg.innerText = "STREAMING • " + ytRadioPresets[currentPresetIdx].desc;
         if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
         if (eqVisualizer) eqVisualizer.classList.add('playing');
-      } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+      } 
+      else if (event.data === YT.PlayerState.PAUSED) {
         isYTRadioPlaying = false;
         if (statusMsg) statusMsg.innerText = "STANDBY • PRESS PLAY";
         if (powerBtn) powerBtn.innerText = "▶ PLAY";
         if (eqVisualizer) eqVisualizer.classList.remove('playing');
-      } else if (event.data === YT.PlayerState.BUFFERING) {
+      } 
+      else if (event.data === YT.PlayerState.ENDED) {
+        // AUTO-REPEAT / LOOP ENGINE: Replay video automatically on end
+        if (ytPlayerInstance) {
+          ytPlayerInstance.playVideo();
+        }
+      } 
+      else if (event.data === YT.PlayerState.BUFFERING) {
         if (statusMsg) statusMsg.innerText = "BUFFERING SIGNAL...";
       }
     }
@@ -1454,7 +1481,12 @@
           const btn = document.getElementById('radio-play-btn');
           if (btn) btn.innerText = '▶ Stream Live Signal';
         }
-        ytPlayerInstance.loadVideoById(selected.videoId);
+
+        // Load video and reset playback
+        ytPlayerInstance.loadVideoById({
+          videoId: selected.videoId,
+          startSeconds: 0
+        });
       }
     }
 
@@ -1467,7 +1499,7 @@
     // Helper: Generate 4 random songs from the catalog for the hourly poll
     function generateRandomPollItems() {
       const performerOptions = [
-        'Akari (Drums) & Nekomi (Vocals)',
+        'Akari Minase (Drums) & Nekomi (Vocals)',
         'Sera (Keytar) & Aoi (Bass)',
         'Girls Dead Phantom Ensemble',
         'Akari Minase (Drums) & Aoi (Bass)'
@@ -1919,7 +1951,7 @@
       if (!text) return;
 
       if (userState.isVIP) {
-        alert(`🔥 VIP Priority Request received: "${text}" has been tagged with Priority Status for Akari & Nekomi in Prep Room B!`);
+        alert(`🔥 VIP Priority Request received: "${text}" has been tagged with Priority Status for Akari Minase & Nekomi in Prep Room B!`);
       } else if (userState.isLoggedIn) {
         alert(`🌸 Suggestion received: "${text}" has been submitted to Prep Room B!`);
       } else {
