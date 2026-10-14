@@ -120,7 +120,7 @@ window.logoutUser = async () => {
   }
 };
 
-// Firestore User Profile Handler (Orbs + Dual Age Verification)
+// Firestore User Profile Handler (Revamped VIP + Dual Age Verification)
 async function loadOrCreateUserProfile(user) {
   try {
     const userRef = doc(db, "users", user.uid);
@@ -128,6 +128,20 @@ async function loadOrCreateUserProfile(user) {
 
     if (docSnap.exists()) {
       window.userData = docSnap.data();
+
+      // Automatically check and handle VIP pass expiration
+      if (window.userData.isVIP && window.userData.vipExpiresAt) {
+        const now = new Date();
+        const expiresAt = window.userData.vipExpiresAt.toDate 
+          ? window.userData.vipExpiresAt.toDate() 
+          : new Date(window.userData.vipExpiresAt);
+          
+        if (now > expiresAt) {
+          window.userData.isVIP = false;
+          console.log("VIP Backstage pass has expired.");
+        }
+      }
+
       console.log("User profile loaded from Firestore:", window.userData);
     } else {
       const defaultData = {
@@ -135,9 +149,11 @@ async function loadOrCreateUserProfile(user) {
         displayName: user.displayName || "Lounge Member",
         email: user.email,
         photoURL: user.photoURL || "",
-        orbs: 250, // Starting currency balance for cosmetics
-        ageVerified13: false, // Core Chat (Twilight Mode)
-        ageVerified17: false, // Basement Mode / Cavern Chat
+        ageVerified13: true,   // Core Chat (Twilight Mode)
+        ageVerified17: false,  // Basement Mode / Cavern Chat
+        isVIP: false,          // Revamped Backstage VIP Pass
+        vipExpiresAt: null,    // 30-Day expiration tracker
+        activityPoints: 0,     // Earned points from polls/events
         equippedAvatar: "default",
         equippedFrame: "none",
         equippedGlow: "none",
@@ -145,7 +161,7 @@ async function loadOrCreateUserProfile(user) {
       };
       await setDoc(userRef, defaultData);
       window.userData = defaultData;
-      console.log("New profile created in Firestore with 250 Orbs.");
+      console.log("New profile created in Firestore with VIP tracking.");
     }
   } catch (err) {
     console.error("Firestore user profile error:", err);
@@ -158,7 +174,7 @@ window.openAuthOrAccount = function() {
     window.location.href = "account.html";
   } else {
     if (typeof showAuthModal === "function") {
-      showAuthModal("Welcome to Otaku Lounge", "Sign in with Google to earn Orbs, unlock avatar frames, and chat live!");
+      showAuthModal("Welcome to Otaku Lounge", "Sign in with Google to earn VIP Backstage passes, participate in polls, and chat live!");
     } else {
       window.loginWithGoogle();
     }
@@ -171,8 +187,9 @@ window.updatePageUI = function() {
   if (!btn) return;
 
   if (window.currentUser && window.userData) {
-    btn.innerHTML = `👤 Profile (🔮 ${window.userData.orbs || 0})`;
-    btn.style.borderColor = '#ffd166';
+    const isVIP = window.userData.isVIP;
+    btn.innerHTML = `👤 Profile ${isVIP ? '👑 VIP' : ''}`;
+    btn.style.borderColor = isVIP ? '#ffd166' : '#a88beb';
   } else {
     btn.innerHTML = `🔑 Login`;
     btn.style.borderColor = '#a88beb';
