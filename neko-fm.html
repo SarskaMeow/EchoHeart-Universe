@@ -18,7 +18,6 @@
       --text-light: #e2daf8;
     }
     
-    
     body {
       background: #0d0b18;
       color: var(--text-light);
@@ -289,20 +288,64 @@
     .tab-content { display: none; }
     .tab-content.active-content { display: block; }
 
+    /* NEKO RADIO DUAL DECK STYLES */
+    .neko-radio-deck {
+      background: rgba(15, 10, 30, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 18px;
+      padding: 20px;
+      max-width: 680px;
+      margin: 0 auto;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .radio-nav-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      background: rgba(8, 5, 18, 0.6);
+      padding: 6px;
+      border-radius: 12px;
+    }
+
+    .radio-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #a092c0;
+      padding: 10px 14px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .radio-tab-btn.active {
+      background: rgba(168, 139, 235, 0.22);
+      color: #f4b8c4;
+      box-shadow: inset 0 0 10px rgba(244, 184, 196, 0.2);
+    }
+
+    .radio-tab-pane {
+      display: none;
+    }
+    .radio-tab-pane.active {
+      display: block;
+    }
+
     /* Tuner Display Card */
     .tuner-card {
       background: rgba(15, 10, 30, 0.8);
       border: 1px solid rgba(168, 139, 235, 0.3);
       border-radius: 16px;
-      padding: 30px;
+      padding: 24px;
       text-align: center;
-      max-width: 650px;
-      margin: 0 auto;
     }
 
     .frequency-display {
       font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 2.2rem;
+      font-size: 2rem;
       color: #f4b8c4;
       margin: 10px 0;
       font-weight: 800;
@@ -323,7 +366,7 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
-      margin: 24px 0;
+      margin: 20px 0;
     }
 
     @media (max-width: 600px) {
@@ -343,21 +386,23 @@
       text-align: left;
     }
 
-    .preset-btn:hover, .preset-btn.active-preset {
+    .preset-btn:hover, .preset-btn.active-preset, .preset-btn.active {
       background: linear-gradient(135deg, #a88beb, #f4b8c4);
       color: #0d0b18;
       border-color: #f4b8c4;
     }
 
     body.basement-mode .preset-btn:hover, 
-    body.basement-mode .preset-btn.active-preset {
+    body.basement-mode .preset-btn.active-preset,
+    body.basement-mode .preset-btn.active {
       background: linear-gradient(135deg, #ff4d6d, #a88beb);
       color: #ffffff;
       border-color: #ff4d6d;
     }
 
     body.backstage-mode .preset-btn:hover, 
-    body.backstage-mode .preset-btn.active-preset {
+    body.backstage-mode .preset-btn.active-preset,
+    body.backstage-mode .preset-btn.active {
       background: linear-gradient(135deg, #ffd166, #ff007f);
       color: #000000;
       border-color: #ffd166;
@@ -371,7 +416,7 @@
       margin-top: 2px;
     }
 
-    .action-btn {
+    .action-btn, .power-btn {
       width: 100%;
       padding: 14px;
       background: linear-gradient(135deg, #a88beb, #f4b8c4);
@@ -382,18 +427,144 @@
       cursor: pointer;
       font-size: 1rem;
       box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
+      transition: all 0.25s ease;
     }
 
-    body.basement-mode .action-btn {
+    body.basement-mode .action-btn, body.basement-mode .power-btn {
       background: linear-gradient(135deg, #ff4d6d, #a88beb);
       color: #ffffff;
       box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
     }
 
-    body.backstage-mode .action-btn {
+    body.backstage-mode .action-btn, body.backstage-mode .power-btn {
       background: linear-gradient(135deg, #ffd166, #ff007f);
       color: #000000;
       box-shadow: 0 4px 15px rgba(255, 209, 102, 0.4);
+    }
+
+    /* YOUTUBE SYNTH LCD CARD STYLES */
+    .yt-radio-card {
+      background: rgba(12, 8, 24, 0.9);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .lcd-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #a092c0;
+      margin-bottom: 8px;
+    }
+
+    .pulse-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #ff4d6d;
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: blinkDot 1.4s infinite;
+    }
+
+    .lcd-screen {
+      background: #080410;
+      border: 1px solid rgba(244, 184, 196, 0.3);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.8);
+    }
+
+    .lcd-station-name {
+      font-family: 'Courier New', monospace;
+      font-weight: 800;
+      color: #f4b8c4;
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .lcd-status-msg {
+      font-size: 0.78rem;
+      color: #a88beb;
+    }
+
+    .lcd-eq-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 26px;
+    }
+
+    .lcd-eq-bars span {
+      width: 4px;
+      height: 4px;
+      background: #ffd166;
+      border-radius: 2px;
+      transition: height 0.15s ease;
+    }
+
+    .lcd-eq-bars.playing span {
+      animation: eqBar 0.8s infinite alternate ease-in-out;
+    }
+    .lcd-eq-bars.playing span:nth-child(2) { animation-delay: 0.15s; }
+    .lcd-eq-bars.playing span:nth-child(3) { animation-delay: 0.3s; }
+    .lcd-eq-bars.playing span:nth-child(4) { animation-delay: 0.45s; }
+    .lcd-eq-bars.playing span:nth-child(5) { animation-delay: 0.6s; }
+
+    .station-presets {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .radio-deck-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .volume-slider-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(8, 5, 18, 0.6);
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(168, 139, 235, 0.2);
+    }
+
+    .volume-slider-group input {
+      accent-color: #f4b8c4;
+      width: 110px;
+      cursor: pointer;
+    }
+
+    .hidden-yt-engine {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    @keyframes blinkDot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    @keyframes eqBar {
+      0% { height: 4px; }
+      100% { height: 26px; }
     }
 
     /* Setlist Poll & Countdown Header Styles */
@@ -905,49 +1076,49 @@
 <body class="twilight-mode">
 
   <!-- Universal Header Navigation Bar -->
-<header class="navbar">
-  <div class="nav-container">
-    
-    <!-- Brand Logo -->
-    <div class="logo-container">
-      <a href="index.html" class="logo-link">
-        <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
-        <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
-      </a>
-    </div>
+  <header class="navbar">
+    <div class="nav-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
+        </a>
+      </div>
 
-    <!-- Mobile Hamburger Toggle Button -->
-    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-      <span class="hamburger-bar"></span>
-      <span class="hamburger-bar"></span>
-      <span class="hamburger-bar"></span>
-    </button>
+      <!-- Mobile Hamburger Toggle Button -->
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
 
-    <!-- 6 Main Destinations & 3-Tier Mode Selector -->
-    <nav class="nav-links" id="nav-menu">
-      <a href="index.html" class="nav-item">🏠 Home</a>
-      <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
-      <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-      <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
-      <a href="chat.html" class="nav-item">💬 Live Chat</a>
-      <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+      <!-- 6 Main Destinations & 3-Tier Mode Selector -->
+      <nav class="nav-links" id="nav-menu">
+        <a href="index.html" class="nav-item">🏠 Home</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="neko-fm.html" class="nav-item active">📻 24/7 Neko FM</a>
+        <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
+        <a href="chat.html" class="nav-item">💬 Live Chat</a>
+        <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
 
         <button id="nav-auth-btn" onclick="openAuthOrAccount()" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
-    🔑 Login
-  </button>
+          🔑 Login
+        </button>
 
-      <!-- 3-Tier Access Mode Switcher -->
-      <div class="mode-selector-wrapper">
-        <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-          <option value="twilight">🌸 Twilight (Public)</option>
-          <option value="basement">⚡ Basement 🔒</option>
-          <option value="backstage">🎟️ Backstage Pass 💎</option>
-        </select>
-      </div>
-    </nav>
+        <!-- 3-Tier Access Mode Switcher -->
+        <div class="mode-selector-wrapper">
+          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
+            <option value="twilight">🌸 Twilight (Public)</option>
+            <option value="basement">⚡ Basement 🔒</option>
+            <option value="backstage">🎟️ Backstage Pass 💎</option>
+          </select>
+        </div>
+      </nav>
 
-  </div>
-</header>
+    </div>
+  </header>
 
   <!-- Audio Engine Player (Hidden) -->
   <audio id="radio-audio-player" crossorigin="anonymous"></audio>
@@ -960,19 +1131,81 @@
       <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 Girls Dead Phantom Hub</button>
     </div>
 
-    <!-- TAB 1: 24/7 RADIO TUNER -->
+    <!-- TAB 1: 24/7 RADIO TUNER (DUAL MODE: DIRECT + YOUTUBE) -->
     <section id="tuner-tab" class="tab-content active-content">
-      <div class="tuner-card">
-        <h3 id="mode-badge-title">🌸 TWILIGHT BROADCAST STATIONS</h3>
-        <div class="frequency-display" id="freq-num">LISTEN.moe</div>
-        <p id="mode-desc-text">Streaming Japanese Vocaloid, Anime OSTs, and J-Pop live streams.</p>
-        
-        <!-- Preset Stations Grid -->
-        <div class="station-preset-grid" id="preset-grid">
-          <!-- Populated by JavaScript -->
+      <div class="neko-radio-deck">
+        <!-- Radio Mode Selector Tabs -->
+        <div class="radio-nav-tabs">
+          <button class="radio-tab-btn active" id="tab-btn-direct" onclick="switchRadioTab('direct')">
+            📻 Direct Streams
+          </button>
+          <button class="radio-tab-btn" id="tab-btn-youtube" onclick="switchRadioTab('youtube')">
+            📺 Neko Tube 24/7
+          </button>
         </div>
 
-        <button class="action-btn" id="radio-play-btn" onclick="toggleRadioStream()">▶ Stream Live Signal</button>
+        <!-- SUB-TAB 1: Original Audio Stream Player -->
+        <div id="radio-tab-direct" class="radio-tab-pane active">
+          <div class="tuner-card">
+            <h3 id="mode-badge-title">🌸 TWILIGHT BROADCAST STATIONS</h3>
+            <div class="frequency-display" id="freq-num">LISTEN.moe</div>
+            <p id="mode-desc-text">Streaming Japanese Vocaloid, Anime OSTs, and J-Pop live streams.</p>
+            
+            <!-- Preset Stations Grid -->
+            <div class="station-preset-grid" id="preset-grid">
+              <!-- Populated by JavaScript -->
+            </div>
+
+            <button class="action-btn" id="radio-play-btn" onclick="toggleRadioStream()">▶ Stream Live Signal</button>
+          </div>
+        </div>
+
+        <!-- SUB-TAB 2: Custom YouTube 24/7 Radio Player -->
+        <div id="radio-tab-youtube" class="radio-tab-pane">
+          <div class="yt-radio-card">
+            <!-- Player LCD Display Header -->
+            <div class="lcd-header">
+              <span class="live-indicator"><span class="pulse-dot"></span> LIVE BROADCAST</span>
+              <span class="deck-model">NEKO-88 SYNTH DECK</span>
+            </div>
+
+            <!-- Main LCD Screen -->
+            <div class="lcd-screen">
+              <div class="lcd-meta">
+                <div class="lcd-station-name" id="yt-channel-title">COZY GHIBLI PIANO 🎹</div>
+                <div class="lcd-status-msg" id="yt-status-text">SYSTEM READY • CHOOSE FREQUENCY</div>
+              </div>
+              <div class="lcd-eq-bars" id="yt-eq-visualizer">
+                <span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+
+            <!-- Station Preset Selector Buttons -->
+            <div class="station-presets">
+              <button class="preset-btn active" onclick="selectYTPreset(0)">🎹 Ghibli Piano</button>
+              <button class="preset-btn" onclick="selectYTPreset(1)">🌸 Lofi Anime</button>
+              <button class="preset-btn" onclick="selectYTPreset(2)">🎤 24/7 J-Pop</button>
+              <button class="preset-btn" onclick="selectYTPreset(3)">⚡ Cyber Synth</button>
+            </div>
+
+            <!-- Controls & Volume -->
+            <div class="radio-deck-controls">
+              <button id="yt-power-btn" class="power-btn" onclick="toggleYTRadioPower()">
+                ▶ PLAY
+              </button>
+              
+              <div class="volume-slider-group">
+                <span class="vol-icon">🔊</span>
+                <input type="range" id="yt-vol-slider" min="0" max="100" value="70" oninput="changeYTRadioVolume(this.value)">
+              </div>
+            </div>
+
+            <!-- Invisible YouTube Engine Target -->
+            <div class="hidden-yt-engine">
+              <div id="yt-audio-player-mount"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1050,10 +1283,10 @@
 
         <!-- Band Member Roster Chips -->
         <div class="gdp-roster-chips">
-          <div class="member-chip">🎸 Akari <span class="member-role">(Drums)</span></div>
+          <div class="member-chip">🥁 Akari <span class="member-role">(Drums)</span></div>
           <div class="member-chip">🎙️ Nekomi <span class="member-role">(Vocals & Guitar)</span></div>
           <div class="member-chip">🎹 Sera <span class="member-role">(Keytar & Vocals)</span></div>
-          <div class="member-chip">🥁 Aoi <span class="member-role">(Bass)</span></div>
+          <div class="member-chip">🎸 Aoi <span class="member-role">(Bass)</span></div>
         </div>
       </div>
 
@@ -1133,7 +1366,7 @@
     // Master Radio Stations Repository with Direct Stream URLs
     const RADIO_STATIONS = {
       twilight: [
-        { freq: "98.4 FM", name: "LISTEN.moe (24/7 Anime & Vocaloid)", genre: "Anime & Vocaloid Stream", url: "http://91.232.4.33:7028" },
+        { freq: "98.4 FM", name: "LISTEN.moe (24/7 Anime & Vocaloid)", genre: "Anime & Vocaloid Stream", url: "https://listen.moe/fallback" },
         { freq: "91.5 FM", name: "Gensokyo Radio (J-Rock & Arrangements)", genre: "Doujin Rock & Arrangements", url: "https://stream.gensokyoradio.net/1" },
         { freq: "95.2 FM", name: "Radio Animu 24/7 J-Pop", genre: "Classic & Modern J-Pop", url: "https://stream.animu.moe/192" },
         { freq: "106.8 FM", name: "animePOP! Kawaii Beats", genre: "Kawaii Beats & Anison Pop", url: "https://stream.zeno.fm/1peyavabbl1tv" }
@@ -1165,6 +1398,18 @@
       { id: 'gdp-9', trackNo: '09', title: 'Akari\'s Crimson Riff', type: 'Guitar Instrumental', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/918p426338quv' },
       { id: 'gdp-10', trackNo: '10', title: 'After Dark Distortion', type: 'Uncompressed Master Stem', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/054a1078s0hvv' }
     ];
+
+    // YOUTUBE 24/7 RADIO ENGINE STATE
+    const ytRadioPresets = [
+      { name: "COZY GHIBLI PIANO 🎹", videoId: "36YnV9STBkc", desc: "Studio Ghibli Relaxing Piano Live" },
+      { name: "LOFI ANIME BEATS 🌸", videoId: "jfKfPfyJRdk", desc: "24/7 Chill Lofi Hip Hop Study Radio" },
+      { name: "24/7 J-POP & ANISON 🎤", videoId: "4xDzrJKXOOY", desc: "Live J-Pop & Anime Opening Hits" },
+      { name: "CYBER SYNTHWAVE ⚡", videoId: "5qap5aO4i9A", desc: "Retro Synthwave & J-Rock Radio" }
+    ];
+
+    let ytPlayerInstance = null;
+    let currentPresetIdx = 0;
+    let isYTRadioPlaying = false;
 
     // Helper: Generate 4 random songs from the catalog for the hourly poll
     function generateRandomPollItems() {
@@ -1226,6 +1471,126 @@
 
     let pollData = getStoredPollData();
 
+    /* DUAL RADIO DECK SWITCHER */
+    function switchRadioTab(tabName) {
+      const directPane = document.getElementById('radio-tab-direct');
+      const ytPane = document.getElementById('radio-tab-youtube');
+      const btnDirect = document.getElementById('tab-btn-direct');
+      const btnYT = document.getElementById('tab-btn-youtube');
+
+      if (tabName === 'youtube') {
+        directPane.classList.remove('active');
+        ytPane.classList.add('active');
+        btnDirect.classList.remove('active');
+        btnYT.classList.add('active');
+
+        // Stop direct audio stream if running
+        if (isStreaming) {
+          audioPlayer.pause();
+          isStreaming = false;
+          const btn = document.getElementById('radio-play-btn');
+          if (btn) btn.innerText = '▶ Stream Live Signal';
+        }
+      } else {
+        ytPane.classList.remove('active');
+        directPane.classList.add('active');
+        btnYT.classList.remove('active');
+        btnDirect.classList.add('active');
+        
+        // Pause YouTube audio when returning to direct tab
+        if (ytPlayerInstance && isYTRadioPlaying) {
+          ytPlayerInstance.pauseVideo();
+        }
+      }
+    }
+
+    /* YOUTUBE IFRAME API CONTROLLER */
+    function initYTApi() {
+      if (window.YT && window.YT.Player) {
+        onYouTubeIframeAPIReady();
+        return;
+      }
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+
+    window.onYouTubeIframeAPIReady = function() {
+      ytPlayerInstance = new YT.Player('yt-audio-player-mount', {
+        videoId: ytRadioPresets[0].videoId,
+        playerVars: {
+          'autoplay': 0,
+          'controls': 0,
+          'disablekb': 1,
+          'fs': 0,
+          'modestbranding': 1,
+          'playsinline': 1
+        },
+        events: {
+          'onReady': (evt) => evt.target.setVolume(70),
+          'onStateChange': handleYTStateChange
+        }
+      });
+    };
+
+    function handleYTStateChange(event) {
+      const statusMsg = document.getElementById('yt-status-text');
+      const powerBtn = document.getElementById('yt-power-btn');
+      const eqVisualizer = document.getElementById('yt-eq-visualizer');
+
+      if (event.data === YT.PlayerState.PLAYING) {
+        isYTRadioPlaying = true;
+        if (statusMsg) statusMsg.innerText = "STREAMING • " + ytRadioPresets[currentPresetIdx].desc;
+        if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
+        if (eqVisualizer) eqVisualizer.classList.add('playing');
+      } else {
+        isYTRadioPlaying = false;
+        if (statusMsg) statusMsg.innerText = "STANDBY • PRESS PLAY";
+        if (powerBtn) powerBtn.innerText = "▶ PLAY";
+        if (eqVisualizer) eqVisualizer.classList.remove('playing');
+      }
+    }
+
+    function toggleYTRadioPower() {
+      if (!ytPlayerInstance) return;
+      stopActivePreview();
+
+      if (isStreaming) {
+        audioPlayer.pause();
+        isStreaming = false;
+        const btn = document.getElementById('radio-play-btn');
+        if (btn) btn.innerText = '▶ Stream Live Signal';
+      }
+
+      if (isYTRadioPlaying) {
+        ytPlayerInstance.pauseVideo();
+      } else {
+        ytPlayerInstance.playVideo();
+      }
+    }
+
+    function selectYTPreset(presetIndex) {
+      currentPresetIdx = presetIndex;
+      const selected = ytRadioPresets[presetIndex];
+
+      const btns = document.querySelectorAll('.station-presets .preset-btn');
+      btns.forEach((b, idx) => b.classList.toggle('active', idx === presetIndex));
+
+      const titleEl = document.getElementById('yt-channel-title');
+      if (titleEl) titleEl.innerText = selected.name;
+
+      if (ytPlayerInstance && typeof ytPlayerInstance.loadVideoById === 'function') {
+        ytPlayerInstance.loadVideoById(selected.videoId);
+      }
+    }
+
+    function changeYTRadioVolume(val) {
+      if (ytPlayerInstance && typeof ytPlayerInstance.setVolume === 'function') {
+        ytPlayerInstance.setVolume(val);
+      }
+    }
+
     function handleModeChange(targetMode) {
       const selector = document.getElementById('mode-selector');
 
@@ -1283,6 +1648,7 @@
 
     function renderStationPresets() {
       const gridContainer = document.getElementById('preset-grid');
+      if (!gridContainer) return;
       gridContainer.innerHTML = '';
 
       const stations = RADIO_STATIONS[currentMode] || RADIO_STATIONS.twilight;
@@ -1297,7 +1663,8 @@
         gridContainer.appendChild(btn);
       });
 
-      document.getElementById('freq-num').innerText = stations[selectedStationIndex].name;
+      const freqEl = document.getElementById('freq-num');
+      if (freqEl) freqEl.innerText = stations[selectedStationIndex].name;
     }
 
     function selectStation(index) {
@@ -1308,7 +1675,6 @@
       const st = stations[selectedStationIndex];
       audioPlayer.src = st.url;
 
-      // Sync active station to localStorage for global persistent player
       localStorage.setItem('echo_audio_src', st.url);
       localStorage.setItem('echo_audio_title', st.name);
       localStorage.setItem('echo_audio_speaker', st.genre);
@@ -1320,7 +1686,6 @@
       }
     }
 
-    /* 24/7 Clock-Synchronized Timer Engine (Global System-Clock Based) */
     function initMasterTimers() {
       updateTimersLoop();
       if (masterTimerInterval) clearInterval(masterTimerInterval);
@@ -1337,9 +1702,8 @@
       const hourMs = 60 * 60 * 1000;
       const currentHourIndex = Math.floor(now / hourMs);
       const currentMsInHour = now % hourMs;
-      const votingDurationMs = 50 * 60 * 1000; // 50 minutes voting, 10 minutes soundcheck
+      const votingDurationMs = 50 * 60 * 1000;
 
-      // Auto-reset votes & select 4 new random songs from the catalog at the start of every new hour
       if (lastProcessedHour !== null && parseInt(lastProcessedHour, 10) !== currentHourIndex) {
         pollData = generateRandomPollItems();
         localStorage.removeItem('neko_voted_poll_id');
@@ -1349,7 +1713,6 @@
       lastProcessedHour = currentHourIndex.toString();
       localStorage.setItem('gdp_last_processed_hour', lastProcessedHour);
 
-      // PHASE 1: Active Voting (:00 to :50 of every hour)
       if (currentMsInHour < votingDurationMs) {
         const diff = votingDurationMs - currentMsInHour;
         const m = Math.floor(diff / (1000 * 60));
@@ -1361,9 +1724,7 @@
 
         if (soundcheckDigits) soundcheckDigits.innerText = "10:00 (Waiting)";
         if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = "10:00 (Waiting)";
-      } 
-      // PHASE 2: Voting Locked & Soundcheck Premiere Countdown (:50 to :00 of every hour)
-      else {
+      } else {
         const diff = hourMs - currentMsInHour;
         const scM = Math.floor(diff / (1000 * 60));
         const scS = Math.floor((diff % (1000 * 60)) / 1000);
@@ -1390,7 +1751,10 @@
 
       stopActivePreview();
 
-      // Sync winner to localStorage for persistent player
+      if (ytPlayerInstance && isYTRadioPlaying) {
+        ytPlayerInstance.pauseVideo();
+      }
+
       localStorage.setItem('echo_audio_src', winner.streamUrl);
       localStorage.setItem('echo_audio_title', winner.title);
       localStorage.setItem('echo_audio_speaker', winner.performers);
@@ -1413,7 +1777,6 @@
       }
     }
 
-    /* 20-Second Preview & Full VIP Stream Function for Discography */
     function play20sTrackPreview(trackId, url, trackTitle) {
       if (activePreviewTrackId === trackId && !audioPlayer.paused) {
         stopActivePreview();
@@ -1422,7 +1785,10 @@
 
       stopActivePreview();
 
-      // Sync preview/stream to localStorage for global mini-player
+      if (ytPlayerInstance && isYTRadioPlaying) {
+        ytPlayerInstance.pauseVideo();
+      }
+
       localStorage.setItem('echo_audio_src', url);
       localStorage.setItem('echo_audio_title', trackTitle);
       localStorage.setItem('echo_audio_speaker', userState.isVIP ? 'Girls Dead Phantom VIP Lossless Audio' : 'Girls Dead Phantom Teaser');
@@ -1434,7 +1800,6 @@
         isStreaming = true;
         activePreviewTrackId = trackId;
         
-        // VIP gets full stream without 20s auto-stop
         if (userState.isVIP) {
           renderDiscography();
           return;
@@ -1578,7 +1943,6 @@
           actionHTML = `<button class="vote-btn" onclick="showVIPModal('Backstage Pass Required', 'Unlock VIP Lossless Master Stem previews!')">💎 VIP Pass</button>`;
         } else {
           if (userState.isVIP) {
-            // Backstage Pass VIPs get full streaming + stem download buttons
             actionHTML = `
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 ${isPreviewingThis ? 
@@ -1589,7 +1953,6 @@
               </div>
             `;
           } else {
-            // Standard Twilight & Basement users get 20s teasers
             if (isPreviewingThis) {
               actionHTML = `<button class="vote-btn" style="background:#ff4d6d; color:#fff;" onclick="stopActivePreview()">
                               ⏸ Stop (<span id="preview-timer-${track.id}">${previewTimeRemaining}s</span>)
@@ -1647,7 +2010,10 @@
 
       stopActivePreview();
 
-      // Sync active station to localStorage
+      if (ytPlayerInstance && isYTRadioPlaying) {
+        ytPlayerInstance.pauseVideo();
+      }
+
       localStorage.setItem('echo_audio_src', st.url);
       localStorage.setItem('echo_audio_title', st.name);
       localStorage.setItem('echo_audio_speaker', st.genre);
@@ -1739,74 +2105,8 @@
       renderSetlistPolls();
       renderDiscography();
       initMasterTimers();
+      initYTApi();
     });
   </script>
-
-  <div class="neko-radio-deck">
-  <!-- Radio Mode Selector Tabs -->
-  <div class="radio-nav-tabs">
-    <button class="radio-tab-btn active" id="tab-btn-direct" onclick="switchRadioTab('direct')">
-      📻 Direct Streams
-    </button>
-    <button class="radio-tab-btn" id="tab-btn-youtube" onclick="switchRadioTab('youtube')">
-      📺 Neko Tube 24/7
-    </button>
-  </div>
-
-  <!-- TAB 1: Original Audio Stream Player (Kept Intact) -->
-  <div id="radio-tab-direct" class="radio-tab-pane active">
-    <!-- Keep your existing audio stream controls/player markup here -->
-    <div style="padding: 15px; text-align: center; color: #a092c0; font-style: italic;">
-      [ Your existing direct radio player lives here ]
-    </div>
-  </div>
-
-  <!-- TAB 2: Custom YouTube 24/7 Radio Player -->
-  <div id="radio-tab-youtube" class="radio-tab-pane">
-    <div class="yt-radio-card">
-      <!-- Player LCD Display Header -->
-      <div class="lcd-header">
-        <span class="live-indicator"><span class="pulse-dot"></span> LIVE BROADCAST</span>
-        <span class="deck-model">NEKO-88 SYNTH DECK</span>
-      </div>
-
-      <!-- Main LCD Screen -->
-      <div class="lcd-screen">
-        <div class="lcd-meta">
-          <div class="lcd-station-name" id="yt-channel-title">COZY GHIBLI PIANO 🎹</div>
-          <div class="lcd-status-msg" id="yt-status-text">SYSTEM READY • CHOOSE FREQUENCY</div>
-        </div>
-        <div class="lcd-eq-bars" id="yt-eq-visualizer">
-          <span></span><span></span><span></span><span></span><span></span><span></span>
-        </div>
-      </div>
-
-      <!-- Station Preset Selector Buttons -->
-      <div class="station-presets">
-        <button class="preset-btn active" onclick="selectYTPreset(0)">🎹 Ghibli Piano</button>
-        <button class="preset-btn" onclick="selectYTPreset(1)">🌸 Lofi Anime</button>
-        <button class="preset-btn" onclick="selectYTPreset(2)">🎤 24/7 J-Pop</button>
-        <button class="preset-btn" onclick="selectYTPreset(3)">⚡ Cyber Synth</button>
-      </div>
-
-      <!-- Controls & Volume -->
-      <div class="radio-deck-controls">
-        <button id="yt-power-btn" class="power-btn" onclick="toggleYTRadioPower()">
-          ▶ PLAY
-        </button>
-        
-        <div class="volume-slider-group">
-          <span class="vol-icon">🔊</span>
-          <input type="range" id="yt-vol-slider" min="0" max="100" value="70" oninput="changeYTRadioVolume(this.value)">
-        </div>
-      </div>
-
-      <!-- Invisible YouTube Engine Target -->
-      <div class="hidden-yt-engine">
-        <div id="yt-audio-player-mount"></div>
-      </div>
-    </div>
-  </div>
-</div>
 </body>
 </html>
