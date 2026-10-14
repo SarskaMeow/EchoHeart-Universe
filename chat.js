@@ -4,12 +4,12 @@ import {
   collection, 
   addDoc, 
   query, 
-  orderBy, 
   limit, 
   onSnapshot 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 let chatUnsubscribe = null;
+let isSeeding = false;
 
 // Helper to check if current user has Admin Overdrive privileges
 function isUserAdmin() {
@@ -34,32 +34,47 @@ export function initChatFeed() {
 
   const collectionName = getActiveCollectionName();
   const chatRef = collection(db, collectionName);
-  const q = query(chatRef, orderBy("timestamp", "desc"), limit(75));
+  // Fetch latest documents without rigid Firestore index sorting to prevent document exclusion
+  const q = query(chatRef, limit(75));
 
   const messagesDisplay = document.getElementById('messages-display');
 
-  chatUnsubscribe = onSnapshot(q, (snapshot) => {
+  chatUnsubscribe = onSnapshot(q, async (snapshot) => {
     if (!messagesDisplay) return;
     
     const messages = [];
-    snapshot.forEach((doc) => messages.push({ id: doc.id, ...doc.data() }));
-    messages.reverse(); // Display oldest to newest down the feed
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      let ts = data.timestamp;
+      
+      // Normalize timestamps to numeric milliseconds for reliable client-side sorting
+      if (ts && typeof ts.toDate === 'function') {
+        ts = ts.toDate().getTime();
+      } else if (typeof ts !== 'number') {
+        ts = Date.now();
+      }
 
-    if (messages.length === 0) {
-      messagesDisplay.innerHTML = `
-        <div style="text-align:center; color:#a092c0; padding:40px; font-style:italic;">
-          No messages in this channel yet. Say hi to Prep Room B! 🌸
-        </div>
-      `;
+      messages.push({ id: doc.id, ...data, _parsedTs: ts });
+    });
+
+    // Sort chronologically (oldest at top, newest at bottom)
+    messages.sort((a, b) => a._parsedTs - b._parsedTs);
+
+    if (messages.length === 0 && !isSeeding) {
+      isSeeding = true;
+      await seedInitialNPCChatter();
+      isSeeding = false;
       return;
     }
 
-    messagesDisplay.innerHTML = messages.map(msg => renderMessageHTML(msg)).join('');
-    
-    // Auto-scroll to the bottom of the feed on new messages
-    setTimeout(() => {
-      messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
-    }, 50);
+    if (messages.length > 0) {
+      messagesDisplay.innerHTML = messages.map(msg => renderMessageHTML(msg)).join('');
+      
+      // Smoothly scroll down to show the latest messages
+      setTimeout(() => {
+        messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
+      }, 50);
+    }
   }, (error) => {
     console.warn("Chat feed listener warning:", error);
   });
@@ -82,9 +97,9 @@ function renderMessageHTML(msg) {
   const borderAccent = isAdminMsg ? '#ff4d6d' : (isVIPMsg ? '#ffd166' : (msg.color || '#a88beb'));
 
   let formattedTime = 'Just now';
-  if (msg.timestamp) {
-    const rawDate = typeof msg.timestamp.toDate === 'function' ? msg.timestamp.toDate() : new Date(msg.timestamp);
-    if (!isNaN(rawDate)) {
+  if (msg._parsedTs) {
+    const rawDate = new Date(msg._parsedTs);
+    if (!isNaN(rawDate.getTime())) {
       formattedTime = rawDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
   }
@@ -387,6 +402,14 @@ async function postNPCMessage(character) {
   } catch (err) {
     console.warn("NPC message skipped:", err);
   }
+}
+
+// Initial seed if feed is completely empty
+async function seedInitialNPCChatter() {
+  const seed1 = lockerNPCs[Math.floor(Math.random() * lockerNPCs.length)];
+  const seed2 = core4NPCs[Math.floor(Math.random() * core4NPCs.length)];
+  await postNPCMessage(seed1);
+  await postNPCMessage(seed2);
 }
 
 // 1. Regular Locker Classmate chatter (~10 seconds)
