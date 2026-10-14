@@ -1646,8 +1646,8 @@
 
         if (!userState.isLoggedIn) {
           buttonHTML = `<button class="vote-btn" onclick="showAuthModal('Google Login Required', 'Sign in with Google to cast your vote for Girls Dead Phantom\'s next broadcast setlist!')">
-                          🔒 Sign in to Vote
-                        </button>`;
+                        🔒 Sign in to Vote
+                      </button>`;
         }
 
         card.innerHTML = `
@@ -1724,12 +1724,12 @@
           } else {
             if (isPreviewingThis) {
               actionHTML = `<button class="vote-btn" style="background:#ff4d6d; color:#fff;" onclick="stopActivePreview()">
-                              ⏸ Stop (<span id="preview-timer-${track.id}">${previewTimeRemaining}s</span>)
-                            </button>`;
+                            ⏸ Stop (<span id="preview-timer-${track.id}">${previewTimeRemaining}s</span>)
+                          </button>`;
             } else {
               actionHTML = `<button class="vote-btn" onclick="play20sTrackPreview('${track.id}', '${track.url}', '${track.title}')">
-                              ▶ 20s Preview
-                            </button>`;
+                            ▶ 20s Preview
+                          </button>`;
             }
           }
         }
