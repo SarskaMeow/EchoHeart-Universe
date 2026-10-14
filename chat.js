@@ -1,4 +1,4 @@
-// chat.js — Live Firestore Chat Feed, 3-Tier Access, Admin Overdrive & NPC Chatter Engine
+// chat.js — Live Firestore Chat Feed, 3-Tier Access, Admin Overdrive & Auto NPC Engine
 import { db, auth } from './firebase-config.js';
 import { 
   collection, 
@@ -18,7 +18,7 @@ function isUserAdmin() {
   return !!(window.userData && (window.userData.isAdmin || window.userData.role === 'admin'));
 }
 
-// Determine active channel collection
+// Determine active channel collection across all 3 modes
 function getActiveCollectionName() {
   const mode = localStorage.getItem('neko_active_mode') || 'twilight';
   if (mode === 'backstage') return 'backstage_chat_messages';
@@ -26,9 +26,12 @@ function getActiveCollectionName() {
   return 'chat_messages';
 }
 
-// 1. Initialize Real-Time Chat Listener (Capped at 75)
+// 1. Initialize Real-Time Chat Listener
 export function initChatFeed() {
-  if (chatUnsubscribe) chatUnsubscribe();
+  if (chatUnsubscribe) {
+    chatUnsubscribe();
+    chatUnsubscribe = null;
+  }
 
   const collectionName = getActiveCollectionName();
   const chatRef = collection(db, collectionName);
@@ -54,6 +57,8 @@ export function initChatFeed() {
 
     messagesDisplay.innerHTML = messages.map(msg => renderMessageHTML(msg)).join('');
     messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
+  }, (error) => {
+    console.warn("Chat feed listener warning:", error);
   });
 }
 
@@ -104,7 +109,7 @@ window.switchChatChannel = async function(mode) {
     return;
   }
 
-  // Admin bypass check
+  // Secret Admin bypass check
   if (isUserAdmin()) {
     setModeState(mode);
     return;
@@ -196,13 +201,6 @@ window.handleSendChatMessage = async function(event) {
     return;
   }
 
-  // Secret NPC Chat Command
-  if (text.toLowerCase() === '/npc') {
-    triggerNPCChatter();
-    input.value = '';
-    return;
-  }
-
   if (!window.currentUser && !isUserAdmin()) {
     alert("Please log in with Google to post messages!");
     return;
@@ -252,7 +250,7 @@ window.insertEmoteCode = function(emote) {
 };
 
 // ==========================================================================
-// 4. AUTOMATED NPC CHAT SYSTEM (CORE 4 RARE / LOCKER NPCS FREQUENT)
+// 4. AUTOMATED NPC CHAT SYSTEM (LOCKER NPCS EVERY ~10s / CORE 4 EVERY ~2m)
 // ==========================================================================
 
 const core4NPCs = [
@@ -363,12 +361,7 @@ const lockerNPCs = [
   }
 ];
 
-export async function triggerNPCChatter() {
-  const roll = Math.floor(Math.random() * 100) + 1;
-  const isCore4 = roll <= 15;
-
-  const pool = isCore4 ? core4NPCs : lockerNPCs;
-  const character = pool[Math.floor(Math.random() * pool.length)];
+async function postNPCMessage(character) {
   const quote = character.quotes[Math.floor(Math.random() * character.quotes.length)];
 
   try {
@@ -382,18 +375,21 @@ export async function triggerNPCChatter() {
       timestamp: serverTimestamp()
     });
   } catch (err) {
-    console.error("Failed to post NPC chatter:", err);
+    console.warn("NPC message skipped:", err);
   }
 }
 
-window.triggerManualNPCChatter = function() {
-  triggerNPCChatter();
-};
-
-// Automated 24/7 background chatter every 3 to 5 minutes
+// 1. Regular Locker Classmate chatter (~10 seconds)
 setInterval(() => {
-  triggerNPCChatter();
-}, Math.floor(Math.random() * 120000) + 180000);
+  const character = lockerNPCs[Math.floor(Math.random() * lockerNPCs.length)];
+  postNPCMessage(character);
+}, 10000);
+
+// 2. Core 4 Band Member chatter (~2 minutes)
+setInterval(() => {
+  const character = core4NPCs[Math.floor(Math.random() * core4NPCs.length)];
+  postNPCMessage(character);
+}, 120000);
 
 document.addEventListener('DOMContentLoaded', () => {
   initChatFeed();
