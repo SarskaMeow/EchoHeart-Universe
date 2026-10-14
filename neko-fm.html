@@ -1124,6 +1124,10 @@
               ▶ PLAY
             </button>
             
+            <button class="preset-btn" onclick="triggerShazamFingerprint()" style="text-align: center;">
+              🔍 Identify Track
+            </button>
+
             <div class="volume-slider-group">
               <span class="vol-icon">🔊</span>
               <input type="range" id="yt-vol-slider" min="0" max="100" value="70" oninput="changeSynthVolume(this.value)">
@@ -1367,6 +1371,66 @@
       if (synthAudioPlayer) {
         synthAudioPlayer.volume = val / 100;
       }
+    }
+
+    // Shazam-Style Audio Fingerprinting Engine
+    async function triggerShazamFingerprint() {
+      const statusMsgEl = document.getElementById('yt-status-text');
+      if (statusMsgEl) statusMsgEl.innerText = "🔍 FINGERPRINTING AUDIO STREAM...";
+
+      try {
+        const audioEl = document.getElementById('synth-deck-audio');
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioCtx.createMediaElementSource(audioEl);
+        const destination = audioCtx.createMediaStreamDestination();
+
+        source.connect(destination);
+        source.connect(audioCtx.destination); // Keep playing through speakers
+
+        const mediaRecorder = new MediaRecorder(destination.stream);
+        const chunks = [];
+
+        mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(chunks, { type: 'audio/wav' });
+          
+          const formData = new FormData();
+          formData.append('file', audioBlob);
+          formData.append('api_token', 'YOUR_AUDD_API_KEY'); // Replace with active API key
+          formData.append('return', 'apple_music,spotify');
+
+          if (statusMsgEl) statusMsgEl.innerText = "⚡ ANALYZING MATCH...";
+
+          const response = await fetch('https://api.audd.io/', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await response.json();
+
+          if (result.status === 'success' && result.result) {
+            const { title, artist } = result.result;
+            updateLCDTrackDisplay(title, artist);
+          } else {
+            if (statusMsgEl) statusMsgEl.innerText = "❌ NO MATCH FOUND • TRY AGAIN";
+          }
+        };
+
+        mediaRecorder.start();
+        setTimeout(() => mediaRecorder.stop(), 5000); // 5-second sample window
+
+      } catch (err) {
+        console.error("Audio fingerprinting error:", err);
+        if (statusMsgEl) statusMsgEl.innerText = "⚠️ CORS BLOCKED OR MIC PERMISSION DENIED";
+      }
+    }
+
+    function updateLCDTrackDisplay(title, artist) {
+      const titleDisplay = document.getElementById('yt-channel-title');
+      const statusDisplay = document.getElementById('yt-status-text');
+
+      if (titleDisplay) titleDisplay.innerText = `🎵 ${title}`;
+      if (statusDisplay) statusDisplay.innerText = `🎤 ${artist} • IDENTIFIED MATCH`;
     }
 
     // Helper: Generate 4 random songs from the catalog for the hourly poll
