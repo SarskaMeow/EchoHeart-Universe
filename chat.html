@@ -1,272 +1,411 @@
-// chat.js — Live Firestore Chat Feed & Core 4 + Locker NPC Chatter Engine
-import { db, auth } from './firebase-config.js';
-import { 
-  collection, 
-  addDoc, 
-  query, 
-  orderBy, 
-  limit, 
-  onSnapshot, 
-  serverTimestamp 
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-let chatUnsubscribe = null;
-
-// Determine current mode collection
-function getActiveCollectionName() {
-  const mode = localStorage.getItem('neko_active_mode') || 'twilight';
-  return mode === 'basement' ? 'basement_chat_messages' : 'chat_messages';
-}
-
-// 1. Initialize Real-Time Chat Listener
-export function initChatFeed() {
-  if (chatUnsubscribe) chatUnsubscribe(); // Clean up existing listener
-
-  const collectionName = getActiveCollectionName();
-  const chatRef = collection(db, collectionName);
-  const q = query(chatRef, orderBy("timestamp", "desc"), limit(75));
-
-  const messagesDisplay = document.getElementById('messages-display');
-
-  chatUnsubscribe = onSnapshot(q, (snapshot) => {
-    if (!messagesDisplay) return;
-    
-    const messages = [];
-    snapshot.forEach((doc) => messages.push({ id: doc.id, ...doc.data() }));
-    messages.reverse(); // Display in chronological order
-
-    if (messages.length === 0) {
-      messagesDisplay.innerHTML = `<div style="text-align:center; color:#a092c0; padding:40px; font-style:italic;">No messages in this channel yet. Say hi to Prep Room B! 🌸</div>`;
-      return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Locker 102 Live Chat — Otaku Overload</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    :root {
+      --nav-bg-twilight: rgba(18, 12, 36, 0.94);
+      --nav-bg-basement: rgba(15, 8, 22, 0.96);
+      --nav-border-twilight: rgba(168, 139, 235, 0.35);
+      --nav-border-basement: rgba(255, 77, 109, 0.45);
+      --accent-pink: #f4b8c4;
+      --accent-purple: #a88beb;
+      --accent-red: #ff4d6d;
+      --accent-gold: #ffd166;
+      --text-light: #e2daf8;
+      --text-muted: #a092c0;
     }
 
-    messagesDisplay.innerHTML = messages.map(msg => renderMessageHTML(msg)).join('');
-    messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
-  });
-}
+    body {
+      background: #0d0b18;
+      color: var(--text-light);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
 
-// Render individual message card
-function renderMessageHTML(msg) {
-  const isCore4 = ['Nekomi 🎸', 'Sera 🎹', 'Akari Minase 🎤', 'Aoi 🥁'].includes(msg.senderName);
-  const badge = isCore4 ? `<span style="background:rgba(244,184,196,0.2); border:1px solid #f4b8c4; color:#f4b8c4; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">BAND</span>` : '';
+    /* 2-Tier Mode Themes */
+    body.twilight-mode { background: #0d0b18; color: #e2daf8; }
+    body.basement-mode { background: #08030f; color: #fce8ec; }
 
-  return `
-    <div class="chat-msg-item" style="background: rgba(15,10,30,0.6); padding: 12px 16px; border-radius: 12px; border-left: 4px solid ${msg.color || '#a88beb'}; margin-bottom: 8px;">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
-        <span class="${msg.nameGlow || ''}" style="font-weight: 800; color: ${msg.color || '#a88beb'}; font-size: 0.9rem;">
-          ${msg.senderName} ${badge}
-        </span>
-        <span style="font-size: 0.72rem; color: #a092c0;">${msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}</span>
+    body.basement-mode .navbar {
+      background: var(--nav-bg-basement);
+      border-bottom-color: var(--nav-border-basement);
+    }
+
+    /* Universal Header Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: var(--nav-bg-twilight);
+      border-bottom: 2px solid var(--nav-border-twilight);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: background 0.4s ease, border-color 0.4s ease;
+      box-sizing: border-box;
+    }
+
+    .nav-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-link {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-main {
+      font-family: 'Fredoka', cursive, sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body.basement-mode .logo-main {
+      background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-sub {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--accent-pink);
+    }
+
+    body.basement-mode .logo-sub { color: var(--accent-red); }
+
+    .nav-links { display: flex; align-items: center; gap: 14px; }
+    
+    .nav-item {
+      color: #cbb8f6;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(168, 139, 235, 0.18);
+      color: #ffffff;
+    }
+
+    /* Mode Select Dropdown Styling */
+    .mode-select-dropdown {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding: 8px 32px 8px 14px;
+      border-radius: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.3s ease;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 16px;
+    }
+
+    body.twilight-mode .mode-select-dropdown {
+      background-color: rgba(28, 18, 52, 0.95);
+      border: 1px solid rgba(168, 139, 235, 0.45);
+      color: #e2daf8;
+      box-shadow: 0 0 12px rgba(168, 139, 235, 0.2);
+    }
+
+    body.basement-mode .mode-select-dropdown {
+      background-color: rgba(20, 8, 28, 0.95);
+      border: 1px solid rgba(255, 77, 109, 0.5);
+      color: #ff4d6d;
+      box-shadow: 0 0 12px rgba(255, 77, 109, 0.25);
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    }
+
+    .mode-select-dropdown option {
+      background-color: #120924;
+      color: #e2daf8;
+      padding: 10px;
+      font-weight: 700;
+    }
+
+    /* Mobile Hamburger Toggle Button */
+    .mobile-menu-btn {
+      display: none;
+      background: rgba(168, 139, 235, 0.15);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 8px;
+      padding: 8px;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .hamburger-bar {
+      width: 22px;
+      height: 2.5px;
+      background: var(--accent-pink);
+      border-radius: 2px;
+    }
+
+    @media (max-width: 992px) {
+      .mobile-menu-btn { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(15, 10, 30, 0.98);
+        border-bottom: 2px solid var(--nav-border-twilight);
+        flex-direction: column;
+        padding: 16px;
+        gap: 10px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
+      }
+      .nav-links.open { display: flex; }
+      .nav-item, .mode-selector-wrapper { width: 100%; box-sizing: border-box; }
+      .mode-select-dropdown { width: 100%; text-align: center; }
+    }
+
+    /* Chat Layout Styles */
+    .chat-container {
+      max-width: 1100px;
+      margin: 30px auto;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 24px;
+      padding: 0 20px 100px;
+    }
+
+    @media (max-width: 850px) { .chat-container { grid-template-columns: 1fr; } }
+
+    .chat-feed-box {
+      background: rgba(22, 15, 42, 0.92);
+      border: 2px solid rgba(168, 139, 235, 0.35);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      height: 560px;
+      transition: border-color 0.4s ease;
+    }
+
+    body.basement-mode .chat-feed-box { border-color: rgba(255, 77, 109, 0.5); }
+
+    .channel-tabs-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .channel-tab-btn {
+      padding: 10px 18px;
+      font-weight: 800;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Name Glow Styles */
+    .glow-pink_glow { text-shadow: 0 0 8px var(--accent-pink); color: var(--accent-pink) !important; }
+    .glow-gold_glow { text-shadow: 0 0 8px var(--accent-gold); color: var(--accent-gold) !important; }
+
+    .emote-bar { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .emote-btn { background: rgba(35, 25, 65, 0.8); border: 1px solid rgba(168, 139, 235, 0.3); color: #fff; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+    .emote-btn:hover { background: var(--accent-purple); color: #000; }
+
+    .post-panel {
+      background: rgba(22, 15, 42, 0.92);
+      border: 2px solid rgba(168, 139, 235, 0.35);
+      border-radius: 20px;
+      padding: 24px;
+      transition: border-color 0.4s ease;
+    }
+
+    body.basement-mode .post-panel { border-color: rgba(255, 77, 109, 0.5); }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      background: rgba(15, 10, 30, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 10px;
+      color: #fff;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      outline: none;
+      font-size: 0.92rem;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #a88beb, #f4b8c4);
+      border: none;
+      border-radius: 10px;
+      color: #0d0b18;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: opacity 0.2s ease;
+    }
+
+    .action-btn:hover { opacity: 0.9; }
+
+    body.basement-mode .action-btn { background: linear-gradient(135deg, #ff4d6d, #a88beb); color: #ffffff; }
+  </style>
+</head>
+<body class="twilight-mode">
+
+  <!-- Universal Header Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      
+      <!-- Brand Logo -->
+      <div class="logo-container">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">🌸 OTAKU OVERLOAD</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
+        </a>
       </div>
-      <div style="color: #e2daf8; font-size: 0.92rem; line-height: 1.4; word-break: break-word;">
-        ${escapeHTML(msg.text)}
-      </div>
+
+      <!-- Mobile Hamburger Toggle Button -->
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+
+      <!-- Main Destinations & Access Mode Selector -->
+      <nav class="nav-links" id="nav-menu">
+        <a href="index.html" class="nav-item">🏠 Home</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+        <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
+        <a href="chat.html" class="nav-item active">💬 Live Chat</a>
+        <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+
+        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
+          🔑 Login
+        </button>
+
+        <!-- 2-Tier Access Mode Switcher -->
+        <div class="mode-selector-wrapper">
+          <select id="mode-selector" class="mode-select-dropdown" onchange="window.switchChatChannel(this.value)">
+            <option value="twilight">🌸 Twilight Channel (13+)</option>
+            <option value="basement">⚡ Basement Channel (17+) 🔒</option>
+          </select>
+        </div>
+      </nav>
+
     </div>
-  `;
-}
+  </header>
 
-function escapeHTML(str) {
-  if (!str) return '';
-  return str.replace(/[&<>'"]/g, 
-    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-  );
-}
+  <!-- Live Chat Stage -->
+  <main class="chat-container">
+    <section class="chat-feed-box">
+      
+      <!-- Channel Selector Tabs -->
+      <div class="channel-tabs-bar">
+        <button id="tab-twilight" onclick="window.switchChatChannel('twilight')" class="channel-tab-btn" style="background: var(--accent-purple); color: #000;">
+          🌸 Twilight Channel (13+)
+        </button>
+        <button id="tab-basement" onclick="window.switchChatChannel('basement')" class="channel-tab-btn" style="background: rgba(255, 77, 109, 0.2); color: #ff4d6d; border: 1px solid #ff4d6d;">
+          ⚡ Basement Channel (17+) 🔒
+        </button>
+      </div>
 
-// 2. Global Channel Switcher Triggered by Navbar / Tabs
-window.switchChatChannel = function(mode) {
-  localStorage.setItem('neko_active_mode', mode);
-  document.body.classList.remove('twilight-mode', 'basement-mode');
-  document.body.classList.add(`${mode}-mode`);
+      <!-- Real-Time Messages Display -->
+      <div id="messages-display" class="chat-messages">
+        <!-- Live Firestore stream loads here via chat.js -->
+      </div>
 
-  const selector = document.getElementById('mode-selector');
-  if (selector) selector.value = mode;
+      <!-- Quick Band Emote Bar -->
+      <div class="emote-bar">
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode('🎸')">🎸 Guitar</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode('🎹')">🎹 Keytar</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode('🥁')">🥁 Drums</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode('🌸')">🌸 Cherry</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode('🍓')">🍓 Strawberry</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode(':neko_wave:')">:neko_wave:</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode(':cat_pog:')">:cat_pog:</button>
+        <button type="button" class="emote-btn" onclick="window.insertEmoteCode(':orb_hype:')">:orb_hype:</button>
+      </div>
+    </section>
 
-  initChatFeed();
-};
+    <!-- Post Message Panel -->
+    <aside class="post-panel">
+      <h3>📮 Send a Message</h3>
+      <p id="posting-access-note" style="font-size: 0.82rem; color: #a092c0; margin-bottom: 16px;">
+        🔒 Messages are moderated by Neko-Guard 🐾 to ensure a safe community environment.
+      </p>
+      
+      <form id="chat-form" onsubmit="window.handleSendChatMessage(event)">
+        <textarea id="chat-input" class="form-control" rows="4" placeholder="Write a message to the lounge..." required></textarea>
+        <button type="submit" class="action-btn">🌸 Send Message</button>
+      </form>
+    </aside>
+  </main>
 
-// 3. User Message Sender
-window.handleSendChatMessage = async function(event) {
-  event.preventDefault();
-  const input = document.getElementById('chat-input');
-  if (!input || !input.value.trim()) return;
+  <!-- Universal Scripts -->
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="moderation.js"></script>
+  <script type="module" src="chat.js"></script>
 
-  const text = input.value.trim();
+  <script>
+    function toggleMobileMenu() {
+      const navMenu = document.getElementById('nav-menu');
+      if (navMenu) navMenu.classList.toggle('open');
+    }
 
-  if (!window.currentUser) {
-    alert("Please log in with Google to post messages!");
-    return;
-  }
-
-  try {
-    const collectionName = getActiveCollectionName();
-    await addDoc(collection(db, collectionName), {
-      senderName: window.userData?.displayName || window.currentUser.displayName || 'Classmate',
-      text: text,
-      color: window.userData?.nameColor || '#a88beb',
-      nameGlow: window.userData?.nameGlow || '',
-      isNPC: false,
-      timestamp: serverTimestamp()
+    document.addEventListener('click', function(event) {
+      const navMenu = document.getElementById('nav-menu');
+      const isInsideNavbar = event.target.closest('.navbar');
+      if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
+        navMenu.classList.remove('open');
+      }
     });
-
-    input.value = '';
-  } catch (err) {
-    console.error("Failed to send chat message:", err);
-    alert("Could not post message: " + err.message);
-  }
-};
-
-window.insertEmoteCode = function(emote) {
-  const input = document.getElementById('chat-input');
-  if (input) {
-    input.value += ` ${emote} `;
-    input.focus();
-  }
-};
-
-// ==========================================================================
-// 4. AUTOMATED NPC CHAT SYSTEM (CORE 4 RARE / LOCKER NPCS FREQUENT)
-// ==========================================================================
-
-// Busy Core 4 Girls (Rare Spawn Chance - ~15%)
-const core4NPCs = [
-  {
-    name: "Nekomi 🎸",
-    color: "#f4b8c4",
-    nameGlow: "glow-pink_glow",
-    quotes: [
-      "Quick break between rehearsals! Prep Room B is sounding great today 🎸",
-      "Sera, did you refine those synth stems for the Universe Hub?",
-      "Checked the Neko FM setlist votes! You guys have great taste 🌸",
-      "Late night cavern jamming... time to tune the lead guitar!",
-      "Thanks everyone for tuning into the audio drama broadcast! 🎙️",
-      "Gotta get back to practice before Aoi counts us in again!"
-    ]
-  },
-  {
-    name: "Sera 🎹",
-    color: "#a88beb",
-    nameGlow: "",
-    quotes: [
-      "Just finished mixing the stem files for the Atelier asset downloads 🌌",
-      "Don't forget to stream the new Whisper Radio podcast episode!",
-      "Adjusting keytar levels... the acoustics in Locker 102 are awesome.",
-      "Aoi brought snacks to rehearsal today 🍓",
-      "Working on a new synth melody for Girls Phantom Dead!"
-    ]
-  },
-  {
-    name: "Akari Minase 🎤",
-    color: "#ff4d6d",
-    nameGlow: "glow-pink_glow",
-    quotes: [
-      "Mic check 1-2! Is Locker 102 feeling the energy tonight? 🎤",
-      "Finishing up lyrics for our next single in Prep Room B!",
-      "Warm tea and vocal warmups before the late night stream.",
-      "Hope everyone is having a cozy night in the lounge! 💖"
-    ]
-  },
-  {
-    name: "Aoi 🥁",
-    color: "#ffd166",
-    nameGlow: "glow-gold_glow",
-    quotes: [
-      "1-2-3-4! Rhythm section keeping the beat tight! 🥁",
-      "Just replaced my snare drum head. Ready for full volume!",
-      "Who's hanging out in the Basement channel tonight? ⚡",
-      "Snack break over, back to the drum kit!"
-    ]
-  }
-];
-
-// Regular Classmates & Locker NPCs (Frequent Spawn Chance - ~85%)
-const lockerNPCs = [
-  {
-    name: "Classmate #102 🎒",
-    color: "#cbb8f6",
-    quotes: [
-      "Hey everyone! Locker 102 is live tonight!",
-      "Anyone listening to Neko FM right now? 📻",
-      "Just finished homework, time to chill in the lounge.",
-      "Prep Room B audio drama was so good this week!"
-    ]
-  },
-  {
-    name: "Locker 088 🎧",
-    color: "#f4b8c4",
-    quotes: [
-      "This J-Rock track on Neko FM is an absolute banger! 🎸",
-      "Who else is grabbing stem downloads from the Universe Hub?",
-      "Twilight mode colors look so clean tonight 🌸"
-    ]
-  },
-  {
-    name: "Locker 204 📚",
-    color: "#a88beb",
-    quotes: [
-      "Reading through the EchoHeart light novel lore archives...",
-      "Did the new podcast chapter drop yet?",
-      "Sakuraoka High lore runs so deep!"
-    ]
-  },
-  {
-    name: "Locker 404 ⚡",
-    color: "#ff4d6d",
-    quotes: [
-      "404: Sleep not found, only J-Pop & J-Rock!",
-      "Basement cavern stream goes hard tonight ⚡",
-      "Otaku Overload community is top tier!"
-    ]
-  },
-  {
-    name: "Locker 013 🌙",
-    color: "#e2daf8",
-    quotes: [
-      "Stargazing while listening to Neko FM radio 🌌",
-      "Late night lounge vibes are immaculate.",
-      "Send keytar emotes in the chat! 🎹"
-    ]
-  },
-  {
-    name: "Locker 319 🎨",
-    color: "#ffd166",
-    quotes: [
-      "Working on custom pixel art sprites in RPG Maker!",
-      "The new dual mode toggle transition is super slick.",
-      "Neko-Guard keeping the chat cozy as always 🐾"
-    ]
-  }
-];
-
-// Trigger an NPC Chat Message
-export async function triggerNPCChatter() {
-  // Roll 1-100: 15% chance for Core 4 (Rare), 85% chance for Locker NPCs (Frequent)
-  const roll = Math.floor(Math.random() * 100) + 1;
-  const isCore4 = roll <= 15;
-
-  const pool = isCore4 ? core4NPCs : lockerNPCs;
-  const character = pool[Math.floor(Math.random() * pool.length)];
-  const quote = character.quotes[Math.floor(Math.random() * character.quotes.length)];
-
-  try {
-    const collectionName = getActiveCollectionName();
-    await addDoc(collection(db, collectionName), {
-      senderName: character.name,
-      text: quote,
-      color: character.color,
-      nameGlow: character.nameGlow || '',
-      isNPC: true,
-      timestamp: serverTimestamp()
-    });
-  } catch (err) {
-    console.error("Failed to post NPC chatter:", err);
-  }
-}
-
-// Automatically send an NPC message every 3 to 5 minutes
-setInterval(() => {
-  triggerNPCChatter();
-}, Math.floor(Math.random() * 120000) + 180000);
-
-document.addEventListener('DOMContentLoaded', () => {
-  initChatFeed();
-});
+  </script>
+  <script src="global-player.js"></script>
+</body>
+</html>
