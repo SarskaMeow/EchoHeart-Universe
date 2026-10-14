@@ -1,17 +1,15 @@
 // chat.js — Live Firestore Chat Feed, 3-Tier Access, Admin Overdrive & Auto NPC Engine
-import { db, auth } from './firebase-config.js';
+import { db } from './firebase-config.js';
 import { 
   collection, 
   addDoc, 
   query, 
   orderBy, 
   limit, 
-  onSnapshot, 
-  serverTimestamp 
+  onSnapshot 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 let chatUnsubscribe = null;
-let isSeeding = false;
 
 // Helper to check if current user has Admin Overdrive privileges
 function isUserAdmin() {
@@ -40,29 +38,28 @@ export function initChatFeed() {
 
   const messagesDisplay = document.getElementById('messages-display');
 
-  chatUnsubscribe = onSnapshot(q, async (snapshot) => {
+  chatUnsubscribe = onSnapshot(q, (snapshot) => {
     if (!messagesDisplay) return;
     
     const messages = [];
     snapshot.forEach((doc) => messages.push({ id: doc.id, ...doc.data() }));
-    messages.reverse(); // Chronological display
+    messages.reverse(); // Display oldest to newest down the feed
 
-    if (messages.length === 0 && !isSeeding) {
-      isSeeding = true;
+    if (messages.length === 0) {
       messagesDisplay.innerHTML = `
         <div style="text-align:center; color:#a092c0; padding:40px; font-style:italic;">
-          Initializing Locker 102 Chatter... 🌸
+          No messages in this channel yet. Say hi to Prep Room B! 🌸
         </div>
       `;
-      await seedInitialNPCChatter();
-      isSeeding = false;
       return;
     }
 
-    if (messages.length > 0) {
-      messagesDisplay.innerHTML = messages.map(msg => renderMessageHTML(msg)).join('');
+    messagesDisplay.innerHTML = messages.map(msg => renderMessageHTML(msg)).join('');
+    
+    // Auto-scroll to the bottom of the feed on new messages
+    setTimeout(() => {
       messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
-    }
+    }, 50);
   }, (error) => {
     console.warn("Chat feed listener warning:", error);
   });
@@ -85,8 +82,11 @@ function renderMessageHTML(msg) {
   const borderAccent = isAdminMsg ? '#ff4d6d' : (isVIPMsg ? '#ffd166' : (msg.color || '#a88beb'));
 
   let formattedTime = 'Just now';
-  if (msg.timestamp && typeof msg.timestamp.toDate === 'function') {
-    formattedTime = new Date(msg.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  if (msg.timestamp) {
+    const rawDate = typeof msg.timestamp.toDate === 'function' ? msg.timestamp.toDate() : new Date(msg.timestamp);
+    if (!isNaN(rawDate)) {
+      formattedTime = rawDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
   }
 
   return `
@@ -113,14 +113,13 @@ function escapeHTML(str) {
   );
 }
 
-// 2. Global Channel Switcher with Admin Permission Overrides
+// 2. Global Channel Switcher
 window.switchChatChannel = async function(mode) {
   if (mode === 'twilight') {
     setModeState('twilight');
     return;
   }
 
-  // Secret Admin bypass check
   if (isUserAdmin()) {
     setModeState(mode);
     return;
@@ -242,7 +241,7 @@ window.handleSendChatMessage = async function(event) {
       isVIP: !!window.userData?.isVIP || isAdmin,
       isAdmin: isAdmin,
       isNPC: false,
-      timestamp: serverTimestamp()
+      timestamp: Date.now()
     });
 
     input.value = '';
@@ -261,7 +260,7 @@ window.insertEmoteCode = function(emote) {
 };
 
 // ==========================================================================
-// 4. AUTOMATED NPC CHAT SYSTEM (INITIAL SEED + LOCKER NPCS ~10s / CORE 4 ~2m)
+// 4. AUTOMATED NPC CHAT SYSTEM (LOCKER NPCS ~10s / CORE 4 ~2m)
 // ==========================================================================
 
 const core4NPCs = [
@@ -383,19 +382,11 @@ async function postNPCMessage(character) {
       color: character.color,
       nameGlow: character.nameGlow || '',
       isNPC: true,
-      timestamp: serverTimestamp()
+      timestamp: Date.now()
     });
   } catch (err) {
     console.warn("NPC message skipped:", err);
   }
-}
-
-// Auto-seed starter messages on load if channel is empty
-async function seedInitialNPCChatter() {
-  const seed1 = lockerNPCs[Math.floor(Math.random() * lockerNPCs.length)];
-  const seed2 = core4NPCs[Math.floor(Math.random() * core4NPCs.length)];
-  await postNPCMessage(seed1);
-  await postNPCMessage(seed2);
 }
 
 // 1. Regular Locker Classmate chatter (~10 seconds)
