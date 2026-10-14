@@ -28,12 +28,12 @@ function getActiveCollectionName() {
 // Helper to safely convert any timestamp format to numeric milliseconds
 function parseTimestampToMillis(rawTimestamp) {
   if (!rawTimestamp) return Date.now();
-  
+   
   // Firestore Timestamp object (.toDate())
   if (typeof rawTimestamp.toDate === 'function') {
     return rawTimestamp.toDate().getTime();
   }
-  
+   
   // Already a numeric timestamp
   if (typeof rawTimestamp === 'number') {
     return rawTimestamp;
@@ -53,7 +53,7 @@ export function initChatFeed() {
 
   const collectionName = getActiveCollectionName();
   const chatRef = collection(db, collectionName);
-  
+   
   // Fetch up to 75 latest messages without strict database-side data-type indexing
   const q = query(chatRef, limit(75));
 
@@ -61,7 +61,7 @@ export function initChatFeed() {
 
   chatUnsubscribe = onSnapshot(q, async (snapshot) => {
     if (!messagesDisplay) return;
-    
+     
     const messages = [];
     snapshot.forEach((doc) => {
       const data = doc.data();
@@ -86,7 +86,7 @@ export function initChatFeed() {
 
     if (messages.length > 0) {
       messagesDisplay.innerHTML = messages.map(msg => renderMessageHTML(msg)).join('');
-      
+       
       // Auto-scroll to the bottom of the feed for live chat behavior
       setTimeout(() => {
         messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
@@ -289,7 +289,7 @@ window.insertEmoteCode = function(emote) {
 };
 
 // ==========================================================================
-// 4. AUTOMATED NPC CHAT SYSTEM (LOCKER NPCS ~10s / CORE 4 ~2m)
+// 4. AUTOMATED NPC CHAT SYSTEM (LOCKER NPCS & CORE 4)
 // ==========================================================================
 
 const core4NPCs = [
@@ -425,17 +425,21 @@ async function seedInitialNPCChatter() {
   await postNPCMessage(seed2);
 }
 
-// 1. Regular Locker Classmate chatter (~10 seconds)
+// Client-side fallback check (runs when users are actively on the page, throttled to prevent duplication bursts)
+let lastNpcPing = Date.now();
 setInterval(() => {
-  const character = lockerNPCs[Math.floor(Math.random() * lockerNPCs.length)];
-  postNPCMessage(character);
-}, 10000);
-
-// 2. Core 4 Band Member chatter (~2 minutes)
-setInterval(() => {
-  const character = core4NPCs[Math.floor(Math.random() * core4NPCs.length)];
-  postNPCMessage(character);
-}, 120000);
+  const now = Date.now();
+  // Only trigger client-side filler if no message has been posted for at least 25 seconds
+  if (now - lastNpcPing > 25000) {
+    const isCore4Chance = Math.random() < 0.3;
+    const character = isCore4Chance 
+      ? core4NPCs[Math.floor(Math.random() * core4NPCs.length)]
+      : lockerNPCs[Math.floor(Math.random() * lockerNPCs.length)];
+    
+    postNPCMessage(character);
+    lastNpcPing = Date.now();
+  }
+}, 15000);
 
 document.addEventListener('DOMContentLoaded', () => {
   initChatFeed();
