@@ -120,7 +120,7 @@
       background: rgba(22, 15, 42, 0.95);
       border: 1px solid var(--nav-border-twilight);
       border-radius: 16px;
-      padding: 16px;
+      padding: 20px 16px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -129,8 +129,8 @@
 
     .avatar-wrapper {
       position: relative;
-      width: 90px;
-      height: 90px;
+      width: 96px;
+      height: 96px;
       margin-bottom: 12px;
     }
 
@@ -158,7 +158,21 @@
       color: #fff;
       font-size: 1.2rem;
       font-weight: 800;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .user-title-badge {
+      font-size: 0.72rem;
+      color: var(--accent-pink);
+      background: rgba(168, 139, 235, 0.2);
+      border: 1px solid rgba(168, 139, 235, 0.4);
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-weight: 800;
+      margin-bottom: 8px;
     }
 
     .user-email {
@@ -168,17 +182,24 @@
       margin-bottom: 12px;
     }
 
-    .orb-pill {
+    /* Access Tier Badge */
+    .tier-pill {
       background: rgba(35, 20, 60, 0.9);
-      border: 1px solid var(--accent-gold);
+      border: 1px solid var(--accent-purple);
       border-radius: 20px;
-      padding: 8px 16px;
+      padding: 6px 14px;
       color: #fff;
-      font-size: 1rem;
-      font-weight: 900;
+      font-size: 0.82rem;
+      font-weight: 800;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+    }
+
+    .tier-pill.vip-tier {
+      border-color: var(--accent-gold);
+      background: rgba(255, 209, 102, 0.15);
+      color: var(--accent-gold);
     }
 
     /* Nav Side Tabs */
@@ -301,6 +322,7 @@
       border-radius: 10px;
       color: #fff;
       font-size: 0.95rem;
+      font-family: inherit;
     }
 
     .form-control:focus {
@@ -329,23 +351,34 @@
       gap: 16px;
     }
 
-    .store-item-card {
-      background: #120924;
-      border: 1px solid var(--nav-border-twilight);
-      border-radius: 14px;
-      padding: 16px;
-      text-align: center;
+    .toggle-setting-row {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(168, 139, 235, 0.15);
     }
 
-    .store-item-card img {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      margin-bottom: 12px;
-      object-fit: cover;
+    .toggle-setting-row:last-child {
+      border-bottom: none;
+    }
+
+    .toggle-setting-label h4 {
+      color: #fff;
+      font-size: 0.98rem;
+      margin-bottom: 4px;
+    }
+
+    .toggle-setting-label p {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    .switch-checkbox {
+      width: 44px;
+      height: 24px;
+      accent-color: var(--accent-purple);
+      cursor: pointer;
     }
   </style>
 </head>
@@ -369,8 +402,8 @@
         <a href="chat.html" class="nav-item">💬 Live Chat</a>
         <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
 
-        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
-          🔑 Login
+        <button id="nav-auth-btn" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
+          👤 Account
         </button>
       </nav>
     </div>
@@ -387,19 +420,22 @@
           <div id="user-avatar-frame-overlay" class="avatar-frame-overlay"></div>
         </div>
         <div id="user-display-name" class="user-name">Syncing Profile...</div>
+        <div id="user-title-badge-text" class="user-title-badge">[Prep Room Listener]</div>
         <div id="user-email-text" class="user-email">Connecting...</div>
-        <div class="orb-pill">
-          <span>🔮</span>
-          <span id="user-orb-count">--</span> Orbs
+        
+        <!-- Access Tier Status -->
+        <div id="user-tier-pill" class="tier-pill">
+          <span id="user-tier-icon">🌸</span>
+          <span id="user-tier-name">Twilight Member</span>
         </div>
       </div>
 
       <nav class="side-tabs-menu">
-        <button class="tab-btn active" onclick="switchDashboardTab('profile')">👤 Profile & Customization</button>
-        <button class="tab-btn" onclick="switchDashboardTab('wardrobe')">🎨 Wardrobe & Inventory</button>
-        <button class="tab-btn" onclick="switchDashboardTab('shop')">🛍️ Orb Emporium</button>
-        <button class="tab-btn" onclick="switchDashboardTab('rewards')">🎁 Earn Orbs & Rewards</button>
-        <button class="tab-btn" onclick="switchDashboardTab('safety')">⚙️ Account & Safety</button>
+        <button class="tab-btn active" onclick="switchDashboardTab('profile')">👤 Profile & Bio</button>
+        <button class="tab-btn" onclick="switchDashboardTab('wardrobe')">🎨 Wardrobe & Cosmetics</button>
+        <button class="tab-btn" onclick="switchDashboardTab('tiers')">🎟️ VIP Pass & Tiers</button>
+        <button class="tab-btn" onclick="switchDashboardTab('settings')">⚙️ App & Audio Settings</button>
+        <button class="tab-btn" onclick="switchDashboardTab('safety')">🛡️ Account & Safety</button>
       </nav>
 
       <button onclick="window.logoutUser()" class="btn-signout">Sign Out</button>
@@ -408,11 +444,11 @@
     <!-- Main Right Content Panels -->
     <main class="dashboard-content">
 
-      <!-- PANEL 1: PROFILE EDIT -->
+      <!-- PANEL 1: PROFILE & BIO -->
       <section id="panel-profile" class="tab-panel active">
         <div class="panel-header">
           <h2>Profile & Public Identity</h2>
-          <p>Update your public display name and avatar details across the Otaku Overload lounge.</p>
+          <p>Customize your public display name, avatar, profile bio, and favorite band member.</p>
         </div>
 
         <div class="content-card">
@@ -421,103 +457,168 @@
             <input type="text" id="edit-display-name-input" class="form-control" placeholder="Enter username...">
           </div>
 
-          <button onclick="window.updateDisplayName()" class="btn-action">Save Display Name</button>
+          <div class="form-group">
+            <label>Profile Bio / About Me</label>
+            <textarea id="edit-bio-input" class="form-control" rows="3" placeholder="Tell the lounge about yourself..."></textarea>
+          </div>
+
+          <div class="grid-2col">
+            <div class="form-group">
+              <label>Favorite Girls Dead Phantom Member</label>
+              <select id="fav-member-select" class="form-control">
+                <option value="none">Select favorite member...</option>
+                <option value="akari">🥁 Akari Minase (Drums)</option>
+                <option value="nekomi">🎙️ Nekomi (Vocals & Lead Guitar)</option>
+                <option value="sera">🎹 Sera (Keytar & Vocals)</option>
+                <option value="aoi">🎸 Aoi (Bass)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Avatar Seed / Custom Image URL</label>
+              <input type="text" id="edit-avatar-url-input" class="form-control" placeholder="Image URL or DiceBear Seed...">
+            </div>
+          </div>
+
+          <button onclick="window.saveProfileDetails()" class="btn-action">Save Profile Details</button>
         </div>
       </section>
 
-      <!-- PANEL 2: WARDROBE -->
+      <!-- PANEL 2: WARDROBE & COSMETICS -->
       <section id="panel-wardrobe" class="tab-panel">
         <div class="panel-header">
-          <h2>Wardrobe & Equipped Styles</h2>
-          <p>Select which cosmetic items to equip on your avatar and chat messages.</p>
+          <h2>Wardrobe & Equipped Flair</h2>
+          <p>Equip free and VIP avatar borders, chat name glows, and community stage titles.</p>
         </div>
 
         <div class="content-card">
           <div class="grid-2col">
-            <div>
-              <label style="color: var(--accent-purple); font-size: 0.85rem; font-weight: 800; display: block; margin-bottom: 8px;">EQUIPPED AVATAR BORDER</label>
+            <div class="form-group">
+              <label>Avatar Border Style</label>
               <select id="equip-frame-select" onchange="window.equipSelectedItem('frame', this.value)" class="form-control">
-                <option value="none">None</option>
-                <option value="neon_purple">🔮 Neon Cavern (Purple)</option>
-                <option value="gold_aura">✨ Backstage Gold</option>
+                <option value="none">Standard Circle (Free)</option>
+                <option value="sakura_pink">🌸 Sakura Blossom Ring (Free)</option>
+                <option value="cavern_purple">🔮 Cavern Purple Ring (Free)</option>
+                <option value="gold_aura">✨ Backstage Gold Aura (VIP 🎟️)</option>
+                <option value="neon_spotlight">⚡ Neon Spotlight Pulse (VIP 🎟️)</option>
               </select>
             </div>
 
-            <div>
-              <label style="color: var(--accent-purple); font-size: 0.85rem; font-weight: 800; display: block; margin-bottom: 8px;">EQUIPPED CHAT NAME GLOW</label>
+            <div class="form-group">
+              <label>Chat Name Glow Style</label>
               <select id="equip-glow-select" onchange="window.equipSelectedItem('glow', this.value)" class="form-control">
-                <option value="none">Standard Text</option>
-                <option value="pink_glow">🌸 Pink Echo Glow</option>
-                <option value="gold_glow">⚡ Golden Glow</option>
+                <option value="none">Standard Text (Free)</option>
+                <option value="pink_glow">🌸 Pink Echo Glow (Free)</option>
+                <option value="purple_glow">🔮 Cavern Dusk Glow (Free)</option>
+                <option value="gold_glow">⚡ Golden Voltage Glow (VIP 🎟️)</option>
+                <option value="cyber_sunset">🌅 Cyber Sunset Gradient (VIP 🎟️)</option>
               </select>
             </div>
+          </div>
+
+          <div class="form-group">
+            <label>Chat Stage Title Badge</label>
+            <select id="equip-title-select" onchange="window.equipSelectedItem('title', this.value)" class="form-control">
+              <option value="listener">[Prep Room Listener] (Free)</option>
+              <option value="otaku">[Otaku Lounge Member] (Free)</option>
+              <option value="rocker">[J-Rock Specialist] (Free)</option>
+              <option value="producer">[Prep Room B Producer] (VIP 🎟️)</option>
+              <option value="crew">[Phantom Crew] (VIP 🎟️)</option>
+            </select>
           </div>
         </div>
       </section>
 
-      <!-- PANEL 3: ORB SHOP -->
-      <section id="panel-shop" class="tab-panel">
+      <!-- PANEL 3: VIP PASS & TIERS -->
+      <section id="panel-tiers" class="tab-panel">
         <div class="panel-header">
-          <h2>Orb Emporium</h2>
-          <p>Spend your hard-earned Orbs to unlock exclusive avatars and chat cosmetics!</p>
+          <h2>Membership Tiers & Perks</h2>
+          <p>Review your active lounge access tier or upgrade to unlock Backstage Pass features.</p>
         </div>
 
         <div class="grid-2col">
-          <div class="store-item-card">
-            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=CyberNeko" alt="Cyber Neko">
-            <strong style="color: #fff; margin-bottom: 4px;">Cyber Neko Avatar</strong>
-            <span style="color: var(--accent-gold); font-weight: 800; margin-bottom: 12px;">🔮 250 Orbs</span>
-            <button onclick="window.buyCosmeticItem('avatar_cyber', 250)" class="btn-action" style="width: 100%;">Buy Avatar</button>
+          <!-- Twilight & Basement Card -->
+          <div class="content-card">
+            <h3 style="color: var(--accent-purple); margin-bottom: 8px;">🌸 Public & After-Hours Tiers</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">Standard access for all lounge members.</p>
+            <ul style="font-size: 0.85rem; color: var(--text-light); padding-left: 20px; line-height: 1.8;">
+              <li>128kbps Standard Radio Streams</li>
+              <li>1 Vote per Hourly Setlist Poll</li>
+              <li>Standard Chat & Free Kaomojis</li>
+              <li>20s Discography Track Previews</li>
+            </ul>
           </div>
 
-          <div class="store-item-card">
-            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=TwilightMage" alt="Twilight Mage">
-            <strong style="color: #fff; margin-bottom: 4px;">Twilight Mage Avatar</strong>
-            <span style="color: var(--accent-gold); font-weight: 800; margin-bottom: 12px;">🔮 450 Orbs</span>
-            <button onclick="window.buyCosmeticItem('avatar_twilight', 450)" class="btn-action" style="width: 100%;">Buy Avatar</button>
+          <!-- Backstage VIP Card -->
+          <div class="content-card" style="border-color: var(--accent-gold); background: rgba(25, 18, 48, 0.95);">
+            <h3 style="color: var(--accent-gold); margin-bottom: 8px;">🎟️ Backstage Pass VIP ($4.99/mo)</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">Full unlocked potential across every tab.</p>
+            <ul style="font-size: 0.85rem; color: var(--text-light); padding-left: 20px; line-height: 1.8; margin-bottom: 20px;">
+              <li><strong>2x Weighted Voting Power</strong> in Polls</li>
+              <li>Full Playback on GDP Discography Tracks</li>
+              <li>Exclusive Gold Avatar Borders & Name Glows</li>
+              <li>Slow-Mode Bypass in Live Chat</li>
+            </ul>
+            <button id="toggle-vip-btn" onclick="window.toggleVIPStatus()" class="btn-action" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; width: 100%;">
+              Unlock Backstage Pass VIP
+            </button>
           </div>
         </div>
       </section>
 
-      <!-- PANEL 4: EARN ORBS & REWARDS -->
-      <section id="panel-rewards" class="tab-panel">
+      <!-- PANEL 4: APP & AUDIO SETTINGS -->
+      <section id="panel-settings" class="tab-panel">
         <div class="panel-header">
-          <h2>Earn Currency & Rewards</h2>
-          <p>Collect free daily login rewards and watch optional video ads to fill your Orb pouch.</p>
-        </div>
-
-        <div class="content-card" style="border-color: var(--accent-gold);">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-            <div>
-              <h3 style="color: var(--accent-gold); margin-bottom: 4px;">🎁 Daily Lounge Reward</h3>
-              <p id="daily-claim-status" style="font-size: 0.88rem; color: var(--text-light);">Claim +50 free Orbs every 24 hours!</p>
-            </div>
-            <button id="claim-daily-btn" onclick="window.claimDailyBonus()" class="btn-action" style="background: linear-gradient(135deg, var(--accent-gold), #ff9f1c);">Claim +50 Orbs</button>
-          </div>
+          <h2>App & Audio Preferences</h2>
+          <p>Configure how Neko FM, radio streams, and live chat behave across your session.</p>
         </div>
 
         <div class="content-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-            <div>
-              <h3 style="color: var(--accent-purple); margin-bottom: 4px;">🎬 Watch Sponsored Video (+50 Orbs)</h3>
-              <p style="font-size: 0.88rem; color: var(--text-muted);">Watch a quick 15-30 second ad to earn instant Orbs.</p>
+          <div class="form-group">
+            <label>Default Launch Mode</label>
+            <select id="setting-default-mode" onchange="window.saveAppSetting('defaultMode', this.value)" class="form-control">
+              <option value="twilight">🌸 Twilight (Public Lounge)</option>
+              <option value="basement">⚡ Basement (After-Hours Underground)</option>
+            </select>
+          </div>
+
+          <div class="toggle-setting-row">
+            <div class="toggle-setting-label">
+              <h4>Audio Station Autoplay</h4>
+              <p>Automatically begin playback when selecting a new station preset.</p>
             </div>
-            <button onclick="window.triggerRewardedAd()" class="btn-action">Watch Video Ad</button>
+            <input type="checkbox" id="setting-autoplay" class="switch-checkbox" onchange="window.saveAppSetting('autoplay', this.checked)">
+          </div>
+
+          <div class="toggle-setting-row">
+            <div class="toggle-setting-label">
+              <h4>Live Chat Desktop Notifications</h4>
+              <p>Receive sound cues when mentioned in live chat events.</p>
+            </div>
+            <input type="checkbox" id="setting-notifications" class="switch-checkbox" onchange="window.saveAppSetting('notifications', this.checked)">
+          </div>
+
+          <div class="toggle-setting-row">
+            <div class="toggle-setting-label">
+              <h4>Show Broadcast Join Alerts</h4>
+              <p>Display live banner announcements when VIP members enter the room.</p>
+            </div>
+            <input type="checkbox" id="setting-join-alerts" class="switch-checkbox" onchange="window.saveAppSetting('joinAlerts', this.checked)">
           </div>
         </div>
       </section>
 
-      <!-- PANEL 5: SAFETY & AGE VERIFICATION -->
+      <!-- PANEL 5: ACCOUNT & SAFETY -->
       <section id="panel-safety" class="tab-panel">
         <div class="panel-header">
-          <h2>Account Security & Verification Flags</h2>
-          <p>Verify your access tiers for community chatrooms.</p>
+          <h2>Account Security & Verification</h2>
+          <p>Verify age access flags for community chatrooms and after-hours channels.</p>
         </div>
 
         <div class="content-card">
           <p style="margin-bottom: 12px;"><strong>Google Email:</strong> <span id="safety-email-display">Loading...</span></p>
-          <p style="margin-bottom: 12px;"><strong>Twilight Mode (13+ Chat Access):</strong> <span id="safety-13-status">❌ Not Verified</span></p>
-          <p style="margin-bottom: 0;"><strong>Basement Mode (17+ Cavern Access):</strong> <span id="safety-17-status">❌ Not Verified</span></p>
+          <p style="margin-bottom: 12px;"><strong>Twilight Mode (13+ Access):</strong> <span id="safety-13-status">❌ Not Verified</span></p>
+          <p style="margin-bottom: 0;"><strong>Basement Mode (17+ Access):</strong> <span id="safety-17-status">❌ Not Verified</span></p>
         </div>
       </section>
 
@@ -527,15 +628,34 @@
   <!-- Single Unified Script for Account Page -->
   <script type="module">
     import { auth, db } from './firebase-config.js?v=3';
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { doc, updateDoc, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    window.currentUser = null;
+    window.userData = {};
 
     // 1. Listen directly to Firebase Auth changes on load
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
+        window.currentUser = user;
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const snap = await getDoc(userRef);
+          if (snap.exists()) {
+            window.userData = snap.data();
+          } else {
+            window.userData = {
+              displayName: user.displayName || "Lounge Member",
+              email: user.email,
+              photoURL: user.photoURL
+            };
+          }
+        } catch (e) {
+          console.error("Firestore sync error:", e);
+          window.userData = { displayName: user.displayName, email: user.email };
+        }
         window.updatePageUI();
       } else {
-        // If not logged in, redirect home
         window.location.href = "index.html";
       }
     });
@@ -547,13 +667,20 @@
 
       const targetPanel = document.getElementById(`panel-${tabName}`);
       if (targetPanel) targetPanel.classList.add('active');
-      event.currentTarget.classList.add('active');
+      if (event && event.currentTarget) event.currentTarget.classList.add('active');
     };
 
-    // Update Display Name
-    window.updateDisplayName = async function() {
-      const input = document.getElementById('edit-display-name-input');
-      const newName = input ? input.value.trim() : '';
+    // Save Profile Details (Name, Bio, Favorite Member, Custom Avatar)
+    window.saveProfileDetails = async function() {
+      const nameInput = document.getElementById('edit-display-name-input');
+      const bioInput = document.getElementById('edit-bio-input');
+      const favSelect = document.getElementById('fav-member-select');
+      const avatarInput = document.getElementById('edit-avatar-url-input');
+
+      const newName = nameInput ? nameInput.value.trim() : '';
+      const newBio = bioInput ? bioInput.value.trim() : '';
+      const newFav = favSelect ? favSelect.value : 'none';
+      const newAvatar = avatarInput ? avatarInput.value.trim() : '';
 
       if (!newName) {
         alert("Please enter a valid display name.");
@@ -562,162 +689,154 @@
 
       try {
         const userRef = doc(db, "users", window.currentUser.uid);
-        await updateDoc(userRef, { displayName: newName });
-        window.userData.displayName = newName;
-        alert("Display name updated successfully!");
+        const updates = {
+          displayName: newName,
+          bio: newBio,
+          favMember: newFav
+        };
+
+        if (newAvatar) updates.photoURL = newAvatar;
+
+        await updateDoc(userRef, updates);
+        Object.assign(window.userData, updates);
+
+        alert("🌸 Profile details updated successfully!");
         window.updatePageUI();
       } catch (err) {
-        console.error("Failed to update display name:", err);
-        alert("Error saving name: " + err.message);
+        console.error("Failed to update profile:", err);
+        alert("Error saving profile: " + err.message);
       }
     };
 
-    // 2. Claim Daily Bonus Function
-    window.claimDailyBonus = async function() {
-      if (!window.currentUser || !window.userData) {
-        alert("Please log in to claim daily Orbs!");
-        return;
-      }
-
-      const now = Date.now();
-      const lastClaim = window.userData.lastDailyClaim || 0;
-      const cooldown = 24 * 60 * 60 * 1000;
-
-      if (now - lastClaim < cooldown) {
-        const hoursLeft = Math.ceil((cooldown - (now - lastClaim)) / (1000 * 60 * 60));
-        alert(`You already claimed today's reward! Come back in ${hoursLeft} hours.`);
-        return;
-      }
-
-      try {
-        const userRef = doc(db, "users", window.currentUser.uid);
-        await updateDoc(userRef, {
-          orbs: increment(50),
-          lastDailyClaim: now
-        });
-
-        window.userData.orbs = (window.userData.orbs || 0) + 50;
-        window.userData.lastDailyClaim = now;
-
-        alert("🎉 Daily Bonus Claimed! +50 Orbs added to your account.");
-        window.updatePageUI();
-      } catch (err) {
-        console.error("Failed to claim daily reward:", err);
-        alert("Error claiming reward: " + err.message);
-      }
-    };
-
-    // 3. Equip Cosmetic Item
+    // Equip Cosmetic Item
     window.equipSelectedItem = async function(type, value) {
       if (!window.currentUser) return;
 
+      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
+
+      if ((value === 'gold_aura' || value === 'neon_spotlight' || value === 'gold_glow' || value === 'cyber_sunset' || value === 'producer' || value === 'crew') && !isVIP) {
+        alert("🎟️ Backstage Pass VIP required to equip this cosmetic flair!");
+        window.updatePageUI();
+        return;
+      }
+
       try {
         const userRef = doc(db, "users", window.currentUser.uid);
-        if (type === 'frame') {
-          await updateDoc(userRef, { equippedFrame: value });
-          window.userData.equippedFrame = value;
-        } else if (type === 'glow') {
-          await updateDoc(userRef, { equippedGlow: value });
-          window.userData.equippedGlow = value;
+        const fieldMap = { frame: 'equippedFrame', glow: 'equippedGlow', title: 'equippedTitle' };
+        
+        if (fieldMap[type]) {
+          await updateDoc(userRef, { [fieldMap[type]]: value });
+          window.userData[fieldMap[type]] = value;
         }
 
         updateAvatarFramePreview(window.userData.equippedFrame);
+        window.updatePageUI();
       } catch (err) {
         console.error("Failed to update equipment:", err);
       }
     };
 
-    // Buy Cosmetic Item Function
-    window.buyCosmeticItem = async function(itemId, cost) {
-      if (!window.currentUser || !window.userData) return;
-
-      if ((window.userData.orbs || 0) < cost) {
-        alert(`You need ${cost} Orbs to buy this cosmetic item!`);
-        return;
+    // Toggle VIP Status Simulator
+    window.toggleVIPStatus = function() {
+      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
+      if (isVIP) {
+        localStorage.setItem('neko_is_vip', 'false');
+        alert("Backstage Pass cancelled. Reverted to Public Twilight Tier.");
+      } else {
+        localStorage.setItem('neko_is_vip', 'true');
+        alert("🎟️ Backstage Pass Unlocked! You now have 2x Weighted Votes and VIP Cosmetic Flair.");
       }
-
-      try {
-        const userRef = doc(db, "users", window.currentUser.uid);
-        await updateDoc(userRef, {
-          orbs: increment(-cost),
-          inventory: arrayUnion(itemId)
-        });
-
-        window.userData.orbs -= cost;
-        alert("Purchase successful! Item added to your inventory.");
-        window.updatePageUI();
-      } catch (err) {
-        console.error("Purchase error:", err);
-      }
+      window.updatePageUI();
     };
 
-    // Rewarded Ad Simulator
-    window.triggerRewardedAd = function() {
-      alert("Sponsor Ad playing... (15 seconds)");
-      setTimeout(async () => {
-        try {
-          const userRef = doc(db, "users", window.currentUser.uid);
-          await updateDoc(userRef, { orbs: increment(50) });
-          window.userData.orbs = (window.userData.orbs || 0) + 50;
-          alert("Ad finished! +50 Orbs credited to your pouch 🔮");
-          window.updatePageUI();
-        } catch (err) {
-          console.error("Ad reward failed:", err);
-        }
-      }, 1500);
+    // Save App Preference
+    window.saveAppSetting = function(key, val) {
+      localStorage.setItem(`neko_setting_${key}`, val);
     };
 
-    // 4. Update Profile Page Elements
+    // Sign Out
+    window.logoutUser = function() {
+      signOut(auth).then(() => {
+        localStorage.removeItem('neko_logged_in');
+        window.location.href = "index.html";
+      });
+    };
+
+    // Update Profile Page Elements
     window.updatePageUI = function() {
       const nameEl = document.getElementById('user-display-name');
       const emailEl = document.getElementById('user-email-text');
-      const orbEl = document.getElementById('user-orb-count');
       const avatarEl = document.getElementById('user-avatar-img');
-      const claimBtn = document.getElementById('claim-daily-btn');
-      const navBtn = document.getElementById('nav-auth-btn');
+      const titleBadgeEl = document.getElementById('user-title-badge-text');
+
+      const tierPill = document.getElementById('user-tier-pill');
+      const tierIcon = document.getElementById('user-tier-icon');
+      const tierName = document.getElementById('user-tier-name');
+      const toggleVipBtn = document.getElementById('toggle-vip-btn');
 
       const inputName = document.getElementById('edit-display-name-input');
+      const inputBio = document.getElementById('edit-bio-input');
+      const inputFav = document.getElementById('fav-member-select');
+      const inputAvatar = document.getElementById('edit-avatar-url-input');
+
       const safetyEmail = document.getElementById('safety-email-display');
       const safety13 = document.getElementById('safety-13-status');
       const safety17 = document.getElementById('safety-17-status');
 
-      if (navBtn) {
-        if (window.currentUser && window.userData) {
-          navBtn.innerHTML = `👤 Profile (🔮 ${window.userData.orbs || 0})`;
-          navBtn.style.borderColor = '#ffd166';
-        } else {
-          navBtn.innerHTML = `🔑 Login`;
-          navBtn.style.borderColor = '#a88beb';
-        }
-      }
+      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
 
       if (window.currentUser && window.userData) {
         if (nameEl) nameEl.innerText = window.userData.displayName || "Lounge Member";
-        if (emailEl) emailEl.innerText = window.userData.email || "";
-        if (orbEl) orbEl.innerText = `${window.userData.orbs || 0}`;
-        if (avatarEl) avatarEl.src = window.userData.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${window.userData.uid}`;
+        if (emailEl) emailEl.innerText = window.userData.email || window.currentUser.email;
+        if (avatarEl) avatarEl.src = window.userData.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${window.currentUser.uid}`;
+
+        const titleMap = {
+          listener: '[Prep Room Listener]',
+          otaku: '[Otaku Lounge Member]',
+          rocker: '[J-Rock Specialist]',
+          producer: '[Prep Room B Producer] 🎟️',
+          crew: '[Phantom Crew] 🎟️'
+        };
+        if (titleBadgeEl) titleBadgeEl.innerText = titleMap[window.userData.equippedTitle] || '[Prep Room Listener]';
 
         if (inputName) inputName.value = window.userData.displayName || "";
+        if (inputBio) inputBio.value = window.userData.bio || "";
+        if (inputFav) inputFav.value = window.userData.favMember || "none";
+        if (inputAvatar) inputAvatar.value = window.userData.photoURL || "";
+
         if (safetyEmail) safetyEmail.innerText = window.userData.email || window.currentUser.email;
         if (safety13) safety13.innerText = window.userData.ageVerified13 ? "✅ Verified (13+)" : "❌ Not Verified";
         if (safety17) safety17.innerText = window.userData.ageVerified17 ? "✅ Verified (17+)" : "❌ Not Verified";
 
-        const now = Date.now();
-        const lastClaim = window.userData.lastDailyClaim || 0;
-        if (now - lastClaim < 24 * 60 * 60 * 1000 && claimBtn) {
-          claimBtn.innerText = "Claimed Today ✓";
-          claimBtn.style.opacity = "0.5";
-          claimBtn.style.cursor = "not-allowed";
-        } else if (claimBtn) {
-          claimBtn.innerText = "Claim +50 Orbs";
-          claimBtn.style.opacity = "1";
-          claimBtn.style.cursor = "pointer";
+        if (isVIP) {
+          if (tierPill) tierPill.className = "tier-pill vip-tier";
+          if (tierIcon) tierIcon.innerText = "🎟️";
+          if (tierName) tierName.innerText = "Backstage Pass VIP";
+          if (toggleVipBtn) toggleVipBtn.innerText = "Manage / Cancel VIP Subscription";
+        } else {
+          if (tierPill) tierPill.className = "tier-pill";
+          if (tierIcon) tierIcon.innerText = "🌸";
+          if (tierName) tierName.innerText = "Twilight Member";
+          if (toggleVipBtn) toggleVipBtn.innerText = "Unlock Backstage Pass VIP";
         }
 
         const frameSelect = document.getElementById('equip-frame-select');
         const glowSelect = document.getElementById('equip-glow-select');
+        const titleSelect = document.getElementById('equip-title-select');
+
         if (frameSelect) frameSelect.value = window.userData.equippedFrame || 'none';
         if (glowSelect) glowSelect.value = window.userData.equippedGlow || 'none';
+        if (titleSelect) titleSelect.value = window.userData.equippedTitle || 'listener';
+
+        const defMode = document.getElementById('setting-default-mode');
+        const autoPlay = document.getElementById('setting-autoplay');
+        const notifs = document.getElementById('setting-notifications');
+        const alerts = document.getElementById('setting-join-alerts');
+
+        if (defMode) defMode.value = localStorage.getItem('neko_setting_defaultMode') || 'twilight';
+        if (autoPlay) autoPlay.checked = localStorage.getItem('neko_setting_autoplay') === 'true';
+        if (notifs) notifs.checked = localStorage.getItem('neko_setting_notifications') === 'true';
+        if (alerts) alerts.checked = localStorage.getItem('neko_setting_joinAlerts') === 'true';
 
         updateAvatarFramePreview(window.userData.equippedFrame);
       }
@@ -727,12 +846,18 @@
       const frameOverlay = document.getElementById('user-avatar-frame-overlay');
       if (!frameOverlay) return;
 
-      if (frame === 'neon_purple') {
+      if (frame === 'sakura_pink') {
+        frameOverlay.style.border = "3px solid #f4b8c4";
+        frameOverlay.style.boxShadow = "0 0 10px #f4b8c4";
+      } else if (frame === 'cavern_purple') {
         frameOverlay.style.border = "3px solid #a88beb";
         frameOverlay.style.boxShadow = "0 0 12px #a88beb";
       } else if (frame === 'gold_aura') {
         frameOverlay.style.border = "3px solid #ffd166";
         frameOverlay.style.boxShadow = "0 0 14px #ffd166";
+      } else if (frame === 'neon_spotlight') {
+        frameOverlay.style.border = "3px solid #ff007f";
+        frameOverlay.style.boxShadow = "0 0 16px #ff007f";
       } else {
         frameOverlay.style.border = "2px solid transparent";
         frameOverlay.style.boxShadow = "none";
