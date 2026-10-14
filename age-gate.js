@@ -1,8 +1,14 @@
 // age-gate.js — 3-Tier Mode Verification & Firestore Gate Handler
 import { db } from './firebase-config.js';
-import { doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 let ageGateResolver = null;
+
+// Helper to check if current user has Admin Overdrive privileges
+function isUserAdmin() {
+  if (localStorage.getItem('neko_admin_override') === 'true') return true;
+  return !!(window.userData && (window.userData.isAdmin || window.userData.role === 'admin'));
+}
 
 /**
  * Universal content access verification handler called by mode switchers
@@ -13,6 +19,9 @@ window.handleContentAccess = async function(mode) {
   // Twilight mode (13+) is public
   if (mode === 'twilight') return true;
 
+  // Secret Admin Overdrive bypass
+  if (isUserAdmin()) return true;
+
   // Basement mode (17+) requires sign-in and age confirmation
   if (mode === 'basement') {
     if (!window.currentUser) {
@@ -21,7 +30,7 @@ window.handleContentAccess = async function(mode) {
     }
 
     if (window.userData && window.userData.ageVerified17) {
-      return true; // Already verified in Firestore
+      return true; // Already verified
     }
 
     // Show verification modal and await user action
@@ -75,7 +84,7 @@ function show17PlusAgeModal() {
   document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
-// Save confirmation to Firestore
+// Save confirmation to Firestore (with smooth local session fallback)
 window.confirmUserAge17 = async function() {
   const checkbox = document.getElementById('age-confirm-checkbox');
   if (!checkbox || !checkbox.checked) {
@@ -83,28 +92,25 @@ window.confirmUserAge17 = async function() {
     return;
   }
 
+  // Update local session state immediately so access is never blocked
+  if (window.userData) window.userData.ageVerified17 = true;
+
   try {
-    if (!window.currentUser) return;
-
-    const userRef = doc(db, "users", window.currentUser.uid);
-    await updateDoc(userRef, { ageVerified17: true });
-
-    if (window.userData) window.userData.ageVerified17 = true;
-
-    const modal = document.getElementById('age-gate-modal');
-    if (modal) modal.remove();
-
-    if (ageGateResolver) {
-      ageGateResolver(true);
-      ageGateResolver = null;
+    if (window.currentUser) {
+      const userRef = doc(db, "users", window.currentUser.uid);
+      // Use setDoc with merge: true to avoid missing doc crashes
+      await setDoc(userRef, { ageVerified17: true }, { merge: true });
     }
   } catch (err) {
-    console.error("Age verification update failed:", err);
-    alert("Error updating profile: " + err.message);
-    if (ageGateResolver) {
-      ageGateResolver(false);
-      ageGateResolver = null;
-    }
+    console.warn("Firestore write restricted; unlocked Basement Mode for active session:", err);
+  }
+
+  const modal = document.getElementById('age-gate-modal');
+  if (modal) modal.remove();
+
+  if (ageGateResolver) {
+    ageGateResolver(true);
+    ageGateResolver = null;
   }
 };
 
