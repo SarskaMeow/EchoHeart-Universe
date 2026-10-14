@@ -288,7 +288,7 @@
     .tab-content { display: none; }
     .tab-content.active-content { display: block; }
 
-    /* NEKO RADIO DUAL DECK STYLES */
+    /* NEKO RADIO DECK STYLES */
     .neko-radio-deck {
       background: rgba(15, 10, 30, 0.85);
       border: 1px solid rgba(168, 139, 235, 0.3);
@@ -297,41 +297,6 @@
       max-width: 680px;
       margin: 0 auto;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .radio-nav-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 18px;
-      background: rgba(8, 5, 18, 0.6);
-      padding: 6px;
-      border-radius: 12px;
-    }
-
-    .radio-tab-btn {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: #a092c0;
-      padding: 10px 14px;
-      font-weight: 800;
-      font-size: 0.85rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .radio-tab-btn.active {
-      background: rgba(168, 139, 235, 0.22);
-      color: #f4b8c4;
-      box-shadow: inset 0 0 10px rgba(244, 184, 196, 0.2);
-    }
-
-    .radio-tab-pane {
-      display: none;
-    }
-    .radio-tab-pane.active {
-      display: block;
     }
 
     /* Tuner Display Card */
@@ -1128,83 +1093,24 @@
     <div class="dashboard-tabs">
       <button class="tab-btn active-tab" onclick="switchTab('tuner-tab', this)">📻 24/7 Radio Tuner</button>
       <button class="tab-btn" onclick="switchTab('board-tab', this)">📋 Setlist Polls</button>
+      <button class="tab-btn" onclick="switchTab('youtube-tab', this)">📺 Neko Tube 24/7</button>
       <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 Girls Dead Phantom Hub</button>
     </div>
 
-    <!-- TAB 1: 24/7 RADIO TUNER (DUAL MODE: DIRECT + YOUTUBE) -->
+    <!-- TAB 1: 24/7 DIRECT RADIO TUNER -->
     <section id="tuner-tab" class="tab-content active-content">
       <div class="neko-radio-deck">
-        <!-- Radio Mode Selector Tabs -->
-        <div class="radio-nav-tabs">
-          <button class="radio-tab-btn active" id="tab-btn-direct" onclick="switchRadioTab('direct')">
-            📻 Direct Streams
-          </button>
-          <button class="radio-tab-btn" id="tab-btn-youtube" onclick="switchRadioTab('youtube')">
-            📺 Neko Tube 24/7
-          </button>
-        </div>
-
-        <!-- SUB-TAB 1: Original Audio Stream Player -->
-        <div id="radio-tab-direct" class="radio-tab-pane active">
-          <div class="tuner-card">
-            <h3 id="mode-badge-title">🌸 TWILIGHT BROADCAST STATIONS</h3>
-            <div class="frequency-display" id="freq-num">LISTEN.moe</div>
-            <p id="mode-desc-text">Streaming Japanese Vocaloid, Anime OSTs, and J-Pop live streams.</p>
-            
-            <!-- Preset Stations Grid -->
-            <div class="station-preset-grid" id="preset-grid">
-              <!-- Populated by JavaScript -->
-            </div>
-
-            <button class="action-btn" id="radio-play-btn" onclick="toggleRadioStream()">▶ Stream Live Signal</button>
+        <div class="tuner-card">
+          <h3 id="mode-badge-title">🌸 TWILIGHT BROADCAST STATIONS</h3>
+          <div class="frequency-display" id="freq-num">LISTEN.moe</div>
+          <p id="mode-desc-text">Streaming Japanese Vocaloid, Anime OSTs, and J-Pop live streams.</p>
+          
+          <!-- Preset Stations Grid -->
+          <div class="station-preset-grid" id="preset-grid">
+            <!-- Populated by JavaScript -->
           </div>
-        </div>
 
-        <!-- SUB-TAB 2: Custom YouTube 24/7 Radio Player -->
-        <div id="radio-tab-youtube" class="radio-tab-pane">
-          <div class="yt-radio-card">
-            <!-- Player LCD Display Header -->
-            <div class="lcd-header">
-              <span class="live-indicator"><span class="pulse-dot"></span> LIVE BROADCAST</span>
-              <span class="deck-model">NEKO-88 SYNTH DECK</span>
-            </div>
-
-            <!-- Main LCD Screen -->
-            <div class="lcd-screen">
-              <div class="lcd-meta">
-                <div class="lcd-station-name" id="yt-channel-title">COZY GHIBLI PIANO 🎹</div>
-                <div class="lcd-status-msg" id="yt-status-text">SYSTEM READY • CHOOSE FREQUENCY</div>
-              </div>
-              <div class="lcd-eq-bars" id="yt-eq-visualizer">
-                <span></span><span></span><span></span><span></span><span></span><span></span>
-              </div>
-            </div>
-
-            <!-- Station Preset Selector Buttons -->
-            <div class="station-presets">
-              <button class="preset-btn active" onclick="selectYTPreset(0)">🎹 Ghibli Piano</button>
-              <button class="preset-btn" onclick="selectYTPreset(1)">🌸 Lofi Anime</button>
-              <button class="preset-btn" onclick="selectYTPreset(2)">🎤 24/7 J-Pop</button>
-              <button class="preset-btn" onclick="selectYTPreset(3)">⚡ Cyber Synth</button>
-            </div>
-
-            <!-- Controls & Volume -->
-            <div class="radio-deck-controls">
-              <button id="yt-power-btn" class="power-btn" onclick="toggleYTRadioPower()">
-                ▶ PLAY
-              </button>
-              
-              <div class="volume-slider-group">
-                <span class="vol-icon">🔊</span>
-                <input type="range" id="yt-vol-slider" min="0" max="100" value="70" oninput="changeYTRadioVolume(this.value)">
-              </div>
-            </div>
-
-            <!-- Invisible YouTube Engine Target -->
-            <div class="hidden-yt-engine">
-              <div id="yt-audio-player-mount"></div>
-            </div>
-          </div>
+          <button class="action-btn" id="radio-play-btn" onclick="toggleRadioStream()">▶ Stream Live Signal</button>
         </div>
       </div>
     </section>
@@ -1258,7 +1164,56 @@
       </div>
     </section>
 
-    <!-- TAB 3: DISCOGRAPHY & PREVIEW HUB -->
+    <!-- TAB 3: DEDICATED YOUTUBE MUSIC (NEKO TUBE 24/7) -->
+    <section id="youtube-tab" class="tab-content">
+      <div class="neko-radio-deck">
+        <div class="yt-radio-card">
+          <!-- Player LCD Display Header -->
+          <div class="lcd-header">
+            <span class="live-indicator"><span class="pulse-dot"></span> LIVE BROADCAST</span>
+            <span class="deck-model">NEKO-88 SYNTH DECK</span>
+          </div>
+
+          <!-- Main LCD Screen -->
+          <div class="lcd-screen">
+            <div class="lcd-meta">
+              <div class="lcd-station-name" id="yt-channel-title">COZY GHIBLI PIANO 🎹</div>
+              <div class="lcd-status-msg" id="yt-status-text">SYSTEM READY • CHOOSE FREQUENCY</div>
+            </div>
+            <div class="lcd-eq-bars" id="yt-eq-visualizer">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+
+          <!-- Station Preset Selector Buttons -->
+          <div class="station-presets">
+            <button class="preset-btn active" onclick="selectYTPreset(0)">🎹 Ghibli Piano</button>
+            <button class="preset-btn" onclick="selectYTPreset(1)">🌸 Lofi Anime</button>
+            <button class="preset-btn" onclick="selectYTPreset(2)">🎤 24/7 J-Pop</button>
+            <button class="preset-btn" onclick="selectYTPreset(3)">⚡ Cyber Synth</button>
+          </div>
+
+          <!-- Controls & Volume -->
+          <div class="radio-deck-controls">
+            <button id="yt-power-btn" class="power-btn" onclick="toggleYTRadioPower()">
+              ▶ PLAY
+            </button>
+            
+            <div class="volume-slider-group">
+              <span class="vol-icon">🔊</span>
+              <input type="range" id="yt-vol-slider" min="0" max="100" value="70" oninput="changeYTRadioVolume(this.value)">
+            </div>
+          </div>
+
+          <!-- Invisible YouTube Engine Target -->
+          <div class="hidden-yt-engine">
+            <div id="yt-audio-player-mount"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: DISCOGRAPHY & PREVIEW HUB -->
     <section id="discography-tab" class="tab-content">
       
       <!-- Fancy Hero Band Header & Roster Banner -->
@@ -1321,7 +1276,7 @@
       <!-- Discography Section Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
-          💿 Official Studio Tracklist <span style="font-size: 0.8rem; color: #f4b8c4; font-weight: 600;">(20s Preview Teasers & Stem Downloads)</span>
+          CD Official Studio Tracklist <span style="font-size: 0.8rem; color: #f4b8c4; font-weight: 600;">(20s Preview Teasers & Stem Downloads)</span>
         </h3>
         <span style="font-size: 0.8rem; color: #cbb8f6;">Showing 10 Tracks</span>
       </div>
@@ -1471,39 +1426,6 @@
 
     let pollData = getStoredPollData();
 
-    /* DUAL RADIO DECK SWITCHER */
-    function switchRadioTab(tabName) {
-      const directPane = document.getElementById('radio-tab-direct');
-      const ytPane = document.getElementById('radio-tab-youtube');
-      const btnDirect = document.getElementById('tab-btn-direct');
-      const btnYT = document.getElementById('tab-btn-youtube');
-
-      if (tabName === 'youtube') {
-        directPane.classList.remove('active');
-        ytPane.classList.add('active');
-        btnDirect.classList.remove('active');
-        btnYT.classList.add('active');
-
-        // Stop direct audio stream if running
-        if (isStreaming) {
-          audioPlayer.pause();
-          isStreaming = false;
-          const btn = document.getElementById('radio-play-btn');
-          if (btn) btn.innerText = '▶ Stream Live Signal';
-        }
-      } else {
-        ytPane.classList.remove('active');
-        directPane.classList.add('active');
-        btnYT.classList.remove('active');
-        btnDirect.classList.add('active');
-        
-        // Pause YouTube audio when returning to direct tab
-        if (ytPlayerInstance && isYTRadioPlaying) {
-          ytPlayerInstance.pauseVideo();
-        }
-      }
-    }
-
     /* YOUTUBE IFRAME API CONTROLLER */
     function initYTApi() {
       if (window.YT && window.YT.Player) {
@@ -1574,7 +1496,7 @@
       currentPresetIdx = presetIndex;
       const selected = ytRadioPresets[presetIndex];
 
-      const btns = document.querySelectorAll('.station-presets .preset-btn');
+      const btns = document.querySelectorAll('#youtube-tab .station-presets .preset-btn');
       btns.forEach((b, idx) => b.classList.toggle('active', idx === presetIndex));
 
       const titleEl = document.getElementById('yt-channel-title');
