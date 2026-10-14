@@ -233,7 +233,6 @@
       border: 2px solid rgba(168, 139, 235, 0.35);
       border-radius: 20px;
       padding: 28px;
-      padding-bottom: 100px; /* Space for floating player */
       backdrop-filter: blur(14px);
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
       transition: border-color 0.4s ease;
@@ -299,45 +298,6 @@
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
     }
 
-    /* Tuner Display Card */
-    .tuner-card {
-      background: rgba(15, 10, 30, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 16px;
-      padding: 24px;
-      text-align: center;
-    }
-
-    .frequency-display {
-      font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 2rem;
-      color: #f4b8c4;
-      margin: 10px 0;
-      font-weight: 800;
-      text-shadow: 0 0 14px rgba(244, 184, 196, 0.5);
-    }
-
-    body.basement-mode .frequency-display {
-      color: #ff4d6d;
-      text-shadow: 0 0 14px rgba(255, 77, 109, 0.6);
-    }
-
-    body.backstage-mode .frequency-display {
-      color: #ffd166;
-      text-shadow: 0 0 14px rgba(255, 209, 102, 0.6);
-    }
-
-    .station-preset-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin: 20px 0;
-    }
-
-    @media (max-width: 600px) {
-      .station-preset-grid { grid-template-columns: 1fr; }
-    }
-
     .preset-btn {
       background: rgba(45, 34, 80, 0.8);
       border: 1px solid rgba(168, 139, 235, 0.4);
@@ -371,14 +331,6 @@
       background: linear-gradient(135deg, #ffd166, #ff007f);
       color: #000000;
       border-color: #ffd166;
-    }
-
-    .preset-genre {
-      display: block;
-      font-size: 0.72rem;
-      opacity: 0.8;
-      font-weight: 600;
-      margin-top: 2px;
     }
 
     .action-btn, .power-btn {
@@ -1257,37 +1209,9 @@
     </section>
   </main>
 
-  <!-- Docked Persistent Floating Mini-Player -->
-  <div id="persistent-player-bar" class="mini-player-bar hidden">
-    <div class="mini-player-content">
-      
-      <!-- Track & Speaker Info -->
-      <div class="mini-track-info">
-        <div class="mini-speaker-avatar" id="mini-avatar-box">📻</div>
-        <div class="mini-text-details">
-          <span class="mini-track-title" id="mini-track-title">24/7 Neko FM Stream</span>
-          <span class="mini-speaker-name" id="mini-speaker-name">Ready to play</span>
-        </div>
-      </div>
-
-      <!-- Center Playback Controls & Progress Bar -->
-      <div class="mini-player-controls">
-        <button id="mini-play-btn" class="mini-control-btn" onclick="toggleGlobalPlayback()">▶</button>
-        <div class="mini-progress-wrapper" onclick="seekGlobalAudio(event)">
-          <span id="mini-time-current" class="mini-time">00:00</span>
-          <div class="mini-progress-track">
-            <div id="mini-progress-fill" class="mini-progress-fill"></div>
-          </div>
-          <span id="mini-time-total" class="mini-time">03:12</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
   <script src="global-player.js"></script>
   <script>
-    // Master Radio Stations Repository with 100% Verified Direct Audio Stream Endpoints
+    // Master Radio Stations Repository
     const RADIO_STATIONS = {
       twilight: [
         { freq: "98.4 FM", name: "LISTEN.moe (24/7 Anime & Vocaloid)", genre: "Anime & Vocaloid Stream", url: "http://kathy.torontocast.com:3350/stream" },
@@ -1324,7 +1248,7 @@
     ];
 
     // ==========================================
-    // NEKO SYNTH DECK ENGINE STATE & CONTROLLER (PURE HTML5 DIRECT STREAMS)
+    // NEKO SYNTH DECK ENGINE STATE & CONTROLLER
     // ==========================================
     const synthPresets = [
       { name: "LISTEN.moe (Anime & Vocaloid HQ) 🌸", url: "https://kathy.torontocast.com:3350/stream", desc: "24/7 Anime OSTs, Vocaloid & J-Pop Stream" },
@@ -1337,15 +1261,15 @@
     let isSynthPlaying = false;
     const synthAudioPlayer = document.getElementById('synth-deck-audio');
 
+    function syncRadioState(isPlaying, url, title, speaker) {
+      localStorage.setItem('neko_radio_playing', isPlaying ? 'true' : 'false');
+      if (url) localStorage.setItem('neko_radio_url', url);
+      if (title) localStorage.setItem('neko_radio_title', title);
+      if (speaker) localStorage.setItem('neko_radio_speaker', speaker);
+    }
+
     function toggleSynthPower() {
       stopActivePreview();
-
-      if (isStreaming) {
-        audioPlayer.pause();
-        isStreaming = false;
-        const btn = document.getElementById('radio-play-btn');
-        if (btn) btn.innerText = '▶ Stream Live Signal';
-      }
 
       const statusMsg = document.getElementById('yt-status-text');
       const powerBtn = document.getElementById('yt-power-btn');
@@ -1354,6 +1278,7 @@
       if (isSynthPlaying) {
         synthAudioPlayer.pause();
         isSynthPlaying = false;
+        syncRadioState(false);
         if (statusMsg) statusMsg.innerText = "STANDBY • PRESS PLAY";
         if (powerBtn) powerBtn.innerText = "▶ PLAY";
         if (eqVisualizer) eqVisualizer.classList.remove('playing');
@@ -1365,6 +1290,7 @@
 
         synthAudioPlayer.play().then(() => {
           isSynthPlaying = true;
+          syncRadioState(true, preset.url, preset.name, preset.desc);
           if (statusMsg) statusMsg.innerText = "STREAMING • " + preset.desc;
           if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
           if (eqVisualizer) eqVisualizer.classList.add('playing');
@@ -1388,6 +1314,7 @@
       if (isSynthPlaying) {
         synthAudioPlayer.src = selected.url;
         synthAudioPlayer.play().then(() => {
+          syncRadioState(true, selected.url, selected.name, selected.desc);
           const statusMsg = document.getElementById('yt-status-text');
           if (statusMsg) statusMsg.innerText = "STREAMING • " + selected.desc;
         }).catch(err => console.error(err));
@@ -1426,10 +1353,6 @@
     }
 
     let currentMode = 'twilight';
-    let selectedStationIndex = 0;
-    let isStreaming = false;
-
-    // Timer Engine State
     let masterTimerInterval = null;
     let previewTimerInterval = null;
     let previewTimeRemaining = 0;
@@ -1438,7 +1361,6 @@
 
     const audioPlayer = document.getElementById('radio-audio-player');
 
-    // User Auth & Tier State
     let userState = {
       isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
       isVIP: localStorage.getItem('neko_is_vip') === 'true'
@@ -1481,12 +1403,7 @@
       currentMode = targetMode;
       localStorage.setItem('neko_active_mode', targetMode);
       applyThemeMode(targetMode);
-
-      selectedStationIndex = 0;
-      renderStationPresets();
       renderDiscography();
-
-      if (isStreaming) selectStation(0);
     }
 
     function getCurrentMode() {
@@ -1496,66 +1413,9 @@
     function applyThemeMode(mode) {
       const body = document.body;
       const selector = document.getElementById('mode-selector');
-      const badgeTitle = document.getElementById('mode-badge-title');
-      const descText = document.getElementById('mode-desc-text');
-
       body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
       body.classList.add(`${mode}-mode`);
-
       if (selector) selector.value = mode;
-
-      if (badgeTitle && descText) {
-        if (mode === 'basement') {
-          badgeTitle.innerText = '⚡ SECRET CONCERT UNDERGROUND STATIONS';
-          descText.innerText = 'Streaming dark pop, high-energy J-Rock, and subterranean Girls Dead Phantom riffs.';
-        } else if (mode === 'backstage') {
-          badgeTitle.innerText = '🎟️ VIP BACKSTAGE STUDIO STREAMS';
-          descText.innerText = 'Streaming unreleased Girls Dead Phantom stems, cavern acoustics, and master audio feeds.';
-        } else {
-          badgeTitle.innerText = '🌸 TWILIGHT BROADCAST STATIONS';
-          descText.innerText = 'Streaming Japanese Vocaloid, Anime OSTs, and J-Pop live streams.';
-        }
-      }
-    }
-
-    function renderStationPresets() {
-      const gridContainer = document.getElementById('preset-grid');
-      if (!gridContainer) return;
-      gridContainer.innerHTML = '';
-
-      const stations = RADIO_STATIONS[currentMode] || RADIO_STATIONS.twilight;
-      stations.forEach((station, index) => {
-        const btn = document.createElement('button');
-        btn.className = `preset-btn ${index === selectedStationIndex ? 'active-preset' : ''}`;
-        btn.onclick = () => selectStation(index);
-        btn.innerHTML = `
-          ${station.name}
-          <span class="preset-genre">${station.genre}</span>
-        `;
-        gridContainer.appendChild(btn);
-      });
-
-      const freqEl = document.getElementById('freq-num');
-      if (freqEl) freqEl.innerText = stations[selectedStationIndex].name;
-    }
-
-    function selectStation(index) {
-      selectedStationIndex = index;
-      renderStationPresets();
-
-      const stations = RADIO_STATIONS[currentMode] || RADIO_STATIONS.twilight;
-      const st = stations[selectedStationIndex];
-      audioPlayer.src = st.url;
-
-      localStorage.setItem('echo_audio_src', st.url);
-      localStorage.setItem('echo_audio_title', st.name);
-      localStorage.setItem('echo_audio_speaker', st.genre);
-      localStorage.setItem('echo_audio_avatar', '📻');
-      localStorage.setItem('echo_audio_mode', 'radio');
-
-      if (isStreaming) {
-        audioPlayer.play().catch(err => console.log("Audio playback error:", err));
-      }
     }
 
     function initMasterTimers() {
@@ -1627,16 +1487,10 @@
         toggleSynthPower();
       }
 
-      localStorage.setItem('echo_audio_src', winner.streamUrl);
-      localStorage.setItem('echo_audio_title', winner.title);
-      localStorage.setItem('echo_audio_speaker', winner.performers);
-      localStorage.setItem('echo_audio_avatar', '🌸');
-      localStorage.setItem('echo_audio_mode', 'radio');
-
       if (audioPlayer.src !== winner.streamUrl || audioPlayer.paused) {
         audioPlayer.src = winner.streamUrl;
         audioPlayer.play().then(() => {
-          isStreaming = true;
+          syncRadioState(true, winner.streamUrl, winner.title, winner.performers);
           if (btn) btn.innerText = "⏸ Pause Premiere";
         }).catch(err => {
           console.log("Audio play error:", err);
@@ -1644,7 +1498,7 @@
         });
       } else {
         audioPlayer.pause();
-        isStreaming = false;
+        syncRadioState(false);
         if (btn) btn.innerText = "▶ Stream Premiere";
       }
     }
@@ -1661,16 +1515,10 @@
         toggleSynthPower();
       }
 
-      localStorage.setItem('echo_audio_src', url);
-      localStorage.setItem('echo_audio_title', trackTitle);
-      localStorage.setItem('echo_audio_speaker', userState.isVIP ? 'Girls Dead Phantom VIP Lossless Audio' : 'Girls Dead Phantom Teaser');
-      localStorage.setItem('echo_audio_avatar', '💿');
-      localStorage.setItem('echo_audio_mode', 'radio');
-
       audioPlayer.src = url;
       audioPlayer.play().then(() => {
-        isStreaming = true;
         activePreviewTrackId = trackId;
+        syncRadioState(true, url, trackTitle, userState.isVIP ? 'Girls Dead Phantom VIP Lossless Audio' : 'Girls Dead Phantom Teaser');
         
         if (userState.isVIP) {
           renderDiscography();
@@ -1709,7 +1557,7 @@
       audioPlayer.pause();
       if (synthAudioPlayer) synthAudioPlayer.pause();
       isSynthPlaying = false;
-      isStreaming = false;
+      syncRadioState(false);
       activePreviewTrackId = null;
       previewTimeRemaining = 0;
       
@@ -1885,39 +1733,6 @@
       btnEl.classList.add('active-tab');
     }
 
-    function toggleRadioStream() {
-      const btn = document.getElementById('radio-play-btn');
-      const stations = RADIO_STATIONS[currentMode] || RADIO_STATIONS.twilight;
-      const st = stations[selectedStationIndex];
-
-      stopActivePreview();
-
-      if (isSynthPlaying) {
-        toggleSynthPower();
-      }
-
-      localStorage.setItem('echo_audio_src', st.url);
-      localStorage.setItem('echo_audio_title', st.name);
-      localStorage.setItem('echo_audio_speaker', st.genre);
-      localStorage.setItem('echo_audio_avatar', '📻');
-      localStorage.setItem('echo_audio_mode', 'radio');
-
-      if (!isStreaming) {
-        audioPlayer.src = st.url;
-        audioPlayer.play().then(() => {
-          isStreaming = true;
-          btn.innerText = '⏸ Pause Radio Stream';
-        }).catch(err => {
-          console.log("Playback error:", err);
-          alert("Click again or select another station to allow audio playback!");
-        });
-      } else {
-        audioPlayer.pause();
-        isStreaming = false;
-        btn.innerText = '▶ Stream Live Signal';
-      }
-    }
-
     function toggleMobileMenu() {
       const navMenu = document.getElementById('nav-menu');
       if (navMenu) navMenu.classList.toggle('open');
@@ -1983,7 +1798,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       currentMode = getCurrentMode();
       applyThemeMode(currentMode);
-      renderStationPresets();
       renderSetlistPolls();
       renderDiscography();
       initMasterTimers();
