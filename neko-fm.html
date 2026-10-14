@@ -1354,7 +1354,9 @@
       { id: 'gdp-10', trackNo: '10', title: 'After Dark Distortion', type: 'Uncompressed Master Stem', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.zeno.fm/054a1078s0hvv' }
     ];
 
-    // YOUTUBE 24/7 RADIO ENGINE STATE
+    // ==========================================
+    // YOUTUBE 24/7 RADIO ENGINE STATE & CONTROLLER
+    // ==========================================
     const ytRadioPresets = [
       { name: "COZY GHIBLI PIANO 🎹", videoId: "36YnV9STBkc", desc: "Studio Ghibli Relaxing Piano Live" },
       { name: "LOFI ANIME BEATS 🌸", videoId: "jfKfPfyJRdk", desc: "24/7 Chill Lofi Hip Hop Study Radio" },
@@ -1365,6 +1367,102 @@
     let ytPlayerInstance = null;
     let currentPresetIdx = 0;
     let isYTRadioPlaying = false;
+
+    /* YOUTUBE IFRAME API CONTROLLER */
+    function initYTApi() {
+      if (window.YT && window.YT.Player) {
+        onYouTubeIframeAPIReady();
+        return;
+      }
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+
+    window.onYouTubeIframeAPIReady = function() {
+      ytPlayerInstance = new YT.Player('yt-audio-player-mount', {
+        videoId: ytRadioPresets[0].videoId,
+        playerVars: {
+          'autoplay': 0,
+          'controls': 0,
+          'disablekb': 1,
+          'fs': 0,
+          'modestbranding': 1,
+          'playsinline': 1
+        },
+        events: {
+          'onReady': (evt) => evt.target.setVolume(70),
+          'onStateChange': handleYTStateChange
+        }
+      });
+    };
+
+    function handleYTStateChange(event) {
+      const statusMsg = document.getElementById('yt-status-text');
+      const powerBtn = document.getElementById('yt-power-btn');
+      const eqVisualizer = document.getElementById('yt-eq-visualizer');
+
+      if (event.data === YT.PlayerState.PLAYING) {
+        isYTRadioPlaying = true;
+        if (statusMsg) statusMsg.innerText = "STREAMING • " + ytRadioPresets[currentPresetIdx].desc;
+        if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
+        if (eqVisualizer) eqVisualizer.classList.add('playing');
+      } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+        isYTRadioPlaying = false;
+        if (statusMsg) statusMsg.innerText = "STANDBY • PRESS PLAY";
+        if (powerBtn) powerBtn.innerText = "▶ PLAY";
+        if (eqVisualizer) eqVisualizer.classList.remove('playing');
+      } else if (event.data === YT.PlayerState.BUFFERING) {
+        if (statusMsg) statusMsg.innerText = "BUFFERING SIGNAL...";
+      }
+    }
+
+    function toggleYTRadioPower() {
+      if (!ytPlayerInstance) return;
+      stopActivePreview();
+
+      if (isStreaming) {
+        audioPlayer.pause();
+        isStreaming = false;
+        const btn = document.getElementById('radio-play-btn');
+        if (btn) btn.innerText = '▶ Stream Live Signal';
+      }
+
+      if (isYTRadioPlaying) {
+        ytPlayerInstance.pauseVideo();
+      } else {
+        ytPlayerInstance.playVideo();
+      }
+    }
+
+    function selectYTPreset(presetIndex) {
+      currentPresetIdx = presetIndex;
+      const selected = ytRadioPresets[presetIndex];
+
+      const btns = document.querySelectorAll('#youtube-tab .station-presets .preset-btn');
+      btns.forEach((b, idx) => b.classList.toggle('active', idx === presetIndex));
+
+      const titleEl = document.getElementById('yt-channel-title');
+      if (titleEl) titleEl.innerText = selected.name;
+
+      if (ytPlayerInstance && typeof ytPlayerInstance.loadVideoById === 'function') {
+        stopActivePreview();
+        if (isStreaming) {
+          audioPlayer.pause();
+          isStreaming = false;
+          const btn = document.getElementById('radio-play-btn');
+          if (btn) btn.innerText = '▶ Stream Live Signal';
+        }
+        ytPlayerInstance.loadVideoById(selected.videoId);
+      }
+    }
+
+    function changeYTRadioVolume(val) {
+      if (ytPlayerInstance && typeof ytPlayerInstance.setVolume === 'function') {
+        ytPlayerInstance.setVolume(val);
+      }
+    }
 
     // Helper: Generate 4 random songs from the catalog for the hourly poll
     function generateRandomPollItems() {
@@ -1425,93 +1523,6 @@
     }
 
     let pollData = getStoredPollData();
-
-    /* YOUTUBE IFRAME API CONTROLLER */
-    function initYTApi() {
-      if (window.YT && window.YT.Player) {
-        onYouTubeIframeAPIReady();
-        return;
-      }
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    }
-
-    window.onYouTubeIframeAPIReady = function() {
-      ytPlayerInstance = new YT.Player('yt-audio-player-mount', {
-        videoId: ytRadioPresets[0].videoId,
-        playerVars: {
-          'autoplay': 0,
-          'controls': 0,
-          'disablekb': 1,
-          'fs': 0,
-          'modestbranding': 1,
-          'playsinline': 1
-        },
-        events: {
-          'onReady': (evt) => evt.target.setVolume(70),
-          'onStateChange': handleYTStateChange
-        }
-      });
-    };
-
-    function handleYTStateChange(event) {
-      const statusMsg = document.getElementById('yt-status-text');
-      const powerBtn = document.getElementById('yt-power-btn');
-      const eqVisualizer = document.getElementById('yt-eq-visualizer');
-
-      if (event.data === YT.PlayerState.PLAYING) {
-        isYTRadioPlaying = true;
-        if (statusMsg) statusMsg.innerText = "STREAMING • " + ytRadioPresets[currentPresetIdx].desc;
-        if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
-        if (eqVisualizer) eqVisualizer.classList.add('playing');
-      } else {
-        isYTRadioPlaying = false;
-        if (statusMsg) statusMsg.innerText = "STANDBY • PRESS PLAY";
-        if (powerBtn) powerBtn.innerText = "▶ PLAY";
-        if (eqVisualizer) eqVisualizer.classList.remove('playing');
-      }
-    }
-
-    function toggleYTRadioPower() {
-      if (!ytPlayerInstance) return;
-      stopActivePreview();
-
-      if (isStreaming) {
-        audioPlayer.pause();
-        isStreaming = false;
-        const btn = document.getElementById('radio-play-btn');
-        if (btn) btn.innerText = '▶ Stream Live Signal';
-      }
-
-      if (isYTRadioPlaying) {
-        ytPlayerInstance.pauseVideo();
-      } else {
-        ytPlayerInstance.playVideo();
-      }
-    }
-
-    function selectYTPreset(presetIndex) {
-      currentPresetIdx = presetIndex;
-      const selected = ytRadioPresets[presetIndex];
-
-      const btns = document.querySelectorAll('#youtube-tab .station-presets .preset-btn');
-      btns.forEach((b, idx) => b.classList.toggle('active', idx === presetIndex));
-
-      const titleEl = document.getElementById('yt-channel-title');
-      if (titleEl) titleEl.innerText = selected.name;
-
-      if (ytPlayerInstance && typeof ytPlayerInstance.loadVideoById === 'function') {
-        ytPlayerInstance.loadVideoById(selected.videoId);
-      }
-    }
-
-    function changeYTRadioVolume(val) {
-      if (ytPlayerInstance && typeof ytPlayerInstance.setVolume === 'function') {
-        ytPlayerInstance.setVolume(val);
-      }
-    }
 
     function handleModeChange(targetMode) {
       const selector = document.getElementById('mode-selector');
