@@ -1263,7 +1263,28 @@
 
     let currentSynthPresetIdx = 0;
     let isSynthPlaying = false;
+    let trackRefreshTimer = null;
     const synthAudioPlayer = document.getElementById('synth-deck-audio');
+
+    // Starts or resets the 15-second background refresh loop
+    function startTrackRefreshTimer() {
+      stopTrackRefreshTimer();
+      triggerShazamFingerprint();
+
+      trackRefreshTimer = setInterval(() => {
+        if (isSynthPlaying && synthAudioPlayer && !synthAudioPlayer.paused) {
+          triggerShazamFingerprint();
+        }
+      }, 15000);
+    }
+
+    // Stops background track metadata refresh timer
+    function stopTrackRefreshTimer() {
+      if (trackRefreshTimer) {
+        clearInterval(trackRefreshTimer);
+        trackRefreshTimer = null;
+      }
+    }
 
     function syncRadioState(isPlaying, url, title, speaker) {
       localStorage.setItem('neko_radio_playing', isPlaying ? 'true' : 'false');
@@ -1282,6 +1303,7 @@
       if (isSynthPlaying) {
         synthAudioPlayer.pause();
         isSynthPlaying = false;
+        stopTrackRefreshTimer();
         syncRadioState(false);
         if (statusMsg) statusMsg.innerText = "STANDBY • PRESS PLAY";
         if (powerBtn) powerBtn.innerText = "▶ PLAY";
@@ -1298,6 +1320,7 @@
           if (statusMsg) statusMsg.innerText = "STREAMING • " + preset.desc;
           if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
           if (eqVisualizer) eqVisualizer.classList.add('playing');
+          startTrackRefreshTimer();
         }).catch(err => {
           console.error("Playback error:", err);
           alert("Click PLAY again to allow browser audio playback!");
@@ -1321,8 +1344,10 @@
           syncRadioState(true, selected.url, selected.name, selected.desc);
           const statusMsg = document.getElementById('yt-status-text');
           if (statusMsg) statusMsg.innerText = "STREAMING • " + selected.desc;
+          startTrackRefreshTimer();
         }).catch(err => console.error(err));
       } else {
+        triggerShazamFingerprint();
         const statusMsg = document.getElementById('yt-status-text');
         if (statusMsg) statusMsg.innerText = "READY • " + selected.desc;
       }
@@ -1335,54 +1360,55 @@
     }
 
     /**
-     * Fetches live artist and song title from TorontoCast Icecast status API via CORS proxy fallbacks
+     * Fetches live artist and song title from AWS Lambda ICY extractor
      */
-   async function triggerShazamFingerprint() {
-  const statusMsgEl = document.getElementById('yt-status-text');
-  const titleEl = document.getElementById('yt-channel-title');
+    async function triggerShazamFingerprint() {
+      const statusMsgEl = document.getElementById('yt-status-text');
+      const titleEl = document.getElementById('yt-channel-title');
 
-  if (statusMsgEl) statusMsgEl.innerText = "🔍 FETCHING LIVE TRACK INFO...";
+      if (statusMsgEl) statusMsgEl.innerText = "🔍 FETCHING LIVE TRACK INFO...";
 
-  const currentPreset = synthPresets[currentSynthPresetIdx];
-  
-  // 🔗 Replace with your actual AWS Lambda Function URL
-  const lambdaUrl = "https://5x4kcoismesnfh7b5rcqllrcau0pxdbt.lambda-url.us-east-2.on.aws/";
-  const endpoint = `${lambdaUrl}?url=${encodeURIComponent(currentPreset.url)}`;
+      const currentPreset = synthPresets[currentSynthPresetIdx];
+      
+      // 🔗 AWS Lambda Function URL
+      const lambdaUrl = "https://5x4kcoismesnfh7b5rcqllrcau0pxdbt.lambda-url.us-east-2.on.aws/";
+      const endpoint = `${lambdaUrl}?url=${encodeURIComponent(currentPreset.url)}`;
 
-  try {
-    const res = await fetch(endpoint);
-    const data = await res.json();
+      try {
+        const res = await fetch(endpoint);
+        const data = await res.json();
 
-    if (data.success && (data.title || data.raw)) {
-      // 1. Smart Split handling all dash variants (hyphen, en-dash, em-dash, full-width)
-      const rawString = data.raw || `${data.artist} - ${data.title}`;
-      const parts = rawString.split(/\s*[-–—－]\s*/);
+        if (data.success && (data.title || data.raw)) {
+          // 1. Smart Split handling all dash variants (hyphen, en-dash, em-dash, full-width)
+          const rawString = data.raw || `${data.artist} - ${data.title}`;
+          const parts = rawString.split(/\s*[-–—－]\s*/);
 
-      let artistName = data.artist;
-      let trackTitle = data.title;
+          let artistName = data.artist;
+          let trackTitle = data.title;
 
-      if (parts.length >= 2) {
-        artistName = parts[0].trim();
-        trackTitle = parts.slice(1).join(' - ').trim();
-      } else {
-        trackTitle = rawString.trim();
-        artistName = currentPreset.name;
+          if (parts.length >= 2) {
+            artistName = parts[0].trim();
+            trackTitle = parts.slice(1).join(' - ').trim();
+          } else {
+            trackTitle = rawString.trim();
+            artistName = currentPreset.name;
+          }
+
+          // 2. Display track title on top line and artist on status line
+          if (titleEl) titleEl.innerText = `🎵 ${trackTitle}`;
+          if (statusMsgEl) statusMsgEl.innerText = `🎤 ${artistName} • ${currentPreset.name}`;
+
+        } else {
+          if (titleEl) titleEl.innerText = currentPreset.name;
+          if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
+        }
+      } catch (err) {
+        console.error("Metadata fetch error:", err);
+        if (titleEl) titleEl.innerText = currentPreset.name;
+        if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
       }
-
-      // 2. Display track title on top line and artist on status line
-      if (titleEl) titleEl.innerText = `🎵 ${trackTitle}`;
-      if (statusMsgEl) statusMsgEl.innerText = `🎤 ${artistName} • ${currentPreset.name}`;
-
-    } else {
-      if (titleEl) titleEl.innerText = currentPreset.name;
-      if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
     }
-  } catch (err) {
-    console.error("Metadata fetch error:", err);
-    if (titleEl) titleEl.innerText = currentPreset.name;
-    if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
-  }
-}
+
     // Helper: Generate 4 random songs from the catalog for the hourly poll
     function generateRandomPollItems() {
       const performerOptions = [
@@ -1610,6 +1636,7 @@
       audioPlayer.pause();
       if (synthAudioPlayer) synthAudioPlayer.pause();
       isSynthPlaying = false;
+      stopTrackRefreshTimer();
       syncRadioState(false);
       activePreviewTrackId = null;
       previewTimeRemaining = 0;
