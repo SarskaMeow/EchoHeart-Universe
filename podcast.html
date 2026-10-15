@@ -500,8 +500,8 @@
 
       <div class="time-display-bar">
         <span id="ep-time-current">00:00</span>
-        <span id="ep-time-total" style="opacity: 0.7;">Total Length: 02:10</span>
-        <span id="ep-time-remaining">Remaining: -02:10</span>
+        <span id="ep-time-total" style="opacity: 0.7;">Total Length: 03:06</span>
+        <span id="ep-time-remaining">Remaining: -03:06</span>
       </div>
 
       <div class="progress-bar-container" id="progress-bar-track" onclick="seekPodcast(event)">
@@ -531,12 +531,14 @@
     }
 
     function parseRuntimeSeconds(str) {
-      if (!str) return 130;
+      if (!str) return 186;
       const parts = str.split(':');
       if (parts.length === 2) {
+        return parseInt(parts[0], 10) * 60 + parseFloat(parts[1]);
+      } else if (parts.length === 3) {
         return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
       }
-      return 130;
+      return 186;
     }
 
     // Accurate Spoken-Cadence Keyframes (Calibrated to Real Spoken Audio WPM)
@@ -544,7 +546,7 @@
       twilight: [
         {
   title: "EchoHeart Whisper Podcast EP-1",
-  runtime: "03:06:13",
+  runtime: "03:06",
   audioUrl: "assets/audio/EchoHeart Whisper Podcast EP-1.mp3",
   tag: "Free",
   script: [
@@ -625,7 +627,7 @@
     let clockTimer = null;
     let syncInterval = null;
     let elapsedSeconds = 0;
-    let totalSeconds = 130;
+    let totalSeconds = 186;
 
     const audioElement = document.getElementById('audio-player');
 
