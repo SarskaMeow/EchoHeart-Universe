@@ -544,7 +544,6 @@
       isVIP: localStorage.getItem('neko_is_vip') === 'true'
     };
 
-    // Helper to format seconds into mm:ss
     function formatTime(sec) {
       if (isNaN(sec) || sec < 0) return "00:00";
       const m = Math.floor(sec / 60);
@@ -835,19 +834,23 @@
 
       if (!ep || !ep.script || ep.script.length === 0) return;
 
-      const currentTime = (ep.audioUrl && audioElement.src && !audioElement.paused)
-                          ? audioElement.currentTime
-                          : elapsedSeconds;
+      const scriptMaxTime = ep.script.reduce((max, line) => {
+        const lineEnd = line.endTime !== undefined ? line.endTime : line.startTime;
+        return Math.max(max, lineEnd);
+      }, 0) || totalSeconds;
+
+      const hasLiveAudio = audioElement && audioElement.src && !audioElement.paused && audioElement.duration && !isNaN(audioElement.duration);
+      const scaleFactor = hasLiveAudio ? (scriptMaxTime / audioElement.duration) : 1;
+      const effectiveTime = hasLiveAudio ? (audioElement.currentTime * scaleFactor) : elapsedSeconds;
 
       let activeLine = null;
-
       for (let i = 0; i < ep.script.length; i++) {
         const line = ep.script[i];
         const nextLine = ep.script[i + 1];
         const start = line.startTime;
-        const end = (line.endTime !== undefined) ? line.endTime : (nextLine ? nextLine.startTime : totalSeconds);
+        const end = (line.endTime !== undefined) ? line.endTime : (nextLine ? nextLine.startTime : scriptMaxTime);
 
-        if (currentTime >= start && currentTime < end) {
+        if (effectiveTime >= start && effectiveTime < end) {
           activeLine = line;
           break;
         }
