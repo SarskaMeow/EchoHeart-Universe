@@ -1124,9 +1124,7 @@
               ▶ PLAY
             </button>
             
-            <button class="preset-btn" onclick="triggerShazamFingerprint()" style="text-align: center;">
-              🔍 Identify Track
-            </button>
+
 
             <div class="volume-slider-group">
               <span class="vol-icon">🔊</span>
@@ -1269,11 +1267,9 @@
     // Starts or resets the 15-second background refresh loop
     function startTrackRefreshTimer() {
       stopTrackRefreshTimer();
-      triggerShazamFingerprint();
 
       trackRefreshTimer = setInterval(() => {
-        if (isSynthPlaying && synthAudioPlayer && !synthAudioPlayer.paused) {
-          triggerShazamFingerprint();
+        if (isSynthPlaying && synthAudioPlayer && !synthAudioPlayer.paused) {  
         }
       }, 15000);
     }
