@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Whisper Radio Podcast Studio — EchoHeart</title>
   <link rel="stylesheet" href="style.css">
+  <script type="module" src="firebase-config.js"></script>
   <style>
     :root {
       --nav-bg-twilight: rgba(18, 12, 36, 0.94);
@@ -423,7 +424,6 @@
     .stripe-btn { background: linear-gradient(135deg, #ff007f, #ffd166); color: #000; }
     .close-btn { background: transparent; color: #a88beb; border: 1px solid rgba(168, 139, 235, 0.3); }
   </style>
-  <script type="module" src="firebase-config.js"></script>
 </head>
 <body class="twilight-mode">
 
@@ -645,7 +645,6 @@
     let currentEpisodeIdx = 0;
     let isPlaying = false;
     let clockTimer = null;
-    let animFrameId = null;
     let elapsedSeconds = 0;
     let totalSeconds = 192;
 
@@ -751,6 +750,7 @@
 
         if (ep.audioUrl) {
           audioElement.src = ep.audioUrl;
+          audioElement.load();
         } else {
           audioElement.removeAttribute('src');
         }
@@ -783,12 +783,21 @@
       const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
       const ep = episodes[currentEpisodeIdx];
 
-      if (ep && ep.audioUrl && audioElement.src) {
+      if (ep && ep.audioUrl) {
         audioElement.play().then(() => {
-          runHighPrecisionSync();
-        }).catch(() => {
+          syncSpeakerDialogue();
+        }).catch((err) => {
+          console.warn("MP3 audio file not found or blocked, running timer simulation:", err);
           runSimulatedTimer();
         });
+
+        audioElement.ontimeupdate = () => {
+          if (!isPlaying) return;
+          elapsedSeconds = audioElement.currentTime;
+          totalSeconds = (audioElement.duration && !isNaN(audioElement.duration)) ? audioElement.duration : parseRuntimeSeconds(ep.runtime);
+          updateTimeUI(elapsedSeconds, totalSeconds);
+          syncSpeakerDialogue();
+        };
 
         audioElement.onended = () => {
           stopPlayback();
@@ -798,21 +807,6 @@
 
       } else {
         runSimulatedTimer();
-      }
-    }
-
-    // High-Precision 60fps Frame Sync Loop for Audio Playback
-    function runHighPrecisionSync() {
-      if (!isPlaying) return;
-
-      elapsedSeconds = audioElement.currentTime;
-      totalSeconds = audioElement.duration || parseRuntimeSeconds(EPISODES_BY_MODE[getCurrentMode()][currentEpisodeIdx]?.runtime);
-
-      updateTimeUI(elapsedSeconds, totalSeconds);
-      syncSpeakerDialogue();
-
-      if (!audioElement.paused) {
-        animFrameId = requestAnimationFrame(runHighPrecisionSync);
       }
     }
 
@@ -851,7 +845,7 @@
         const line = ep.script[i];
         const nextLine = ep.script[i + 1];
         const start = line.startTime;
-        const end = line.endTime !== undefined ? line.endTime : (nextLine ? nextLine.startTime : totalSeconds);
+        const end = (line.endTime !== undefined) ? line.endTime : (nextLine ? nextLine.startTime : totalSeconds);
 
         if (currentTime >= start && currentTime < end) {
           activeLine = line;
@@ -862,4 +856,123 @@
       document.querySelectorAll('.speaker-avatar').forEach(a => a.classList.remove('speaking'));
 
       if (activeLine) {
-        const active
+        const activeAvatar = document.getElementById(`spk-${activeLine.speaker}`);
+        if (activeAvatar) activeAvatar.classList.add('speaking');
+
+        document.getElementById('speaker-title-display').innerText = `🎙️ ${activeLine.title}`;
+        document.getElementById('dialogue-line-display').innerText = `"${activeLine.text}"`;
+      }
+    }
+
+    function seekPodcast(event) {
+      const track = document.getElementById('progress-bar-track');
+      const rect = track.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, clickX / rect.width));
+
+      elapsedSeconds = pct * totalSeconds;
+      
+      const currentMode = getCurrentMode();
+      const ep = (EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight)[currentEpisodeIdx];
+
+      if (ep && ep.audioUrl && audioElement.src) {
+        audioElement.currentTime = elapsedSeconds;
+      }
+
+      updateTimeUI(elapsedSeconds, totalSeconds);
+      syncSpeakerDialogue();
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      if (clockTimer) {
+        clearInterval(clockTimer);
+        clockTimer = null;
+      }
+      if (audioElement) {
+        audioElement.pause();
+      }
+      
+      const playBtn = document.getElementById('podcast-play-btn');
+      if (playBtn) playBtn.innerText = '▶ Start Episode Broadcast';
+      
+      document.querySelectorAll('.speaker-avatar').forEach(avatar => avatar.classList.remove('speaking'));
+    }
+
+    function showAuthModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card">
+            <h3>🔑 ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-actions">
+              <button class="modal-btn google-btn" onclick="simulateGoogleLogin()">Sign In with Google</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function showVIPModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card vip-modal-card">
+            <h3>🎟️ ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-price-tag">$4.99 / month • Backstage Pass</div>
+            <div class="modal-actions">
+              <button class="modal-btn stripe-btn" onclick="simulateStripeCheckout()">Unlock Backstage Pass</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function removeExistingModals() {
+      const existing = document.getElementById('neko-gate-modal');
+      if (existing) existing.remove();
+    }
+
+    function simulateGoogleLogin() {
+      userState.isLoggedIn = true;
+      localStorage.setItem('neko_logged_in', 'true');
+      removeExistingModals();
+      handleModeChange('basement');
+    }
+
+    function simulateStripeCheckout() {
+      userState.isLoggedIn = true;
+      userState.isVIP = true;
+      localStorage.setItem('neko_logged_in', 'true');
+      localStorage.setItem('neko_is_vip', 'true');
+      removeExistingModals();
+      handleModeChange('backstage');
+    }
+
+    function toggleMobileMenu() {
+      const navMenu = document.getElementById('nav-menu');
+      if (navMenu) navMenu.classList.toggle('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const mode = getCurrentMode();
+      applyThemeMode(mode);
+      loadTierEpisodes(mode);
+
+      document.addEventListener('click', function(event) {
+        const navMenu = document.getElementById('nav-menu');
+        const isInsideNavbar = event.target.closest('.navbar');
+        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
+          navMenu.classList.remove('open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
