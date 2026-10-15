@@ -1345,15 +1345,14 @@
 
   const currentPreset = synthPresets[currentSynthPresetIdx];
   
-  // Replace this URL with your deployed Cloudflare Worker endpoint
-  const workerEndpoint = `https://music-info.otaku-05c.workers.dev/?url=${encodeURIComponent(currentPreset.url)}`;
+  // 🔗 Replace with your actual AWS Lambda Function URL
+  const lambdaUrl = "https://<YOUR-LAMBDA-ID>.lambda-url.us-east-1.on.aws/";
+  const endpoint = `${lambdaUrl}?url=${encodeURIComponent(currentPreset.url)}`;
 
   try {
-    const res = await fetch(workerEndpoint);
+    const res = await fetch(endpoint);
     const data = await res.json();
 
-    console.log("Worker Output Data:", data);
-    
     if (data.success && data.title) {
       if (titleEl) titleEl.innerText = `🎵 ${data.title}`;
       if (statusMsgEl) statusMsgEl.innerText = `🎤 ${data.artist} • ASIA DREAM RADIO`;
@@ -1362,7 +1361,7 @@
       if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
     }
   } catch (err) {
-    console.error("Worker metadata fetch failed:", err);
+    console.error("Metadata fetch error:", err);
     if (titleEl) titleEl.innerText = currentPreset.name;
     if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
   }
