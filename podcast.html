@@ -14,6 +14,7 @@
       --accent-purple: #a88beb;
       --accent-red: #ff4d6d;
       --accent-gold: #ffd166;
+      --accent-green: #40c057;
       --text-light: #e2daf8;
     }
 
@@ -254,7 +255,7 @@
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 24px;
-      padding: 0 20px 40px;
+      padding: 0 20px;
     }
 
     @media (max-width: 900px) { .podcast-container { grid-template-columns: 1fr; } }
@@ -443,7 +444,7 @@
     /* Lore & Mystery ARG Tab Styles */
     .lore-container-full {
       max-width: 1200px;
-      margin: 20px auto 40px;
+      margin: 20px auto 30px;
       padding: 0 20px;
       display: flex;
       flex-direction: column;
@@ -642,6 +643,84 @@
       box-sizing: border-box;
       margin-bottom: 12px;
       font-family: inherit;
+    }
+
+    /* ALWAYS-ON BOTTOM COMMUNITY COMMENTS SECTION & SAFETY RULES */
+    .global-comments-wrapper {
+      max-width: 1200px;
+      margin: 10px auto 50px;
+      padding: 0 20px;
+    }
+
+    .comments-card-main {
+      background: linear-gradient(145deg, rgba(20, 13, 38, 0.96), rgba(10, 5, 22, 0.98));
+      border: 2px solid rgba(168, 139, 235, 0.35);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .safety-rules-banner {
+      background: rgba(255, 77, 109, 0.12);
+      border: 1px solid rgba(255, 77, 109, 0.4);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .safety-rules-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .safety-rules-text h4 {
+      margin: 0 0 4px;
+      color: #f4b8c4;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    .safety-rules-text p {
+      margin: 0;
+      font-size: 0.82rem;
+      color: #cbb8f6;
+      line-height: 1.4;
+    }
+
+    .comment-input-box {
+      background: rgba(14, 8, 28, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .comment-input-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr auto;
+      gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .comment-input-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .comment-feed-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .single-comment {
+      background: rgba(12, 6, 24, 0.7);
+      border-left: 3px solid #a88beb;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
     }
 
     /* Modal Overlays */
@@ -887,11 +966,76 @@
     </div>
   </div>
 
+  <!-- ALWAYS-ON BOTTOM COMMUNITY COMMENT SECTION & SAFETY RULES -->
+  <section class="global-comments-wrapper">
+    <div class="comments-card-main">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+        <h3 style="margin: 0; color: #ffffff; font-size: 1.25rem;">💬 Listener Comments & Discussion</h3>
+        <span style="font-size: 0.8rem; color: #a88beb; font-weight: 700;">🟢 Live Safety Filtering Enabled</span>
+      </div>
+
+      <!-- SAFETY RULES BANNER -->
+      <div class="safety-rules-banner">
+        <div class="safety-rules-icon">🛡️</div>
+        <div class="safety-rules-text">
+          <h4>Otaku Lounge Community Safety Guidelines</h4>
+          <p>
+            Welcome to the EchoHeart Lounge! Keep discussion respectful, friendly, and anime-focused. 
+            <strong>No hate speech, harassment, explicit content, or unmasked lore spoilers.</strong> 
+            Automated safety filters monitor all comments. Repeated violations will mute your account.
+          </p>
+        </div>
+      </div>
+
+      <!-- COMMENT INPUT FORM -->
+      <div class="comment-input-box">
+        <div class="comment-input-row">
+          <input type="text" id="main-comment-handle" class="form-input-text" style="margin-bottom: 0;" placeholder="Handle (e.g. NekoFan_42)">
+          <input type="text" id="main-comment-text" class="form-input-text" style="margin-bottom: 0;" placeholder="Share your thoughts on the current podcast or theories...">
+          <button class="action-btn-small" onclick="postMainComment()" style="white-space: nowrap; height: 100%;">Post Comment</button>
+        </div>
+      </div>
+
+      <!-- LIVE COMMENTS FEED -->
+      <div id="main-comments-feed" class="comment-feed-list">
+        <div class="single-comment">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <strong style="color: #f4b8c4; font-size: 0.88rem;">Akari_Overdrive <span class="npc-badge">LEAD GUITAR</span></strong>
+            <span style="font-size: 0.75rem; color: #a88beb;">2 hours ago</span>
+          </div>
+          <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"Thanks for tuning in everyone! Leave your favorite episode moments down here!"</p>
+        </div>
+
+        <div class="single-comment">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <strong style="color: #cbb8f6; font-size: 0.88rem;">Sakura_Rhythm <span class="user-badge">Listener</span></strong>
+            <span style="font-size: 0.75rem; color: #a88beb;">45 mins ago</span>
+          </div>
+          <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"The audio quality on EP-1 sounds so much clearer now! The voice timing with the pictures is super smooth."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <script>
     let userState = {
       isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
       isVIP: localStorage.getItem('neko_is_vip') === 'true'
     };
+
+    // PROHIBITED CONTENT FILTER LIST
+    const PROHIBITED_WORDS = ["hate", "slur", "spam", "abuse", "exploit", "nsfw"];
+
+    function checkContentSafety(text) {
+      if (!text) return true;
+      const lower = text.toLowerCase();
+      for (let word of PROHIBITED_WORDS) {
+        if (lower.includes(word)) {
+          return false;
+        }
+      }
+      return true;
+    }
 
     function formatTime(sec) {
       if (isNaN(sec) || sec < 0) return "00:00";
@@ -1020,6 +1164,52 @@
       }
     }
 
+    function postMainComment() {
+      const handleInput = document.getElementById('main-comment-handle');
+      const textInput = document.getElementById('main-comment-text');
+
+      const handle = handleInput.value.trim() || "Anon_Listener";
+      const text = textInput.value.trim();
+
+      if (!text) return;
+
+      // SAFETY FILTER CHECK
+      if (!checkContentSafety(text) || !checkContentSafety(handle)) {
+        showSafetyWarningModal("Comment Blocked by Community Safety Filter", "Your post contained terms that violate community rules. Please keep comments friendly, respectful, and spoiler-free.");
+        return;
+      }
+
+      const feed = document.getElementById('main-comments-feed');
+      const newCommentHTML = `
+        <div class="single-comment">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <strong style="color: #cbb8f6; font-size: 0.88rem;">${handle} <span class="user-badge">Listener</span></strong>
+            <span style="font-size: 0.75rem; color: #a88beb;">Just now</span>
+          </div>
+          <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"${text}"</p>
+        </div>
+      `;
+
+      feed.insertAdjacentHTML('afterbegin', newCommentHTML);
+      textInput.value = "";
+    }
+
+    function showSafetyWarningModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card">
+            <h3>🛡️ ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-actions">
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Understood</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
     function openClueModal(clueId) {
       removeExistingModals();
       let title = "🔍 Clue Dossier #00" + clueId;
@@ -1072,6 +1262,11 @@
       const text = document.getElementById('theory-text').value;
 
       if (!text) return;
+
+      if (!checkContentSafety(text) || !checkContentSafety(name)) {
+        showSafetyWarningModal("Theory Blocked by Safety Filter", "Your lore theory contains inappropriate terms. Please refine your submission.");
+        return;
+      }
 
       const container = document.getElementById('bbs-posts-container');
       const postHTML = `
