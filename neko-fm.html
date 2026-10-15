@@ -1346,16 +1346,33 @@
   const currentPreset = synthPresets[currentSynthPresetIdx];
   
   // 🔗 Replace with your actual AWS Lambda Function URL
-  const lambdaUrl = "https://5x4kcoismesnfh7b5rcqllrcau0pxdbt.lambda-url.us-east-2.on.aws/";
+  const lambdaUrl = "https://<YOUR-LAMBDA-ID>.lambda-url.us-east-1.on.aws/";
   const endpoint = `${lambdaUrl}?url=${encodeURIComponent(currentPreset.url)}`;
 
   try {
     const res = await fetch(endpoint);
     const data = await res.json();
 
-    if (data.success && data.title) {
-      if (titleEl) titleEl.innerText = `🎵 ${data.title}`;
-      if (statusMsgEl) statusMsgEl.innerText = `🎤 ${data.artist} • ASIA DREAM RADIO`;
+    if (data.success && (data.title || data.raw)) {
+      // 1. Smart Split handling all dash variants (hyphen, en-dash, em-dash, full-width)
+      const rawString = data.raw || `${data.artist} - ${data.title}`;
+      const parts = rawString.split(/\s*[-–—－]\s*/);
+
+      let artistName = data.artist;
+      let trackTitle = data.title;
+
+      if (parts.length >= 2) {
+        artistName = parts[0].trim();
+        trackTitle = parts.slice(1).join(' - ').trim();
+      } else {
+        trackTitle = rawString.trim();
+        artistName = currentPreset.name;
+      }
+
+      // 2. Display track title on top line and artist on status line
+      if (titleEl) titleEl.innerText = `🎵 ${trackTitle}`;
+      if (statusMsgEl) statusMsgEl.innerText = `🎤 ${artistName} • ${currentPreset.name}`;
+
     } else {
       if (titleEl) titleEl.innerText = currentPreset.name;
       if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
