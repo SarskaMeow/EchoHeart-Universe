@@ -1352,6 +1352,8 @@
     const res = await fetch(workerEndpoint);
     const data = await res.json();
 
+    console.log("Worker Output Data:", data);
+    
     if (data.success && data.title) {
       if (titleEl) titleEl.innerText = `🎵 ${data.title}`;
       if (statusMsgEl) statusMsgEl.innerText = `🎤 ${data.artist} • ASIA DREAM RADIO`;
