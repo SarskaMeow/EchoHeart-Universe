@@ -560,7 +560,7 @@
       return 236;
     }
 
-    // Master Episode Repository — Scaled Dialogue Keyframes Matched to Realistic Spoken Cadence
+    // Master Episode Repository
     const EPISODES_BY_MODE = {
       twilight: [
         {
@@ -747,10 +747,10 @@
         
         updateTimeUI(0, totalSeconds);
 
-        if (ep.audioUrl) {
+        if (ep.audioUrl && audioElement) {
           audioElement.src = ep.audioUrl;
           audioElement.load();
-        } else {
+        } else if (audioElement) {
           audioElement.removeAttribute('src');
         }
       }
@@ -782,7 +782,7 @@
       const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
       const ep = episodes[currentEpisodeIdx];
 
-      if (ep && ep.audioUrl) {
+      if (ep && ep.audioUrl && audioElement) {
         audioElement.play().then(() => {
           syncSpeakerDialogue();
         }).catch((err) => {
@@ -824,3 +824,161 @@
           updateTimeUI(totalSeconds, totalSeconds);
           document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode from the archive."`;
         }
+      }, 1000);
+    }
+
+    function syncSpeakerDialogue() {
+      const currentMode = getCurrentMode();
+      const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
+      const ep = episodes[currentEpisodeIdx];
+
+      if (!ep || !ep.script || ep.script.length === 0) return;
+
+      const currentTime = (audioElement && audioElement.src && !audioElement.paused && !isNaN(audioElement.currentTime))
+                          ? audioElement.currentTime
+                          : elapsedSeconds;
+
+      let activeLine = null;
+
+      for (let i = 0; i < ep.script.length; i++) {
+        const line = ep.script[i];
+        const nextLine = ep.script[i + 1];
+        const start = line.startTime;
+        const end = (line.endTime !== undefined) ? line.endTime : (nextLine ? nextLine.startTime : totalSeconds);
+
+        if (currentTime >= start && currentTime < end) {
+          activeLine = line;
+          break;
+        }
+      }
+
+      document.querySelectorAll('.speaker-avatar').forEach(a => a.classList.remove('speaking'));
+
+      if (activeLine) {
+        const activeAvatar = document.getElementById(`spk-${activeLine.speaker}`);
+        if (activeAvatar) activeAvatar.classList.add('speaking');
+
+        document.getElementById('speaker-title-display').innerText = `🎙️ ${activeLine.title}`;
+        document.getElementById('dialogue-line-display').innerText = `"${activeLine.text}"`;
+      }
+    }
+
+    function seekPodcast(event) {
+      const track = document.getElementById('progress-bar-track');
+      const rect = track.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, clickX / rect.width));
+
+      elapsedSeconds = pct * totalSeconds;
+      
+      const currentMode = getCurrentMode();
+      const ep = (EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight)[currentEpisodeIdx];
+
+      if (ep && ep.audioUrl && audioElement && audioElement.src) {
+        audioElement.currentTime = elapsedSeconds;
+      }
+
+      updateTimeUI(elapsedSeconds, totalSeconds);
+      syncSpeakerDialogue();
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      if (clockTimer) {
+        clearInterval(clockTimer);
+        clockTimer = null;
+      }
+      if (audioElement) {
+        audioElement.pause();
+      }
+      
+      const playBtn = document.getElementById('podcast-play-btn');
+      if (playBtn) playBtn.innerText = '▶ Start Episode Broadcast';
+      
+      document.querySelectorAll('.speaker-avatar').forEach(avatar => avatar.classList.remove('speaking'));
+    }
+
+    function showAuthModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card">
+            <h3>🔑 ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-actions">
+              <button class="modal-btn google-btn" onclick="simulateGoogleLogin()">Sign In with Google</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function showVIPModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card vip-modal-card">
+            <h3>🎟️ ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-price-tag">$4.99 / month • Backstage Pass</div>
+            <div class="modal-actions">
+              <button class="modal-btn stripe-btn" onclick="simulateStripeCheckout()">Unlock Backstage Pass</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function removeExistingModals() {
+      const existing = document.getElementById('neko-gate-modal');
+      if (existing) existing.remove();
+    }
+
+    function simulateGoogleLogin() {
+      userState.isLoggedIn = true;
+      localStorage.setItem('neko_logged_in', 'true');
+      removeExistingModals();
+      handleModeChange('basement');
+    }
+
+    function simulateStripeCheckout() {
+      userState.isLoggedIn = true;
+      userState.isVIP = true;
+      localStorage.setItem('neko_logged_in', 'true');
+      localStorage.setItem('neko_is_vip', 'true');
+      removeExistingModals();
+      handleModeChange('backstage');
+    }
+
+    function toggleMobileMenu() {
+      const navMenu = document.getElementById('nav-menu');
+      if (navMenu) navMenu.classList.toggle('open');
+    }
+
+    function initPodcastStudio() {
+      const mode = getCurrentMode();
+      applyThemeMode(mode);
+      loadTierEpisodes(mode);
+
+      document.addEventListener('click', function(event) {
+        const navMenu = document.getElementById('nav-menu');
+        const isInsideNavbar = event.target.closest('.navbar');
+        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
+          navMenu.classList.remove('open');
+        }
+      });
+    }
+
+    // Safe execution regardless of module load timing
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPodcastStudio);
+    } else {
+      initPodcastStudio();
+    }
+  </script>
+</body>
+</html>
