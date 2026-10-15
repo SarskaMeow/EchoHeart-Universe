@@ -517,8 +517,8 @@
       <!-- Real-Time Countdown & Duration Header -->
       <div class="time-display-bar">
         <span id="ep-time-current">00:00</span>
-        <span id="ep-time-total" style="opacity: 0.7;">Total Length: 03:12</span>
-        <span id="ep-time-remaining">Remaining: -03:12</span>
+        <span id="ep-time-total" style="opacity: 0.7;">Total Length: 03:56</span>
+        <span id="ep-time-remaining">Remaining: -03:56</span>
       </div>
 
       <div class="progress-bar-container" id="progress-bar-track" onclick="seekPodcast(event)">
@@ -552,43 +552,43 @@
     }
 
     function parseRuntimeSeconds(str) {
-      if (!str) return 192;
+      if (!str) return 236;
       const parts = str.split(':');
       if (parts.length === 2) {
         return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
       }
-      return 192;
+      return 236;
     }
 
-    // Master Episode Repository — Time-Synced Dialogue Lines Matched to Your Script
+    // Master Episode Repository — Scaled Dialogue Keyframes Matched to Realistic Spoken Cadence
     const EPISODES_BY_MODE = {
       twilight: [
         {
           title: "EchoHeart Whisper Podcast EP-1",
-          runtime: "03:12",
+          runtime: "03:56",
           audioUrl: "assets/audio/EchoHeart Whisper Podcast EP-1.mp3",
           tag: "Free",
           script: [
-            { startTime: 0, endTime: 12, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome, welcome, everyone! You're tuned into the very first official broadcast of EchoHeart Whisper Radio! I'm your lead vocalist, and Guitarist, Nekomi!" },
-            { startTime: 12, endTime: 22, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Yaho~! Akari Minase here, Drums overdrive ready to turn every quiet afternoon into a rock concert!" },
-            { startTime: 22, endTime: 29, speaker: "sera", title: "Sera (Keytar)", text: "Sera... keytarist and audio monitor. Frequency check looks clean." },
-            { startTime: 29, endTime: 40, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And I'm Aoi, I'm the bassist and I'm keeping our band on schedule. Whether you're listening between classes or after practice, thanks for dropping in for our 3-minute campus catch-up!" },
-            { startTime: 40, endTime: 50, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Okay, team, let's jump straight into today's big story! Did anyone else notice the utter chaos outside the main cafeteria at 12:15 PM today?" },
-            { startTime: 50, endTime: 61, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Oh, I saw it! It was an absolute stampede! The line for the new limited-edition Strawberry Shortcake Parfait was longer than our festival queue!" },
-            { startTime: 61, endTime: 72, speaker: "sera", title: "Sera (Keytar)", text: "It sold out in exactly forty-two seconds... I was three people away from the counter. A tragedy." },
-            { startTime: 72, endTime: 85, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "A tragedy might be an exaggeration, Sera, but the rumor is someone bought the last three parfaits all at once and sprinted out the side doors toward the music wing." },
-            { startTime: 85, endTime: 93, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Wait... toward our wing?! Are you saying the Parfait Bandit is a musician?" },
-            { startTime: 93, endTime: 108, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Hey, don't look at me! I was stuck tuning my amp in the storage closet during lunch! Though... if whoever took them wants to trade one for a guitar solo, my door is open!" },
-            { startTime: 108, endTime: 122, speaker: "sera", title: "Sera (Keytar)", text: "Actually... I checked the audio logs on my soundboard. I heard heavy footsteps in the hallway right around twelve-twenty... followed by the sound of plastic spoons." },
-            { startTime: 122, endTime: 133, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Alright, alright, let me clear the air before this turns into a full investigation. The three parfaits were purchased by me." },
-            { startTime: 133, endTime: 139, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "What?! Aoi, you're the Parfait Bandit?!" },
-            { startTime: 139, endTime: 151, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "I am not a bandit! I bought them for all of us as a treat for locking down our rehearsal schedule this week! They're in the prep room mini-fridge right now." },
-            { startTime: 151, endTime: 160, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Whaaat?! Aoi, you're an absolute legend! First dibs on the extra strawberries!" },
-            { startTime: 160, endTime: 168, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "And that's our very first piece of good news on Whisper Radio! Case closed, and dessert secured!" },
-            { startTime: 168, endTime: 178, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Remember to check back next week for more daily news around school. Now, let me make sure Akari doesn't eat all three parfaits before practice starts." },
-            { startTime: 178, endTime: 184, speaker: "sera", title: "Sera (Keytar)", text: "Save one for me... Goodbye, everyone. Keep your headphones warm." },
-            { startTime: 184, endTime: 191, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Catch ya later, everyone! Don't forget to turn the volume all the way up next week! Bye-bye!" },
-            { startTime: 191, endTime: 192, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thanks for tuning in! See you next time, everyone! Bye-bye~!" }
+            { startTime: 0, endTime: 14, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome, welcome, everyone! You're tuned into the very first official broadcast of EchoHeart Whisper Radio! I'm your lead vocalist, and Guitarist, Nekomi!" },
+            { startTime: 14, endTime: 24, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Yaho~! Akari Minase here, Drums overdrive ready to turn every quiet afternoon into a rock concert!" },
+            { startTime: 24, endTime: 31, speaker: "sera", title: "Sera (Keytar)", text: "Sera... keytarist and audio monitor. Frequency check looks clean." },
+            { startTime: 31, endTime: 48, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And I'm Aoi, I'm the bassist and I'm keeping our band on schedule. Whether you're listening between classes or after practice, thanks for dropping in for our 3-minute campus catch-up!" },
+            { startTime: 48, endTime: 62, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Okay, team, let's jump straight into today's big story! Did anyone else notice the utter chaos outside the main cafeteria at 12:15 PM today?" },
+            { startTime: 62, endTime: 75, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Oh, I saw it! It was an absolute stampede! The line for the new limited-edition Strawberry Shortcake Parfait was longer than our festival queue!" },
+            { startTime: 75, endTime: 86, speaker: "sera", title: "Sera (Keytar)", text: "It sold out in exactly forty-two seconds... I was three people away from the counter. A tragedy." },
+            { startTime: 86, endTime: 102, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "A tragedy might be an exaggeration, Sera, but the rumor is someone bought the last three parfaits all at once and sprinted out the side doors toward the music wing." },
+            { startTime: 102, endTime: 111, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Wait... toward our wing?! Are you saying the Parfait Bandit is a musician?" },
+            { startTime: 111, endTime: 130, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Hey, don't look at me! I was stuck tuning my amp in the storage closet during lunch! Though... if whoever took them wants to trade one for a guitar solo, my door is open!" },
+            { startTime: 130, endTime: 145, speaker: "sera", title: "Sera (Keytar)", text: "Actually... I checked the audio logs on my soundboard. I heard heavy footsteps in the hallway right around twelve-twenty... followed by the sound of plastic spoons." },
+            { startTime: 145, endTime: 158, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Alright, alright, let me clear the air before this turns into a full investigation. The three parfaits were purchased by me." },
+            { startTime: 158, endTime: 164, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "What?! Aoi, you're the Parfait Bandit?!" },
+            { startTime: 164, endTime: 180, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "I am not a bandit! I bought them for all of us as a treat for locking down our rehearsal schedule this week! They're in the prep room mini-fridge right now." },
+            { startTime: 180, endTime: 189, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Whaaat?! Aoi, you're an absolute legend! First dibs on the extra strawberries!" },
+            { startTime: 189, endTime: 198, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "And that's our very first piece of good news on Whisper Radio! Case closed, and dessert secured!" },
+            { startTime: 198, endTime: 210, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Remember to check back next week for more daily news around school. Now, let me make sure Akari doesn't eat all three parfaits before practice starts." },
+            { startTime: 210, endTime: 218, speaker: "sera", title: "Sera (Keytar)", text: "Save one for me... Goodbye, everyone. Keep your headphones warm." },
+            { startTime: 218, endTime: 228, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Catch ya later, everyone! Don't forget to turn the volume all the way up next week! Bye-bye!" },
+            { startTime: 228, endTime: 236, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thanks for tuning in! See you next time, everyone! Bye-bye~!" }
           ]
         },
         {
@@ -645,7 +645,7 @@
     let isPlaying = false;
     let clockTimer = null;
     let elapsedSeconds = 0;
-    let totalSeconds = 192;
+    let totalSeconds = 236;
 
     const audioElement = document.getElementById('audio-player');
 
@@ -824,158 +824,3 @@
           updateTimeUI(totalSeconds, totalSeconds);
           document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode from the archive."`;
         }
-      }, 1000);
-    }
-
-    function syncSpeakerDialogue() {
-      const currentMode = getCurrentMode();
-      const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
-      const ep = episodes[currentEpisodeIdx];
-
-      if (!ep || !ep.script || ep.script.length === 0) return;
-
-      const scriptMaxTime = ep.script.reduce((max, line) => {
-        const lineEnd = line.endTime !== undefined ? line.endTime : line.startTime;
-        return Math.max(max, lineEnd);
-      }, 0) || totalSeconds;
-
-      const hasLiveAudio = audioElement && audioElement.src && !audioElement.paused && audioElement.duration && !isNaN(audioElement.duration);
-      const scaleFactor = hasLiveAudio ? (scriptMaxTime / audioElement.duration) : 1;
-      const effectiveTime = hasLiveAudio ? (audioElement.currentTime * scaleFactor) : elapsedSeconds;
-
-      let activeLine = null;
-      for (let i = 0; i < ep.script.length; i++) {
-        const line = ep.script[i];
-        const nextLine = ep.script[i + 1];
-        const start = line.startTime;
-        const end = (line.endTime !== undefined) ? line.endTime : (nextLine ? nextLine.startTime : scriptMaxTime);
-
-        if (effectiveTime >= start && effectiveTime < end) {
-          activeLine = line;
-          break;
-        }
-      }
-
-      document.querySelectorAll('.speaker-avatar').forEach(a => a.classList.remove('speaking'));
-
-      if (activeLine) {
-        const activeAvatar = document.getElementById(`spk-${activeLine.speaker}`);
-        if (activeAvatar) activeAvatar.classList.add('speaking');
-
-        document.getElementById('speaker-title-display').innerText = `🎙️ ${activeLine.title}`;
-        document.getElementById('dialogue-line-display').innerText = `"${activeLine.text}"`;
-      }
-    }
-
-    function seekPodcast(event) {
-      const track = document.getElementById('progress-bar-track');
-      const rect = track.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const pct = Math.max(0, Math.min(1, clickX / rect.width));
-
-      elapsedSeconds = pct * totalSeconds;
-      
-      const currentMode = getCurrentMode();
-      const ep = (EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight)[currentEpisodeIdx];
-
-      if (ep && ep.audioUrl && audioElement.src) {
-        audioElement.currentTime = elapsedSeconds;
-      }
-
-      updateTimeUI(elapsedSeconds, totalSeconds);
-      syncSpeakerDialogue();
-    }
-
-    function stopPlayback() {
-      isPlaying = false;
-      if (clockTimer) {
-        clearInterval(clockTimer);
-        clockTimer = null;
-      }
-      if (audioElement) {
-        audioElement.pause();
-      }
-      
-      const playBtn = document.getElementById('podcast-play-btn');
-      if (playBtn) playBtn.innerText = '▶ Start Episode Broadcast';
-      
-      document.querySelectorAll('.speaker-avatar').forEach(avatar => avatar.classList.remove('speaking'));
-    }
-
-    function showAuthModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3>🔑 ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-actions">
-              <button class="modal-btn google-btn" onclick="simulateGoogleLogin()">Sign In with Google</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function showVIPModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card vip-modal-card">
-            <h3>🎟️ ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-price-tag">$4.99 / month • Backstage Pass</div>
-            <div class="modal-actions">
-              <button class="modal-btn stripe-btn" onclick="simulateStripeCheckout()">Unlock Backstage Pass</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function removeExistingModals() {
-      const existing = document.getElementById('neko-gate-modal');
-      if (existing) existing.remove();
-    }
-
-    function simulateGoogleLogin() {
-      userState.isLoggedIn = true;
-      localStorage.setItem('neko_logged_in', 'true');
-      removeExistingModals();
-      handleModeChange('basement');
-    }
-
-    function simulateStripeCheckout() {
-      userState.isLoggedIn = true;
-      userState.isVIP = true;
-      localStorage.setItem('neko_logged_in', 'true');
-      localStorage.setItem('neko_is_vip', 'true');
-      removeExistingModals();
-      handleModeChange('backstage');
-    }
-
-    function toggleMobileMenu() {
-      const navMenu = document.getElementById('nav-menu');
-      if (navMenu) navMenu.classList.toggle('open');
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const mode = getCurrentMode();
-      applyThemeMode(mode);
-      loadTierEpisodes(mode);
-
-      document.addEventListener('click', function(event) {
-        const navMenu = document.getElementById('nav-menu');
-        const isInsideNavbar = event.target.closest('.navbar');
-        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
-          navMenu.classList.remove('open');
-        }
-      });
-    });
-  </script>
-</body>
-</html>
