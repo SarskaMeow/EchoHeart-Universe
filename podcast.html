@@ -116,7 +116,6 @@
       color: #ffffff;
     }
 
-    /* Mode Select Dropdown Styling */
     .mode-select-dropdown {
       background: rgba(35, 25, 65, 0.9);
       border: 1px solid #f4b8c4;
@@ -145,7 +144,6 @@
       display: none;
     }
 
-    /* Mobile Collapsible Navigation */
     @media (max-width: 992px) {
       .nav-container { padding: 10px 16px; }
 
@@ -253,7 +251,7 @@
     .speaker-avatar {
       text-align: center;
       opacity: 0.45;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
     }
 
     .speaker-avatar.speaking {
@@ -272,7 +270,7 @@
       justify-content: center;
       margin: 0 auto 6px;
       overflow: hidden;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
     }
 
     .speaker-icon-box img {
@@ -316,7 +314,6 @@
 
     .current-dialogue-line { font-size: 1.05rem; font-style: italic; line-height: 1.5; }
 
-    /* Real-Time Audio Player Controls */
     .time-display-bar {
       display: flex;
       justify-content: space-between;
@@ -380,7 +377,6 @@
     body.basement-mode .ep-card:hover, body.basement-mode .ep-card.active { border-color: #ff4d6d; background: rgba(40, 12, 35, 0.9); }
     body.backstage-mode .ep-card:hover, body.backstage-mode .ep-card.active { border-color: #ffd166; background: rgba(30, 10, 40, 0.9); }
 
-    /* Modal Styles */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -427,14 +423,10 @@
 </head>
 <body class="twilight-mode">
 
-  <!-- Hidden HTML5 Audio Element for Podcast MP3 Files -->
   <audio id="audio-player" style="display: none;"></audio>
 
-  <!-- Universal Header Navigation Bar -->
   <header class="navbar">
     <div class="nav-container">
-      
-      <!-- Brand Logo -->
       <div class="logo-container">
         <a href="index.html" class="logo-link">
           <span class="logo-main">🌸 OTAKU NEKO LOUNGE</span>
@@ -442,14 +434,12 @@
         </a>
       </div>
 
-      <!-- Mobile Hamburger Toggle Button -->
       <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
         <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>
       </button>
 
-      <!-- 6 Main Destinations & 3-Tier Mode Selector -->
       <nav class="nav-links" id="nav-menu">
         <a href="index.html" class="nav-item">🏠 Home</a>
         <a href="podcast.html" class="nav-item active">🎙️ Podcast</a>
@@ -458,7 +448,6 @@
         <a href="chat.html" class="nav-item">💬 Live Chat</a>
         <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
 
-        <!-- 3-Tier Access Mode Switcher -->
         <div class="mode-selector-wrapper">
           <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
             <option value="twilight">🌸 Twilight (Public)</option>
@@ -467,20 +456,16 @@
           </select>
         </div>
       </nav>
-
     </div>
   </header>
 
-  <!-- Podcast Stage & Archive Layout -->
   <main class="podcast-container">
-    <!-- LEFT: LIVE PODCAST STAGE -->
     <section class="wide-stage">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
         <h2 id="stage-main-title">🎙️ WHISPER RADIO STUDIO STAGE</h2>
         <span id="stage-air-badge" class="on-air-badge">ON AIR</span>
       </div>
 
-      <!-- 4 Speaker Character Avatars Connected to Asset Images -->
       <div class="speaker-booth-wide">
         <div id="spk-nekomi" class="speaker-avatar">
           <div class="speaker-icon-box">
@@ -508,17 +493,15 @@
         </div>
       </div>
 
-      <!-- Live Line Dialogue Display -->
       <div class="script-transcript-box">
         <div id="speaker-title-display" class="current-speaker-title">🎙️ READY TO BROADCAST</div>
         <div id="dialogue-line-display" class="current-dialogue-line">"Select an episode from the archive drawer and tap start to listen!"</div>
       </div>
 
-      <!-- Real-Time Countdown & Duration Header -->
       <div class="time-display-bar">
         <span id="ep-time-current">00:00</span>
-        <span id="ep-time-total" style="opacity: 0.7;">Total Length: 03:56</span>
-        <span id="ep-time-remaining">Remaining: -03:56</span>
+        <span id="ep-time-total" style="opacity: 0.7;">Total Length: 02:10</span>
+        <span id="ep-time-remaining">Remaining: -02:10</span>
       </div>
 
       <div class="progress-bar-container" id="progress-bar-track" onclick="seekPodcast(event)">
@@ -528,17 +511,13 @@
       <button id="podcast-play-btn" class="action-btn" onclick="togglePodcastPlayback()">▶ Start Episode Broadcast</button>
     </section>
 
-    <!-- RIGHT: EPISODE ARCHIVE DRAWER -->
     <aside class="archive-drawer">
       <h3 id="archive-drawer-heading">📻 Episode Archives</h3>
-      <div id="archive-episode-list">
-        <!-- Rendered via JavaScript per active tier -->
-      </div>
+      <div id="archive-episode-list"></div>
     </aside>
   </main>
 
   <script>
-    // User Auth & Tier State
     let userState = {
       isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
       isVIP: localStorage.getItem('neko_is_vip') === 'true'
@@ -552,43 +531,43 @@
     }
 
     function parseRuntimeSeconds(str) {
-      if (!str) return 236;
+      if (!str) return 130;
       const parts = str.split(':');
       if (parts.length === 2) {
         return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
       }
-      return 236;
+      return 130;
     }
 
-    // Master Episode Repository
+    // Accurate Spoken-Cadence Keyframes (Calibrated to Real Spoken Audio WPM)
     const EPISODES_BY_MODE = {
       twilight: [
         {
           title: "EchoHeart Whisper Podcast EP-1",
-          runtime: "03:56",
+          runtime: "02:10",
           audioUrl: "assets/audio/EchoHeart Whisper Podcast EP-1.mp3",
           tag: "Free",
           script: [
-            { startTime: 0, endTime: 14, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome, welcome, everyone! You're tuned into the very first official broadcast of EchoHeart Whisper Radio! I'm your lead vocalist, and Guitarist, Nekomi!" },
-            { startTime: 14, endTime: 24, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Yaho~! Akari Minase here, Drums overdrive ready to turn every quiet afternoon into a rock concert!" },
-            { startTime: 24, endTime: 31, speaker: "sera", title: "Sera (Keytar)", text: "Sera... keytarist and audio monitor. Frequency check looks clean." },
-            { startTime: 31, endTime: 48, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And I'm Aoi, I'm the bassist and I'm keeping our band on schedule. Whether you're listening between classes or after practice, thanks for dropping in for our 3-minute campus catch-up!" },
-            { startTime: 48, endTime: 62, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Okay, team, let's jump straight into today's big story! Did anyone else notice the utter chaos outside the main cafeteria at 12:15 PM today?" },
-            { startTime: 62, endTime: 75, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Oh, I saw it! It was an absolute stampede! The line for the new limited-edition Strawberry Shortcake Parfait was longer than our festival queue!" },
-            { startTime: 75, endTime: 86, speaker: "sera", title: "Sera (Keytar)", text: "It sold out in exactly forty-two seconds... I was three people away from the counter. A tragedy." },
-            { startTime: 86, endTime: 102, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "A tragedy might be an exaggeration, Sera, but the rumor is someone bought the last three parfaits all at once and sprinted out the side doors toward the music wing." },
-            { startTime: 102, endTime: 111, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Wait... toward our wing?! Are you saying the Parfait Bandit is a musician?" },
-            { startTime: 111, endTime: 130, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Hey, don't look at me! I was stuck tuning my amp in the storage closet during lunch! Though... if whoever took them wants to trade one for a guitar solo, my door is open!" },
-            { startTime: 130, endTime: 145, speaker: "sera", title: "Sera (Keytar)", text: "Actually... I checked the audio logs on my soundboard. I heard heavy footsteps in the hallway right around twelve-twenty... followed by the sound of plastic spoons." },
-            { startTime: 145, endTime: 158, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Alright, alright, let me clear the air before this turns into a full investigation. The three parfaits were purchased by me." },
-            { startTime: 158, endTime: 164, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "What?! Aoi, you're the Parfait Bandit?!" },
-            { startTime: 164, endTime: 180, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "I am not a bandit! I bought them for all of us as a treat for locking down our rehearsal schedule this week! They're in the prep room mini-fridge right now." },
-            { startTime: 180, endTime: 189, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Whaaat?! Aoi, you're an absolute legend! First dibs on the extra strawberries!" },
-            { startTime: 189, endTime: 198, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "And that's our very first piece of good news on Whisper Radio! Case closed, and dessert secured!" },
-            { startTime: 198, endTime: 210, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Remember to check back next week for more daily news around school. Now, let me make sure Akari doesn't eat all three parfaits before practice starts." },
-            { startTime: 210, endTime: 218, speaker: "sera", title: "Sera (Keytar)", text: "Save one for me... Goodbye, everyone. Keep your headphones warm." },
-            { startTime: 218, endTime: 228, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Catch ya later, everyone! Don't forget to turn the volume all the way up next week! Bye-bye!" },
-            { startTime: 228, endTime: 236, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thanks for tuning in! See you next time, everyone! Bye-bye~!" }
+            { startTime: 0, endTime: 8, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome, welcome, everyone! You're tuned into the very first official broadcast of EchoHeart Whisper Radio! I'm your lead vocalist, and Guitarist, Nekomi!" },
+            { startTime: 8, endTime: 13, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Yaho~! Akari Minase here, Drums overdrive ready to turn every quiet afternoon into a rock concert!" },
+            { startTime: 13, endTime: 17, speaker: "sera", title: "Sera (Keytar)", text: "Sera... keytarist and audio monitor. Frequency check looks clean." },
+            { startTime: 17, endTime: 27, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "And I'm Aoi, I'm the bassist and I'm keeping our band on schedule. Whether you're listening between classes or after practice, thanks for dropping in for our 3-minute campus catch-up!" },
+            { startTime: 27, endTime: 33, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Okay, team, let's jump straight into today's big story! Did anyone else notice the utter chaos outside the main cafeteria at 12:15 PM today?" },
+            { startTime: 33, endTime: 41, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Oh, I saw it! It was an absolute stampede! The line for the new limited-edition Strawberry Shortcake Parfait was longer than our festival queue!" },
+            { startTime: 41, endTime: 46, speaker: "sera", title: "Sera (Keytar)", text: "It sold out in exactly forty-two seconds... I was three people away from the counter. A tragedy." },
+            { startTime: 46, endTime: 54, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "A tragedy might be an exaggeration, Sera, but the rumor is someone bought the last three parfaits all at once and sprinted out the side doors toward the music wing." },
+            { startTime: 54, endTime: 58, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Wait... toward our wing?! Are you saying the Parfait Bandit is a musician?" },
+            { startTime: 58, endTime: 67, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Hey, don't look at me! I was stuck tuning my amp in the storage closet during lunch! Though... if whoever took them wants to trade one for a guitar solo, my door is open!" },
+            { startTime: 67, endTime: 74, speaker: "sera", title: "Sera (Keytar)", text: "Actually... I checked the audio logs on my soundboard. I heard heavy footsteps in the hallway right around twelve-twenty... followed by the sound of plastic spoons." },
+            { startTime: 74, endTime: 80, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Alright, alright, let me clear the air before this turns into a full investigation. The three parfaits were purchased by me." },
+            { startTime: 80, endTime: 83, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "What?! Aoi, you're the Parfait Bandit?!" },
+            { startTime: 83, endTime: 90, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "I am not a bandit! I bought them for all of us as a treat for locking down our rehearsal schedule this week! They're in the prep room mini-fridge right now." },
+            { startTime: 90, endTime: 95, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Whaaat?! Aoi, you're an absolute legend! First dibs on the extra strawberries!" },
+            { startTime: 95, endTime: 100, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "And that's our very first piece of good news on Whisper Radio! Case closed, and dessert secured!" },
+            { startTime: 100, endTime: 108, speaker: "aoi", title: "Aoi (Bass & Drums)", text: "Remember to check back next week for more daily news around school. Now, let me make sure Akari doesn't eat all three parfaits before practice starts." },
+            { startTime: 108, endTime: 112, speaker: "sera", title: "Sera (Keytar)", text: "Save one for me... Goodbye, everyone. Keep your headphones warm." },
+            { startTime: 112, endTime: 118, speaker: "akari", title: "Akari Minase (Lead Guitar)", text: "Catch ya later, everyone! Don't forget to turn the volume all the way up next week! Bye-bye!" },
+            { startTime: 118, endTime: 124, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thanks for tuning in! See you next time, everyone! Bye-bye~!" }
           ]
         },
         {
@@ -644,8 +623,9 @@
     let currentEpisodeIdx = 0;
     let isPlaying = false;
     let clockTimer = null;
+    let syncInterval = null;
     let elapsedSeconds = 0;
-    let totalSeconds = 236;
+    let totalSeconds = 130;
 
     const audioElement = document.getElementById('audio-player');
 
@@ -784,29 +764,34 @@
 
       if (ep && ep.audioUrl && audioElement) {
         audioElement.play().then(() => {
-          syncSpeakerDialogue();
+          startHighFreqSync();
         }).catch((err) => {
-          console.warn("MP3 audio file not found or blocked, running timer simulation:", err);
+          console.warn("Audio play error, falling back to timer:", err);
           runSimulatedTimer();
         });
-
-        audioElement.ontimeupdate = () => {
-          if (!isPlaying) return;
-          elapsedSeconds = audioElement.currentTime;
-          totalSeconds = (audioElement.duration && !isNaN(audioElement.duration)) ? audioElement.duration : parseRuntimeSeconds(ep.runtime);
-          updateTimeUI(elapsedSeconds, totalSeconds);
-          syncSpeakerDialogue();
-        };
 
         audioElement.onended = () => {
           stopPlayback();
           updateTimeUI(totalSeconds, totalSeconds);
           document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode from the archive."`;
         };
-
       } else {
         runSimulatedTimer();
       }
+    }
+
+    function startHighFreqSync() {
+      if (syncInterval) clearInterval(syncInterval);
+
+      syncInterval = setInterval(() => {
+        if (!isPlaying || !audioElement) return;
+
+        elapsedSeconds = audioElement.currentTime;
+        totalSeconds = (audioElement.duration && !isNaN(audioElement.duration)) ? audioElement.duration : parseRuntimeSeconds(EPISODES_BY_MODE[getCurrentMode()][currentEpisodeIdx]?.runtime);
+
+        updateTimeUI(elapsedSeconds, totalSeconds);
+        syncSpeakerDialogue();
+      }, 100);
     }
 
     function runSimulatedTimer() {
@@ -842,11 +827,7 @@
 
       for (let i = 0; i < ep.script.length; i++) {
         const line = ep.script[i];
-        const nextLine = ep.script[i + 1];
-        const start = line.startTime;
-        const end = (line.endTime !== undefined) ? line.endTime : (nextLine ? nextLine.startTime : totalSeconds);
-
-        if (currentTime >= start && currentTime < end) {
+        if (currentTime >= line.startTime && currentTime < line.endTime) {
           activeLine = line;
           break;
         }
@@ -884,13 +865,9 @@
 
     function stopPlayback() {
       isPlaying = false;
-      if (clockTimer) {
-        clearInterval(clockTimer);
-        clockTimer = null;
-      }
-      if (audioElement) {
-        audioElement.pause();
-      }
+      if (clockTimer) { clearInterval(clockTimer); clockTimer = null; }
+      if (syncInterval) { clearInterval(syncInterval); syncInterval = null; }
+      if (audioElement) { audioElement.pause(); }
       
       const playBtn = document.getElementById('podcast-play-btn');
       if (playBtn) playBtn.innerText = '▶ Start Episode Broadcast';
@@ -973,7 +950,6 @@
       });
     }
 
-    // Safe execution regardless of module load timing
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initPodcastStudio);
     } else {
