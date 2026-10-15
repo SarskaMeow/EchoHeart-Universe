@@ -1125,7 +1125,6 @@
             </button>
             
 
-
             <div class="volume-slider-group">
               <span class="vol-icon">🔊</span>
               <input type="range" id="yt-vol-slider" min="0" max="100" value="70" oninput="changeSynthVolume(this.value)">
@@ -1267,9 +1266,11 @@
     // Starts or resets the 15-second background refresh loop
     function startTrackRefreshTimer() {
       stopTrackRefreshTimer();
+      triggerShazamFingerprint();
 
       trackRefreshTimer = setInterval(() => {
-        if (isSynthPlaying && synthAudioPlayer && !synthAudioPlayer.paused) {  
+        if (isSynthPlaying && synthAudioPlayer && !synthAudioPlayer.paused) {
+          triggerShazamFingerprint();
         }
       }, 15000);
     }
