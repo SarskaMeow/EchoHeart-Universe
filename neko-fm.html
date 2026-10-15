@@ -1337,55 +1337,34 @@
     /**
      * Fetches live artist and song title from TorontoCast Icecast status API via CORS proxy fallbacks
      */
-    async function triggerShazamFingerprint() {
-      const statusMsgEl = document.getElementById('yt-status-text');
-      const titleEl = document.getElementById('yt-channel-title');
+   async function triggerShazamFingerprint() {
+  const statusMsgEl = document.getElementById('yt-status-text');
+  const titleEl = document.getElementById('yt-channel-title');
 
-      if (statusMsgEl) statusMsgEl.innerText = "🔍 FETCHING LIVE TRACK INFO...";
+  if (statusMsgEl) statusMsgEl.innerText = "🔍 FETCHING LIVE TRACK INFO...";
 
-      const currentPreset = synthPresets[currentSynthPresetIdx];
-      const baseUrl = currentPreset.url.substring(0, currentPreset.url.lastIndexOf('/'));
-      const icecastStatsUrl = baseUrl + '/status-json.xsl';
+  const currentPreset = synthPresets[currentSynthPresetIdx];
+  
+  // Replace this URL with your deployed Cloudflare Worker endpoint
+  const workerEndpoint = `https://music-info.otaku-05c.workers.dev/?url=${encodeURIComponent(currentPreset.url)}`;
 
-      const proxies = [
-        (target) => `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`,
-        (target) => `https://corsproxy.io/?${encodeURIComponent(target)}`,
-        (target) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(target)}`
-      ];
+  try {
+    const res = await fetch(workerEndpoint);
+    const data = await res.json();
 
-      let data = null;
-
-      for (const getProxyUrl of proxies) {
-        try {
-          const proxyUrl = getProxyUrl(icecastStatsUrl);
-          const res = await fetch(proxyUrl);
-          if (res.ok) {
-            data = await res.json();
-            if (data) break;
-          }
-        } catch (e) {
-          console.warn("Proxy attempt failed:", e);
-        }
-      }
-
-      try {
-        let source = null;
-        if (data && data.icestats && data.icestats.source) {
-          source = Array.isArray(data.icestats.source) ? data.icestats.source[0] : data.icestats.source;
-        }
-
-        if (source && source.title) {
-          if (titleEl) titleEl.innerText = `🎵 ${source.title}`;
-          if (statusMsgEl) statusMsgEl.innerText = `🎤 ASIA DREAM RADIO • LIVE STREAM`;
-        } else {
-          if (statusMsgEl) statusMsgEl.innerText = "⚠️ METADATA NOT AVAILABLE";
-        }
-      } catch (err) {
-        console.error("TorontoCast metadata fetch failed:", err);
-        if (statusMsgEl) statusMsgEl.innerText = "⚠️ COULD NOT PARSE TRACK INFO";
-      }
+    if (data.success && data.title) {
+      if (titleEl) titleEl.innerText = `🎵 ${data.title}`;
+      if (statusMsgEl) statusMsgEl.innerText = `🎤 ${data.artist} • ASIA DREAM RADIO`;
+    } else {
+      if (titleEl) titleEl.innerText = currentPreset.name;
+      if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
     }
-
+  } catch (err) {
+    console.error("Worker metadata fetch failed:", err);
+    if (titleEl) titleEl.innerText = currentPreset.name;
+    if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
+  }
+}
     // Helper: Generate 4 random songs from the catalog for the hourly poll
     function generateRandomPollItems() {
       const performerOptions = [
