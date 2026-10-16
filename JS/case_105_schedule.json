@@ -1,0 +1,68 @@
+{
+  "mystery_id": "case_105_midnight_piano",
+  "title": "Case #105 — The Midnight Melody of Room 302",
+  "duration_days": 7,
+  "passcode_trigger": "HARMONY_1994",
+  "badge_reward": "Resonance Detective",
+  "timeline": [
+    {
+      "trigger_time": "Day 1 - 22:15",
+      "location": "bbs_board02",
+      "thread_id": "105",
+      "author": "Library_Yuki",
+      "author_badge": "Archivist",
+      "avatar_icon": "📚",
+      "message": "I was returning overdue reference books to the 3F archive just now. Room 302 (the old music classroom that's been locked since 2012) had faint piano notes coming from inside. It was playing a 4-bar minor chord progression over and over. When I touched the doorknob, the music stopped instantly."
+    },
+    {
+      "trigger_time": "Day 1 - 22:30",
+      "location": "chat_locker102",
+      "author": "Track_Captain_Ren",
+      "avatar_icon": "🏃",
+      "message": "@Library_Yuki bro Room 302 doesn't even have a piano anymore?? They moved all upright pianos to the B1 storage locker last semester during the renovation!!"
+    },
+    {
+      "trigger_time": "Day 2 - 01:05",
+      "location": "bbs_board02",
+      "thread_id": "105",
+      "author": "Bass_Sera",
+      "author_badge": "GIRLS PHANTOM DEAD",
+      "avatar_icon": "assets/sera.jpeg",
+      "is_npc": true,
+      "message": "We just picked up the vibration on our room mic down in Sub-Level 04. It's radiating straight through the air duct connected to Room 302. The pitch is tuned to exactly 432Hz—standard pitch used in Sakuraoka High back in the 90s."
+    },
+    {
+      "trigger_time": "Day 2 - 14:00",
+      "location": "neko_fm_ticker",
+      "message": "📟 [SL-04 SIGNAL ALERT] Resonance detected on Ch. 4 (432Hz). Check Lore Library 1994 Archives for passcode clue."
+    },
+    {
+      "trigger_time": "Day 3 - 20:00",
+      "location": "bbs_board02",
+      "thread_id": "105",
+      "author": "Akari_M",
+      "author_badge": "SENIOR INVESTIGATOR",
+      "avatar_icon": "assets/akari.jpeg",
+      "is_npc": true,
+      "message": "UPDATE: Nekomi found a torn sheet music scrap tucked inside the 1994 yearbook on the Lore page! If anyone can decipher the chord code and enter it into the SL-04 Terminal, we can feed the matching synth note through Neko FM to ground the signal!"
+    },
+    {
+      "trigger_time": "Day 5 - 18:30",
+      "location": "chat_locker102",
+      "author": "CatEars_Nekomi",
+      "avatar_icon": "assets/nekomi.jpeg",
+      "is_npc": true,
+      "message": "The air ducts are vibrating again... if you guys find the code in the Lore Library archives, put it in the BBS terminal tab before midnight!!"
+    },
+    {
+      "trigger_time": "Day 7 - 23:59",
+      "location": "bbs_vip_archive",
+      "thread_id": "105_resolved",
+      "author": "Akari_M",
+      "author_badge": "SENIOR INVESTIGATOR",
+      "avatar_icon": "assets/akari.jpeg",
+      "is_npc": true,
+      "message": "[CASE #105 RESOLVED REPORT] Code HARMONY_1994 verified! We matched the ghost chord progression to the unreleased chorus of EchoHeart Track #03. Full spectrograph analysis and unredacted Chapter 2 draft locked to Board 03 for Backstage VIPs."
+    }
+  ]
+}
