@@ -7,24 +7,30 @@
   <link rel="stylesheet" href="style.css">
   <script type="module" src="firebase-config.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap');
+
     :root {
-      --bg-main: #0F0E17;
-      --card-bg: #1A1829;
-      --card-inner: #120F20;
-      --accent-pink: #FF2A85;
-      --accent-purple: #A88BEB;
+      --bg-main: #0B0914;
+      --card-bg: rgba(23, 18, 38, 0.92);
+      --card-inner: rgba(14, 11, 26, 0.85);
+      --accent-pink: #FF3B8D;
+      --accent-purple: #B282FF;
       --accent-cyan: #00F0FF;
       --accent-gold: #FFD166;
-      --accent-green: #40C057;
-      --text-light: #FFFFFE;
-      --text-muted: #A7A9BE;
-      --border-subtle: rgba(168, 139, 235, 0.25);
+      --accent-green: #38E57C;
+      --text-light: #F4EFFD;
+      --text-muted: #A09BB9;
+      --border-subtle: rgba(178, 130, 255, 0.28);
+      --border-glow: rgba(255, 59, 141, 0.35);
     }
 
     body {
       background: var(--bg-main);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(255, 59, 141, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(0, 240, 255, 0.06) 0%, transparent 45%);
       color: var(--text-light);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'M PLUS Rounded 1c', 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
     }
@@ -35,9 +41,9 @@
       top: 0;
       z-index: 1000;
       width: 100%;
-      background: rgba(15, 14, 23, 0.95);
+      background: rgba(11, 9, 20, 0.94);
       border-bottom: 2px solid var(--border-subtle);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px);
       box-sizing: border-box;
     }
 
@@ -52,10 +58,10 @@
 
     .logo-main {
       font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #FF7BB0, var(--accent-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -70,7 +76,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .nav-item {
@@ -78,14 +84,15 @@
       font-size: 0.88rem;
       font-weight: 700;
       padding: 8px 14px;
-      border-radius: 10px;
+      border-radius: 12px;
       text-decoration: none;
       transition: all 0.25s ease;
     }
 
     .nav-item:hover, .nav-item.active {
-      background: rgba(255, 42, 133, 0.15);
-      color: var(--text-light);
+      background: rgba(255, 59, 141, 0.15);
+      color: #FFFFFF;
+      box-shadow: 0 0 12px rgba(255, 59, 141, 0.2);
     }
 
     /* MAIN CONTAINER */
@@ -95,78 +102,78 @@
       padding: 0 20px;
     }
 
-    /* TOP TERMINAL BAR */
+    /* ANIME HERO HEADER BAR */
     .bbs-terminal-bar {
-      background: rgba(10, 5, 22, 0.95);
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: 12px 20px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 14px 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: var(--text-muted);
-      font-family: 'Courier New', Courier, monospace;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      margin-bottom: 22px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     }
 
     .terminal-status-group { display: flex; align-items: center; gap: 10px; }
-    .terminal-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
+    .terminal-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
     .terminal-dot.pulsing { animation: pulse-green 1.5s infinite; }
 
     @keyframes pulse-green {
-      0% { box-shadow: 0 0 0 0 rgba(64, 192, 87, 0.7); }
-      70% { box-shadow: 0 0 0 8px rgba(64, 192, 87, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(64, 192, 87, 0); }
+      0% { box-shadow: 0 0 0 0 rgba(56, 229, 124, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(56, 229, 124, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(56, 229, 124, 0); }
     }
 
     .badge-after-dark {
-      background: rgba(255, 42, 133, 0.2);
+      background: rgba(255, 59, 141, 0.2);
       border: 1px solid var(--accent-pink);
       color: var(--accent-pink);
-      padding: 3px 10px;
-      border-radius: 6px;
-      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.78rem;
     }
 
-    /* DIEGETIC 3-TAB NAVIGATION BAR */
+    /* STORY TABS */
     .bbs-tab-bar {
       display: flex;
       gap: 10px;
       background: var(--card-bg);
-      padding: 10px 14px;
-      border-radius: 16px 16px 0 0;
-      border: 1px solid var(--border-subtle);
+      padding: 12px 16px 0;
+      border-radius: 20px 20px 0 0;
+      border: 1.5px solid var(--border-subtle);
       border-bottom: none;
-      font-family: 'Courier New', monospace;
       flex-wrap: wrap;
     }
 
     .bbs-tab {
-      background: rgba(15, 14, 23, 0.8);
+      background: rgba(14, 11, 26, 0.8);
       color: var(--text-muted);
-      padding: 12px 20px;
-      border-radius: 10px 10px 0 0;
+      padding: 12px 22px;
+      border-radius: 12px 12px 0 0;
       cursor: pointer;
       border: 1px solid transparent;
-      font-size: 0.88rem;
-      font-weight: bold;
-      transition: all 0.2s ease;
+      font-size: 0.92rem;
+      font-weight: 800;
+      transition: all 0.25s ease;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .bbs-tab:hover {
-      color: var(--text-light);
-      background: rgba(255, 42, 133, 0.1);
+      color: #FFFFFF;
+      background: rgba(255, 59, 141, 0.15);
     }
 
     .bbs-tab.active-tab {
       background: var(--card-bg);
       color: var(--accent-cyan);
       border-color: var(--accent-cyan) var(--accent-cyan) transparent var(--accent-cyan);
+      box-shadow: 0 -4px 15px rgba(0, 240, 255, 0.15);
     }
 
     .bbs-tab.vip-tab {
@@ -175,16 +182,17 @@
 
     .bbs-tab.vip-tab.active-tab {
       border-color: var(--accent-gold) var(--accent-gold) transparent var(--accent-gold);
+      box-shadow: 0 -4px 15px rgba(255, 209, 102, 0.15);
     }
 
     /* TAB CONTENT PANELS */
     .tab-panel {
       display: none;
       background: var(--card-bg);
-      border: 1px solid var(--border-subtle);
-      border-radius: 0 0 16px 16px;
-      padding: 24px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 0 0 20px 20px;
+      padding: 26px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.5);
     }
 
     .tab-panel.active-panel {
@@ -195,168 +203,172 @@
     .bbs-main-layout {
       display: grid;
       grid-template-columns: 2.8fr 1.2fr;
-      gap: 22px;
+      gap: 24px;
     }
 
     @media (max-width: 960px) {
       .bbs-main-layout { grid-template-columns: 1fr; }
     }
 
-    /* DOSSIER & BADGE WIDGET */
+    /* INVESTIGATOR BADGE DOSSIER */
     .investigator-docket {
-      background: linear-gradient(145deg, rgba(26, 24, 41, 0.95), rgba(15, 14, 23, 0.95));
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 18px 22px;
-      margin-bottom: 20px;
+      background: linear-gradient(135deg, rgba(30, 22, 50, 0.9), rgba(15, 11, 28, 0.9));
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 20px 24px;
+      margin-bottom: 22px;
     }
 
     .rank-badge-pill {
       background: rgba(255, 209, 102, 0.18);
       border: 1px solid var(--accent-gold);
       color: var(--accent-gold);
-      padding: 4px 12px;
+      padding: 4px 14px;
       border-radius: 20px;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 800;
     }
 
     .badge-collection-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 10px;
+      gap: 12px;
       margin-top: 14px;
     }
 
     .badge-item-card {
       background: var(--card-inner);
       border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 10px 12px;
+      border-radius: 12px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 0.82rem;
+      font-size: 0.84rem;
       font-weight: 700;
       color: var(--text-light);
     }
 
-    /* FILTER BAR */
+    /* FILTER BUTTONS */
     .bbs-filter-bar {
       display: flex;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       flex-wrap: wrap;
       align-items: center;
     }
 
     .filter-btn {
-      background: rgba(15, 14, 23, 0.85);
+      background: rgba(14, 11, 26, 0.85);
       border: 1px solid var(--border-subtle);
       color: var(--text-muted);
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-size: 0.85rem;
+      padding: 8px 18px;
+      border-radius: 12px;
+      font-size: 0.86rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
     }
 
     .filter-btn.active, .filter-btn:hover {
       border-color: var(--accent-pink);
-      color: var(--text-light);
-      background: rgba(255, 42, 133, 0.15);
+      color: #FFFFFF;
+      background: rgba(255, 59, 141, 0.18);
+      box-shadow: 0 0 12px rgba(255, 59, 141, 0.25);
     }
 
     .action-btn-primary {
-      padding: 8px 18px;
+      padding: 10px 20px;
       background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
       border: none;
-      border-radius: 10px;
-      color: var(--text-light);
+      border-radius: 12px;
+      color: #FFFFFF;
       font-weight: 800;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       margin-left: auto;
+      box-shadow: 0 4px 15px rgba(255, 59, 141, 0.3);
+      transition: transform 0.2s ease;
     }
 
-    /* THREAD CARDS & DIALOGUE CHAINS */
+    .action-btn-primary:hover { transform: translateY(-2px); }
+
+    /* THREAD CARDS */
     .bbs-thread-card {
       background: var(--card-inner);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 20px;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 22px;
       margin-bottom: 22px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
     }
 
     .bbs-thread-card.after-dark-glow {
       border-color: var(--accent-pink);
-      box-shadow: 0 0 20px rgba(255, 42, 133, 0.18);
+      box-shadow: 0 0 24px rgba(255, 59, 141, 0.22);
     }
 
     .thread-main-header {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 12px;
+      padding-bottom: 14px;
     }
 
-    .thread-title { margin: 6px 0 4px; color: var(--text-light); font-size: 1.15rem; line-height: 1.4; }
-    .thread-meta { font-size: 0.78rem; color: var(--accent-purple); }
+    .thread-title { margin: 8px 0 4px; color: #FFFFFF; font-size: 1.18rem; line-height: 1.4; font-weight: 800; }
+    .thread-meta { font-size: 0.8rem; color: var(--accent-purple); }
 
-    .thread-tag { font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.5px; }
+    .thread-tag { font-size: 0.74rem; font-weight: 800; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.5px; }
     .thread-tag.rumor { background: rgba(255, 209, 102, 0.2); color: var(--accent-gold); }
-    .thread-tag.dark { background: rgba(255, 42, 133, 0.2); color: var(--accent-pink); }
-    .thread-tag.official { background: rgba(64, 192, 87, 0.2); color: var(--accent-green); }
+    .thread-tag.dark { background: rgba(255, 59, 141, 0.2); color: var(--accent-pink); }
+    .thread-tag.official { background: rgba(56, 229, 124, 0.2); color: var(--accent-green); }
 
-    .thread-replies-chain { display: flex; flex-direction: column; gap: 12px; }
+    .thread-replies-chain { display: flex; flex-direction: column; gap: 14px; }
 
     .bbs-post-reply {
-      background: rgba(15, 14, 23, 0.7);
-      border-left: 3.5px solid var(--accent-purple);
-      padding: 12px 16px;
-      border-radius: 0 10px 10px 0;
+      background: rgba(11, 9, 20, 0.7);
+      border-left: 4px solid var(--accent-purple);
+      padding: 14px 18px;
+      border-radius: 0 14px 14px 0;
     }
 
-    .bbs-post-reply.npc-reply { border-left-color: var(--accent-gold); background: rgba(30, 25, 15, 0.4); }
-    .bbs-post-reply.highlight { border-left-color: var(--accent-pink); background: rgba(35, 15, 28, 0.5); }
+    .bbs-post-reply.npc-reply { border-left-color: var(--accent-gold); background: rgba(35, 28, 16, 0.45); }
+    .bbs-post-reply.highlight { border-left-color: var(--accent-pink); background: rgba(40, 16, 32, 0.55); }
 
-    .bbs-author { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .bbs-author { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 
     .author-avatar-sm {
-      width: 32px; height: 32px; border-radius: 50%;
-      object-fit: cover; border: 1.5px solid var(--accent-purple);
+      width: 36px; height: 36px; border-radius: 50%;
+      object-fit: cover; border: 2px solid var(--accent-purple);
     }
 
     .avatar-icon-sm {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: rgba(168, 139, 235, 0.2);
-      display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(178, 130, 255, 0.2);
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
     }
 
     .npc-badge {
-      background: var(--accent-gold); color: #000;
-      font-size: 0.65rem; font-weight: 900;
-      padding: 1px 6px; border-radius: 4px; margin-left: 6px;
+      background: var(--accent-gold); color: #000000;
+      font-size: 0.68rem; font-weight: 900;
+      padding: 2px 8px; border-radius: 6px; margin-left: 6px;
     }
 
     .user-badge-student {
-      font-size: 0.68rem; color: var(--accent-purple);
-      background: rgba(168, 139, 235, 0.15);
-      padding: 1px 6px; border-radius: 4px; margin-left: 6px;
+      font-size: 0.7rem; color: var(--accent-purple);
+      background: rgba(178, 130, 255, 0.18);
+      padding: 2px 8px; border-radius: 6px; margin-left: 6px;
     }
 
-    .post-time { font-size: 0.74rem; color: var(--accent-purple); margin-left: auto; }
-    .post-content { margin: 0; font-size: 0.92rem; line-height: 1.5; color: var(--text-light); }
+    .post-time { font-size: 0.76rem; color: var(--accent-purple); margin-left: auto; }
+    .post-content { margin: 0; font-size: 0.94rem; line-height: 1.6; color: var(--text-light); }
 
-    /* TAB 2: PHANTOM TERMINAL ANALYZER STYLES */
+    /* TAB 2: MYSTERY DECODER STYLES */
     .terminal-analyzer-box {
-      background: rgba(10, 8, 18, 0.95);
+      background: rgba(11, 9, 20, 0.95);
       border: 2px solid var(--accent-cyan);
-      border-radius: 14px;
-      padding: 24px;
-      font-family: 'Courier New', Courier, monospace;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+      border-radius: 18px;
+      padding: 26px;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.18);
     }
 
     .terminal-title-bar {
@@ -364,45 +376,46 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(0, 240, 255, 0.3);
-      padding-bottom: 12px;
-      margin-bottom: 18px;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
     }
 
     .terminal-code-input-group {
       display: flex;
       gap: 12px;
-      margin: 20px 0;
+      margin: 22px 0;
     }
 
     .terminal-text-input {
       flex: 1;
-      background: #000;
-      border: 1px solid var(--accent-cyan);
-      border-radius: 8px;
-      padding: 12px 16px;
+      background: #000000;
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 12px;
+      padding: 12px 18px;
       color: var(--accent-cyan);
       font-family: inherit;
-      font-size: 0.95rem;
+      font-size: 0.98rem;
       outline: none;
     }
 
     .terminal-submit-btn {
-      background: var(--accent-pink);
-      color: #fff;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      color: #FFFFFF;
       border: none;
-      border-radius: 8px;
-      padding: 12px 24px;
+      border-radius: 12px;
+      padding: 12px 26px;
       font-family: inherit;
-      font-weight: bold;
+      font-weight: 800;
       cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 59, 141, 0.3);
     }
 
     .terminal-output-log {
       background: #05040A;
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 8px;
-      padding: 16px;
-      font-size: 0.88rem;
+      border: 1px solid rgba(178, 130, 255, 0.3);
+      border-radius: 12px;
+      padding: 18px;
+      font-size: 0.9rem;
       line-height: 1.6;
       min-height: 80px;
       display: none;
@@ -412,23 +425,23 @@
       display: block;
       border-color: var(--accent-gold);
       color: var(--accent-gold);
-      background: rgba(255, 209, 102, 0.05);
+      background: rgba(255, 209, 102, 0.08);
     }
 
     .terminal-output-log.error {
       display: block;
       border-color: var(--accent-pink);
       color: var(--accent-pink);
-      background: rgba(255, 42, 133, 0.05);
+      background: rgba(255, 59, 141, 0.08);
     }
 
-    /* TAB 3: VIP CAVERN VAULT STYLES */
+    /* TAB 3: SECRET CASE FILES STYLES */
     .vip-vault-header {
-      background: rgba(255, 209, 102, 0.1);
-      border: 1px solid var(--accent-gold);
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 20px;
+      background: rgba(255, 209, 102, 0.12);
+      border: 1.5px solid var(--accent-gold);
+      border-radius: 16px;
+      padding: 18px 24px;
+      margin-bottom: 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -436,11 +449,11 @@
 
     .vip-card-locked {
       background: var(--card-inner);
-      border: 1px dashed var(--accent-gold);
-      border-radius: 14px;
-      padding: 24px;
+      border: 1.5px dashed var(--accent-gold);
+      border-radius: 18px;
+      padding: 26px;
       position: relative;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     .vip-stamp-overlay {
@@ -453,51 +466,51 @@
       font-size: 0.8rem;
       letter-spacing: 1px;
       display: inline-block;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     /* SIDEBAR WIDGETS */
     .sidebar-widget {
       background: var(--card-inner);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 18px;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 20px;
     }
 
-    .widget-title { margin: 0 0 14px; color: var(--accent-pink); font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .widget-title { margin: 0 0 16px; color: var(--accent-pink); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; }
 
-    .student-status-list { display: flex; flex-direction: column; gap: 12px; }
-    .student-status-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
-    .status-indicator { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .status-indicator.online { background: var(--accent-green); box-shadow: 0 0 6px var(--accent-green); }
-    .status-indicator.busy { background: var(--accent-pink); box-shadow: 0 0 6px var(--accent-pink); }
+    .student-status-list { display: flex; flex-direction: column; gap: 14px; }
+    .student-status-item { display: flex; align-items: center; gap: 12px; font-size: 0.88rem; }
+    .status-indicator { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .status-indicator.online { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+    .status-indicator.busy { background: var(--accent-pink); box-shadow: 0 0 8px var(--accent-pink); }
     .status-indicator.away { background: var(--accent-gold); }
-    .status-text { font-size: 0.74rem; color: var(--accent-purple); margin-top: 1px; }
+    .status-text { font-size: 0.76rem; color: var(--accent-purple); margin-top: 2px; }
 
     .quick-clue-item {
-      background: rgba(15, 14, 23, 0.85);
+      background: rgba(11, 9, 20, 0.85);
       border: 1px solid var(--border-subtle);
-      padding: 10px 14px;
-      border-radius: 10px;
-      margin-bottom: 8px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 10px;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       display: flex;
       align-items: center;
       gap: 10px;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
     }
 
-    .quick-clue-item:hover { border-color: var(--accent-pink); color: #fff; transform: translateX(3px); }
-    .clue-tag-mini { background: rgba(255, 42, 133, 0.2); color: var(--accent-pink); font-size: 0.68rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    .quick-clue-item:hover { border-color: var(--accent-pink); color: #FFFFFF; transform: translateX(4px); }
+    .clue-tag-mini { background: rgba(255, 59, 141, 0.2); color: var(--accent-pink); font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; font-weight: 800; }
 
     /* MODAL OVERLAYS */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(5, 2, 12, 0.88);
-      backdrop-filter: blur(10px);
+      background: rgba(5, 3, 12, 0.88);
+      backdrop-filter: blur(12px);
       z-index: 2000;
       display: flex;
       align-items: center;
@@ -508,28 +521,28 @@
     .modal-card {
       background: var(--card-bg);
       border: 2px solid var(--accent-purple);
-      border-radius: 18px;
-      padding: 28px;
+      border-radius: 20px;
+      padding: 30px;
       max-width: 500px;
       width: 100%;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.85);
     }
 
     .form-input-text {
       width: 100%;
-      padding: 10px 14px;
-      background: #000;
+      padding: 12px 16px;
+      background: #000000;
       border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      color: #fff;
+      border-radius: 10px;
+      color: #FFFFFF;
       box-sizing: border-box;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       font-family: inherit;
     }
 
     .modal-actions { display: flex; flex-direction: column; gap: 10px; }
-    .modal-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; }
-    .btn-submit { background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); color: #fff; }
+    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
+    .btn-submit { background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); color: #FFFFFF; }
     .btn-close { background: transparent; color: var(--text-muted); border: 1px solid var(--border-subtle); }
   </style>
 </head>
@@ -558,36 +571,36 @@
   <!-- MAIN CONTENT CONTAINER -->
   <main class="bbs-container">
 
-    <!-- TOP TERMINAL HEADER -->
+    <!-- TOP ANIME BANNER -->
     <div class="bbs-terminal-bar">
       <div class="terminal-status-group">
         <span class="terminal-dot pulsing"></span>
-        <strong>SAKURAOKA-NET // SUB-LEVEL 04 NETWORK PORTAL</strong>
+        <strong>🌸 SAKURAOKA HIGH // THE PHANTOM ROOM BULLETIN</strong>
         <span style="opacity: 0.3;">|</span>
-        <span id="bbs-server-time">Server Time: Loading...</span>
+        <span id="bbs-server-time">Campus Clock: Loading...</span>
       </div>
       <div class="terminal-status-group">
-        <span>Campus Terminals Active: <strong id="bbs-active-count" style="color: var(--accent-gold);">--</strong></span>
+        <span>Active Students: <strong id="bbs-active-count" style="color: var(--accent-gold);">--</strong></span>
         <span style="opacity: 0.3;">|</span>
         <span id="bbs-mode-badge" class="badge-after-dark">🌙 AFTER HOURS MODE</span>
       </div>
     </div>
 
-    <!-- DIEGETIC 3-TAB NAVIGATION -->
+    <!-- 3 STORY TABS -->
     <div class="bbs-tab-bar">
       <div class="bbs-tab active-tab" onclick="switchBBSTab('public-board', this)">
-        💬 BOARD 02 // PUBLIC RUMORS
+        💬 SCHOOL RUMORS
       </div>
       <div class="bbs-tab" onclick="switchBBSTab('phantom-terminal', this)">
-        📟 SL-04 TERMINAL [ANALYZER]
+        🔍 MYSTERY DECODER
       </div>
       <div class="bbs-tab vip-tab" onclick="switchBBSTab('vip-archive', this)">
-        🔒 BOARD 03 // CAVERN FILES [VIP]
+        🔒 SECRET CASE FILES [VIP]
       </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 1: PUBLIC RUMORS (DEFAULT ACTIVE)                       -->
+    <!-- TAB 1: PUBLIC SCHOOL RUMORS                                  -->
     <!-- ============================================================ -->
     <div id="public-board" class="tab-panel active-panel">
       <div class="bbs-main-layout">
@@ -599,8 +612,8 @@
           <div class="investigator-docket">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
               <div>
-                <span style="font-size: 0.72rem; color: var(--accent-gold); font-weight: 800; letter-spacing: 1px;">🕵️ STUDENT INVESTIGATOR DOSSIER</span>
-                <h3 style="margin: 2px 0 0; color: #ffffff; font-size: 1.15rem;">Campus Mystery Clearance</h3>
+                <span style="font-size: 0.74rem; color: var(--accent-gold); font-weight: 800; letter-spacing: 1px;">🕵️ STUDENT MYSTERY DOSSIER</span>
+                <h3 style="margin: 2px 0 0; color: #FFFFFF; font-size: 1.15rem;">School Mystery Badges</h3>
               </div>
               <span id="investigator-rank-tag" class="rank-badge-pill">Rank: Novice Sleuth</span>
             </div>
@@ -612,28 +625,28 @@
               </div>
               <div id="badge-frequency" class="badge-item-card">
                 <span style="font-size: 1.2rem;">🎧</span>
-                <span>Signal Specialist</span>
+                <span>Signal Listener</span>
               </div>
               <div id="badge-phantom" class="badge-item-card">
                 <span style="font-size: 1.2rem;">🗝️</span>
-                <span>Phantom Room Insider</span>
+                <span>Phantom Member</span>
               </div>
             </div>
           </div>
 
           <!-- FILTER BAR -->
           <div class="bbs-filter-bar">
-            <button class="filter-btn active" onclick="filterBBS('all')">💬 All Threads</button>
-            <button class="filter-btn" onclick="filterBBS('rumors')">🔥 Campus Rumors</button>
-            <button class="filter-btn" onclick="filterBBS('afterdark')">🌙 After Hours</button>
+            <button class="filter-btn active" onclick="filterBBS('all')">💬 All Posts</button>
+            <button class="filter-btn" onclick="filterBBS('rumors')">🔥 School Gossip</button>
+            <button class="filter-btn" onclick="filterBBS('afterdark')">🌙 Night Sightings</button>
             <button class="filter-btn" onclick="filterBBS('official')">📋 Student Council</button>
-            <button class="action-btn-primary" onclick="openTheoryModal()">+ New Post</button>
+            <button class="action-btn-primary" onclick="openTheoryModal()">+ Post Sighting</button>
           </div>
 
           <!-- THREAD FEED CONTAINER -->
           <div id="bbs-posts-container">
 
-            <!-- THREAD #104: THE WINDOW WATCHER (REAL-TIME EVENT) -->
+            <!-- THREAD #104: ACTIVE MYSTERY -->
             <article class="bbs-thread-card after-dark-glow" data-category="afterdark">
               <div class="thread-main-header">
                 <span class="thread-tag dark">🌙 [ACTIVE MYSTERY]</span>
@@ -651,7 +664,7 @@
                       <div class="post-time">21:14</div>
                     </div>
                   </div>
-                  <p class="post-content">"Okay I know how crazy this sounds, but I’m cramming for the history midterm alone in 2F Study Room B. I took off my headphones for two seconds and looked at the reflection in the window facing the quad.<br><br>There was a figure standing <em>right outside</em> on the narrow concrete ledge. Pale, dark uniform, totally motionless, staring through the glass at me. <strong>WE ARE ON THE SECOND FLOOR.</strong> I ran into the hallway to check, but when I opened the exterior door 10 seconds later, nobody was there. Courtyard was dead silent. Am I losing my mind?"</p>
+                  <p class="post-content">"Okay I know how crazy this sounds, but I’m cramming for the history midterm alone in 2F Study Room B. I took off my headphones for two seconds and looked at the reflection in the window facing the quad.<br><br>There was a figure standing <em>right outside</em> on the narrow concrete ledge. Pale, dark uniform, totally motionless, staring through the glass at me. <strong>WE ARE ON THE SECOND FLOOR.</strong> I ran into the hallway to check, but when I opened the door 10 seconds later, nobody was there. Courtyard was dead silent. Am I losing my mind?"</p>
                 </div>
 
                 <!-- Kaito -->
@@ -693,13 +706,13 @@
                 <!-- Sera NPC -->
                 <div class="bbs-post-reply npc-reply">
                   <div class="bbs-author">
-                    <img src="assets/sera.jpeg" alt="Sera" class="author-avatar-sm" onerror="this.src='https://via.placeholder.com/32'">
+                    <img src="assets/sera.jpeg" alt="Sera" class="author-avatar-sm" onerror="this.src='https://via.placeholder.com/36'">
                     <div>
                       <strong>Bass_Sera <span class="npc-badge">GIRLS PHANTOM DEAD</span></strong>
                       <div class="post-time">22:15</div>
                     </div>
                   </div>
-                  <p class="post-content">"@Hiro_Class2B Don't walk down the B-wing emergency stairs on your way out. Take the main lobby stairs instead. That study room sits directly above <strong>The Phantom Room (Sub-Level 04)</strong> in the basement. We're picking up severe magnetic spikes on the mixing console right now."</p>
+                  <p class="post-content">"@Hiro_Class2B Don't walk down the B-wing emergency stairs on your way out. Take the main lobby stairs instead. That study room sits directly above <strong>The Phantom Room</strong> in the basement. We're picking up strange room vibrations on our band console right now."</p>
                 </div>
 
                 <!-- Ren -->
@@ -717,21 +730,21 @@
                 <!-- Akari NPC -->
                 <div class="bbs-post-reply npc-reply highlight">
                   <div class="bbs-author">
-                    <img src="assets/akari.jpeg" alt="Akari" class="author-avatar-sm" onerror="this.src='https://via.placeholder.com/32'">
+                    <img src="assets/akari.jpeg" alt="Akari" class="author-avatar-sm" onerror="this.src='https://via.placeholder.com/36'">
                     <div>
                       <strong>Akari_M <span class="npc-badge">SENIOR INVESTIGATOR</span></strong>
                       <div class="post-time">00:03</div>
                     </div>
                   </div>
-                  <p class="post-content">"Sera and I just finished inspecting the 2F exterior ledge and the B1 drainage pump directly below it. If you found the frequency code on Neko FM or in the chapter notes, enter it in the <strong>SL-04 Terminal</strong> tab to help us decrypt the log file!"</p>
+                  <p class="post-content">"Sera and I just finished inspecting the 2F exterior ledge and the basement drainage pump below it. If you found the mystery secret code on Neko FM or in the chapter notes, enter it in the <strong>Mystery Decoder</strong> tab to help us solve the case!"</p>
                 </div>
               </div>
             </article>
 
-            <!-- THREAD #089: NEKO FM B1 STATIC -->
+            <!-- THREAD #089: NEKO FM STATIC -->
             <article class="bbs-thread-card" data-category="rumors">
               <div class="thread-main-header">
-                <span class="thread-tag rumor">🔥 [RUMOR]</span>
+                <span class="thread-tag rumor">🔥 [SCHOOL GOSSIP]</span>
                 <h2 class="thread-title">#089 — Strange static feedback on Neko FM around 2:15 AM?</h2>
                 <span class="thread-meta">Thread #089 • Started by NightOwl_33</span>
               </div>
@@ -745,40 +758,18 @@
                       <div class="post-time">02:20</div>
                     </div>
                   </div>
-                  <p class="post-content">"I kept Neko FM playing in a background tab while studying. Right between the midnight track drop and the podcast replay, there was 5 seconds of raw high-frequency static. It sounded almost like a reversed voice recording coming from under Sub-Level 04."</p>
+                  <p class="post-content">"I kept Neko FM playing in a background tab while studying. Right between the midnight track drop and the podcast replay, there was 5 seconds of strange static. It sounded almost like a reversed voice recording coming from under The Phantom Room."</p>
                 </div>
 
                 <div class="bbs-post-reply npc-reply">
                   <div class="bbs-author">
-                    <img src="assets/nekomi.jpeg" alt="Nekomi" class="author-avatar-sm" onerror="this.src='https://via.placeholder.com/32'">
+                    <img src="assets/nekomi.jpeg" alt="Nekomi" class="author-avatar-sm" onerror="this.src='https://via.placeholder.com/36'">
                     <div>
                       <strong>CatEars_Nekomi <span class="npc-badge">GIRLS PHANTOM DEAD</span></strong>
                       <div class="post-time">02:35</div>
                     </div>
                   </div>
-                  <p class="post-content">"Don't poke around Sub-Level 04 after hours! The floorboards leak sound from the old drainage pipes, that's all. Definitely just pipe noise... 🤐"</p>
-                </div>
-              </div>
-            </article>
-
-            <!-- THREAD #042: THE 13TH STEP -->
-            <article class="bbs-thread-card" data-category="afterdark">
-              <div class="thread-main-header">
-                <span class="thread-tag dark">🌙 [GHOST SIGHTING]</span>
-                <h2 class="thread-title">#042 — The B1 Staircase had an extra step during third period rain?</h2>
-                <span class="thread-meta">Thread #042 • Started by Library_Yuki</span>
-              </div>
-
-              <div class="thread-replies-chain">
-                <div class="bbs-post-reply">
-                  <div class="bbs-author">
-                    <div class="avatar-icon-sm">📚</div>
-                    <div>
-                      <strong>Library_Yuki <span class="user-badge-student">Archivist</span></strong>
-                      <div class="post-time">14:10</div>
-                    </div>
-                  </div>
-                  <p class="post-content">"The stairs leading down to The Phantom Room normally have 12 steps. But when I went down during the rainstorm today, I counted 13 steps before hitting the basement landing. The 13th step felt cold through my shoes."</p>
+                  <p class="post-content">"Don't poke around The Phantom Room after hours! The floorboards leak sound from the old drainage pipes, that's all. Definitely just pipe noise... 🤐"</p>
                 </div>
               </div>
             </article>
@@ -791,20 +782,20 @@
 
           <!-- ACTIVE NETWORK ROSTER -->
           <div class="sidebar-widget">
-            <h3 class="widget-title">🌐 Active Campus Network</h3>
+            <h3 class="widget-title">💬 Online Students</h3>
             <div class="student-status-list">
               <div class="student-status-item">
                 <div class="status-indicator online"></div>
                 <div>
                   <strong>Akari_M</strong>
-                  <div class="status-text">"Sub-Level 04 Mixing Desk"</div>
+                  <div class="status-text">"Phantom Room Band Desk"</div>
                 </div>
               </div>
               <div class="student-status-item">
                 <div class="status-indicator busy"></div>
                 <div>
                   <strong>Bass_Sera</strong>
-                  <div class="status-text">"Analyzing B1 Drainage Pump"</div>
+                  <div class="status-text">"Checking B1 Drainage Line"</div>
                 </div>
               </div>
               <div class="student-status-item">
@@ -831,16 +822,16 @@
             </div>
           </div>
 
-          <!-- QUICK EVIDENCE DOSSIER -->
+          <!-- UNCOVERED CLUES -->
           <div class="sidebar-widget">
-            <h3 class="widget-title">🔍 Quick Clue Dossier</h3>
+            <h3 class="widget-title">🔍 Uncovered Clues</h3>
             <div class="quick-clue-item" onclick="openClueModal(1)">
-              <span class="clue-tag-mini">LOG #104</span>
-              <strong>Window Handprint Log</strong>
+              <span class="clue-tag-mini">CASE #104</span>
+              <strong>Window Handprint Note</strong>
             </div>
             <div class="quick-clue-item" onclick="openClueModal(2)">
-              <span class="clue-tag-mini">LOG #089</span>
-              <strong>B1 Drainage Frequency</strong>
+              <span class="clue-tag-mini">CASE #089</span>
+              <strong>B1 Drainage Note</strong>
             </div>
           </div>
 
@@ -850,61 +841,61 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 2: PHANTOM TERMINAL SIGNAL ANALYZER                      -->
+    <!-- TAB 2: MYSTERY DECODER                                       -->
     <!-- ============================================================ -->
     <div id="phantom-terminal" class="tab-panel">
       <div class="terminal-analyzer-box">
         <div class="terminal-title-bar">
-          <span style="color: var(--accent-cyan); font-weight: bold;">📟 PHANTOM ROOM // SUB-LEVEL 04 SIGNAL ANALYZER</span>
-          <span style="color: var(--accent-pink); font-size: 0.8rem;">● CASE #104 ACTIVE</span>
+          <span style="color: var(--accent-cyan); font-weight: 800; font-size: 1rem;">🔍 PHANTOM ROOM // MYSTERY DECODER</span>
+          <span style="color: var(--accent-pink); font-size: 0.82rem; font-weight: 800;">● ACTIVE EVENT</span>
         </div>
 
-        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-          Notice an audio glitch on Neko FM or a strange frequency code mentioned in the forum chatter? Enter the recovered keyword or frequency passcode below to calibrate the club's mixing console and verify the evidence.
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+          Hear a weird audio note on Neko FM or spot a secret passcode in the forum chatter? Enter the mystery keyword below to help the girls solve the case!
         </p>
 
         <div class="terminal-code-input-group">
-          <input type="text" id="evidenceInput" class="terminal-text-input" placeholder="Enter keyword (e.g. DRAINAGE_B1, 440HZ)..." autocomplete="off">
-          <button class="terminal-submit-btn" onclick="submitEvidence()">VERIFY SIGNAL</button>
+          <input type="text" id="evidenceInput" class="terminal-text-input" placeholder="Enter mystery passcode (e.g. DRAINAGE_B1, HARMONY_1994)..." autocomplete="off">
+          <button class="terminal-submit-btn" onclick="submitEvidence()">SUBMIT CLUE</button>
         </div>
 
         <div id="terminalOutput" class="terminal-output-log"></div>
 
-        <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(0,240,255,0.2); font-size: 0.85rem; color: var(--text-muted);">
-          <strong style="color: var(--accent-cyan);">HINT LOCATIONS ACROSS THE SITE:</strong>
-          <ul style="margin: 8px 0 0 18px; padding: 0;">
-            <li>Check the live text ticker on the <strong>24/7 Neko FM</strong> player header.</li>
-            <li>Read the author margin notes at the end of <strong>EchoHeart Chapter 1</strong> on the Lore page.</li>
-            <li>Listen for the 3-second audio chime between songs on the radio stream.</li>
+        <div style="margin-top: 26px; padding-top: 18px; border-top: 1px solid rgba(0,240,255,0.2); font-size: 0.88rem; color: var(--text-muted);">
+          <strong style="color: var(--accent-cyan);">WHERE TO FIND MYSTERY CODES:</strong>
+          <ul style="margin: 10px 0 0 18px; padding: 0; line-height: 1.6;">
+            <li>Check the live text banner on the <strong>24/7 Neko FM</strong> player.</li>
+            <li>Read the author margin notes inside Chapter 1 on the <strong>Lore & Books</strong> page.</li>
+            <li>Listen for the short chime between songs on the radio stream.</li>
           </ul>
         </div>
       </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 3: BOARD 03 CAVERN FILES [VIP]                           -->
+    <!-- TAB 3: SECRET CASE FILES [VIP]                               -->
     <!-- ============================================================ -->
     <div id="vip-archive" class="tab-panel">
       <div class="vip-vault-header">
         <div>
-          <h3 style="margin: 0; color: var(--accent-gold);">🔒 BOARD 03 // CAVERN CASE FILES</h3>
-          <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--text-muted);">Restricted investigation records & unredacted EchoHeart light novel lore.</p>
+          <h3 style="margin: 0; color: var(--accent-gold); font-size: 1.15rem;">🔒 SECRET CASE FILES & NOVEL LORE</h3>
+          <p style="margin: 4px 0 0; font-size: 0.88rem; color: var(--text-muted);">Unredacted investigation reports and advance EchoHeart story chapters.</p>
         </div>
         <span class="rank-badge-pill">BACKSTAGE VIP ACCESS</span>
       </div>
 
       <div class="vip-card-locked">
         <span class="vip-stamp-overlay">[STAMP: SENIOR INVESTIGATOR CLEARANCE REQUIRED]</span>
-        <h3 style="margin: 6px 0 10px; color: #fff;">CASE FILE #104: THE WINDOW WATCHER (RESOLVED REPORT)</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-          Full spectrograph analysis of the 21:50 B1 audio spike, exterior window sill photograph logs, and the unredacted 4-page Light Novel chapter excerpt showing how Akari and Sera resolved the phenomenon in Sub-Level 04.
+        <h3 style="margin: 8px 0 10px; color: #FFFFFF;">CASE FILE #104: THE WINDOW WATCHER (RESOLVED REPORT)</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+          Full audio investigation log, window sill photos, and the unredacted 4-page Light Novel chapter excerpt showing how Akari and Sera resolved the phenomenon in The Phantom Room.
         </p>
 
-        <div style="margin-top: 20px; padding: 18px; background: rgba(255, 209, 102, 0.08); border-radius: 10px; text-align: center;">
-          <p style="margin: 0 0 12px; color: var(--accent-gold); font-weight: bold; font-size: 0.95rem;">
-            Unlock Board 03 Cavern Files & Support the Studio
+        <div style="margin-top: 22px; padding: 20px; background: rgba(255, 209, 102, 0.08); border-radius: 12px; text-align: center;">
+          <p style="margin: 0 0 14px; color: var(--accent-gold); font-weight: bold; font-size: 0.98rem;">
+            Unlock Secret Files & Support the Studio
           </p>
-          <button class="action-btn-primary" onclick="openVIPModal()" style="padding: 10px 24px; font-size: 0.9rem;">
+          <button class="action-btn-primary" onclick="openVIPModal()" style="padding: 12px 28px; font-size: 0.92rem;">
             ⭐ Upgrade to Backstage Pass ($3/mo)
           </button>
         </div>
@@ -924,7 +915,7 @@
       tabEl.classList.add('active-tab');
     }
 
-    // 2. Real-Time Clock & Campus Terminal Counter
+    // 2. Real-Time Clock & Campus Counter
     function updateBBSServerClock() {
       const now = new Date();
       const hours = now.getHours();
@@ -936,7 +927,7 @@
       const formattedTime = `${displayHours < 10 ? '0' : ''}${displayHours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds} ${ampm}`;
 
       const clockEl = document.getElementById('bbs-server-time');
-      if (clockEl) clockEl.innerText = `Server Time: ${formattedTime}`;
+      if (clockEl) clockEl.innerText = `Campus Clock: ${formattedTime}`;
 
       let baseCount = 180;
       if (hours >= 22 || hours < 6) {
@@ -955,13 +946,13 @@
 
       if (modeBadge) {
         if (isAfterHours) {
-          modeBadge.innerText = '🌙 AFTER HOURS MODE [UNMONITORED]';
+          modeBadge.innerText = '🌙 AFTER HOURS MODE';
           modeBadge.className = 'badge-after-dark';
         } else {
-          modeBadge.innerText = '☀️ NORMAL OPERATING HOURS';
-          modeBadge.style.background = 'rgba(64, 192, 87, 0.2)';
-          modeBadge.style.borderColor = '#40c057';
-          modeBadge.style.color = '#40c057';
+          modeBadge.innerText = '☀️ DAYTIME HOURS';
+          modeBadge.style.background = 'rgba(56, 229, 124, 0.2)';
+          modeBadge.style.borderColor = '#38E57C';
+          modeBadge.style.color = '#38E57C';
         }
       }
     }
@@ -984,15 +975,19 @@
       });
     }
 
-    // 4. Investigator Terminal Evidence Verification
+    // 4. Mystery Decoder Solution Database
     const caseSolutions = {
       "DRAINAGE_B1": {
-        message: "CLEARANCE GRANTED. @Akari_M: 'That's it! The water pump frequency matched the audio spike. Case #104 resolved!'",
+        message: "CLEARANCE GRANTED. @Akari_M: 'That's it! The water pump sound matched the audio glitch. Case #104 solved!'",
         badgeUnlocked: "Lead Investigator"
       },
       "440HZ": {
-        message: "SIGNAL VERIFIED. Audio frequency matched to the music room piano harmonic.",
-        badgeUnlocked: "Signal Specialist"
+        message: "SIGNAL VERIFIED. Audio pitch matched to the music room piano harmonic.",
+        badgeUnlocked: "Signal Listener"
+      },
+      "HARMONY_1994": {
+        message: "CLEARANCE GRANTED. @Akari_M: 'Awesome work!! That 1994 chord code unlocked Case #105! Resonance report archived to Board 03!'",
+        badgeUnlocked: "Resonance Detective"
       }
     };
 
@@ -1005,7 +1000,7 @@
       if (caseSolutions[input]) {
         const match = caseSolutions[input];
         output.className = "terminal-output-log success";
-        output.innerHTML = `<strong>[ACCESS GRANTED]</strong> ${match.message}`;
+        output.innerHTML = `<strong>[MYSTERY SOLVED!]</strong> ${match.message}`;
         
         if (match.badgeUnlocked) {
           const rankTag = document.getElementById("investigator-rank-tag");
@@ -1013,19 +1008,45 @@
         }
       } else {
         output.className = "terminal-output-log error";
-        output.innerHTML = "<strong>[SIGNAL REJECTED]</strong> Code mismatch. Re-check Neko FM and the chapter notes.";
+        output.innerHTML = "<strong>[CODE MISMATCH]</strong> Passcode not recognized. Re-check Neko FM and the chapter notes.";
       }
     }
 
-    // 5. Modals Logic
+    // 5. Dynamic 7-Day Real-Time JSON Mystery Engine
+    async function loadActiveMysterySchedule() {
+      try {
+        const response = await fetch('case_105_schedule.json');
+        if (!response.ok) return;
+        const mysteryData = await response.json();
+        
+        let eventStartTime = localStorage.getItem('mystery_start_time');
+        if (!eventStartTime) {
+          eventStartTime = Date.now();
+          localStorage.setItem('mystery_start_time', eventStartTime);
+        }
+
+        const elapsedDays = Math.floor((Date.now() - eventStartTime) / (1000 * 60 * 60 * 24)) + 1;
+
+        if (mysteryData.passcode_trigger) {
+          caseSolutions[mysteryData.passcode_trigger] = {
+            message: `CLEARANCE GRANTED. @Akari_M: 'You cracked Case #${mysteryData.mystery_id}! Resonance report archived to Board 03!'`,
+            badgeUnlocked: mysteryData.badge_reward || "Lead Investigator"
+          };
+        }
+      } catch (err) {
+        console.log("Running default built-in case database.");
+      }
+    }
+
+    // 6. Modals Engine
     function openTheoryModal() {
       removeExistingModals();
       const modalHTML = `
         <div id="bbs-modal" class="modal-overlay">
           <div class="modal-card">
-            <h3 style="margin: 0 0 10px; color: #fff;">🕵️ Post Student Sightings</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 18px;">Share strange occurrences or theories on Sakuraoka-Net!</p>
-            <input type="text" id="theory-username" class="form-input-text" placeholder="Your Handle (e.g. Anon_Sleuth)">
+            <h3 style="margin: 0 0 10px; color: #FFFFFF;">🕵️ Post Student Sightings</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 18px;">Share strange occurrences or theories with other students!</p>
+            <input type="text" id="theory-username" class="form-input-text" placeholder="Your Student Handle (e.g. Anon_Sleuth)">
             <textarea id="theory-text" class="form-input-text" rows="3" placeholder="Describe what you saw or heard..."></textarea>
             <div class="modal-actions">
               <button class="modal-btn btn-submit" onclick="submitTheory()">Publish Post</button>
@@ -1071,22 +1092,22 @@
 
     function openClueModal(clueId) {
       removeExistingModals();
-      let title = "🔍 Clue Dossier #" + clueId;
+      let title = "🔍 Uncovered Clue #" + clueId;
       let bodyText = "";
 
       if (clueId === 1) {
-        bodyText = "<strong>Window Handprint Log (22:42):</strong><br><br>Dripping wet handprints were confirmed on the exterior glass pane of 2F Study Room B. The courtyard was empty and dry at the time of discovery.";
+        bodyText = "<strong>Window Handprint Note (22:42):</strong><br><br>Dripping wet handprints were confirmed on the exterior glass pane of 2F Study Room B. The courtyard was empty and dry at the time of discovery.";
       } else if (clueId === 2) {
-        bodyText = "<strong>B1 Drainage Frequency Log (02:15):</strong><br><br>Sub-Level 04 mixing desk recorded a 14.2kHz audio pulse coming through the floorboards. The code <code>DRAINAGE_B1</code> was recovered from the spectrograph.";
+        bodyText = "<strong>B1 Drainage Note (02:15):</strong><br><br>The Phantom Room band desk recorded an audio pulse coming through the floorboards. The passcode <code>DRAINAGE_B1</code> was recovered from the sound file.";
       }
 
       const modalHTML = `
         <div id="bbs-modal" class="modal-overlay">
           <div class="modal-card">
-            <h3 style="margin: 0 0 10px; color: #fff;">${title}</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">${bodyText}</p>
+            <h3 style="margin: 0 0 10px; color: #FFFFFF;">${title}</h3>
+            <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">${bodyText}</p>
             <div class="modal-actions">
-              <button class="modal-btn btn-close" onclick="removeExistingModals()">Close Dossier</button>
+              <button class="modal-btn btn-close" onclick="removeExistingModals()">Close Note</button>
             </div>
           </div>
         </div>
@@ -1100,8 +1121,8 @@
         <div id="bbs-modal" class="modal-overlay">
           <div class="modal-card" style="text-align: center;">
             <h3 style="margin: 0 0 10px; color: var(--accent-gold);">⭐ Backstage VIP Access</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
-              Support the studio to unlock Board 03 Cavern Files, custom gold chat glows in Locker 102, 2x poll voting on Neko FM, and advance Light Novel chapters!
+            <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 22px;">
+              Support the studio to unlock Board 03 Secret Files, custom gold chat glows in Locker 102, 2x poll voting on Neko FM, and advance Light Novel chapters!
             </p>
             <div class="modal-actions">
               <button class="modal-btn btn-submit" onclick="alert('Redirecting to studio support page...')">Unlock Backstage Pass ($3/mo)</button>
@@ -1118,9 +1139,10 @@
       if (existing) existing.remove();
     }
 
-    // Initialize clock loop
+    // Initialize clock loop & JSON engine
     setInterval(updateBBSServerClock, 1000);
     updateBBSServerClock();
+    document.addEventListener('DOMContentLoaded', loadActiveMysterySchedule);
   </script>
   <script src="music-player.js"></script>
 </body>
