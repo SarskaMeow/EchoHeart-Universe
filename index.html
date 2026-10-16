@@ -36,16 +36,16 @@
     body.basement-mode .navbar {
       background: rgba(15, 8, 22, 0.96);
       border-bottom-color: rgba(255, 77, 109, 0.45);
-      box-shadow: 0 4px 20px rgba(255, 77, 109, 0.18);
+      box-shadow: 0 2px 10px rgba(255, 77, 109, 0.18);
     }
 
     body.backstage-mode .navbar {
       background: rgba(14, 6, 22, 0.98);
       border-bottom: 2px solid var(--accent-gold);
-      box-shadow: 0 4px 20px rgba(255, 209, 102, 0.25);
+      box-shadow: 0 2px 10px rgba(255, 209, 102, 0.25);
     }
 
-    /* Universal Stacked Navbar Styling */
+    /* Universal Low-Profile Compact Navbar */
     .navbar {
       position: sticky;
       top: 0;
@@ -55,7 +55,7 @@
       border-bottom: 2px solid var(--nav-border-twilight);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      padding: 14px 20px 12px;
+      padding: 6px 16px;
       box-sizing: border-box;
       transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
@@ -66,13 +66,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 4px;
       position: relative;
     }
 
-    /* Centered Branding */
+    /* Compact Centered Branding */
     .brand-centered {
       text-align: center;
+      line-height: 1.1;
     }
 
     .logo-link {
@@ -84,29 +85,29 @@
 
     .logo-main {
       font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.85rem;
+      font-size: 1.25rem;
       font-weight: 900;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 12px rgba(168, 139, 235, 0.35));
-      transition: all 0.4s ease;
+      filter: drop-shadow(0 0 8px rgba(168, 139, 235, 0.35));
+      transition: all 0.3s ease;
     }
 
     body.basement-mode .logo-main {
       background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 12px rgba(255, 77, 109, 0.45));
+      filter: drop-shadow(0 0 8px rgba(255, 77, 109, 0.45));
     }
 
     body.backstage-mode .logo-main {
       background: linear-gradient(135deg, var(--accent-gold), #ff007f);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 12px rgba(255, 209, 102, 0.45));
+      filter: drop-shadow(0 0 8px rgba(255, 209, 102, 0.45));
     }
 
     .logo-link:hover .logo-main {
@@ -114,78 +115,76 @@
     }
 
     .logo-sub {
-      font-size: 0.72rem;
+      font-size: 0.6rem;
       font-weight: 800;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       color: var(--accent-pink);
       text-transform: uppercase;
       opacity: 0.9;
-      margin-top: 1px;
+      margin-top: -1px;
     }
 
     body.basement-mode .logo-sub { color: var(--accent-red); }
     body.backstage-mode .logo-sub { color: var(--accent-gold); }
 
-    /* Centered Nav Links Row */
+    /* Compact Nav Links Row */
     .nav-links {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 8px 12px;
+      gap: 4px 8px;
       width: 100%;
     }
 
     .nav-item {
       color: #cbb8f6;
-      font-size: 0.88rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      padding: 8px 14px;
-      border-radius: 10px;
+      padding: 4px 10px;
+      border-radius: 8px;
       text-decoration: none;
       background: rgba(168, 139, 235, 0.08);
       border: 1px solid rgba(168, 139, 235, 0.2);
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
       white-space: nowrap;
     }
 
     .nav-item:hover, .nav-item.active {
-      background: rgba(168, 139, 235, 0.18);
+      background: rgba(168, 139, 235, 0.22);
       color: #ffffff;
       border-color: var(--accent-pink);
     }
 
-    /* Mode Select Dropdown Styling */
+    /* Slim Mode Select Dropdown */
     .mode-select-dropdown {
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      padding: 8px 32px 8px 14px;
-      border-radius: 20px;
+      padding: 4px 26px 4px 10px;
+      border-radius: 16px;
       font-family: 'Segoe UI', sans-serif;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 800;
       cursor: pointer;
       outline: none;
       transition: all 0.3s ease;
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
       background-repeat: no-repeat;
-      background-position: right 10px center;
-      background-size: 16px;
+      background-position: right 8px center;
+      background-size: 14px;
     }
 
     body.twilight-mode .mode-select-dropdown {
       background-color: rgba(28, 18, 52, 0.95);
       border: 1px solid rgba(168, 139, 235, 0.45);
       color: #e2daf8;
-      box-shadow: 0 0 12px rgba(168, 139, 235, 0.2);
     }
 
     body.basement-mode .mode-select-dropdown {
       background-color: rgba(20, 8, 28, 0.95);
       border: 1px solid rgba(255, 77, 109, 0.5);
       color: #ff4d6d;
-      box-shadow: 0 0 12px rgba(255, 77, 109, 0.25);
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     }
 
@@ -193,14 +192,13 @@
       background-color: rgba(22, 12, 38, 0.98);
       border: 1px solid rgba(255, 209, 102, 0.6);
       color: #ffd166;
-      box-shadow: 0 0 14px rgba(255, 209, 102, 0.3);
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     }
 
     .mode-select-dropdown option {
       background-color: #120924;
       color: #e2daf8;
-      padding: 10px;
+      padding: 6px;
       font-weight: 700;
     }
 
@@ -225,23 +223,23 @@
         justify-content: space-between;
       }
 
-      .logo-main { font-size: 1.35rem; }
-      .logo-sub { font-size: 0.62rem; letter-spacing: 2px; }
+      .logo-main { font-size: 1.15rem; }
+      .logo-sub { font-size: 0.55rem; letter-spacing: 1.5px; }
 
       .mobile-menu-btn {
         display: flex !important;
         background: rgba(168, 139, 235, 0.15);
         border: 1px solid rgba(168, 139, 235, 0.3);
         border-radius: 8px;
-        padding: 8px;
+        padding: 6px;
         flex-direction: column;
-        gap: 4px;
+        gap: 3px;
         cursor: pointer;
       }
 
       .hamburger-bar {
-        width: 22px;
-        height: 2.5px;
+        width: 20px;
+        height: 2px;
         background: #f4b8c4;
         border-radius: 2px;
       }
@@ -255,8 +253,8 @@
         background: rgba(15, 10, 30, 0.98);
         border-bottom: 2px solid rgba(168, 139, 235, 0.35);
         flex-direction: column;
-        padding: 16px;
-        gap: 10px;
+        padding: 12px;
+        gap: 8px;
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
       }
 
@@ -268,8 +266,8 @@
     /* Hero Banner */
     .hero-container {
       max-width: 1200px;
-      margin: 40px auto 20px;
-      padding: 40px 20px;
+      margin: 24px auto 20px;
+      padding: 36px 20px;
       text-align: center;
       background: linear-gradient(145deg, rgba(22, 15, 42, 0.9), rgba(12, 8, 24, 0.95));
       border: 2px solid rgba(168, 139, 235, 0.35);
@@ -283,38 +281,38 @@
 
     .hero-badge {
       display: inline-block;
-      padding: 6px 16px;
+      padding: 5px 14px;
       border-radius: 20px;
       background: rgba(168, 139, 235, 0.2);
       border: 1px solid rgba(168, 139, 235, 0.4);
       color: #f4b8c4;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 800;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .hero-title {
-      font-size: 2.8rem;
-      margin: 0 0 16px;
+      font-size: 2.6rem;
+      margin: 0 0 14px;
       background: linear-gradient(135deg, #ffffff, #f4b8c4, #a88beb);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero-subtitle {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       color: #cbb8f6;
       max-width: 750px;
-      margin: 0 auto 30px;
-      line-height: 1.6;
+      margin: 0 auto 26px;
+      line-height: 1.5;
     }
 
     .hero-cta-group {
       display: flex;
       justify-content: center;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
     }
 
@@ -322,8 +320,8 @@
       background: linear-gradient(135deg, #a88beb, #f4b8c4);
       color: #0d0b18;
       font-weight: 800;
-      padding: 14px 28px;
-      border-radius: 14px;
+      padding: 12px 24px;
+      border-radius: 12px;
       text-decoration: none;
       box-shadow: 0 4px 20px rgba(168, 139, 235, 0.4);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -337,8 +335,8 @@
       border: 1px solid rgba(168, 139, 235, 0.4);
       color: #e2daf8;
       font-weight: 800;
-      padding: 14px 28px;
-      border-radius: 14px;
+      padding: 12px 24px;
+      border-radius: 12px;
       text-decoration: none;
       transition: background 0.2s ease;
     }
@@ -349,18 +347,18 @@
     /* Gateway Grid Cards */
     .gateway-grid {
       max-width: 1200px;
-      margin: 30px auto 50px;
+      margin: 24px auto 50px;
       padding: 0 20px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 18px;
     }
 
     .gateway-card {
       background: rgba(22, 15, 42, 0.85);
       border: 1px solid rgba(168, 139, 235, 0.3);
       border-radius: 18px;
-      padding: 24px;
+      padding: 22px;
       text-decoration: none;
       color: inherit;
       transition: all 0.3s ease;
@@ -377,26 +375,26 @@
     }
 
     .gateway-icon {
-      font-size: 2.5rem;
-      margin-bottom: 14px;
+      font-size: 2.2rem;
+      margin-bottom: 12px;
     }
 
     .gateway-title {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 800;
-      margin: 0 0 8px;
+      margin: 0 0 6px;
       color: #ffffff;
     }
 
     .gateway-card p {
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       color: #cbb8f6;
-      line-height: 1.5;
-      margin: 0 0 16px;
+      line-height: 1.4;
+      margin: 0 0 14px;
     }
 
     .gateway-link-text {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 800;
       color: #f4b8c4;
       display: flex;
@@ -438,11 +436,11 @@
 </head>
 <body class="twilight-mode">
 
-  <!-- Universal Header Navigation Bar -->
+  <!-- Low-Profile Universal Header Navigation Bar -->
   <header class="navbar">
     <div class="nav-header-stacked">
       
-      <!-- Fancy Centered Brand Title -->
+      <!-- Compact Centered Brand Title -->
       <div class="brand-centered">
         <a href="index.html" class="logo-link">
           <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
