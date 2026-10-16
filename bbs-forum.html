@@ -1,1069 +1,601 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sakuraoka High BBS — EchoHeart Universe</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="module" src="firebase-config.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap');
+/**
+ * Sakuraoka BBS Master Mystery Engine
+ * Handles real-time post unlocking, automated epoch-based case rotation,
+ * dual-track board rendering, student council notice threads, dynamic gossip feeds,
+ * tab switching, and passcode decoding.
+ */
 
-    :root {
-      --bg-main: #0B0914;
-      --card-bg: rgba(23, 18, 38, 0.92);
-      --card-inner: rgba(14, 11, 26, 0.85);
-      --accent-pink: #FF3B8D;
-      --accent-purple: #B282FF;
-      --accent-cyan: #00F0FF;
-      --accent-gold: #FFD166;
-      --accent-green: #38E57C;
-      --text-light: #F4EFFD;
-      --text-muted: #A09BB9;
-      --border-subtle: rgba(178, 130, 255, 0.28);
-      --border-glow: rgba(255, 59, 141, 0.35);
+(function () {
+  // Constants
+  const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
+
+  // Active solution vault for Decoder tab matching
+  const activeSolutions = {};
+
+  // Embedded Schedule Catalog (Fallback if fetch fails or running via local file:// protocol)
+  const EMBEDDED_CATALOG = {
+    "epoch_start_iso": "2026-10-12T00:00:00Z",
+    "free_cases_pool": [
+      {
+        "case_id": "CASE-105",
+        "mystery_id": "case_105_midnight_piano",
+        "title": "Case #105 — The Midnight Lullaby of Room 302",
+        "reward_badge": "Seven Wonders Sleuth",
+        "required_passcode": "HARMONY_1994",
+        "timeline": [
+          /* ================= DAY 1 (MONDAY) ================= */
+          { "offset_mins": 0, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "I was walking down the 3F B-Wing hallway after sunset. Room 302 was pitch dark, but I heard a soft piano melody coming from inside...", "is_npc": false },
+          { "offset_mins": 45, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "@Yuki_Library Wait, Room 302? Isn't that the old music practice room that's been locked all term?", "is_npc": false },
+          { "offset_mins": 450, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Good morning! Just finished morning lap practice. Walked past B-Wing and Room 302 is locked tight like usual.", "is_npc": false },
+          { "offset_mins": 510, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Class 2-A homeroom is right below 302. During morning prep we didn't hear anything, but the sunset yesterday looked super pretty against the window.", "is_npc": false },
+          { "offset_mins": 615, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Break time! Is this another one of those Seven Wonders of Sakuraoka urban legends starting up again?", "is_npc": false },
+          { "offset_mins": 735, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "Lunch break update: Me and Nekomi checked with our music teacher. The upright pianos were all moved down to the B1 storage room last term!", "is_npc": true },
+          { "offset_mins": 780, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi peered through Room 302's door window during lunch break! No piano inside at all, just stacked wooden desks! So where is the music coming from?!", "is_npc": true },
+          { "offset_mins": 915, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Maybe someone left a radio in there playing a prank on us?", "is_npc": false },
+          { "offset_mins": 990, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "Our Class 2-A group is on the case! If anyone hears the song again after 5 PM, post the exact time here on the BBS.", "is_npc": true },
+          { "offset_mins": 1080, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "Sunset just started. Setting up the telescope in the science room across the courtyard.", "is_npc": false },
+          { "offset_mins": 1155, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "I hear it right now from the courtyard! It's a sweet lullaby tune playing right as the orange sunset hits Room 302's window!", "is_npc": true },
+          { "offset_mins": 1230, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "We're down in our rehearsal room and we can hear the faint melody echo through the courtyard too!", "is_npc": true },
+          { "offset_mins": 1305, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Student Council Notice: Please do not loiter near the 3F B-Wing hallway after evening curfew.", "is_npc": true },
+          { "offset_mins": 1380, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Late night check... the school courtyard is pitch black. Super cozy vibe tonight.", "is_npc": false },
+          { "offset_mins": 1425, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Day 1 report logged. More investigations tomorrow morning!", "is_npc": false },
+
+          /* ================= DAY 2 (TUESDAY) ================= */
+          { "offset_mins": 1485, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "Midnight check on the BBS... anyone else unable to sleep thinking about Room 302?", "is_npc": false },
+          { "offset_mins": 1890, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Day 2 morning run complete. The staff room key box for Room 302 was checked—no student has borrowed the key all week.", "is_npc": false },
+          { "offset_mins": 1950, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "So if the key was never checked out, how did anyone get inside to make music?", "is_npc": false },
+          { "offset_mins": 2055, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "My senior told me there used to be a student band performance tradition at Sakuraoka High back in the 1990s!", "is_npc": false },
+          { "offset_mins": 2175, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "Great clue @Hina_Class1A! Me and Aoi are going to check the old event posters along the 3F B-Wing notice board during lunch.", "is_npc": true },
+          { "offset_mins": 2220, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "I found a framed vintage Culture Festival poster on the 3F wall! It's dated from the 1994 school year!", "is_npc": true },
+          { "offset_mins": 2355, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi checked our Light Music rehearsal locker during lunch break! We have equipment cases from 1994 stored in the back!", "is_npc": true },
+          { "offset_mins": 2430, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Ooh, vintage gear from 1994?! Did you find anything inside?", "is_npc": false },
+          { "offset_mins": 2520, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "There's an old setlist card tucked inside one of the bass cases! It lists the 1994 finale song!", "is_npc": true },
+          { "offset_mins": 2595, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Student Council note: Please make sure all clubroom storage lockers are kept tidy after use.", "is_npc": true },
+          { "offset_mins": 2670, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "6:30 PM: I can see the warm orange sunset reflecting in Room 302's window again tonight.", "is_npc": false },
+          { "offset_mins": 2745, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Just walked under 302 leaving gym practice. The piano lullaby is definitely playing right now!", "is_npc": false },
+          { "offset_mins": 2820, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "It starts every day right as the sunset fills the B-Wing corridor. Keep tracking the clues everyone!", "is_npc": true },
+          { "offset_mins": 2865, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Listening to the melody from the courtyard bench... it sounds so warm and nostalgic.", "is_npc": false },
+
+          /* ================= DAY 3 (WEDNESDAY) ================= */
+          { "offset_mins": 2925, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Day 3 begins! Mid-week mystery updates loading...", "is_npc": false },
+          { "offset_mins": 3330, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "Good morning! @Bass_Sera what was written on that 1994 setlist card you found yesterday?", "is_npc": true },
+          { "offset_mins": 3390, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Yeah, spill the details! Track team wants to know!", "is_npc": false },
+          { "offset_mins": 3495, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi read the handwritten setlist card! The title of the 1994 song is 'HARMONY'!", "is_npc": true },
+          { "offset_mins": 3615, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "CLUE UPDATE: 'HARMONY' is the main mystery keyword! Combine it with the 1994 festival year code!", "is_npc": true },
+          { "offset_mins": 3660, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Tuned into Neko FM right now during lunch! The radio ticker just mentioned '1994 Sunset Hits'!", "is_npc": false },
+          { "offset_mins": 3795, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "So combining the setlist keyword and the year gives us the passcode formula!", "is_npc": false },
+          { "offset_mins": 3870, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Class 2-A is solving this so fast haha! Drama club is watching the BBS live!", "is_npc": false },
+          { "offset_mins": 3960, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "So HARMONY + 1994 is definitely our core passcode combination!", "is_npc": true },
+          { "offset_mins": 4035, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "We're so close to unlocking the Mystery Decoder tab with the full passcode!", "is_npc": true },
+          { "offset_mins": 4110, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "5:45 PM: Sunset hit Room 302's window glass again. The music has started right on time!", "is_npc": false },
+          { "offset_mins": 4185, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Stood outside Room 302 door just now... you can hear a tiny chime clicking inside as the song plays!", "is_npc": false },
+          { "offset_mins": 4260, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "A chime?! That means it's an object sitting on the windowsill inside, not a ghost!", "is_npc": true },
+          { "offset_mins": 4305, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "An object playing music on the windowsill every evening? We're finding out tomorrow!", "is_npc": false },
+
+          /* ================= DAY 4 (THURSDAY) ================= */
+          { "offset_mins": 4365, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Day 4 overnight check! Let's solve this before Friday!", "is_npc": false },
+          { "offset_mins": 4770, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Thursday morning! Track team is running bleacher laps. B-Wing looks beautiful in the morning light.", "is_npc": false },
+          { "offset_mins": 4830, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "@Kenji_Gym said he heard a chime yesterday... could it be an old wind-up music box sitting in the room?", "is_npc": false },
+          { "offset_mins": 4935, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "An antique wind-up music box left inside Room 302 since 1994?! That is super sweet!", "is_npc": false },
+          { "offset_mins": 5055, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi asked the veteran school custodian! He remembers a wooden piano music box sitting on Room 302's windowsill!", "is_npc": true },
+          { "offset_mins": 5100, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "He said he winds it up every Monday morning before school starts so it plays a sunset melody all week long for the students!", "is_npc": true },
+          { "offset_mins": 5235, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "AWH WOW!! The custodian has been keeping the 1994 music box playing as a tradition this whole time!!", "is_npc": false },
+          { "offset_mins": 5310, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "That is the sweetest story ever! That's why it plays every single day at sunset!", "is_npc": true },
+          { "offset_mins": 5400, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Student Council confirmation: The 1994 music box is a preserved piece of Sakuraoka High culture.", "is_npc": true },
+          { "offset_mins": 5475, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "Mystery solved! Enter the keyword HARMONY_1994 into the Mystery Decoder tab to claim your badge!", "is_npc": true },
+          { "offset_mins": 5550, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "5:45 PM: Sunset hit the window, and the little music box played its song on schedule!", "is_npc": false },
+          { "offset_mins": 5625, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Sakuraoka High traditions are pretty amazing.", "is_npc": false },
+          { "offset_mins": 5700, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Heading to the Mystery Decoder tab right now to claim my badge!", "is_npc": false },
+          { "offset_mins": 5745, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Passcode verified: HARMONY_1994! Get ready for Friday celebration!", "is_npc": false },
+
+          /* ================= DAY 5 (FRIDAY) ================= */
+          { "offset_mins": 5805, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "Friday morning on the BBS! Claim your Seven Wonders Sleuth badge today!", "is_npc": false },
+          { "offset_mins": 6210, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Morning practice! Everyone in the halls is talking about the Room 302 music box today.", "is_npc": false },
+          { "offset_mins": 6270, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Enter HARMONY_1994 into the Mystery Decoder tab in the top navigation bar!", "is_npc": false },
+          { "offset_mins": 6375, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "I entered it! Got the Seven Wonders Sleuth badge added to my profile!", "is_npc": false },
+          { "offset_mins": 6495, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi and Sera are going to perform 'Sunset Harmony' live at the Culture Festival!", "is_npc": true },
+          { "offset_mins": 6540, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "CASE COMPLETE! Thank you to everyone who helped investigate the 3F B-Wing hallway!", "is_npc": true },
+          { "offset_mins": 6675, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Got my new badge unlocked!! 'Seven Wonders Sleuth' looks so cool on my handle!", "is_npc": false },
+          { "offset_mins": 6750, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "Loved working on this mystery with everyone in Class 2-A this week!", "is_npc": true },
+          { "offset_mins": 6840, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "Light Music Club is starting band practice for the culture fest cover track right now!", "is_npc": true },
+          { "offset_mins": 6915, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Official Student Council update: Room 302's music box will remain a protected school treasure.", "is_npc": true },
+          { "offset_mins": 6990, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "5:45 PM: Watching the Friday sunset while listening to the music box one last time this school week.", "is_npc": false },
+          { "offset_mins": 7065, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Best mystery of the term! Have a great weekend everyone!", "is_npc": false },
+          { "offset_mins": 7140, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Heading home for the weekend! Thanks Class 2-A!", "is_npc": false },
+          { "offset_mins": 7185, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Case #105 officially solved on Friday evening. Weekend lounge open!", "is_npc": false },
+
+          /* ================= DAY 6 (SATURDAY) ================= */
+          { "offset_mins": 7245, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "Saturday morning BBS lounge check. Case #105 victory lap!", "is_npc": false },
+          { "offset_mins": 7650, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Listening to Neko FM Saturday stream while finishing my weekend homework.", "is_npc": false },
+          { "offset_mins": 7710, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "Logged into the BBS from home! So glad Class 2-A solved the mystery together.", "is_npc": true },
+          { "offset_mins": 7815, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Saturday morning club practice done. Campus is super peaceful today.", "is_npc": false },
+          { "offset_mins": 7935, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi and Sera are rehearsing the 'Sunset Harmony' arrangement in the band room right now!", "is_npc": true },
+          { "offset_mins": 7980, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "We added a synth melody to match Neko FM's weekend vibe!", "is_npc": true },
+          { "offset_mins": 8115, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Can't wait to hear the performance at the Culture Festival!", "is_npc": false },
+          { "offset_mins": 8190, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Anyone who missed the case during the week can still enter HARMONY_1994 in the Decoder tab!", "is_npc": false },
+          { "offset_mins": 8280, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "Clear skies expected for stargazing tonight!", "is_npc": false },
+          { "offset_mins": 8355, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Relaxing Saturday afternoon. Sakuraoka BBS is the best place to chill.", "is_npc": false },
+          { "offset_mins": 8430, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "Planning out next week's student activities on the BBS!", "is_npc": true },
+          { "offset_mins": 8505, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Have a restful weekend everyone!", "is_npc": true },
+          { "offset_mins": 8580, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Showing off my 'Seven Wonders Sleuth' badge on my student profile!", "is_npc": false },
+          { "offset_mins": 8625, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Saturday night late chatter signing off.", "is_npc": false },
+
+          /* ================= DAY 7 (SUNDAY) ================= */
+          { "offset_mins": 8685, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "Sunday morning! Last day of Case #105 cycle before weekly reset!", "is_npc": false },
+          { "offset_mins": 9090, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Finishing up Sunday homework before Monday morning prep.", "is_npc": false },
+          { "offset_mins": 9150, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "Sunday reminder: Return all borrowed study materials tomorrow morning!", "is_npc": false },
+          { "offset_mins": 9255, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Rest day for the track team. Ready for Monday morning runs!", "is_npc": false },
+          { "offset_mins": 9375, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi finished polishing the band arrangement for tomorrow's practice!", "is_npc": true },
+          { "offset_mins": 9420, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "Recorded a mini song preview for Neko FM's Sunday night broadcast!", "is_npc": true },
+          { "offset_mins": 9555, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "So glad Room 302's mystery turned out to be such a sweet school memory.", "is_npc": false },
+          { "offset_mins": 9630, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Packing my school bag for Monday morning!", "is_npc": false },
+          { "offset_mins": 9720, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "Sunday dusk: Room 302 music box playing its final weekend lullaby.", "is_npc": false },
+          { "offset_mins": 9795, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Ready for Monday morning gym class!", "is_npc": false },
+          { "offset_mins": 9870, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "[CASE #105 FINAL RESOLUTION REPORT] Case Closed. The solar music box of Room 302 remains a Sakuraoka tradition.", "is_npc": true },
+          { "offset_mins": 9945, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Thank you to Akari, Aoi, Nekomi, Sera, and all participating students.", "is_npc": true },
+          { "offset_mins": 10020, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Goodnight everyone! See you at school tomorrow!", "is_npc": false },
+          { "offset_mins": 10065, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Weekly cycle complete. Mystery archives locked for reset.", "is_npc": false }
+        ]
+      }
+    ],
+    "vip_cases_pool": [
+      {
+        "case_id": "VIP-CASE-105",
+        "mystery_id": "case_105_rooftop_legend",
+        "title": "VIP #105 — The Locked Rooftop Sunset Rumor",
+        "reward_badge": "Rooftop Explorer",
+        "required_passcode": "SUNSET_1994",
+        "timeline": [
+          {
+            "offset_mins": 0,
+            "author": "Daiki_Pres",
+            "author_badge": "Student Council",
+            "avatar_icon": "📋",
+            "message": "Notice: The door to the rooftop staircase remains locked after 5:00 PM for all students.",
+            "is_npc": true
+          },
+          {
+            "offset_mins": 360,
+            "author": "Akari_M",
+            "author_badge": "Class 2-A",
+            "avatar_icon": "assets/akari.jpeg",
+            "message": "Someone left a handwritten note on the rooftop keyhook in the staff room...",
+            "is_npc": true
+          }
+        ]
+      }
+    ]
+  };
+
+  /**
+   * Main Initialization
+   */
+  async function initEngine() {
+    setupTabNavigation();
+    setupDecoder();
+    await loadAndRenderCases();
+    await loadAndRenderGossip();
+
+    // Poll every 30 seconds to reveal new posts as time progresses
+    setInterval(async () => {
+      await loadAndRenderCases();
+      await loadAndRenderGossip();
+    }, 30000);
+  }
+
+  /**
+   * Fetches JSON catalog or falls back to embedded catalog
+   */
+  async function loadAndRenderCases() {
+    let catalog = null;
+
+    try {
+      let response = await fetch('js/case_105_schedule.json');
+      if (!response.ok) {
+        response = await fetch('case_105_schedule.json');
+      }
+      if (response.ok) {
+        catalog = await response.json();
+      }
+    } catch (err) {
+      console.warn('[MYSTERY ENGINE] Fetch unavailable or blocked by CORS. Using embedded catalog fallback.');
     }
 
-    body {
-      background: var(--bg-main);
-      background-image: 
-        radial-gradient(circle at 15% 20%, rgba(255, 59, 141, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 80%, rgba(0, 240, 255, 0.06) 0%, transparent 45%);
-      color: var(--text-light);
-      font-family: 'M PLUS Rounded 1c', 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
+    if (!catalog) {
+      catalog = EMBEDDED_CATALOG;
     }
 
-    /* UNIVERSAL TOP NAVBAR */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      width: 100%;
-      background: rgba(11, 9, 20, 0.94);
-      border-bottom: 2px solid var(--border-subtle);
-      backdrop-filter: blur(18px);
-      box-sizing: border-box;
+    const epochMs = new Date(catalog.epoch_start_iso || '2026-10-12T00:00:00Z').getTime();
+    const nowMs = Date.now();
+
+    // Calculate current week index relative to epoch
+    const weekIndex = Math.max(0, Math.floor((nowMs - epochMs) / MS_PER_WEEK));
+
+    // Calculate start timestamp (Monday 00:00:00 UTC) of current week cycle
+    const currentWeekStartMs = epochMs + (weekIndex * MS_PER_WEEK);
+    const elapsedMinsInCurrentWeek = Math.floor((nowMs - currentWeekStartMs) / 60000);
+
+    // Support multi-case pools and flat single-case JSONs
+    const freePool = catalog.free_cases_pool || (catalog.timeline ? [catalog] : []);
+    const vipPool = catalog.vip_cases_pool || [];
+
+    const activeFreeCase = freePool.length > 0 ? freePool[weekIndex % freePool.length] : null;
+    const activeVipCase = vipPool.length > 0 ? vipPool[weekIndex % vipPool.length] : null;
+
+    // Render Free Board
+    if (activeFreeCase) {
+      renderCase(activeFreeCase, currentWeekStartMs, elapsedMinsInCurrentWeek, 'bbs-posts-container', false);
     }
 
-    .nav-container {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    // Render VIP Board
+    if (activeVipCase) {
+      renderCase(activeVipCase, currentWeekStartMs, elapsedMinsInCurrentWeek, 'vip-posts-container', true);
     }
-
-    .logo-main {
-      font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      background: linear-gradient(135deg, #FF7BB0, var(--accent-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .logo-sub {
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: var(--accent-pink);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav-item {
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      font-weight: 700;
-      padding: 8px 14px;
-      border-radius: 12px;
-      text-decoration: none;
-      transition: all 0.25s ease;
-    }
-
-    .nav-item:hover, .nav-item.active {
-      background: rgba(255, 59, 141, 0.15);
-      color: #FFFFFF;
-      box-shadow: 0 0 12px rgba(255, 59, 141, 0.2);
-    }
-
-    /* MAIN CONTAINER */
-    .bbs-container {
-      max-width: 1280px;
-      margin: 20px auto 50px;
-      padding: 0 20px;
-    }
-
-    /* ANIME HERO HEADER BAR */
-    .bbs-terminal-bar {
-      background: var(--card-bg);
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 14px 22px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      margin-bottom: 22px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-    }
-
-    .terminal-status-group { display: flex; align-items: center; gap: 10px; }
-    .terminal-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
-    .terminal-dot.pulsing { animation: pulse-green 1.5s infinite; }
-
-    @keyframes pulse-green {
-      0% { box-shadow: 0 0 0 0 rgba(56, 229, 124, 0.7); }
-      70% { box-shadow: 0 0 0 8px rgba(56, 229, 124, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(56, 229, 124, 0); }
-    }
-
-    .badge-after-dark {
-      background: rgba(255, 59, 141, 0.2);
-      border: 1px solid var(--accent-pink);
-      color: var(--accent-pink);
-      padding: 4px 12px;
-      border-radius: 8px;
-      font-weight: 800;
-      font-size: 0.78rem;
-    }
-
-    /* STORY TABS */
-    .bbs-tab-bar {
-      display: flex;
-      gap: 10px;
-      background: var(--card-bg);
-      padding: 12px 16px 0;
-      border-radius: 20px 20px 0 0;
-      border: 1.5px solid var(--border-subtle);
-      border-bottom: none;
-      flex-wrap: wrap;
-    }
-
-    .bbs-tab {
-      background: rgba(14, 11, 26, 0.8);
-      color: var(--text-muted);
-      padding: 12px 22px;
-      border-radius: 12px 12px 0 0;
-      cursor: pointer;
-      border: 1px solid transparent;
-      font-size: 0.92rem;
-      font-weight: 800;
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .bbs-tab:hover {
-      color: #FFFFFF;
-      background: rgba(255, 59, 141, 0.15);
-    }
-
-    .bbs-tab.active, .bbs-tab.active-tab {
-      background: var(--card-bg);
-      color: var(--accent-cyan);
-      border-color: var(--accent-cyan) var(--accent-cyan) transparent var(--accent-cyan);
-      box-shadow: 0 -4px 15px rgba(0, 240, 255, 0.15);
-    }
-
-    .bbs-tab.vip-tab {
-      color: var(--accent-gold);
-    }
-
-    .bbs-tab.vip-tab.active, .bbs-tab.vip-tab.active-tab {
-      border-color: var(--accent-gold) var(--accent-gold) transparent var(--accent-gold);
-      box-shadow: 0 -4px 15px rgba(255, 209, 102, 0.15);
-    }
-
-    /* TAB CONTENT PANELS */
-    .tab-panel, .bbs-tab-panel {
-      display: none;
-      background: var(--card-bg);
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 0 0 20px 20px;
-      padding: 26px;
-      box-shadow: 0 12px 36px rgba(0,0,0,0.5);
-    }
-
-    .tab-panel.active, .tab-panel.active-panel, .bbs-tab-panel.active {
-      display: block;
-    }
-
-    /* MAIN GRID LAYOUT */
-    .bbs-main-layout {
-      display: grid;
-      grid-template-columns: 2.8fr 1.2fr;
-      gap: 24px;
-    }
-
-    @media (max-width: 960px) {
-      .bbs-main-layout { grid-template-columns: 1fr; }
-    }
-
-    /* INVESTIGATOR BADGE DOSSIER */
-    .investigator-docket {
-      background: linear-gradient(135deg, rgba(30, 22, 50, 0.9), rgba(15, 11, 28, 0.9));
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 20px 24px;
-      margin-bottom: 22px;
-    }
-
-    .rank-badge-pill {
-      background: rgba(255, 209, 102, 0.18);
-      border: 1px solid var(--accent-gold);
-      color: var(--accent-gold);
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 800;
-    }
-
-    .badge-collection-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .badge-item-card {
-      background: var(--card-inner);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.84rem;
-      font-weight: 700;
-      color: var(--text-light);
-    }
-
-    /* FILTER BUTTONS */
-    .bbs-filter-bar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 22px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .filter-btn {
-      background: rgba(14, 11, 26, 0.85);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
-      padding: 8px 18px;
-      border-radius: 12px;
-      font-size: 0.86rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .filter-btn.active, .filter-btn:hover {
-      border-color: var(--accent-pink);
-      color: #FFFFFF;
-      background: rgba(255, 59, 141, 0.18);
-      box-shadow: 0 0 12px rgba(255, 59, 141, 0.25);
-    }
-
-    .action-btn-primary {
-      padding: 10px 20px;
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      border: none;
-      border-radius: 12px;
-      color: #FFFFFF;
-      font-weight: 800;
-      cursor: pointer;
-      font-size: 0.88rem;
-      margin-left: auto;
-      box-shadow: 0 4px 15px rgba(255, 59, 141, 0.3);
-      transition: transform 0.2s ease;
-    }
-
-    .action-btn-primary:hover { transform: translateY(-2px); }
-
-    /* THREAD CARDS */
-    .bbs-thread-card {
-      background: var(--card-inner);
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 22px;
-      margin-bottom: 22px;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
-    }
-
-    .bbs-thread-card.after-dark-glow {
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 24px rgba(255, 59, 141, 0.22);
-    }
-
-    .thread-main-header {
-      margin-bottom: 16px;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 14px;
-    }
-
-    .thread-title { margin: 8px 0 4px; color: #FFFFFF; font-size: 1.18rem; line-height: 1.4; font-weight: 800; }
-    .thread-meta { font-size: 0.8rem; color: var(--accent-purple); }
-
-    .thread-tag { font-size: 0.74rem; font-weight: 800; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.5px; }
-    .thread-tag.rumor { background: rgba(255, 209, 102, 0.2); color: var(--accent-gold); }
-    .thread-tag.dark { background: rgba(255, 59, 141, 0.2); color: var(--accent-pink); }
-    .thread-tag.official { background: rgba(56, 229, 124, 0.2); color: var(--accent-green); }
-
-    .thread-replies-chain { display: flex; flex-direction: column; gap: 14px; }
-
-    .bbs-post-reply {
-      background: rgba(11, 9, 20, 0.7);
-      border-left: 4px solid var(--accent-purple);
-      padding: 14px 18px;
-      border-radius: 0 14px 14px 0;
-    }
-
-    .bbs-post-reply.npc-reply { border-left-color: var(--accent-gold); background: rgba(35, 28, 16, 0.45); }
-    .bbs-post-reply.highlight { border-left-color: var(--accent-pink); background: rgba(40, 16, 32, 0.55); }
-
-    .bbs-author { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-
-    .author-avatar-sm {
-      width: 36px; height: 36px; border-radius: 50%;
-      object-fit: cover; border: 2px solid var(--accent-purple);
-    }
-
-    .avatar-icon-sm {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(178, 130, 255, 0.2);
-      display: flex; align-items: center; justify-content: center; font-size: 1rem;
-    }
-
-    .npc-badge {
-      background: var(--accent-gold); color: #000000;
-      font-size: 0.68rem; font-weight: 900;
-      padding: 2px 8px; border-radius: 6px; margin-left: 6px;
-    }
-
-    .user-badge-student {
-      font-size: 0.7rem; color: var(--accent-purple);
-      background: rgba(178, 130, 255, 0.18);
-      padding: 2px 8px; border-radius: 6px; margin-left: 6px;
-    }
-
-    .post-time { font-size: 0.76rem; color: var(--accent-purple); margin-left: auto; }
-    .post-content { margin: 0; font-size: 0.94rem; line-height: 1.6; color: var(--text-light); }
-
-    /* TAB 2: MYSTERY DECODER STYLES */
-    .terminal-analyzer-box {
-      background: rgba(11, 9, 20, 0.95);
-      border: 2px solid var(--accent-cyan);
-      border-radius: 18px;
-      padding: 26px;
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.18);
-    }
-
-    .terminal-title-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(0, 240, 255, 0.3);
-      padding-bottom: 14px;
-      margin-bottom: 20px;
-    }
-
-    .terminal-code-input-group {
-      display: flex;
-      gap: 12px;
-      margin: 22px 0;
-    }
-
-    .terminal-text-input {
-      flex: 1;
-      background: #000000;
-      border: 1.5px solid var(--accent-cyan);
-      border-radius: 12px;
-      padding: 12px 18px;
-      color: var(--accent-cyan);
-      font-family: inherit;
-      font-size: 0.98rem;
-      outline: none;
-    }
-
-    .terminal-submit-btn {
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      color: #FFFFFF;
-      border: none;
-      border-radius: 12px;
-      padding: 12px 26px;
-      font-family: inherit;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 59, 141, 0.3);
-    }
-
-    .terminal-output-log {
-      background: #05040A;
-      border: 1px solid rgba(178, 130, 255, 0.3);
-      border-radius: 12px;
-      padding: 18px;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      min-height: 80px;
-      display: none;
-    }
-
-    .terminal-output-log.success, .decoder-result-box.success {
-      display: block;
-      border-color: var(--accent-gold);
-      color: var(--accent-gold);
-      background: rgba(255, 209, 102, 0.08);
-    }
-
-    .terminal-output-log.error, .decoder-result-box.error {
-      display: block;
-      border-color: var(--accent-pink);
-      color: var(--accent-pink);
-      background: rgba(255, 59, 141, 0.08);
-    }
-
-    /* TAB 3: SECRET CASE FILES STYLES */
-    .vip-vault-header {
-      background: rgba(255, 209, 102, 0.12);
-      border: 1.5px solid var(--accent-gold);
-      border-radius: 16px;
-      padding: 18px 24px;
-      margin-bottom: 22px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .vip-card-locked {
-      background: var(--card-inner);
-      border: 1.5px dashed var(--accent-gold);
-      border-radius: 18px;
-      padding: 26px;
-      position: relative;
-      margin-bottom: 22px;
-    }
-
-    .vip-stamp-overlay {
-      background: rgba(255, 209, 102, 0.15);
-      border: 2px solid var(--accent-gold);
-      color: var(--accent-gold);
-      padding: 6px 16px;
-      border-radius: 8px;
-      font-weight: 900;
-      font-size: 0.8rem;
-      letter-spacing: 1px;
-      display: inline-block;
-      margin-bottom: 14px;
-    }
-
-    /* SIDEBAR WIDGETS */
-    .sidebar-widget {
-      background: var(--card-inner);
-      border: 1.5px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .widget-title { margin: 0 0 16px; color: var(--accent-pink); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; }
-
-    .student-status-list { display: flex; flex-direction: column; gap: 14px; }
-    .student-status-item { display: flex; align-items: center; gap: 12px; font-size: 0.88rem; }
-    .status-indicator { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-    .status-indicator.online { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
-    .status-indicator.busy { background: var(--accent-pink); box-shadow: 0 0 8px var(--accent-pink); }
-    .status-indicator.away { background: var(--accent-gold); }
-    .status-text { font-size: 0.76rem; color: var(--accent-purple); margin-top: 2px; }
-
-    .quick-clue-item {
-      background: rgba(11, 9, 20, 0.85);
-      border: 1px solid var(--border-subtle);
-      padding: 12px 16px;
-      border-radius: 12px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      font-size: 0.88rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.25s ease;
-    }
-
-    .quick-clue-item:hover { border-color: var(--accent-pink); color: #FFFFFF; transform: translateX(4px); }
-    .clue-tag-mini { background: rgba(255, 59, 141, 0.2); color: var(--accent-pink); font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; font-weight: 800; }
-
-    /* MODAL OVERLAYS */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(5, 3, 12, 0.88);
-      backdrop-filter: blur(12px);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-card {
-      background: var(--card-bg);
-      border: 2px solid var(--accent-purple);
-      border-radius: 20px;
-      padding: 30px;
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 16px 48px rgba(0,0,0,0.85);
-    }
-
-    .form-input-text {
-      width: 100%;
-      padding: 12px 16px;
-      background: #000000;
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      color: #FFFFFF;
-      box-sizing: border-box;
-      margin-bottom: 14px;
-      font-family: inherit;
-    }
-
-    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
-    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
-    .btn-submit { background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); color: #FFFFFF; }
-    .btn-close { background: transparent; color: var(--text-muted); border: 1px solid var(--border-subtle); }
-  </style>
-</head>
-<body>
-
-  <!-- UNIVERSAL NAVBAR -->
-  <header class="navbar">
-    <div class="nav-container">
-      <div class="logo-container">
-        <a href="index.html" style="text-decoration: none;">
-          <div class="logo-main">🌸 OTAKU OVERLOAD</div>
-          <div class="logo-sub">✦ GIRLS PHANTOM DEAD</div>
-        </a>
-      </div>
-
-      <nav class="nav-links">
-        <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
-        <a href="bbs-forum.html" class="nav-item active">💬 Sakuraoka BBS</a>
-        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-        <a href="lore.html" class="nav-item">📚 Lore & Books</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- MAIN CONTENT CONTAINER -->
-  <main class="bbs-container">
-
-    <!-- TOP ANIME BANNER -->
-    <div class="bbs-terminal-bar">
-      <div class="terminal-status-group">
-        <span class="terminal-dot pulsing"></span>
-        <strong>🌸 SAKURAOKA HIGH // THE PHANTOM ROOM BULLETIN</strong>
-        <span style="opacity: 0.3;">|</span>
-        <span id="bbs-server-time">Campus Clock: Loading...</span>
-      </div>
-      <div class="terminal-status-group">
-        <span>Active Students: <strong id="bbs-active-count" style="color: var(--accent-gold);">--</strong></span>
-        <span style="opacity: 0.3;">|</span>
-        <span id="bbs-mode-badge" class="badge-after-dark">🌙 AFTER HOURS MODE</span>
-      </div>
-    </div>
-
-    <!-- 3 STORY TABS -->
-    <div class="bbs-tab-bar">
-      <div class="bbs-tab active-tab" data-tab-target="public-board" onclick="switchBBSTab('public-board', this)">
-        💬 SCHOOL RUMORS
-      </div>
-      <div class="bbs-tab" data-tab-target="phantom-terminal" onclick="switchBBSTab('phantom-terminal', this)">
-        🔍 MYSTERY DECODER
-      </div>
-      <div class="bbs-tab vip-tab" data-tab-target="vip-archive" onclick="switchBBSTab('vip-archive', this)">
-        🔒 SECRET CASE FILES [VIP]
-      </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- TAB 1: PUBLIC SCHOOL RUMORS                                  -->
-    <!-- ============================================================ -->
-    <div id="public-board" class="tab-panel bbs-tab-panel active-panel active">
-      <div class="bbs-main-layout">
-
-        <!-- LEFT COLUMN: THREAD FEED -->
-        <section class="bbs-content-left">
-
-          <!-- INVESTIGATOR DOSSIER -->
-          <div class="investigator-docket">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-              <div>
-                <span style="font-size: 0.74rem; color: var(--accent-gold); font-weight: 800; letter-spacing: 1px;">🕵️ STUDENT MYSTERY DOSSIER</span>
-                <h3 style="margin: 2px 0 0; color: #FFFFFF; font-size: 1.15rem;">School Mystery Badges</h3>
-              </div>
-              <span id="investigator-rank-tag" class="rank-badge-pill">Rank: Novice Sleuth</span>
-            </div>
-
-            <div class="badge-collection-grid">
-              <div id="badge-window" class="badge-item-card">
-                <span style="font-size: 1.2rem;">👁️</span>
-                <span>Window Watcher</span>
-              </div>
-              <div id="badge-frequency" class="badge-item-card">
-                <span style="font-size: 1.2rem;">🎧</span>
-                <span>Signal Listener</span>
-              </div>
-              <div id="badge-phantom" class="badge-item-card">
-                <span style="font-size: 1.2rem;">🗝️</span>
-                <span>Phantom Member</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- FILTER BAR -->
-          <div class="bbs-filter-bar">
-            <button class="filter-btn active" onclick="filterBBS('all')">💬 All Posts</button>
-            <button class="filter-btn" onclick="filterBBS('rumors')">🔥 School Gossip</button>
-            <button class="filter-btn" onclick="filterBBS('afterdark')">🌙 Night Sightings</button>
-            <button class="filter-btn" onclick="filterBBS('official')">📋 Student Council</button>
-            <button class="action-btn-primary" onclick="openTheoryModal()">+ Post Sighting</button>
-          </div>
-
-          <!-- THREAD FEED CONTAINER (bbs-mystery-engine.js dynamically injects active weekly case here) -->
-          <div id="bbs-posts-container"></div>
-        </section>
-
-        <!-- RIGHT COLUMN: SIDEBAR WIDGETS -->
-        <aside class="bbs-sidebar-right">
-
-          <!-- ACTIVE NETWORK ROSTER -->
-          <div class="sidebar-widget">
-            <h3 class="widget-title">💬 Online Students</h3>
-            <div class="student-status-list">
-              <div class="student-status-item">
-                <div class="status-indicator online"></div>
-                <div>
-                  <strong>Akari_M</strong>
-                  <div class="status-text">"Phantom Room Band Desk"</div>
-                </div>
-              </div>
-              <div class="student-status-item">
-                <div class="status-indicator busy"></div>
-                <div>
-                  <strong>Bass_Sera</strong>
-                  <div class="status-text">"Rehearsing Room 302 song"</div>
-                </div>
-              </div>
-              <div class="student-status-item">
-                <div class="status-indicator online"></div>
-                <div>
-                  <strong>CatEars_Nekomi</strong>
-                  <div class="status-text">"Writing lyric drafts..."</div>
-                </div>
-              </div>
-              <div class="student-status-item">
-                <div class="status-indicator away"></div>
-                <div>
-                  <strong>Aoi_Pres</strong>
-                  <div class="status-text">"Reviewing Rehearsal Permits"</div>
-                </div>
-              </div>
-              <div class="student-status-item">
-                <div class="status-indicator online"></div>
-                <div>
-                  <strong>Hiro_Class2B</strong>
-                  <div class="status-text">"Left Study Room B..."</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- UNCOVERED CLUES -->
-          <div class="sidebar-widget">
-            <h3 class="widget-title">🔍 Uncovered Clues</h3>
-            <div class="quick-clue-item" onclick="openClueModal(1)">
-              <span class="clue-tag-mini">CASE #105</span>
-              <strong>1994 Sheet Music Note</strong>
-            </div>
-            <div class="quick-clue-item" onclick="openClueModal(2)">
-              <span class="clue-tag-mini">CASE #105</span>
-              <strong>Solar Music Box Note</strong>
-            </div>
-          </div>
-
-        </aside>
-
-      </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- TAB 2: MYSTERY DECODER                                       -->
-    <!-- ============================================================ -->
-    <div id="phantom-terminal" class="tab-panel bbs-tab-panel">
-      <div class="terminal-analyzer-box">
-        <div class="terminal-title-bar">
-          <span style="color: var(--accent-cyan); font-weight: 800; font-size: 1rem;">🔍 PHANTOM ROOM // MYSTERY DECODER</span>
-          <span style="color: var(--accent-pink); font-size: 0.82rem; font-weight: 800;">● ACTIVE EVENT</span>
-        </div>
-
-        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
-          Hear a weird audio note on Neko FM or spot a secret passcode in the forum chatter? Enter the mystery keyword below to help the girls solve the case!
-        </p>
-
-        <!-- Form linked directly to bbs-mystery-engine.js -->
-        <form id="decoder-form" class="terminal-code-input-group">
-          <input type="text" id="passcode-input" class="terminal-text-input" placeholder="Enter mystery passcode (e.g. HARMONY_1994, SUNSET_1994)..." autocomplete="off">
-          <button type="submit" class="terminal-submit-btn">SUBMIT CLUE</button>
-        </form>
-
-        <div id="decoder-result" class="terminal-output-log"></div>
-
-        <div style="margin-top: 26px; padding-top: 18px; border-top: 1px solid rgba(0,240,255,0.2); font-size: 0.88rem; color: var(--text-muted);">
-          <strong style="color: var(--accent-cyan);">WHERE TO FIND MYSTERY CODES:</strong>
-          <ul style="margin: 10px 0 0 18px; padding: 0; line-height: 1.6;">
-            <li>Check the live text banner on the <strong>24/7 Neko FM</strong> player.</li>
-            <li>Read the author margin notes inside Chapter 1 on the <strong>Lore & Books</strong> page.</li>
-            <li>Listen for the short chime between songs on the radio stream.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- TAB 3: SECRET CASE FILES [VIP] (DUAL BOARD & LIVE CASE #2)   -->
-    <!-- ============================================================ -->
-    <div id="vip-archive" class="tab-panel bbs-tab-panel">
-      <div class="vip-vault-header">
-        <div>
-          <h3 style="margin: 0; color: var(--accent-gold); font-size: 1.15rem;">🔒 SECRET CASE FILES & VIP PARALLEL INVESTIGATION</h3>
-          <p style="margin: 4px 0 0; font-size: 0.88rem; color: var(--text-muted);">Exclusive 2nd weekly case thread, live NPC evidence drops, and general school boards.</p>
-        </div>
-        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-          <span id="vip-access-status-badge" class="rank-badge-pill" style="background: rgba(255, 209, 102, 0.25);">⭐ BACKSTAGE VIP ACTIVE</span>
-          <button class="filter-btn" onclick="toggleVIPAccess()" style="border-color: var(--accent-gold); color: var(--accent-gold);">⚡ Demo VIP Toggle</button>
-        </div>
-      </div>
-
-      <!-- LOCKED STATE VIEW -->
-      <div id="vip-locked-view" class="vip-card-locked" style="display: none;">
-        <span class="vip-stamp-overlay">[STAMP: SENIOR INVESTIGATOR CLEARANCE REQUIRED]</span>
-        <h3 style="margin: 8px 0 10px; color: #FFFFFF;">VIP CASE #105 & EXCLUSIVE PARALLEL INVESTIGATION BOARD</h3>
-        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
-          Backstage VIP members receive full access to the 2nd parallel weekly mystery thread, unredacted resolution reports, and live NPC chatter drops in the exclusive chat line.
-        </p>
-
-        <div style="margin-top: 22px; padding: 20px; background: rgba(255, 209, 102, 0.08); border-radius: 12px; text-align: center;">
-          <p style="margin: 0 0 14px; color: var(--accent-gold); font-weight: bold; font-size: 0.98rem;">
-            Unlock Parallel VIP Mysteries & Support the Studio
-          </p>
-          <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-            <button class="action-btn-primary" onclick="openVIPModal()" style="padding: 12px 28px; font-size: 0.92rem;">
-              ⭐ Upgrade to Backstage Pass ($3/mo)
-            </button>
-            <button class="filter-btn" onclick="toggleVIPAccess()" style="border-color: var(--accent-gold); color: var(--accent-gold);">
-              🔑 Test VIP Access (Demo)
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- UNLOCKED LIVE VIP DUAL BOARD VIEW -->
-      <div id="vip-unlocked-view" class="bbs-main-layout">
-
-        <!-- LEFT COLUMN: VIP LIVE THREAD FEED -->
-        <section class="bbs-content-left">
-          
-          <div class="investigator-docket" style="border-color: var(--accent-gold); background: linear-gradient(135deg, rgba(45, 32, 18, 0.9), rgba(15, 11, 28, 0.9));">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-              <div>
-                <span style="font-size: 0.74rem; color: var(--accent-gold); font-weight: 800; letter-spacing: 1px;">⭐ VIP INVESTIGATOR DASHBOARD</span>
-                <h3 style="margin: 2px 0 0; color: #FFFFFF; font-size: 1.15rem;">VIP Case #105 Parallel Live Thread</h3>
-              </div>
-              <span class="rank-badge-pill" style="background: var(--accent-gold); color: #000;">CLEARANCE LEVEL 3</span>
-            </div>
-          </div>
-
-          <!-- VIP FEED CONTAINER (bbs-mystery-engine.js dynamically injects VIP Case here) -->
-          <div id="vip-posts-container"></div>
-        </section>
-
-        <!-- RIGHT COLUMN: VIP EXCLUSIVE SIDEBAR -->
-        <aside class="bbs-sidebar-right">
-          <div class="sidebar-widget" style="border-color: var(--accent-gold);">
-            <h3 class="widget-title" style="color: var(--accent-gold);">⭐ VIP Clue Stream</h3>
-            <div class="quick-clue-item" onclick="openClueModal(3)">
-              <span class="clue-tag-mini" style="background: rgba(255, 209, 102, 0.2); color: var(--accent-gold);">VIP CASE #105</span>
-              <strong>Locked Rooftop Key Note</strong>
-            </div>
-          </div>
-
-          <div class="sidebar-widget">
-            <h3 class="widget-title">💬 VIP Radio Chat Line</h3>
-            <div style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.6;">
-              <p>Live hints drop into this channel during late-night broadcasts on Neko FM.</p>
-              <div style="padding: 10px; background: rgba(0, 240, 255, 0.08); border-radius: 8px; color: var(--accent-cyan); font-family: monospace;">
-                [Neko FM Ticker]: "Check the 1994 graduation album page 32..."
-              </div>
-            </div>
-          </div>
-        </aside>
-
-      </div>
-
-    </div>
-
-  </main>
-
-  <!-- JAVASCRIPT ENGINE -->
-  <script>
-    // 1. Diegetic Tab Switcher
-    function switchBBSTab(panelId, tabEl) {
-      document.querySelectorAll('.tab-panel, .bbs-tab-panel').forEach(panel => {
-        panel.classList.remove('active-panel', 'active');
+  }
+
+  /**
+   * Helper to generate procedural daily chatter posts when template components are provided
+   */
+  function generateProceduralGossip(gossipData, daySeed) {
+    const posts = [];
+    if (!gossipData.students || !gossipData.topics) return posts;
+
+    const categories = Object.keys(gossipData.topics);
+    const timeOffsets = [450, 510, 570, 630, 690, 750, 810, 870, 930, 990, 1050, 1110, 1170, 1230, 1290, 1350];
+
+    timeOffsets.forEach((offset, idx) => {
+      const studentIdx = (daySeed * 7 + idx) % gossipData.students.length;
+      const student = gossipData.students[studentIdx];
+      const cat = categories[idx % categories.length];
+      const templateArr = gossipData.topics[cat];
+      if (!templateArr || templateArr.length === 0) return;
+
+      const template = templateArr[(daySeed * 3 + idx) % templateArr.length];
+      let message = template;
+
+      if (gossipData.fillers) {
+        message = message.replace(/\{(\w+)\}/g, (_, key) => {
+          const options = gossipData.fillers[key];
+          if (!options || options.length === 0) return key;
+          return options[(daySeed * 5 + idx) % options.length];
+        });
+      }
+
+      posts.push({
+        offset_mins: offset,
+        author: student.author,
+        author_badge: student.badge || student.author_badge || 'Student',
+        avatar_icon: student.avatar || student.avatar_icon || '👤',
+        message: message,
+        is_npc: false
       });
-      document.querySelectorAll('.bbs-tab').forEach(tab => {
-        tab.classList.remove('active-tab', 'active');
-      });
+    });
 
-      const activePanel = document.getElementById(panelId);
-      if (activePanel) {
-        activePanel.classList.add('active-panel', 'active');
+    return posts;
+  }
+
+  /**
+   * Fetches gossip pool and renders student council vs general feed
+   */
+  async function loadAndRenderGossip() {
+    let gossipData = null;
+
+    try {
+      let response = await fetch('js/school_gossip_pool.json');
+      if (!response.ok) {
+        response = await fetch('school_gossip_pool.json');
       }
-      if (tabEl) {
-        tabEl.classList.add('active-tab', 'active');
+      if (response.ok) {
+        gossipData = await response.json();
       }
+    } catch (err) {
+      console.warn('[MYSTERY ENGINE] Gossip pool fetch unavailable.');
     }
 
-    // 2. VIP Access State Toggle & View Handler
-    function toggleVIPAccess() {
-      const isVIP = localStorage.getItem('has_vip_pass') === 'true';
-      localStorage.setItem('has_vip_pass', isVIP ? 'false' : 'true');
-      updateVIPView();
-    }
+    if (!gossipData) return;
 
-    function updateVIPView() {
-      const isVIP = localStorage.getItem('has_vip_pass') === 'true';
-      const lockedView = document.getElementById('vip-locked-view');
-      const unlockedView = document.getElementById('vip-unlocked-view');
-      const vipBadge = document.getElementById('vip-access-status-badge');
+    const nowMs = Date.now();
+    const daySeed = Math.floor(nowMs / (1000 * 60 * 60 * 24));
 
-      if (isVIP) {
-        if (lockedView) lockedView.style.display = 'none';
-        if (unlockedView) unlockedView.style.display = 'grid';
-        if (vipBadge) {
-          vipBadge.innerText = '⭐ BACKSTAGE VIP ACTIVE';
-          vipBadge.style.background = 'rgba(255, 209, 102, 0.25)';
-          vipBadge.style.color = 'var(--accent-gold)';
-        }
-      } else {
-        if (lockedView) lockedView.style.display = 'block';
-        if (unlockedView) unlockedView.style.display = 'none';
-        if (vipBadge) {
-          vipBadge.innerText = '🔒 BACKSTAGE VIP LOCKED';
-          vipBadge.style.background = 'rgba(255, 59, 141, 0.2)';
-          vipBadge.style.color = 'var(--accent-pink)';
-        }
-      }
-    }
+    // 1. RENDER STUDENT COUNCIL TAB FEED
+    const councilContainer = document.getElementById('council-posts-container');
+    if (councilContainer && gossipData.student_council_threads && gossipData.student_council_threads.length > 0) {
+      const activeThread = gossipData.student_council_threads[daySeed % gossipData.student_council_threads.length];
 
-    // 3. Real-Time Clock & Campus Counter
-    function updateBBSServerClock() {
-      const now = new Date();
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      let hours = now.getHours();
-      const minutes = now.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
-      const formattedMin = minutes < 10 ? '0' + minutes : minutes;
-      const formattedTime = `${monthNames[now.getMonth()]} ${now.getDate()} • ${hours}:${formattedMin} ${ampm}`;
-
-      const clockEl = document.getElementById('bbs-server-time');
-      if (clockEl) clockEl.innerText = `Campus Clock: ${formattedTime}`;
-
-      let baseCount = 180;
-      if (now.getHours() >= 22 || now.getHours() < 6) {
-        baseCount = Math.floor(12 + (minutes % 20));
-      } else if (now.getHours() >= 12 && now.getHours() <= 16) {
-        baseCount = Math.floor(240 + (minutes * 1.5));
-      } else {
-        baseCount = Math.floor(80 + (minutes * 1.1));
-      }
-
-      const countEl = document.getElementById('bbs-active-count');
-      if (countEl) countEl.innerText = baseCount;
-
-      const isAfterHours = (now.getHours() >= 22 || now.getHours() < 6);
-      const modeBadge = document.getElementById('bbs-mode-badge');
-
-      if (modeBadge) {
-        if (isAfterHours) {
-          modeBadge.innerText = '🌙 AFTER HOURS MODE';
-          modeBadge.className = 'badge-after-dark';
-        } else {
-          modeBadge.innerText = '☀️ DAYTIME HOURS';
-          modeBadge.style.background = 'rgba(56, 229, 124, 0.2)';
-          modeBadge.style.borderColor = '#38E57C';
-          modeBadge.style.color = '#38E57C';
-        }
-      }
-    }
-
-    // 4. Thread Filter Engine
-    function filterBBS(category) {
-      const threads = document.querySelectorAll('.bbs-thread-card');
-      const buttons = document.querySelectorAll('.filter-btn');
-
-      buttons.forEach(btn => btn.classList.remove('active'));
-      if (event && event.target) event.target.classList.add('active');
-
-      threads.forEach(thread => {
-        if (category === 'all') {
-          thread.style.display = 'block';
-        } else {
-          const threadCat = thread.getAttribute('data-category');
-          thread.style.display = (threadCat === category) ? 'block' : 'none';
-        }
-      });
-    }
-
-    // Modals Engine
-    function openTheoryModal() {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="bbs-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3 style="margin: 0 0 10px; color: #FFFFFF;">🕵️ Post Student Sightings</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 18px;">Share strange occurrences or theories with other students!</p>
-            <input type="text" id="theory-username" class="form-input-text" placeholder="Your Student Handle (e.g. Anon_Sleuth)">
-            <textarea id="theory-text" class="form-input-text" rows="3" placeholder="Describe what you saw or heard..."></textarea>
-            <div class="modal-actions">
-              <button class="modal-btn btn-submit" onclick="submitTheory()">Publish Post</button>
-              <button class="modal-btn btn-close" onclick="removeExistingModals()">Cancel</button>
+      if (activeThread) {
+        let threadHTML = `
+          <article class="bbs-thread-card" style="margin-bottom: 24px;">
+            <div class="thread-main-header">
+              <span class="thread-tag dark">📋 [STUDENT COUNCIL OFFICIAL ANNOUNCEMENT]</span>
             </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
+            <div class="thread-replies-chain">
+              <div class="bbs-post-reply npc-reply highlight">
+                <div class="bbs-author">
+                  <div class="avatar-icon-sm">${activeThread.notice.avatar_icon || '📋'}</div>
+                  <div>
+                    <strong>${escapeHTML(activeThread.notice.author)} <span class="npc-badge">${escapeHTML(activeThread.notice.author_badge || 'Student Council')}</span></strong>
+                  </div>
+                </div>
+                <p class="post-content">"${escapeHTML(activeThread.notice.message)}"</p>
+              </div>
+        `;
 
-    function submitTheory() {
-      const name = document.getElementById('theory-username').value || "Anon_Student";
-      const text = document.getElementById('theory-text').value;
-
-      if (!text) return;
-
-      const now = new Date();
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      let hours = now.getHours();
-      const minutes = now.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
-      const formattedMin = minutes < 10 ? '0' + minutes : minutes;
-      const timeStamp = `${monthNames[now.getMonth()]} ${now.getDate()} • ${hours}:${formattedMin} ${ampm}`;
-
-      const container = document.getElementById('bbs-posts-container');
-      const postHTML = `
-        <article class="bbs-thread-card" data-category="afterdark">
-          <div class="thread-main-header">
-            <span class="thread-tag rumor">💬 [STUDENT POST]</span>
-            <h2 class="thread-title">"${text.substring(0, 50)}..."</h2>
-            <span class="thread-meta">Started by ${name} • ${timeStamp}</span>
-          </div>
-          <div class="thread-replies-chain">
+        if (activeThread.replies) {
+          threadHTML += activeThread.replies.map(reply => `
             <div class="bbs-post-reply">
               <div class="bbs-author">
-                <div class="avatar-icon-sm">🕵️</div>
+                <div class="avatar-icon-sm">${reply.avatar_icon || '👤'}</div>
                 <div>
-                  <strong>${name} <span class="user-badge-student">Sleuth</span></strong>
-                  <div class="post-time">${timeStamp}</div>
+                  <strong>${escapeHTML(reply.author)} <span class="user-badge-student">${escapeHTML(reply.author_badge || 'Student')}</span></strong>
                 </div>
               </div>
-              <p class="post-content">"${text}"</p>
+              <p class="post-content">"${escapeHTML(reply.message)}"</p>
             </div>
-          </div>
-        </article>
-      `;
-      container.insertAdjacentHTML('afterbegin', postHTML);
-      removeExistingModals();
+          `).join('');
+        }
+
+        threadHTML += `</div></article>`;
+        councilContainer.innerHTML = threadHTML;
+      }
     }
 
-    function openClueModal(clueId) {
-      removeExistingModals();
-      let title = "🔍 Uncovered Clue #" + clueId;
-      let bodyText = "";
+    // 2. RENDER GOSSIP & CAMPUS LIFE FEED
+    const gossipContainer = document.getElementById('gossip-posts-container');
+    if (gossipContainer) {
+      let gossipList = [];
 
-      if (clueId === 1) {
-        bodyText = "<strong>1994 Sheet Music Note:</strong><br><br>Found tucked inside the 1994 yearbook on page 32. Bears the handwritten keyword <code>HARMONY</code>.";
-      } else if (clueId === 2) {
-        bodyText = "<strong>Solar Music Box Note:</strong><br><br>Veteran custodian confirmed a 1990s grandfather clock music box in Room 302 that activates when sunset light hits the windowsill sensor.";
-      } else if (clueId === 3) {
-        bodyText = "<strong>Locked Rooftop Key Note:</strong><br><br>A handwritten note on the rooftop keyhook in the staff room. Unlocks with passcode <code>SUNSET_1994</code>.";
+      // Combine standard gossip arrays
+      if (gossipData.general_gossip) gossipList = gossipList.concat(gossipData.general_gossip);
+      if (gossipData.class_2a_corner) gossipList = gossipList.concat(gossipData.class_2a_corner);
+
+      // Extract from daily_gossip_pool categories if present
+      if (gossipData.daily_gossip_pool) {
+        Object.values(gossipData.daily_gossip_pool).forEach(category => {
+          if (Array.isArray(category)) gossipList = gossipList.concat(category);
+        });
       }
 
-      const modalHTML = `
-        <div id="bbs-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3 style="margin: 0 0 10px; color: #FFFFFF;">${title}</h3>
-            <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">${bodyText}</p>
-            <div class="modal-actions">
-              <button class="modal-btn btn-close" onclick="removeExistingModals()">Close Note</button>
+      // Add procedurally generated chatter if template objects exist
+      if (gossipData.students && gossipData.topics) {
+        const generated = generateProceduralGossip(gossipData, daySeed);
+        gossipList = gossipList.concat(generated);
+      }
+
+      if (gossipList.length > 0) {
+        const gossipHTML = gossipList.map(post => {
+          const avatarIcon = post.avatar_icon || '👤';
+          const isCustomImage = String(avatarIcon).includes('/');
+          const avatarMarkup = isCustomImage
+            ? `<img src="${avatarIcon}" class="author-avatar-sm" alt="${escapeHTML(post.author)}" onerror="this.src='https://via.placeholder.com/36'">`
+            : `<div class="avatar-icon-sm">${avatarIcon}</div>`;
+
+          return `
+            <div class="bbs-post-reply ${post.is_npc ? 'npc-reply highlight' : ''}" style="margin-bottom: 12px;">
+              <div class="bbs-author">
+                ${avatarMarkup}
+                <div>
+                  <strong>${escapeHTML(post.author)} <span class="${post.is_npc ? 'npc-badge' : 'user-badge-student'}">${escapeHTML(post.author_badge || 'Student')}</span></strong>
+                </div>
+              </div>
+              <p class="post-content">"${escapeHTML(post.message)}"</p>
+            </div>
+          `;
+        }).join('');
+
+        gossipContainer.innerHTML = `
+          <article class="bbs-thread-card" style="margin-bottom: 24px;">
+            <div class="thread-main-header">
+              <span class="thread-tag dark">💬 [SAKURAOKA CAMPUS CHATTER & GOSSIP]</span>
+            </div>
+            <div class="thread-replies-chain">${gossipHTML}</div>
+          </article>
+        `;
+      }
+    }
+  }
+
+  /**
+   * Helper: Extracts minute offset from post object (supports offset_mins or "Day X - HH:MM" strings)
+   */
+  function getPostOffsetMins(post) {
+    if (typeof post.offset_mins === 'number') {
+      return post.offset_mins;
+    }
+    if (post.trigger_time) {
+      const match = String(post.trigger_time).match(/Day\s*(\d+)\s*-\s*(\d{1,2}):(\d{2})/i);
+      if (match) {
+        const day = parseInt(match[1], 10) - 1; // Day 1 = 0 days elapsed
+        const hours = parseInt(match[2], 10);
+        const mins = parseInt(match[3], 10);
+        return (day * 24 * 60) + (hours * 60) + mins;
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * Renders a single case thread into a target container
+   */
+  function renderCase(caseObj, weekStartMs, elapsedMins, containerId, isVIP) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // Normalize property keys for both catalog & legacy formats
+    const caseId = caseObj.case_id || caseObj.mystery_id || 'CASE-105';
+    const title = caseObj.title || 'Active Mystery Case';
+    const passcode = caseObj.required_passcode || caseObj.passcode_trigger;
+    const badge = caseObj.reward_badge || caseObj.badge_reward || 'Seven Wonders Sleuth';
+
+    // Register passcode into solution vault
+    if (passcode) {
+      const cleanPasscode = String(passcode).trim().toUpperCase();
+      activeSolutions[cleanPasscode] = {
+        caseId: caseId,
+        title: title,
+        badge: badge
+      };
+    }
+
+    // GATING GUARD: Only allow posts whose calculated minute offset is <= elapsed time
+    const timeline = caseObj.timeline || [];
+    const unlockedPosts = timeline.filter(post => getPostOffsetMins(post) <= elapsedMins);
+
+    if (unlockedPosts.length === 0) return;
+
+    // CHAT PRESERVATION GUARD:
+    // If card already exists and unlocked post count hasn't changed, DO NOT re-render.
+    const existingDynamicCard = container.querySelector('.after-dark-glow');
+    if (existingDynamicCard && existingDynamicCard.dataset.unlockedCount === String(unlockedPosts.length)) {
+      return;
+    }
+
+    // Build reply posts HTML
+    const postsHTML = unlockedPosts.map(post => {
+      const offsetMins = getPostOffsetMins(post);
+      const postDate = new Date(weekStartMs + (offsetMins * 60 * 1000));
+      const avatarIcon = post.avatar_icon || '👤';
+      const isCustomImage = String(avatarIcon).includes('/');
+
+      const avatarMarkup = isCustomImage
+        ? `<img src="${avatarIcon}" class="author-avatar-sm" alt="${escapeHTML(post.author)}" onerror="this.src='https://via.placeholder.com/36'">`
+        : `<div class="avatar-icon-sm">${avatarIcon}</div>`;
+
+      return `
+        <div class="bbs-post-reply ${post.is_npc ? 'npc-reply highlight' : ''}">
+          <div class="bbs-author">
+            ${avatarMarkup}
+            <div>
+              <strong>${escapeHTML(post.author)} <span class="${post.is_npc ? 'npc-badge' : 'user-badge-student'}">${escapeHTML(post.author_badge || 'Student')}</span></strong>
+              <div class="post-time">${formatRelativeTimestamp(postDate)}</div>
             </div>
           </div>
+          <p class="post-content">"${escapeHTML(post.message)}"</p>
         </div>
       `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
+    }).join('');
 
-    function openVIPModal() {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="bbs-modal" class="modal-overlay">
-          <div class="modal-card" style="text-align: center;">
-            <h3 style="margin: 0 0 10px; color: var(--accent-gold);">⭐ Backstage VIP Access</h3>
-            <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 22px;">
-              Support the studio to unlock Board 03 Secret Files, parallel VIP weekly cases, custom gold chat glows, and advance Light Novel chapters!
-            </p>
-            <div class="modal-actions">
-              <button class="modal-btn btn-submit" onclick="toggleVIPAccess(); removeExistingModals();">Activate Demo VIP Pass ($3/mo)</button>
-              <button class="modal-btn btn-close" onclick="removeExistingModals()">Close Window</button>
-            </div>
-          </div>
+    // Wrap in main thread article card
+    const threadHTML = `
+      <article class="bbs-thread-card after-dark-glow" data-category="${isVIP ? 'official' : 'afterdark'}" data-unlocked-count="${unlockedPosts.length}" style="margin-bottom: 24px;">
+        <div class="thread-main-header">
+          <span class="thread-tag dark">${isVIP ? '🔒 [VIP EXCLUSIVE CASE]' : '🌙 [ACTIVE WEEKLY CASE]'}</span>
+          <h2 class="thread-title">${escapeHTML(title)}</h2>
+          <span class="thread-meta">Case ID: <strong>${escapeHTML(caseId)}</strong> • Target Badge: <strong>${escapeHTML(badge)}</strong></span>
         </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
+        <div class="thread-replies-chain">${postsHTML}</div>
+      </article>
+    `;
+
+    // Remove old card if new posts unlocked, then prepend updated card
+    if (existingDynamicCard) {
+      existingDynamicCard.remove();
     }
+    container.insertAdjacentHTML('afterbegin', threadHTML);
+  }
 
-    function removeExistingModals() {
-      const existing = document.getElementById('bbs-modal');
-      if (existing) existing.remove();
-    }
+  /**
+   * Tab Navigation Handler
+   */
+  function setupTabNavigation() {
+    const tabButtons = document.querySelectorAll('[data-tab-target]');
+    const tabPanels = document.querySelectorAll('.bbs-tab-panel');
 
-    // Initialize clock loop
-    setInterval(updateBBSServerClock, 1000);
-    updateBBSServerClock();
+    if (tabButtons.length === 0) return;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      updateVIPView();
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetId = button.getAttribute('data-tab-target');
+
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanels.forEach(panel => panel.classList.remove('active'));
+
+        button.classList.add('active');
+        const activePanel = document.getElementById(targetId);
+        if (activePanel) {
+          activePanel.classList.add('active');
+        }
+      });
     });
-  </script>
-  <!-- Master Mystery Engine JS -->
-  <script src="bbs-mystery-engine.js"></script>
-  <script src="music-player.js"></script>
-</body>
-</html>
+  }
+
+  /**
+   * Decoder Form & Passcode Verification
+   */
+  function setupDecoder() {
+    const decoderForm = document.getElementById('decoder-form');
+    const inputField = document.getElementById('passcode-input');
+    const resultBox = document.getElementById('decoder-result');
+
+    if (!decoderForm || !inputField || !resultBox) return;
+
+    decoderForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const userEnteredCode = inputField.value.trim().toUpperCase();
+
+      if (!userEnteredCode) {
+        resultBox.className = 'decoder-result-box error';
+        resultBox.textContent = 'Please enter a passcode.';
+        return;
+      }
+
+      if (activeSolutions[userEnteredCode]) {
+        const solution = activeSolutions[userEnteredCode];
+        resultBox.className = 'decoder-result-box success';
+        resultBox.innerHTML = `
+          <strong>CLEARANCE GRANTED!</strong><br>
+          Solved: <em>${escapeHTML(solution.title)}</em><br>
+          Badge Earned: <strong>[${escapeHTML(solution.badge)}]</strong>
+        `;
+        inputField.value = '';
+      } else {
+        resultBox.className = 'decoder-result-box error';
+        resultBox.textContent = 'ACCESS DENIED: Invalid passcode or frequency out of range.';
+      }
+    });
+  }
+
+  /**
+   * Helper: Formats Date objects into relative timestamps ("Today at...", "Yesterday at...")
+   */
+  function formatRelativeTimestamp(date) {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+    const formattedMin = minutes < 10 ? '0' + minutes : minutes;
+    const timeStr = `${hours}:${formattedMin} ${ampm}`;
+
+    if (diffHours >= 20 && diffHours < 48) {
+      return `Yesterday at ${timeStr}`;
+    } else if (diffHours < 20 && now.getDate() === date.getDate()) {
+      return `Today at ${timeStr}`;
+    } else {
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return `${monthNames[date.getMonth()]} ${date.getDate()} • ${timeStr}`;
+    }
+  }
+
+  /**
+   * Helper: Sanitizes text to prevent XSS
+   */
+  function escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // Run engine when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEngine);
+  } else {
+    initEngine();
+  }
+})();
