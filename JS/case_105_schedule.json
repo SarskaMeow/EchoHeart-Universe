@@ -1,165 +1,121 @@
 {
-  "epoch_start_iso": "2026-10-12T00:00:00Z",
-  "free_cases_pool": [
-    {
-      "case_id": "CASE-105",
-      "mystery_id": "case_105_midnight_piano",
-      "title": "Case #105 — The Midnight Melody of Room 302",
-      "reward_badge": "Resonance Detective",
-      "required_passcode": "HARMONY_1994",
-      "mystery_word_pool": ["HARMONY", "MELODY", "CHORDS", "RESONANCE", "OCTAVE", "PITCH"],
-      "daily_keywords": ["SIGNAL", "ARCHIVE", "DUCTS", "YEARBOOK", "KEYBOARD", "TREBLE", "SYNTH"],
-      "timeline": [
-        {
-          "offset_mins": 0,
-          "author": "Library_Yuki",
-          "author_badge": "Archivist",
-          "avatar_icon": "📚",
-          "message": "I was returning overdue reference books to the 3F archive just now. Room 302 (the old music classroom that's been locked since 2012) had faint piano notes coming from inside. It was playing a 4-bar minor chord progression over and over.",
-          "is_npc": false
-        },
-        {
-          "offset_mins": 135,
-          "author": "Track_Captain_Ren",
-          "author_badge": "Class 3-B",
-          "avatar_icon": "🏃",
-          "message": "@Library_Yuki bro Room 302 doesn't even have a piano anymore?? They moved all upright pianos to the B1 storage locker last semester during the renovation!!",
-          "is_npc": false
-        },
-        {
-          "offset_mins": 360,
-          "author": "NightOwl_33",
-          "author_badge": "Class 2-A",
-          "avatar_icon": "🎧",
-          "message": "I walked past the courtyard glass around 6:00 AM and heard the same melody echoing down through the rain spouts.",
-          "is_npc": false
-        },
-        {
-          "offset_mins": 720,
-          "author": "Bass_Sera",
-          "author_badge": "GIRLS PHANTOM DEAD",
-          "avatar_icon": "assets/sera.jpeg",
-          "message": "We picked up the vibration on our room mic down in Sub-Level 04. It's radiating straight through the air duct connected to Room 302. Pitch is tuned to exactly 432Hz.",
-          "is_npc": true
-        },
-        {
-          "offset_mins": 1500,
-          "author": "Yumi_BioLab",
-          "author_badge": "Class 2-A",
-          "avatar_icon": "🔬",
-          "message": "The audio sensors in 2F hall recorded an energy spike right as the melody stopped. The frequency resonance matches old 1990s magnetic audio tape.",
-          "is_npc": false
-        },
-        {
-          "offset_mins": 2160,
-          "author": "CatEars_Nekomi",
-          "author_badge": "GIRLS PHANTOM DEAD",
-          "avatar_icon": "assets/nekomi.jpeg",
-          "message": "Nekomi found a torn sheet music scrap tucked inside the 1994 yearbook on the Lore page! Check the radio ticker for clue word 1: SIGNAL!",
-          "is_npc": true
-        },
-        {
-          "offset_mins": 2880,
-          "author": "Daiki_StudentGov",
-          "author_badge": "Student Gov",
-          "avatar_icon": "📋",
-          "message": "Reminder: 3F Hallway is cordoned off for electrical testing. Please do not attempt to enter Room 302.",
-          "is_npc": false
-        },
-        {
-          "offset_mins": 3600,
-          "author": "Akari_M",
-          "author_badge": "SENIOR INVESTIGATOR",
-          "avatar_icon": "assets/akari.jpeg",
-          "message": "UPDATE: If anyone can decipher the chord code and enter it into the Mystery Decoder tab, we can feed the matching synth note through Neko FM to ground the signal!",
-          "is_npc": true
-        },
-        {
-          "offset_mins": 4320,
-          "author": "Hiro_Class2B",
-          "author_badge": "Class 2-B",
-          "avatar_icon": "🕵️",
-          "message": "I entered my daily code into the Mystery Decoder tab and unlocked a new letter for my target word! Check your Student ID tail!",
-          "is_npc": false
-        },
-        {
-          "offset_mins": 5040,
-          "author": "CatEars_Nekomi",
-          "author_badge": "GIRLS PHANTOM DEAD",
-          "avatar_icon": "assets/nekomi.jpeg",
-          "message": "The air ducts are vibrating again... if you guys find the code in the Lore Library archives, put it in the BBS terminal tab before midnight!!",
-          "is_npc": true
-        },
-        {
-          "offset_mins": 5760,
-          "author": "Bass_Sera",
-          "author_badge": "GIRLS PHANTOM DEAD",
-          "avatar_icon": "assets/sera.jpeg",
-          "message": "The resonance in SL-04 is reaching peak amplitude! Weekend investigators, enter your final solved word into the Decoder tab to claim your badge!",
-          "is_npc": true
-        },
-        {
-          "offset_mins": 6480,
-          "author": "Library_Yuki",
-          "author_badge": "Archivist",
-          "avatar_icon": "📚",
-          "message": "The piano notes are fading out... entering the correct passcode matched the ghost chord progression to an unreleased 1994 track!",
-          "is_npc": false
-        },
-        {
-          "offset_mins": 7200,
-          "author": "Akari_M",
-          "author_badge": "SENIOR INVESTIGATOR",
-          "avatar_icon": "assets/akari.jpeg",
-          "message": "[CASE #105 RESOLVED REPORT] Code HARMONY_1994 verified! Ghost melody grounded. Unredacted spectrograph analysis locked to Board 03 for VIP Backstage Pass members.",
-          "is_npc": true
-        }
-      ]
-    }
-  ],
-  "vip_cases_pool": [
-    {
-      "case_id": "VIP-CASE-105",
-      "mystery_id": "case_105_sublevel_vault",
-      "title": "VIP #105 — Sub-Level 04 Sealed Vault Resonance",
-      "reward_badge": "Vault Keymaster",
-      "required_passcode": "VAULT_1994",
-      "mystery_word_pool": ["CAVERN", "ECHOES", "SEALED", "RESONANCE", "ARCANE"],
-      "daily_keywords": ["RESONANCE", "IRON", "FREQ", "CIRCUIT", "LOCKER", "SUBLEVEL", "GATE"],
-      "timeline": [
-        {
-          "offset_mins": 0,
-          "author": "Aoi_Pres",
-          "author_badge": "STUDENT GOV",
-          "avatar_icon": "assets/aoi.jpeg",
-          "message": "Sub-Level 04 iron gate resonance frequency recorded at 14.2kHz. Clearance Level 3 required for investigation.",
-          "is_npc": true
-        },
-        {
-          "offset_mins": 360,
-          "author": "Akari_M",
-          "author_badge": "GIRLS PHANTOM DEAD",
-          "avatar_icon": "assets/akari.jpeg",
-          "message": "The spectrograph behind the sealed iron gate is registering harmonic feedback matching the Room 302 piano track.",
-          "is_npc": true
-        },
-        {
-          "offset_mins": 1440,
-          "author": "Bass_Sera",
-          "author_badge": "GIRLS PHANTOM DEAD",
-          "avatar_icon": "assets/sera.jpeg",
-          "message": "VIP Clue Unlocked: Check the spectrograph log in the radio chat line for the Sub-Level 04 gate passcode.",
-          "is_npc": true
-        },
-        {
-          "offset_mins": 2880,
-          "author": "CatEars_Nekomi",
-          "author_badge": "GIRLS PHANTOM DEAD",
-          "avatar_icon": "assets/nekomi.jpeg",
-          "message": "Sub-Level 04 vault doors unlocked for all VIP Backstage Pass holders!",
-          "is_npc": true
-        }
-      ]
-    }
+  "case_id": "CASE-105",
+  "mystery_id": "case_105_midnight_piano",
+  "title": "Case #105 — The Midnight Piano in Room 302",
+  "reward_badge": "Seven Wonders Sleuth",
+  "required_passcode": "HARMONY_1994",
+  "timeline": [
+    /* ================= DAY 1 (MONDAY) ================= */
+    { "offset_mins": 0, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "I was returning reference books to the 3F archive after sunset. Room 302 was pitch dark, but I heard a soft piano melody coming from inside...", "is_npc": false },
+    { "offset_mins": 45, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "@Yuki_Library Wait, Room 302? Isn't that the old music room that's been locked up all semester?", "is_npc": false },
+    { "offset_mins": 450, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Good morning! Just finished morning lap practice. Walked past B-Wing and Room 302 is locked tight like usual.", "is_npc": false },
+    { "offset_mins": 510, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "My homeroom is right below 302. During morning prep we didn't hear anything, but the windowsill light looked weird.", "is_npc": false },
+    { "offset_mins": 615, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Break time! Is this another one of those Seven Wonders of Sakuraoka urban legends starting up again?", "is_npc": false },
+    { "offset_mins": 735, "author": "Bass_Sera", "author_badge": "Light Music Club", "avatar_icon": "assets/sera.jpeg", "message": "Lunch break update: We checked with the music teacher. The upright pianos were all moved to the B1 storage room last year!", "is_npc": true },
+    { "offset_mins": 780, "author": "CatEars_Nekomi", "author_badge": "Light Music Club", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi checked Room 302 during lunch break! No piano inside at all, just stacked wooden desks! So where did the music come from?!", "is_npc": true },
+    { "offset_mins": 915, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Maybe someone left a bluetooth speaker in there as a prank?", "is_npc": false },
+    { "offset_mins": 990, "author": "Akari_M", "author_badge": "Mystery Club", "avatar_icon": "assets/akari.jpeg", "message": "Mystery Club is taking the case! If anyone hears the song again after 5 PM, post the exact time here on the BBS.", "is_npc": true },
+    { "offset_mins": 1080, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "Sunset just started. Setting up the telescope in the science room across the courtyard.", "is_npc": false },
+    { "offset_mins": 1155, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "I hear it again right now!! It's a slow lullaby tune playing in 3/4 time signature!", "is_npc": false },
+    { "offset_mins": 1230, "author": "Bass_Sera", "author_badge": "Light Music Club", "avatar_icon": "assets/sera.jpeg", "message": "We're down in our rehearsal room and we can hear the faint echo too. Pitch is tuned to classic grand piano resonance.", "is_npc": true },
+    { "offset_mins": 1305, "author": "Aoi_Pres", "author_badge": "Student Council", "avatar_icon": "assets/aoi.jpeg", "message": "Reminder from Student Council: Please do not loiter near the 3F B-Wing hallway after evening curfew.", "is_npc": true },
+    { "offset_mins": 1380, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Late night check... the school courtyard is pitch black. Super eerie vibe tonight.", "is_npc": false },
+    { "offset_mins": 1425, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Day 1 report logged. Mystery Club is investigating tomorrow morning!", "is_npc": false },
+
+    /* ================= DAY 2 (TUESDAY) ================= */
+    { "offset_mins": 1485, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "Midnight check on the BBS... anyone else unable to sleep thinking about Room 302?", "is_npc": false },
+    { "offset_mins": 1890, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Day 2 morning run complete. The staff room key box for Room 302 was checked—no one checked out the key yesterday.", "is_npc": false },
+    { "offset_mins": 1950, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "So if the key was never checked out, how did anyone get inside to play music?", "is_npc": false },
+    { "offset_mins": 2055, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "My senior told me there used to be a famous piano prodigy student at Sakuraoka High back in the 1990s!", "is_npc": false },
+    { "offset_mins": 2175, "author": "Akari_M", "author_badge": "Mystery Club", "avatar_icon": "assets/akari.jpeg", "message": "Great clue @Hina_Class1A! Library Committee is helping us search the old school archives during lunch hour.", "is_npc": true },
+    { "offset_mins": 2220, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "We found old graduation albums from 1990 to 1998 on the archive shelf!", "is_npc": false },
+    { "offset_mins": 2355, "author": "CatEars_Nekomi", "author_badge": "Light Music Club", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi found a sheet music notebook tucked behind the 1994 yearbook! It has handwritten notes in the margins!", "is_npc": true },
+    { "offset_mins": 2430, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Ooh, a mystery from 1994?! What do the notes say?!", "is_npc": false },
+    { "offset_mins": 2520, "author": "Bass_Sera", "author_badge": "Light Music Club", "avatar_icon": "assets/sera.jpeg", "message": "The notes list a specific song title: 'Sunset Harmony'. The music club used to perform it at the culture festival.", "is_npc": true },
+    { "offset_mins": 2595, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Student Council note: Archives must be kept orderly. Please return all 1990s yearbooks to box #4.", "is_npc": true },
+    { "offset_mins": 2670, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "6:30 PM: I can see a faint reflection in Room 302's window again tonight.", "is_npc": false },
+    { "offset_mins": 2745, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Just walked under 302 leaving gym practice. The piano melody is definitely playing right now!", "is_npc": false },
+    { "offset_mins": 2820, "author": "Akari_M", "author_badge": "Mystery Club", "avatar_icon": "assets/akari.jpeg", "message": "It starts every day right as the sun finishes setting. Keep tracking the clues everyone!", "is_npc": true },
+    { "offset_mins": 2865, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Listening to the melody from the courtyard bench... it actually sounds really pretty, not scary at all.", "is_npc": false },
+
+    /* ================= DAY 3 (WEDNESDAY) ================= */
+    { "offset_mins": 2925, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Day 3 begins! Mid-week mystery updates loading...", "is_npc": false },
+    { "offset_mins": 3330, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "Good morning! I examined the 1994 yearbook sheet music again under a magnifying glass.", "is_npc": false },
+    { "offset_mins": 3390, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Find anything interesting @Yuki_Library?", "is_npc": false },
+    { "offset_mins": 3495, "author": "CatEars_Nekomi", "author_badge": "Light Music Club", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi found a keyword stamped on the corner of the music sheet! The word is: SIGNAL!", "is_npc": true },
+    { "offset_mins": 3615, "author": "Akari_M", "author_badge": "Mystery Club", "avatar_icon": "assets/akari.jpeg", "message": "CLUE UPDATE: 'SIGNAL' is word 1! Check Neko FM's radio ticker during lunch break for word 2!", "is_npc": true },
+    { "offset_mins": 3660, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Tuned into Neko FM right now during lunch! The broadcast ticker says: 'Search the 1994 graduation album page 32!'", "is_npc": false },
+    { "offset_mins": 3795, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Heading to the library archive on 3F right now to check page 32!", "is_npc": false },
+    { "offset_mins": 3870, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "The whole class is invested in this now haha! Drama club is watching the BBS updates live!", "is_npc": false },
+    { "offset_mins": 3960, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "FOUND IT! Page 32 shows a photo of the 1994 Music Club holding a banner that says 'HARMONY'!", "is_npc": false },
+    { "offset_mins": 4035, "author": "Bass_Sera", "author_badge": "Light Music Club", "avatar_icon": "assets/sera.jpeg", "message": "So 'HARMONY' is a core clue word! We're getting closer to solving the mystery passcode!", "is_npc": true },
+    { "offset_mins": 4110, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "5:45 PM: Room 302's window light just clicked on again. The piano music has started!", "is_npc": false },
+    { "offset_mins": 4185, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Stood right outside Room 302 door just now... you can hear faint mechanical gears ticking inside along with the music!", "is_npc": false },
+    { "offset_mins": 4260, "author": "Akari_M", "author_badge": "Mystery Club", "avatar_icon": "assets/akari.jpeg", "message": "Mechanical gears?! That means it might not be a ghost or live player at all!", "is_npc": true },
+    { "offset_mins": 4305, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "A mechanical device inside a locked room playing every sunset? Interesting...", "is_npc": false },
+
+    /* ================= DAY 4 (THURSDAY) ================= */
+    { "offset_mins": 4365, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Day 4 overnight check! Let's solve this before the weekend!", "is_npc": false },
+    { "offset_mins": 4770, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Thursday morning! Track team is doing bleacher runs. B-Wing looks peaceful today.", "is_npc": false },
+    { "offset_mins": 4830, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "@Kenji_Gym said he heard gears ticking inside yesterday... could it be an old wind-up music box?", "is_npc": false },
+    { "offset_mins": 4935, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "A giant wind-up music box left inside Room 302 since 1994?! That would be super romantic!", "is_npc": false },
+    { "offset_mins": 5055, "author": "CatEars_Nekomi", "author_badge": "Light Music Club", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi asked the veteran custodian officer! He remembers a wooden grandfather clock music box in Room 302 back in the 90s!", "is_npc": true },
+    { "offset_mins": 5100, "author": "Bass_Sera", "author_badge": "Light Music Club", "avatar_icon": "assets/sera.jpeg", "message": "He said the clock mechanism was set to activate whenever ambient sunlight hit the solar sensor on the windowsill!", "is_npc": true },
+    { "offset_mins": 5235, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "WHOA!! So whenever the sunset hits the window at 5:45 PM, the light triggers the music box to play!!", "is_npc": false },
+    { "offset_mins": 5310, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "That explains why it plays every single day at sunset like clockwork!", "is_npc": false },
+    { "offset_mins": 5400, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Student Council confirmation: A custodian has verified the antique solar music box on the Room 302 shelf.", "is_npc": true },
+    { "offset_mins": 5475, "author": "Akari_M", "author_badge": "Mystery Club", "avatar_icon": "assets/akari.jpeg", "message": "We know HOW it works now! Now we just need to decode the full passcode combination to log the case solution!", "is_npc": true },
+    { "offset_mins": 5550, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "5:45 PM: Sunset light hit the window, music box started playing on schedule!", "is_npc": false },
+    { "offset_mins": 5625, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Man, mystery solved almost! Sakuraoka High history is pretty cool.", "is_npc": false },
+    { "offset_mins": 5700, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "So what is the exact passcode format for the Mystery Decoder tab?", "is_npc": false },
+    { "offset_mins": 5745, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Combine the music clue + graduation year! Try entering it on Friday!", "is_npc": false },
+
+    /* ================= DAY 5 (FRIDAY) ================= */
+    { "offset_mins": 5805, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "Friday is here! Let's complete the passcode formula!", "is_npc": false },
+    { "offset_mins": 6210, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Morning practice! Everyone's talking about the Room 302 solar music box today.", "is_npc": false },
+    { "offset_mins": 6270, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "We have two main clues: The sheet music keyword 'HARMONY' and the graduation year '1994'.", "is_npc": false },
+    { "offset_mins": 6375, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Combine them with an underscore! Like HARMONY_1994!", "is_npc": false },
+    { "offset_mins": 6495, "author": "CatEars_Nekomi", "author_badge": "Light Music Club", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi tested the passcode formula! Check the Mystery Decoder tab in the top navigation bar!", "is_npc": true },
+    { "offset_mins": 6540, "author": "Akari_M", "author_badge": "Mystery Club", "avatar_icon": "assets/akari.jpeg", "message": "INSTRUCTIONS: Go to the 'Mystery Decoder' tab, type in HARMONY_1994, and hit submit to claim your badge!", "is_npc": true },
+    { "offset_mins": 6675, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "IT WORKED!! 'CLEARANCE GRANTED! Solved: Case #105 — Badge: Seven Wonders Sleuth'!!", "is_npc": false },
+    { "offset_mins": 6750, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "I entered it too! Got the Seven Wonders Sleuth badge added to my profile!", "is_npc": false },
+    { "offset_mins": 6840, "author": "Bass_Sera", "author_badge": "Light Music Club", "avatar_icon": "assets/sera.jpeg", "message": "Awesome job everyone! Light Music Club is going to perform a modern cover of 'Sunset Harmony' at the culture fest!", "is_npc": true },
+    { "offset_mins": 6915, "author": "Aoi_Pres", "author_badge": "Student Council", "avatar_icon": "assets/aoi.jpeg", "message": "Official Student Council update: The 1994 solar music box in Room 302 will remain preserved as a school heritage piece.", "is_npc": true },
+    { "offset_mins": 6990, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "5:45 PM: Watching the sunset play its final song of the school week.", "is_npc": false },
+    { "offset_mins": 7065, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Best mystery case of the term! Everyone have a great weekend!", "is_npc": false },
+    { "offset_mins": 7140, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Heading home for the weekend! Thanks Mystery Club!", "is_npc": false },
+    { "offset_mins": 7185, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Case #105 officially solved on Friday evening. Weekend recap coming up!", "is_npc": false },
+
+    /* ================= DAY 6 (SATURDAY) ================= */
+    { "offset_mins": 7245, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "Saturday morning BBS lounge check. Case #105 victory lap!", "is_npc": false },
+    { "offset_mins": 7650, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Listening to Neko FM Saturday morning stream while doing homework.", "is_npc": false },
+    { "offset_mins": 7710, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "Logged into the BBS from home! Loved how everyone worked together on this mystery.", "is_npc": false },
+    { "offset_mins": 7815, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Saturday morning club practice done. Campus is super quiet today.", "is_npc": false },
+    { "offset_mins": 7935, "author": "CatEars_Nekomi", "author_badge": "Light Music Club", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi and Sera are practicing the 'Sunset Harmony' cover in the band room right now!", "is_npc": true },
+    { "offset_mins": 7980, "author": "Bass_Sera", "author_badge": "Light Music Club", "avatar_icon": "assets/sera.jpeg", "message": "We added a synth baseline to match Neko FM's weekend vibe!", "is_npc": true },
+    { "offset_mins": 8115, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Can't wait to hear the song at the Culture Festival!", "is_npc": false },
+    { "offset_mins": 8190, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Anyone who missed the case during the week can still enter HARMONY_1994 in the Decoder tab!", "is_npc": false },
+    { "offset_mins": 8280, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "Clear skies expected for stargazing tonight!", "is_npc": false },
+    { "offset_mins": 8355, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Relaxing Saturday afternoon. Sakuraoka BBS is the best place to chill.", "is_npc": false },
+    { "offset_mins": 8430, "author": "Akari_M", "author_badge": "Mystery Club", "avatar_icon": "assets/akari.jpeg", "message": "Mystery Club is prepping file archives for next week's rotation case!", "is_npc": true },
+    { "offset_mins": 8505, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Have a restful weekend everyone!", "is_npc": true },
+    { "offset_mins": 8580, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Wearing my new 'Seven Wonders Sleuth' badge on my profile!", "is_npc": false },
+    { "offset_mins": 8625, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Saturday night late chatter signing off.", "is_npc": false },
+
+    /* ================= DAY 7 (SUNDAY) ================= */
+    { "offset_mins": 8685, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "Sunday morning! Last day of Case #105 cycle before weekly reset!", "is_npc": false },
+    { "offset_mins": 9090, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Finishing up Sunday homework before tomorrow morning.", "is_npc": false },
+    { "offset_mins": 9150, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "Sunday reminder: Return all borrowed 1990s yearbooks tomorrow morning!", "is_npc": false },
+    { "offset_mins": 9255, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Rest day for the track team. Ready for Monday laps!", "is_npc": false },
+    { "offset_mins": 9375, "author": "CatEars_Nekomi", "author_badge": "Light Music Club", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi finished polishing the band arrangement for tomorrow's rehearsal!", "is_npc": true },
+    { "offset_mins": 9420, "author": "Bass_Sera", "author_badge": "Light Music Club", "avatar_icon": "assets/sera.jpeg", "message": "Recorded a mini snippet for Neko FM Sunday night broadcast!", "is_npc": true },
+    { "offset_mins": 9555, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "So glad Room 302's mystery turned out to be such a nice school story.", "is_npc": false },
+    { "offset_mins": 9630, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Packing my school bag for Monday morning!", "is_npc": false },
+    { "offset_mins": 9720, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "Sunday dusk: Room 302 music box playing its final weekend melody.", "is_npc": false },
+    { "offset_mins": 9795, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Ready for Monday morning gym class!", "is_npc": false },
+    { "offset_mins": 9870, "author": "Akari_M", "author_badge": "Mystery Club", "avatar_icon": "assets/akari.jpeg", "message": "[CASE #105 FINAL RESOLUTION REPORT] Mystery solved! The solar music box of Room 302 remains a Sakuraoka legend.", "is_npc": true },
+    { "offset_mins": 9945, "author": "Aoi_Pres", "author_badge": "Student Council", "avatar_icon": "assets/aoi.jpeg", "message": "Thank you to the Mystery Club and all participating students.", "is_npc": true },
+    { "offset_mins": 10020, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Goodnight everyone! See you at school tomorrow!", "is_npc": false },
+    { "offset_mins": 10065, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Weekly cycle complete. Case #105 mystery archivism locked.", "is_npc": false }
   ]
 }
