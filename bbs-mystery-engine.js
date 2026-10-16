@@ -18,6 +18,9 @@
     setupTabNavigation();
     setupDecoder();
     await loadAndRenderCases();
+
+    // Poll every 30 seconds to automatically reveal newly unlocked posts live
+    setInterval(loadAndRenderCases, 30000);
   }
 
   /**
@@ -25,7 +28,6 @@
    */
   async function loadAndRenderCases() {
     try {
-      // Updated to match your exact file name
       const response = await fetch('case_105_schedule.json');
       if (!response.ok) {
         console.warn('[MYSTERY ENGINE] Could not load case_105_schedule.json');
@@ -33,18 +35,18 @@
       }
 
       const catalog = await response.json();
-      const epochMs = new Date(catalog.epoch_start_iso || '2026-01-05T00:00:00Z').getTime();
+      const epochMs = new Date(catalog.epoch_start_iso || '2026-10-12T00:00:00Z').getTime();
       const nowMs = Date.now();
 
       // Calculate current week index relative to epoch
       const weekIndex = Math.max(0, Math.floor((nowMs - epochMs) / MS_PER_WEEK));
 
-      // Calculate the exact start timestamp (Monday 00:00:00) of the current week cycle
+      // Calculate start timestamp (Monday 00:00:00 UTC) of current week cycle
       const currentWeekStartMs = epochMs + (weekIndex * MS_PER_WEEK);
       const elapsedMinsInCurrentWeek = Math.floor((nowMs - currentWeekStartMs) / 60000);
 
-      // Select active cases using rotational modulo
-      const freePool = catalog.free_cases_pool || [];
+      // Support both multi-case pool catalogs and single-case JSON formats
+      const freePool = catalog.free_cases_pool || (catalog.timeline ? [catalog] : []);
       const vipPool = catalog.vip_cases_pool || [];
 
       const activeFreeCase = freePool.length > 0 ? freePool[weekIndex % freePool.length] : null;
@@ -66,34 +68,62 @@
   }
 
   /**
+   * Helper: Extracts minute offset from post object (supports offset_mins or "Day X - HH:MM" strings)
+   */
+  function getPostOffsetMins(post) {
+    if (typeof post.offset_mins === 'number') {
+      return post.offset_mins;
+    }
+    if (post.trigger_time) {
+      const match = String(post.trigger_time).match(/Day\s*(\d+)\s*-\s*(\d{1,2}):(\d{2})/i);
+      if (match) {
+        const day = parseInt(match[1], 10) - 1; // Day 1 = 0 days elapsed
+        const hours = parseInt(match[2], 10);
+        const mins = parseInt(match[3], 10);
+        return (day * 24 * 60) + (hours * 60) + mins;
+      }
+    }
+    return 0;
+  }
+
+  /**
    * Renders a single case thread into a target container
    */
   function renderCase(caseObj, weekStartMs, elapsedMins, containerId, isVIP) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
+    // Normalize property keys for both catalog & legacy formats
+    const caseId = caseObj.case_id || caseObj.mystery_id || 'CASE-105';
+    const title = caseObj.title || 'Active Mystery Case';
+    const passcode = caseObj.required_passcode || caseObj.passcode_trigger;
+    const badge = caseObj.reward_badge || caseObj.badge_reward || 'Resonance Detective';
+
     // Register passcode into solution vault
-    if (caseObj.required_passcode) {
-      const cleanPasscode = caseObj.required_passcode.trim().toUpperCase();
+    if (passcode) {
+      const cleanPasscode = String(passcode).trim().toUpperCase();
       activeSolutions[cleanPasscode] = {
-        caseId: caseObj.case_id,
-        title: caseObj.title,
-        badge: caseObj.reward_badge || 'Case Solved'
+        caseId: caseId,
+        title: title,
+        badge: badge
       };
     }
 
-    // GATING GUARD: Only allow posts whose offset_mins is <= elapsed real-world time
-    const unlockedPosts = (caseObj.timeline || []).filter(post => post.offset_mins <= elapsedMins);
+    // GATING GUARD: Only allow posts whose calculated minute offset is <= elapsed time
+    const timeline = caseObj.timeline || [];
+    const unlockedPosts = timeline.filter(post => getPostOffsetMins(post) <= elapsedMins);
+
+    if (unlockedPosts.length === 0) return;
 
     // Build reply posts HTML
     const postsHTML = unlockedPosts.map(post => {
-      // Calculate exact deterministic past date
-      const postDate = new Date(weekStartMs + (post.offset_mins * 60 * 1000));
+      const offsetMins = getPostOffsetMins(post);
+      const postDate = new Date(weekStartMs + (offsetMins * 60 * 1000));
       const avatarIcon = post.avatar_icon || '👤';
-      const isCustomImage = avatarIcon.includes('/');
+      const isCustomImage = String(avatarIcon).includes('/');
 
       const avatarMarkup = isCustomImage
-        ? `<img src="${avatarIcon}" class="author-avatar-sm" alt="${post.author}" onerror="this.src='https://via.placeholder.com/36'">`
+        ? `<img src="${avatarIcon}" class="author-avatar-sm" alt="${escapeHTML(post.author)}" onerror="this.src='https://via.placeholder.com/36'">`
         : `<div class="avatar-icon-sm">${avatarIcon}</div>`;
 
       return `
@@ -102,7 +132,7 @@
             ${avatarMarkup}
             <div>
               <strong>${escapeHTML(post.author)} <span class="${post.is_npc ? 'npc-badge' : 'user-badge-student'}">${escapeHTML(post.author_badge || 'Student')}</span></strong>
-              <div class="post-time">${formatTimestamp(postDate)}</div>
+              <div class="post-time">${formatRelativeTimestamp(postDate)}</div>
             </div>
           </div>
           <p class="post-content">"${escapeHTML(post.message)}"</p>
@@ -115,14 +145,14 @@
       <article class="bbs-thread-card after-dark-glow" style="margin-bottom: 24px;">
         <div class="thread-main-header">
           <span class="thread-tag dark">${isVIP ? '🔒 [VIP EXCLUSIVE CASE]' : '🌙 [ACTIVE WEEKLY CASE]'}</span>
-          <h2 class="thread-title">${escapeHTML(caseObj.title)}</h2>
-          <span class="thread-meta">Case ID: <strong>${escapeHTML(caseObj.case_id)}</strong> • Target Badge: <strong>${escapeHTML(caseObj.reward_badge || 'None')}</strong></span>
+          <h2 class="thread-title">${escapeHTML(title)}</h2>
+          <span class="thread-meta">Case ID: <strong>${escapeHTML(caseId)}</strong> • Target Badge: <strong>${escapeHTML(badge)}</strong></span>
         </div>
         <div class="thread-replies-chain">${postsHTML}</div>
       </article>
     `;
 
-    // Replace or inject into container
+    // Replace existing dynamic card if present, or insert at top
     const existingDynamicCard = container.querySelector('.after-dark-glow');
     if (existingDynamicCard) {
       existingDynamicCard.remove();
@@ -192,20 +222,32 @@
   }
 
   /**
-   * Helper: Formats Date objects into standard BBS timestamps
+   * Helper: Formats Date objects into relative timestamps ("Today at...", "Yesterday at...")
    */
-  function formatTimestamp(date) {
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  function formatRelativeTimestamp(date) {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+
     let hours = date.getHours();
     const minutes = date.getMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
     const formattedMin = minutes < 10 ? '0' + minutes : minutes;
-    return `${monthNames[date.getMonth()]} ${date.getDate()} • ${hours}:${formattedMin} ${ampm}`;
+    const timeStr = `${hours}:${formattedMin} ${ampm}`;
+
+    if (diffHours >= 20 && diffHours < 48) {
+      return `Yesterday at ${timeStr}`;
+    } else if (diffHours < 20 && now.getDate() === date.getDate()) {
+      return `Today at ${timeStr}`;
+    } else {
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return `${monthNames[date.getMonth()]} ${date.getDate()} • ${timeStr}`;
+    }
   }
 
   /**
-   * Helper: Sanitizes text to prevent accidental XSS
+   * Helper: Sanitizes text to prevent XSS
    */
   function escapeHTML(str) {
     if (!str) return '';
