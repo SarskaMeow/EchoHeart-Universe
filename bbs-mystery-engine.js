@@ -252,7 +252,7 @@
 
     // Wrap in main thread article card
     const threadHTML = `
-      <article class="bbs-thread-card after-dark-glow" data-unlocked-count="${unlockedPosts.length}" style="margin-bottom: 24px;">
+      <article class="bbs-thread-card after-dark-glow" data-category="${isVIP ? 'official' : 'afterdark'}" data-unlocked-count="${unlockedPosts.length}" style="margin-bottom: 24px;">
         <div class="thread-main-header">
           <span class="thread-tag dark">${isVIP ? '🔒 [VIP EXCLUSIVE CASE]' : '🌙 [ACTIVE WEEKLY CASE]'}</span>
           <h2 class="thread-title">${escapeHTML(title)}</h2>
