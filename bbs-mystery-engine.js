@@ -288,8 +288,10 @@
       gossipData = EMBEDDED_GOSSIP_POOL;
     }
 
-    const nowMs = Date.now();
-    const daySeed = Math.floor(nowMs / (1000 * 60 * 60 * 24));
+    const now = new Date();
+    const currentDay = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+    const currentHour = now.getHours(); // 0 - 23
+    const daySeed = Math.floor(now.getTime() / (1000 * 60 * 60 * 24));
 
     // 1. RENDER STUDENT COUNCIL TAB FEED
     const councilContainer = document.getElementById('council-posts-container');
@@ -338,32 +340,75 @@
     if (gossipContainer) {
       let gossipList = [];
 
-      if (gossipData.general_gossip) gossipList = gossipList.concat(gossipData.general_gossip);
-      if (gossipData.class_2a_corner) gossipList = gossipList.concat(gossipData.class_2a_corner);
-
-      if (gossipData.daily_gossip_pool) {
-        Object.values(gossipData.daily_gossip_pool).forEach(category => {
-          if (Array.isArray(category)) gossipList = gossipList.concat(category);
+      // Check for day-scheduled gossip pool
+      if (gossipData.weekly_gossip) {
+        const dayPosts = gossipData.weekly_gossip[String(currentDay)] || [];
+        dayPosts.forEach(post => {
+          const unlockHr = typeof post.unlock_hour === 'number' ? post.unlock_hour : 0;
+          if (currentHour >= unlockHr) {
+            gossipList.push({
+              author: post.name || post.author,
+              author_badge: post.badge || post.author_badge,
+              avatar_icon: post.avatar || post.avatar_icon,
+              message: post.text || post.message,
+              post_time: post.post_time,
+              category: post.category,
+              is_npc: post.is_npc
+            });
+          }
         });
+
+        // Add late night posts if past 10 PM or early morning
+        if ((currentHour >= 22 || currentHour < 6) && gossipData.after_hours_gossip) {
+          gossipData.after_hours_gossip.forEach(post => {
+            const unlockHr = typeof post.unlock_hour === 'number' ? post.unlock_hour : 0;
+            if (currentHour >= unlockHr || currentHour < 6) {
+              gossipList.push({
+                author: post.name || post.author,
+                author_badge: post.badge || post.author_badge,
+                avatar_icon: post.avatar || post.avatar_icon,
+                message: post.text || post.message,
+                post_time: post.post_time,
+                category: post.category,
+                is_npc: post.is_npc
+              });
+            }
+          });
+        }
+      }
+
+      // Fallback to legacy structure if weekly_gossip is not present
+      if (gossipList.length === 0) {
+        if (gossipData.general_gossip) gossipList = gossipList.concat(gossipData.general_gossip);
+        if (gossipData.class_2a_corner) gossipList = gossipList.concat(gossipData.class_2a_corner);
+
+        if (gossipData.daily_gossip_pool) {
+          Object.values(gossipData.daily_gossip_pool).forEach(category => {
+            if (Array.isArray(category)) gossipList = gossipList.concat(category);
+          });
+        }
       }
 
       if (gossipList.length > 0) {
         const gossipHTML = gossipList.map(post => {
-          const avatarIcon = post.avatar_icon || '👤';
+          const avatarIcon = post.avatar_icon || post.avatar || '👤';
           const isCustomImage = String(avatarIcon).includes('/');
           const avatarMarkup = isCustomImage
-            ? `<img src="${avatarIcon}" class="author-avatar-sm" alt="${escapeHTML(post.author)}" onerror="this.src='https://via.placeholder.com/36'">`
+            ? `<img src="${avatarIcon}" class="author-avatar-sm" alt="${escapeHTML(post.author || post.name)}" onerror="this.src='https://via.placeholder.com/36'">`
             : `<div class="avatar-icon-sm">${avatarIcon}</div>`;
+
+          const timeStampStr = post.post_time ? `<div class="post-time">${escapeHTML(post.post_time)}</div>` : '';
 
           return `
             <div class="bbs-post-reply ${post.is_npc ? 'npc-reply highlight' : ''}" style="margin-bottom: 12px;">
               <div class="bbs-author">
                 ${avatarMarkup}
                 <div>
-                  <strong>${escapeHTML(post.author)} <span class="${post.is_npc ? 'npc-badge' : 'user-badge-student'}">${escapeHTML(post.author_badge || 'Student')}</span></strong>
+                  <strong>${escapeHTML(post.author || post.name)} <span class="${post.is_npc ? 'npc-badge' : 'user-badge-student'}">${escapeHTML(post.author_badge || post.badge || 'Student')}</span></strong>
+                  ${timeStampStr}
                 </div>
               </div>
-              <p class="post-content">"${escapeHTML(post.message)}"</p>
+              <p class="post-content">"${escapeHTML(post.message || post.text)}"</p>
             </div>
           `;
         }).join('');
