@@ -1,68 +1,165 @@
 {
-  "mystery_id": "case_105_midnight_piano",
-  "title": "Case #105 — The Midnight Melody of Room 302",
-  "duration_days": 7,
-  "passcode_trigger": "HARMONY_1994",
-  "badge_reward": "Resonance Detective",
-  "timeline": [
+  "epoch_start_iso": "2026-10-12T00:00:00Z",
+  "free_cases_pool": [
     {
-      "trigger_time": "Day 1 - 22:15",
-      "location": "bbs_board02",
-      "thread_id": "105",
-      "author": "Library_Yuki",
-      "author_badge": "Archivist",
-      "avatar_icon": "📚",
-      "message": "I was returning overdue reference books to the 3F archive just now. Room 302 (the old music classroom that's been locked since 2012) had faint piano notes coming from inside. It was playing a 4-bar minor chord progression over and over. When I touched the doorknob, the music stopped instantly."
-    },
+      "case_id": "CASE-105",
+      "mystery_id": "case_105_midnight_piano",
+      "title": "Case #105 — The Midnight Melody of Room 302",
+      "reward_badge": "Resonance Detective",
+      "required_passcode": "HARMONY_1994",
+      "mystery_word_pool": ["HARMONY", "MELODY", "CHORDS", "RESONANCE", "OCTAVE", "PITCH"],
+      "daily_keywords": ["SIGNAL", "ARCHIVE", "DUCTS", "YEARBOOK", "KEYBOARD", "TREBLE", "SYNTH"],
+      "timeline": [
+        {
+          "offset_mins": 0,
+          "author": "Library_Yuki",
+          "author_badge": "Archivist",
+          "avatar_icon": "📚",
+          "message": "I was returning overdue reference books to the 3F archive just now. Room 302 (the old music classroom that's been locked since 2012) had faint piano notes coming from inside. It was playing a 4-bar minor chord progression over and over.",
+          "is_npc": false
+        },
+        {
+          "offset_mins": 135,
+          "author": "Track_Captain_Ren",
+          "author_badge": "Class 3-B",
+          "avatar_icon": "🏃",
+          "message": "@Library_Yuki bro Room 302 doesn't even have a piano anymore?? They moved all upright pianos to the B1 storage locker last semester during the renovation!!",
+          "is_npc": false
+        },
+        {
+          "offset_mins": 360,
+          "author": "NightOwl_33",
+          "author_badge": "Class 2-A",
+          "avatar_icon": "🎧",
+          "message": "I walked past the courtyard glass around 6:00 AM and heard the same melody echoing down through the rain spouts.",
+          "is_npc": false
+        },
+        {
+          "offset_mins": 720,
+          "author": "Bass_Sera",
+          "author_badge": "GIRLS PHANTOM DEAD",
+          "avatar_icon": "assets/sera.jpeg",
+          "message": "We picked up the vibration on our room mic down in Sub-Level 04. It's radiating straight through the air duct connected to Room 302. Pitch is tuned to exactly 432Hz.",
+          "is_npc": true
+        },
+        {
+          "offset_mins": 1500,
+          "author": "Yumi_BioLab",
+          "author_badge": "Class 2-A",
+          "avatar_icon": "🔬",
+          "message": "The audio sensors in 2F hall recorded an energy spike right as the melody stopped. The frequency resonance matches old 1990s magnetic audio tape.",
+          "is_npc": false
+        },
+        {
+          "offset_mins": 2160,
+          "author": "CatEars_Nekomi",
+          "author_badge": "GIRLS PHANTOM DEAD",
+          "avatar_icon": "assets/nekomi.jpeg",
+          "message": "Nekomi found a torn sheet music scrap tucked inside the 1994 yearbook on the Lore page! Check the radio ticker for clue word 1: SIGNAL!",
+          "is_npc": true
+        },
+        {
+          "offset_mins": 2880,
+          "author": "Daiki_StudentGov",
+          "author_badge": "Student Gov",
+          "avatar_icon": "📋",
+          "message": "Reminder: 3F Hallway is cordoned off for electrical testing. Please do not attempt to enter Room 302.",
+          "is_npc": false
+        },
+        {
+          "offset_mins": 3600,
+          "author": "Akari_M",
+          "author_badge": "SENIOR INVESTIGATOR",
+          "avatar_icon": "assets/akari.jpeg",
+          "message": "UPDATE: If anyone can decipher the chord code and enter it into the Mystery Decoder tab, we can feed the matching synth note through Neko FM to ground the signal!",
+          "is_npc": true
+        },
+        {
+          "offset_mins": 4320,
+          "author": "Hiro_Class2B",
+          "author_badge": "Class 2-B",
+          "avatar_icon": "🕵️",
+          "message": "I entered my daily code into the Mystery Decoder tab and unlocked a new letter for my target word! Check your Student ID tail!",
+          "is_npc": false
+        },
+        {
+          "offset_mins": 5040,
+          "author": "CatEars_Nekomi",
+          "author_badge": "GIRLS PHANTOM DEAD",
+          "avatar_icon": "assets/nekomi.jpeg",
+          "message": "The air ducts are vibrating again... if you guys find the code in the Lore Library archives, put it in the BBS terminal tab before midnight!!",
+          "is_npc": true
+        },
+        {
+          "offset_mins": 5760,
+          "author": "Bass_Sera",
+          "author_badge": "GIRLS PHANTOM DEAD",
+          "avatar_icon": "assets/sera.jpeg",
+          "message": "The resonance in SL-04 is reaching peak amplitude! Weekend investigators, enter your final solved word into the Decoder tab to claim your badge!",
+          "is_npc": true
+        },
+        {
+          "offset_mins": 6480,
+          "author": "Library_Yuki",
+          "author_badge": "Archivist",
+          "avatar_icon": "📚",
+          "message": "The piano notes are fading out... entering the correct passcode matched the ghost chord progression to an unreleased 1994 track!",
+          "is_npc": false
+        },
+        {
+          "offset_mins": 7200,
+          "author": "Akari_M",
+          "author_badge": "SENIOR INVESTIGATOR",
+          "avatar_icon": "assets/akari.jpeg",
+          "message": "[CASE #105 RESOLVED REPORT] Code HARMONY_1994 verified! Ghost melody grounded. Unredacted spectrograph analysis locked to Board 03 for VIP Backstage Pass members.",
+          "is_npc": true
+        }
+      ]
+    }
+  ],
+  "vip_cases_pool": [
     {
-      "trigger_time": "Day 1 - 22:30",
-      "location": "chat_locker102",
-      "author": "Track_Captain_Ren",
-      "avatar_icon": "🏃",
-      "message": "@Library_Yuki bro Room 302 doesn't even have a piano anymore?? They moved all upright pianos to the B1 storage locker last semester during the renovation!!"
-    },
-    {
-      "trigger_time": "Day 2 - 01:05",
-      "location": "bbs_board02",
-      "thread_id": "105",
-      "author": "Bass_Sera",
-      "author_badge": "GIRLS PHANTOM DEAD",
-      "avatar_icon": "assets/sera.jpeg",
-      "is_npc": true,
-      "message": "We just picked up the vibration on our room mic down in Sub-Level 04. It's radiating straight through the air duct connected to Room 302. The pitch is tuned to exactly 432Hz—standard pitch used in Sakuraoka High back in the 90s."
-    },
-    {
-      "trigger_time": "Day 2 - 14:00",
-      "location": "neko_fm_ticker",
-      "message": "📟 [SL-04 SIGNAL ALERT] Resonance detected on Ch. 4 (432Hz). Check Lore Library 1994 Archives for passcode clue."
-    },
-    {
-      "trigger_time": "Day 3 - 20:00",
-      "location": "bbs_board02",
-      "thread_id": "105",
-      "author": "Akari_M",
-      "author_badge": "SENIOR INVESTIGATOR",
-      "avatar_icon": "assets/akari.jpeg",
-      "is_npc": true,
-      "message": "UPDATE: Nekomi found a torn sheet music scrap tucked inside the 1994 yearbook on the Lore page! If anyone can decipher the chord code and enter it into the SL-04 Terminal, we can feed the matching synth note through Neko FM to ground the signal!"
-    },
-    {
-      "trigger_time": "Day 5 - 18:30",
-      "location": "chat_locker102",
-      "author": "CatEars_Nekomi",
-      "avatar_icon": "assets/nekomi.jpeg",
-      "is_npc": true,
-      "message": "The air ducts are vibrating again... if you guys find the code in the Lore Library archives, put it in the BBS terminal tab before midnight!!"
-    },
-    {
-      "trigger_time": "Day 7 - 23:59",
-      "location": "bbs_vip_archive",
-      "thread_id": "105_resolved",
-      "author": "Akari_M",
-      "author_badge": "SENIOR INVESTIGATOR",
-      "avatar_icon": "assets/akari.jpeg",
-      "is_npc": true,
-      "message": "[CASE #105 RESOLVED REPORT] Code HARMONY_1994 verified! We matched the ghost chord progression to the unreleased chorus of EchoHeart Track #03. Full spectrograph analysis and unredacted Chapter 2 draft locked to Board 03 for Backstage VIPs."
+      "case_id": "VIP-CASE-105",
+      "mystery_id": "case_105_sublevel_vault",
+      "title": "VIP #105 — Sub-Level 04 Sealed Vault Resonance",
+      "reward_badge": "Vault Keymaster",
+      "required_passcode": "VAULT_1994",
+      "mystery_word_pool": ["CAVERN", "ECHOES", "SEALED", "RESONANCE", "ARCANE"],
+      "daily_keywords": ["RESONANCE", "IRON", "FREQ", "CIRCUIT", "LOCKER", "SUBLEVEL", "GATE"],
+      "timeline": [
+        {
+          "offset_mins": 0,
+          "author": "Aoi_Pres",
+          "author_badge": "STUDENT GOV",
+          "avatar_icon": "assets/aoi.jpeg",
+          "message": "Sub-Level 04 iron gate resonance frequency recorded at 14.2kHz. Clearance Level 3 required for investigation.",
+          "is_npc": true
+        },
+        {
+          "offset_mins": 360,
+          "author": "Akari_M",
+          "author_badge": "GIRLS PHANTOM DEAD",
+          "avatar_icon": "assets/akari.jpeg",
+          "message": "The spectrograph behind the sealed iron gate is registering harmonic feedback matching the Room 302 piano track.",
+          "is_npc": true
+        },
+        {
+          "offset_mins": 1440,
+          "author": "Bass_Sera",
+          "author_badge": "GIRLS PHANTOM DEAD",
+          "avatar_icon": "assets/sera.jpeg",
+          "message": "VIP Clue Unlocked: Check the spectrograph log in the radio chat line for the Sub-Level 04 gate passcode.",
+          "is_npc": true
+        },
+        {
+          "offset_mins": 2880,
+          "author": "CatEars_Nekomi",
+          "author_badge": "GIRLS PHANTOM DEAD",
+          "avatar_icon": "assets/nekomi.jpeg",
+          "message": "Sub-Level 04 vault doors unlocked for all VIP Backstage Pass holders!",
+          "is_npc": true
+        }
+      ]
     }
   ]
 }
