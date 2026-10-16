@@ -11,6 +11,105 @@
   // Active solution vault for Decoder tab matching
   const activeSolutions = {};
 
+  // Embedded Schedule Catalog (Fallback if fetch fails or running via local file:// protocol)
+  const EMBEDDED_CATALOG = {
+    "epoch_start_iso": "2026-10-12T00:00:00Z",
+    "free_cases_pool": [
+      {
+        "case_id": "CASE-105",
+        "mystery_id": "case_105_midnight_piano",
+        "title": "Case #105 — The Midnight Melody of Room 302",
+        "reward_badge": "Resonance Detective",
+        "required_passcode": "HARMONY_1994",
+        "timeline": [
+          {
+            "offset_mins": 0,
+            "author": "Library_Yuki",
+            "author_badge": "Archivist",
+            "avatar_icon": "📚",
+            "message": "I was returning overdue reference books to the 3F archive just now. Room 302 (the old music classroom that's been locked since 2012) had faint piano notes coming from inside.",
+            "is_npc": false
+          },
+          {
+            "offset_mins": 135,
+            "author": "Track_Captain_Ren",
+            "author_badge": "Class 3-B",
+            "avatar_icon": "🏃",
+            "message": "@Library_Yuki bro Room 302 doesn't even have a piano anymore?? They moved all upright pianos to the B1 storage locker last semester!!",
+            "is_npc": false
+          },
+          {
+            "offset_mins": 720,
+            "author": "Bass_Sera",
+            "author_badge": "GIRLS PHANTOM DEAD",
+            "avatar_icon": "assets/sera.jpeg",
+            "message": "We picked up the vibration on our room mic down in Sub-Level 04. It's radiating straight through the air duct connected to Room 302. Pitch is tuned to 432Hz.",
+            "is_npc": true
+          },
+          {
+            "offset_mins": 2160,
+            "author": "CatEars_Nekomi",
+            "author_badge": "GIRLS PHANTOM DEAD",
+            "avatar_icon": "assets/nekomi.jpeg",
+            "message": "Nekomi found a torn sheet music scrap tucked inside the 1994 yearbook on the Lore page! Check the radio ticker for clue word 1: SIGNAL!",
+            "is_npc": true
+          },
+          {
+            "offset_mins": 3600,
+            "author": "Akari_M",
+            "author_badge": "SENIOR INVESTIGATOR",
+            "avatar_icon": "assets/akari.jpeg",
+            "message": "UPDATE: If anyone can decipher the chord code and enter it into the Mystery Decoder tab, we can feed the matching synth note through Neko FM to ground the signal!",
+            "is_npc": true
+          },
+          {
+            "offset_mins": 5040,
+            "author": "CatEars_Nekomi",
+            "author_badge": "GIRLS PHANTOM DEAD",
+            "avatar_icon": "assets/nekomi.jpeg",
+            "message": "The air ducts are vibrating again... if you guys find the code in the Lore Library archives, put it in the BBS terminal tab before midnight!!",
+            "is_npc": true
+          },
+          {
+            "offset_mins": 7200,
+            "author": "Akari_M",
+            "author_badge": "SENIOR INVESTIGATOR",
+            "avatar_icon": "assets/akari.jpeg",
+            "message": "[CASE #105 RESOLVED REPORT] Code HARMONY_1994 verified! Ghost melody grounded. Spectrograph report locked to VIP files.",
+            "is_npc": true
+          }
+        ]
+      }
+    ],
+    "vip_cases_pool": [
+      {
+        "case_id": "VIP-CASE-105",
+        "mystery_id": "case_105_sublevel_vault",
+        "title": "VIP #105 — Sub-Level 04 Sealed Vault Resonance",
+        "reward_badge": "Vault Keymaster",
+        "required_passcode": "VAULT_1994",
+        "timeline": [
+          {
+            "offset_mins": 0,
+            "author": "Aoi_Pres",
+            "author_badge": "STUDENT GOV",
+            "avatar_icon": "assets/aoi.jpeg",
+            "message": "Sub-Level 04 iron gate resonance frequency recorded at 14.2kHz. Clearance Level 3 required for investigation.",
+            "is_npc": true
+          },
+          {
+            "offset_mins": 360,
+            "author": "Akari_M",
+            "author_badge": "GIRLS PHANTOM DEAD",
+            "avatar_icon": "assets/akari.jpeg",
+            "message": "The spectrograph behind the sealed iron gate is registering harmonic feedback matching the Room 302 piano track.",
+            "is_npc": true
+          }
+        ]
+      }
+    ]
+  };
+
   /**
    * Main Initialization
    */
@@ -19,51 +118,54 @@
     setupDecoder();
     await loadAndRenderCases();
 
-    // Poll every 30 seconds to automatically reveal newly unlocked posts live
+    // Poll every 30 seconds to reveal new posts as time progresses
     setInterval(loadAndRenderCases, 30000);
   }
 
   /**
-   * Fetches JSON catalog, computes week index, and renders Free + VIP boards
+   * Fetches JSON catalog or falls back to embedded catalog
    */
   async function loadAndRenderCases() {
+    let catalog = null;
+
     try {
       const response = await fetch('case_105_schedule.json');
-      if (!response.ok) {
-        console.warn('[MYSTERY ENGINE] Could not load case_105_schedule.json');
-        return;
+      if (response.ok) {
+        catalog = await response.json();
       }
-
-      const catalog = await response.json();
-      const epochMs = new Date(catalog.epoch_start_iso || '2026-10-12T00:00:00Z').getTime();
-      const nowMs = Date.now();
-
-      // Calculate current week index relative to epoch
-      const weekIndex = Math.max(0, Math.floor((nowMs - epochMs) / MS_PER_WEEK));
-
-      // Calculate start timestamp (Monday 00:00:00 UTC) of current week cycle
-      const currentWeekStartMs = epochMs + (weekIndex * MS_PER_WEEK);
-      const elapsedMinsInCurrentWeek = Math.floor((nowMs - currentWeekStartMs) / 60000);
-
-      // Support both multi-case pool catalogs and single-case JSON formats
-      const freePool = catalog.free_cases_pool || (catalog.timeline ? [catalog] : []);
-      const vipPool = catalog.vip_cases_pool || [];
-
-      const activeFreeCase = freePool.length > 0 ? freePool[weekIndex % freePool.length] : null;
-      const activeVipCase = vipPool.length > 0 ? vipPool[weekIndex % vipPool.length] : null;
-
-      // Render Free Board
-      if (activeFreeCase) {
-        renderCase(activeFreeCase, currentWeekStartMs, elapsedMinsInCurrentWeek, 'bbs-posts-container', false);
-      }
-
-      // Render VIP Board
-      if (activeVipCase) {
-        renderCase(activeVipCase, currentWeekStartMs, elapsedMinsInCurrentWeek, 'vip-posts-container', true);
-      }
-
     } catch (err) {
-      console.error('[MYSTERY ENGINE] Error loading or rendering cases:', err);
+      console.warn('[MYSTERY ENGINE] Fetch unavailable or blocked by CORS. Using embedded catalog fallback.');
+    }
+
+    if (!catalog) {
+      catalog = EMBEDDED_CATALOG;
+    }
+
+    const epochMs = new Date(catalog.epoch_start_iso || '2026-10-12T00:00:00Z').getTime();
+    const nowMs = Date.now();
+
+    // Calculate current week index relative to epoch
+    const weekIndex = Math.max(0, Math.floor((nowMs - epochMs) / MS_PER_WEEK));
+
+    // Calculate start timestamp (Monday 00:00:00 UTC) of current week cycle
+    const currentWeekStartMs = epochMs + (weekIndex * MS_PER_WEEK);
+    const elapsedMinsInCurrentWeek = Math.floor((nowMs - currentWeekStartMs) / 60000);
+
+    // Support multi-case pools and flat single-case JSONs
+    const freePool = catalog.free_cases_pool || (catalog.timeline ? [catalog] : []);
+    const vipPool = catalog.vip_cases_pool || [];
+
+    const activeFreeCase = freePool.length > 0 ? freePool[weekIndex % freePool.length] : null;
+    const activeVipCase = vipPool.length > 0 ? vipPool[weekIndex % vipPool.length] : null;
+
+    // Render Free Board
+    if (activeFreeCase) {
+      renderCase(activeFreeCase, currentWeekStartMs, elapsedMinsInCurrentWeek, 'bbs-posts-container', false);
+    }
+
+    // Render VIP Board
+    if (activeVipCase) {
+      renderCase(activeVipCase, currentWeekStartMs, elapsedMinsInCurrentWeek, 'vip-posts-container', true);
     }
   }
 
@@ -115,6 +217,14 @@
 
     if (unlockedPosts.length === 0) return;
 
+    // CHAT PRESERVATION GUARD:
+    // If card already exists and unlocked post count hasn't changed, DO NOT re-render.
+    // This preserves live gossip chatter appended by triggerRandomLiveChatter()!
+    const existingDynamicCard = container.querySelector('.after-dark-glow');
+    if (existingDynamicCard && existingDynamicCard.dataset.unlockedCount === String(unlockedPosts.length)) {
+      return;
+    }
+
     // Build reply posts HTML
     const postsHTML = unlockedPosts.map(post => {
       const offsetMins = getPostOffsetMins(post);
@@ -142,7 +252,7 @@
 
     // Wrap in main thread article card
     const threadHTML = `
-      <article class="bbs-thread-card after-dark-glow" style="margin-bottom: 24px;">
+      <article class="bbs-thread-card after-dark-glow" data-unlocked-count="${unlockedPosts.length}" style="margin-bottom: 24px;">
         <div class="thread-main-header">
           <span class="thread-tag dark">${isVIP ? '🔒 [VIP EXCLUSIVE CASE]' : '🌙 [ACTIVE WEEKLY CASE]'}</span>
           <h2 class="thread-title">${escapeHTML(title)}</h2>
@@ -152,8 +262,7 @@
       </article>
     `;
 
-    // Replace existing dynamic card if present, or insert at top
-    const existingDynamicCard = container.querySelector('.after-dark-glow');
+    // Remove old card if new posts unlocked, then prepend updated card
     if (existingDynamicCard) {
       existingDynamicCard.remove();
     }
