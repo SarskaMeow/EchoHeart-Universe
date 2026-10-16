@@ -362,7 +362,7 @@
     .post-time { font-size: 0.76rem; color: var(--accent-purple); margin-left: auto; }
     .post-content { margin: 0; font-size: 0.94rem; line-height: 1.6; color: var(--text-light); }
 
-    /* TAB 2: MYSTERY DECODER STYLES */
+    /* MYSTERY DECODER STYLES */
     .terminal-analyzer-box {
       background: rgba(11, 9, 20, 0.95);
       border: 2px solid var(--accent-cyan);
@@ -435,7 +435,7 @@
       background: rgba(255, 59, 141, 0.08);
     }
 
-    /* TAB 3: SECRET CASE FILES STYLES */
+    /* SECRET CASE FILES STYLES */
     .vip-vault-header {
       background: rgba(255, 209, 102, 0.12);
       border: 1.5px solid var(--accent-gold);
@@ -555,8 +555,8 @@
     <div class="nav-container">
       <div class="logo-container">
         <a href="index.html" style="text-decoration: none;">
-          <div class="logo-main">🌸 OTAKU OVERLOAD</div>
-          <div class="logo-sub">✦ GIRLS PHANTOM DEAD</div>
+          <div class="logo-main">🌸 SAKURAOKA HIGH</div>
+          <div class="logo-sub">✦ STUDENT BBS NETWORK</div>
         </a>
       </div>
 
@@ -577,7 +577,7 @@
     <div class="bbs-terminal-bar">
       <div class="terminal-status-group">
         <span class="terminal-dot pulsing"></span>
-        <strong>🌸 SAKURAOKA HIGH // THE PHANTOM ROOM BULLETIN</strong>
+        <strong>🌸 SAKURAOKA HIGH // STUDENT BULLETIN NETWORK</strong>
         <span style="opacity: 0.3;">|</span>
         <span id="bbs-server-time">Campus Clock: Loading...</span>
       </div>
@@ -588,10 +588,16 @@
       </div>
     </div>
 
-    <!-- 3 STORY TABS -->
+    <!-- 5 NAVIGATION TABS -->
     <div class="bbs-tab-bar">
       <div class="bbs-tab active-tab" data-tab-target="public-board" onclick="switchBBSTab('public-board', this)">
-        💬 SCHOOL RUMORS
+        💬 ACTIVE MYSTERY CASE
+      </div>
+      <div class="bbs-tab" data-tab-target="council-board" onclick="switchBBSTab('council-board', this)">
+        📋 STUDENT COUNCIL
+      </div>
+      <div class="bbs-tab" data-tab-target="gossip-board" onclick="switchBBSTab('gossip-board', this)">
+        📣 CAMPUS CHATTER
       </div>
       <div class="bbs-tab" data-tab-target="phantom-terminal" onclick="switchBBSTab('phantom-terminal', this)">
         🔍 MYSTERY DECODER
@@ -602,7 +608,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 1: PUBLIC SCHOOL RUMORS                                  -->
+    <!-- TAB 1: ACTIVE MYSTERY CASE                                  -->
     <!-- ============================================================ -->
     <div id="public-board" class="tab-panel bbs-tab-panel active-panel active">
       <div class="bbs-main-layout">
@@ -631,7 +637,7 @@
               </div>
               <div id="badge-phantom" class="badge-item-card">
                 <span style="font-size: 1.2rem;">🗝️</span>
-                <span>Phantom Member</span>
+                <span>Seven Wonders Sleuth</span>
               </div>
             </div>
           </div>
@@ -639,9 +645,7 @@
           <!-- FILTER BAR -->
           <div class="bbs-filter-bar">
             <button class="filter-btn active" onclick="filterBBS('all')">💬 All Posts</button>
-            <button class="filter-btn" onclick="filterBBS('rumors')">🔥 School Gossip</button>
-            <button class="filter-btn" onclick="filterBBS('afterdark')">🌙 Night Sightings</button>
-            <button class="filter-btn" onclick="filterBBS('official')">📋 Student Council</button>
+            <button class="filter-btn" onclick="filterBBS('afterdark')">🌙 Active Case Thread</button>
             <button class="action-btn-primary" onclick="openTheoryModal()">+ Post Sighting</button>
           </div>
 
@@ -660,35 +664,42 @@
                 <div class="status-indicator online"></div>
                 <div>
                   <strong>Akari_M</strong>
-                  <div class="status-text">"Phantom Room Band Desk"</div>
+                  <div class="status-text">"Class 2-A Homeroom"</div>
+                </div>
+              </div>
+              <div class="student-status-item">
+                <div class="status-indicator online"></div>
+                <div>
+                  <strong>Aoi</strong>
+                  <div class="status-text">"Class 2-A Window Planters"</div>
+                </div>
+              </div>
+              <div class="student-status-item">
+                <div class="status-indicator busy"></div>
+                <div>
+                  <strong>CatEars_Nekomi</strong>
+                  <div class="status-text">"Light Music Rehearsal"</div>
                 </div>
               </div>
               <div class="student-status-item">
                 <div class="status-indicator busy"></div>
                 <div>
                   <strong>Bass_Sera</strong>
-                  <div class="status-text">"Rehearsing Room 302 song"</div>
-                </div>
-              </div>
-              <div class="student-status-item">
-                <div class="status-indicator online"></div>
-                <div>
-                  <strong>CatEars_Nekomi</strong>
-                  <div class="status-text">"Writing lyric drafts..."</div>
+                  <div class="status-text">"Tuning Bass Amp..."</div>
                 </div>
               </div>
               <div class="student-status-item">
                 <div class="status-indicator away"></div>
                 <div>
-                  <strong>Aoi_Pres</strong>
-                  <div class="status-text">"Reviewing Rehearsal Permits"</div>
+                  <strong>Pres_Haruka</strong>
+                  <div class="status-text">"Reviewing Club Permits"</div>
                 </div>
               </div>
               <div class="student-status-item">
                 <div class="status-indicator online"></div>
                 <div>
-                  <strong>Hiro_Class2B</strong>
-                  <div class="status-text">"Left Study Room B..."</div>
+                  <strong>VP_Chiaki</strong>
+                  <div class="status-text">"Lost & Found Desk Duty"</div>
                 </div>
               </div>
             </div>
@@ -699,11 +710,11 @@
             <h3 class="widget-title">🔍 Uncovered Clues</h3>
             <div class="quick-clue-item" onclick="openClueModal(1)">
               <span class="clue-tag-mini">CASE #105</span>
-              <strong>1994 Sheet Music Note</strong>
+              <strong>1994 Setlist Card</strong>
             </div>
             <div class="quick-clue-item" onclick="openClueModal(2)">
               <span class="clue-tag-mini">CASE #105</span>
-              <strong>Solar Music Box Note</strong>
+              <strong>Solar Music Box</strong>
             </div>
           </div>
 
@@ -713,22 +724,66 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 2: MYSTERY DECODER                                       -->
+    <!-- TAB 2: STUDENT COUNCIL FEED                                 -->
+    <!-- ============================================================ -->
+    <div id="council-board" class="tab-panel bbs-tab-panel">
+      <div class="bbs-main-layout">
+        <section class="bbs-content-left">
+          <div id="council-posts-container">
+            <p style="color: var(--text-muted);">Loading Student Council announcements...</p>
+          </div>
+        </section>
+
+        <aside class="bbs-sidebar-right">
+          <div class="sidebar-widget">
+            <h3 class="widget-title">👑 Student Council Desk</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
+              Official notices posted by President Haruka (Class 3-A) and VP Chiaki (Class 2-B). Check here for daily campus updates!
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TAB 3: CAMPUS CHATTER & GOSSIP                              -->
+    <!-- ============================================================ -->
+    <div id="gossip-board" class="tab-panel bbs-tab-panel">
+      <div class="bbs-main-layout">
+        <section class="bbs-content-left">
+          <div id="gossip-posts-container">
+            <p style="color: var(--text-muted);">Loading campus chatter...</p>
+          </div>
+        </section>
+
+        <aside class="bbs-sidebar-right">
+          <div class="sidebar-widget">
+            <h3 class="widget-title">📣 Lunch Lounge</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
+              Daily student gossip, club updates, bento trades, and general Sakuraoka High chatter refreshed daily!
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TAB 4: MYSTERY DECODER                                      -->
     <!-- ============================================================ -->
     <div id="phantom-terminal" class="tab-panel bbs-tab-panel">
       <div class="terminal-analyzer-box">
         <div class="terminal-title-bar">
-          <span style="color: var(--accent-cyan); font-weight: 800; font-size: 1rem;">🔍 PHANTOM ROOM // MYSTERY DECODER</span>
+          <span style="color: var(--accent-cyan); font-weight: 800; font-size: 1rem;">🔍 SAKURAOKA HIGH // MYSTERY DECODER</span>
           <span style="color: var(--accent-pink); font-size: 0.82rem; font-weight: 800;">● ACTIVE EVENT</span>
         </div>
 
         <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
-          Hear a weird audio note on Neko FM or spot a secret passcode in the forum chatter? Enter the mystery keyword below to help the girls solve the case!
+          Hear a clue on Neko FM or spot a mystery keyword in the forum chatter? Enter the passcode below to complete the case solution and unlock your badge!
         </p>
 
         <!-- Form linked directly to bbs-mystery-engine.js -->
         <form id="decoder-form" class="terminal-code-input-group">
-          <input type="text" id="passcode-input" class="terminal-text-input" placeholder="Enter mystery passcode (e.g. HARMONY_1994, SUNSET_1994)..." autocomplete="off">
+          <input type="text" id="passcode-input" class="terminal-text-input" placeholder="Enter mystery passcode (e.g. HARMONY_1994, CRANE_2004, LANTERN_2012)..." autocomplete="off">
           <button type="submit" class="terminal-submit-btn">SUBMIT CLUE</button>
         </form>
 
@@ -738,7 +793,7 @@
           <strong style="color: var(--accent-cyan);">WHERE TO FIND MYSTERY CODES:</strong>
           <ul style="margin: 10px 0 0 18px; padding: 0; line-height: 1.6;">
             <li>Check the live text banner on the <strong>24/7 Neko FM</strong> player.</li>
-            <li>Read the author margin notes inside Chapter 1 on the <strong>Lore & Books</strong> page.</li>
+            <li>Follow Class 2-A's clues on the <strong>Active Mystery Case</strong> board.</li>
             <li>Listen for the short chime between songs on the radio stream.</li>
           </ul>
         </div>
@@ -746,7 +801,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 3: SECRET CASE FILES [VIP] (DUAL BOARD & LIVE CASE #2)   -->
+    <!-- TAB 5: SECRET CASE FILES [VIP]                              -->
     <!-- ============================================================ -->
     <div id="vip-archive" class="tab-panel bbs-tab-panel">
       <div class="vip-vault-header">
@@ -818,7 +873,7 @@
             <div style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.6;">
               <p>Live hints drop into this channel during late-night broadcasts on Neko FM.</p>
               <div style="padding: 10px; background: rgba(0, 240, 255, 0.08); border-radius: 8px; color: var(--accent-cyan); font-family: monospace;">
-                [Neko FM Ticker]: "Check the 1994 graduation album page 32..."
+                [Neko FM Ticker]: "Listen closely for the 1994 setlist keyword..."
               </div>
             </div>
           </div>
@@ -1009,9 +1064,9 @@
       let bodyText = "";
 
       if (clueId === 1) {
-        bodyText = "<strong>1994 Sheet Music Note:</strong><br><br>Found tucked inside the 1994 yearbook on page 32. Bears the handwritten keyword <code>HARMONY</code>.";
+        bodyText = "<strong>1994 Setlist Card:</strong><br><br>Found tucked inside one of the vintage bass cases in the rehearsal locker. Lists the 1994 finale song title: <code>HARMONY</code>.";
       } else if (clueId === 2) {
-        bodyText = "<strong>Solar Music Box Note:</strong><br><br>Veteran custodian confirmed a 1990s grandfather clock music box in Room 302 that activates when sunset light hits the windowsill sensor.";
+        bodyText = "<strong>Solar Music Box:</strong><br><br>Veteran custodian confirmed a wooden piano music box in Room 302 that is wound up every Monday morning for the students.";
       } else if (clueId === 3) {
         bodyText = "<strong>Locked Rooftop Key Note:</strong><br><br>A handwritten note on the rooftop keyhook in the staff room. Unlocks with passcode <code>SUNSET_1994</code>.";
       }
@@ -1037,7 +1092,7 @@
           <div class="modal-card" style="text-align: center;">
             <h3 style="margin: 0 0 10px; color: var(--accent-gold);">⭐ Backstage VIP Access</h3>
             <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 22px;">
-              Support the studio to unlock Board 03 Secret Files, parallel VIP weekly cases, custom gold chat glows, and advance Light Novel chapters!
+              Support the studio to unlock Secret Case Files, parallel VIP weekly cases, custom gold chat glows, and advance Light Novel chapters!
             </p>
             <div class="modal-actions">
               <button class="modal-btn btn-submit" onclick="toggleVIPAccess(); removeExistingModals();">Activate Demo VIP Pass ($3/mo)</button>
