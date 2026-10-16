@@ -646,42 +646,7 @@
           </div>
 
           <!-- THREAD FEED CONTAINER (bbs-mystery-engine.js dynamically injects active weekly case here) -->
-          <div id="bbs-posts-container">
-
-            <!-- THREAD #089: NEKO FM STATIC (STATIC COMMUNITY THREAD) -->
-            <article class="bbs-thread-card" data-category="rumors">
-              <div class="thread-main-header">
-                <span class="thread-tag rumor">🔥 [SCHOOL GOSSIP]</span>
-                <h2 class="thread-title">#089 — Strange static feedback on Neko FM earlier?</h2>
-                <span class="thread-meta">Thread #089 • Started by NightOwl_33</span>
-              </div>
-
-              <div class="thread-replies-chain">
-                <div class="bbs-post-reply">
-                  <div class="bbs-author">
-                    <div class="avatar-icon-sm">🎧</div>
-                    <div>
-                      <strong>NightOwl_33 <span class="user-badge-student">Class 2-A</span></strong>
-                      <div class="post-time">Yesterday</div>
-                    </div>
-                  </div>
-                  <p class="post-content">"I kept Neko FM playing in a background tab while studying. Right between the midnight track drop and the podcast replay, there was 5 seconds of strange static. It sounded almost like a reversed voice recording coming from under The Phantom Room."</p>
-                </div>
-
-                <div class="bbs-post-reply npc-reply">
-                  <div class="bbs-author">
-                    <img src="assets/nekomi.jpeg" alt="Nekomi" class="author-avatar-sm" onerror="this.src='https://via.placeholder.com/36'">
-                    <div>
-                      <strong>CatEars_Nekomi <span class="npc-badge">GIRLS PHANTOM DEAD</span></strong>
-                      <div class="post-time">Yesterday</div>
-                    </div>
-                  </div>
-                  <p class="post-content">"Don't poke around The Phantom Room after hours! The floorboards leak sound from the old drainage pipes, that's all. Definitely just pipe noise... 🤐"</p>
-                </div>
-              </div>
-            </article>
-
-          </div>
+          <div id="bbs-posts-container"></div>
         </section>
 
         <!-- RIGHT COLUMN: SIDEBAR WIDGETS -->
@@ -702,7 +667,7 @@
                 <div class="status-indicator busy"></div>
                 <div>
                   <strong>Bass_Sera</strong>
-                  <div class="status-text">"Checking B1 Drainage Line"</div>
+                  <div class="status-text">"Rehearsing Room 302 song"</div>
                 </div>
               </div>
               <div class="student-status-item">
@@ -733,12 +698,12 @@
           <div class="sidebar-widget">
             <h3 class="widget-title">🔍 Uncovered Clues</h3>
             <div class="quick-clue-item" onclick="openClueModal(1)">
-              <span class="clue-tag-mini">CASE #104</span>
-              <strong>Window Handprint Note</strong>
+              <span class="clue-tag-mini">CASE #105</span>
+              <strong>1994 Sheet Music Note</strong>
             </div>
             <div class="quick-clue-item" onclick="openClueModal(2)">
-              <span class="clue-tag-mini">CASE #089</span>
-              <strong>B1 Drainage Note</strong>
+              <span class="clue-tag-mini">CASE #105</span>
+              <strong>Solar Music Box Note</strong>
             </div>
           </div>
 
@@ -763,7 +728,7 @@
 
         <!-- Form linked directly to bbs-mystery-engine.js -->
         <form id="decoder-form" class="terminal-code-input-group">
-          <input type="text" id="passcode-input" class="terminal-text-input" placeholder="Enter mystery passcode (e.g. DRAINAGE_B1, HARMONY_1994, PHANTOM_KEY_94)..." autocomplete="off">
+          <input type="text" id="passcode-input" class="terminal-text-input" placeholder="Enter mystery passcode (e.g. HARMONY_1994, SUNSET_1994)..." autocomplete="off">
           <button type="submit" class="terminal-submit-btn">SUBMIT CLUE</button>
         </form>
 
@@ -798,9 +763,9 @@
       <!-- LOCKED STATE VIEW -->
       <div id="vip-locked-view" class="vip-card-locked" style="display: none;">
         <span class="vip-stamp-overlay">[STAMP: SENIOR INVESTIGATOR CLEARANCE REQUIRED]</span>
-        <h3 style="margin: 8px 0 10px; color: #FFFFFF;">VIP CASE #004 & EXCLUSIVE PARALLEL INVESTIGATION BOARD</h3>
+        <h3 style="margin: 8px 0 10px; color: #FFFFFF;">VIP CASE #105 & EXCLUSIVE PARALLEL INVESTIGATION BOARD</h3>
         <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
-          Backstage VIP members receive full access to the 2nd parallel weekly mystery thread (Case #004 — Sub-Level 04 Sealed Vault Frequency), unredacted resolution reports, and live NPC chatter drops in the exclusive chat line.
+          Backstage VIP members receive full access to the 2nd parallel weekly mystery thread, unredacted resolution reports, and live NPC chatter drops in the exclusive chat line.
         </p>
 
         <div style="margin-top: 22px; padding: 20px; background: rgba(255, 209, 102, 0.08); border-radius: 12px; text-align: center;">
@@ -828,37 +793,14 @@
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
               <div>
                 <span style="font-size: 0.74rem; color: var(--accent-gold); font-weight: 800; letter-spacing: 1px;">⭐ VIP INVESTIGATOR DASHBOARD</span>
-                <h3 style="margin: 2px 0 0; color: #FFFFFF; font-size: 1.15rem;">Case #004 Parallel Live Thread & School Feeds</h3>
+                <h3 style="margin: 2px 0 0; color: #FFFFFF; font-size: 1.15rem;">VIP Case #105 Parallel Live Thread</h3>
               </div>
               <span class="rank-badge-pill" style="background: var(--accent-gold); color: #000;">CLEARANCE LEVEL 3</span>
             </div>
           </div>
 
           <!-- VIP FEED CONTAINER (bbs-mystery-engine.js dynamically injects VIP Case here) -->
-          <div id="vip-posts-container">
-
-            <!-- GENERAL NON-MYSTERY THREADS INCLUDED ON VIP BOARD -->
-            <article class="bbs-thread-card" data-category="official">
-              <div class="thread-main-header">
-                <span class="thread-tag official">📋 [STUDENT COUNCIL]</span>
-                <h2 class="thread-title">#092 — Festival Rehearsal Permit Extensions for Sub-Level 04</h2>
-                <span class="thread-meta">Thread #092 • Started by Aoi_Pres</span>
-              </div>
-              <div class="thread-replies-chain">
-                <div class="bbs-post-reply npc-reply">
-                  <div class="bbs-author">
-                    <img src="assets/aoi.jpeg" alt="Aoi" class="author-avatar-sm" onerror="this.src='https://via.placeholder.com/36'">
-                    <div>
-                      <strong>Aoi_Pres <span class="npc-badge">STUDENT GOV</span></strong>
-                      <div class="post-time">Official Bulletin</div>
-                    </div>
-                  </div>
-                  <p class="post-content">"Rehearsal permits for B-Wing sub-levels have been extended through 22:00 PM for registered music clubs. Please ensure all equipment is powered down and iron gates are latched prior to curfew."</p>
-                </div>
-              </div>
-            </article>
-
-          </div>
+          <div id="vip-posts-container"></div>
         </section>
 
         <!-- RIGHT COLUMN: VIP EXCLUSIVE SIDEBAR -->
@@ -866,17 +808,17 @@
           <div class="sidebar-widget" style="border-color: var(--accent-gold);">
             <h3 class="widget-title" style="color: var(--accent-gold);">⭐ VIP Clue Stream</h3>
             <div class="quick-clue-item" onclick="openClueModal(3)">
-              <span class="clue-tag-mini" style="background: rgba(255, 209, 102, 0.2); color: var(--accent-gold);">VIP CASE #004</span>
-              <strong>Sealed Cavern Blueprint Note</strong>
+              <span class="clue-tag-mini" style="background: rgba(255, 209, 102, 0.2); color: var(--accent-gold);">VIP CASE #105</span>
+              <strong>Locked Rooftop Key Note</strong>
             </div>
           </div>
 
           <div class="sidebar-widget">
             <h3 class="widget-title">💬 VIP Radio Chat Line</h3>
             <div style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.6;">
-              <p>Live spectrograph hints drop into this channel during late-night broadcasts on Neko FM.</p>
+              <p>Live hints drop into this channel during late-night broadcasts on Neko FM.</p>
               <div style="padding: 10px; background: rgba(0, 240, 255, 0.08); border-radius: 8px; color: var(--accent-cyan); font-family: monospace;">
-                [SIGNAL 14.2kHz]: "Check Chapter 2 key emblem..."
+                [Neko FM Ticker]: "Check the 1994 graduation album page 32..."
               </div>
             </div>
           </div>
@@ -1000,65 +942,6 @@
       });
     }
 
-    // Extended Dynamic School Gossip Pool & Live Stream Generator
-    const dynamicSchoolNpcs = [
-      { name: "Kenji_Volleyball", class: "Class 3-C", avatar: "🏐", text: "Just walked past the B-wing corridor... the staff locked the emergency fire doors early tonight. Creepy." },
-      { name: "Yumi_BioLab", class: "Class 2-A", avatar: "🔬", text: "Did anyone check the humidity sensors near room 204? There was a huge spike recorded right before the lights flickered." },
-      { name: "Daiki_StudentGov", class: "Student Gov", avatar: "📋", text: "Reminder: All students must vacate campus study halls prior to night curfew hours." },
-      { name: "Mina_Astronomy", class: "Class 1-B", avatar: "🔭", text: "Saw a weird flickering light through the rooftop telescope dome near Room 302..." },
-      { name: "Ren_Track", class: "Class 3-B", avatar: "🏃", text: "Who left the air intake ducts humming in B1 locker rooms? The pitch sounds like a tuning fork." },
-      { name: "Sora_Drama", class: "Class 2-C", avatar: "🎭", text: "The prop pianos in the auditorium were locked down today. Where is that melody even coming from??" },
-      { name: "Hina_Library", class: "Class 2-A", avatar: "📚", text: "Found an old 1994 music club ledger on the 3F archive table... someone opened it recently." }
-    ];
-
-    let usedNpcIndices = [];
-
-    function triggerRandomLiveChatter() {
-      // Find active thread reply chain in public board
-      const chain = document.querySelector('#bbs-posts-container .thread-replies-chain');
-      if (!chain) return;
-
-      // Reset pool if all used
-      if (usedNpcIndices.length >= dynamicSchoolNpcs.length) {
-        usedNpcIndices = [];
-      }
-
-      let randomIndex;
-      do {
-        randomIndex = Math.floor(Math.random() * dynamicSchoolNpcs.length);
-      } while (usedNpcIndices.includes(randomIndex) && usedNpcIndices.length < dynamicSchoolNpcs.length);
-
-      usedNpcIndices.push(randomIndex);
-      const npc = dynamicSchoolNpcs[randomIndex];
-
-      const now = new Date();
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      let hours = now.getHours();
-      const minutes = now.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
-      const formattedMin = minutes < 10 ? '0' + minutes : minutes;
-      const timeString = `${monthNames[now.getMonth()]} ${now.getDate()} • ${hours}:${formattedMin} ${ampm}`;
-
-      const replyHTML = `
-        <div class="bbs-post-reply npc-reply">
-          <div class="bbs-author">
-            <div class="avatar-icon-sm">${npc.avatar}</div>
-            <div>
-              <strong>${npc.name} <span class="user-badge-student">${npc.class}</span></strong>
-              <div class="post-time">${timeString}</div>
-            </div>
-          </div>
-          <p class="post-content">"${npc.text}"</p>
-        </div>
-      `;
-      chain.insertAdjacentHTML('beforeend', replyHTML);
-
-      // Schedule next sporadic chatter drop between 30 and 90 seconds
-      const nextDelay = Math.floor(Math.random() * (90000 - 30000 + 1)) + 30000;
-      setTimeout(triggerRandomLiveChatter, nextDelay);
-    }
-
     // Modals Engine
     function openTheoryModal() {
       removeExistingModals();
@@ -1096,7 +979,7 @@
 
       const container = document.getElementById('bbs-posts-container');
       const postHTML = `
-        <article class="bbs-thread-card">
+        <article class="bbs-thread-card" data-category="afterdark">
           <div class="thread-main-header">
             <span class="thread-tag rumor">💬 [STUDENT POST]</span>
             <h2 class="thread-title">"${text.substring(0, 50)}..."</h2>
@@ -1126,11 +1009,11 @@
       let bodyText = "";
 
       if (clueId === 1) {
-        bodyText = "<strong>Window Handprint Note:</strong><br><br>Dripping wet handprints were confirmed on the exterior glass pane of 2F Study Room B. The courtyard was empty and dry at the time of discovery.";
+        bodyText = "<strong>1994 Sheet Music Note:</strong><br><br>Found tucked inside the 1994 yearbook on page 32. Bears the handwritten keyword <code>HARMONY</code>.";
       } else if (clueId === 2) {
-        bodyText = "<strong>B1 Drainage Note:</strong><br><br>The Phantom Room band desk recorded an audio pulse coming through the floorboards. The passcode <code>DRAINAGE_B1</code> was recovered from the sound file.";
+        bodyText = "<strong>Solar Music Box Note:</strong><br><br>Veteran custodian confirmed a 1990s grandfather clock music box in Room 302 that activates when sunset light hits the windowsill sensor.";
       } else if (clueId === 3) {
-        bodyText = "<strong>Sealed Cavern Blueprint Note:</strong><br><br>Sub-Level 04 iron gate resonance frequency recorded at 14.2kHz. Unlocks with passcode <code>PHANTOM_KEY_94</code>.";
+        bodyText = "<strong>Locked Rooftop Key Note:</strong><br><br>A handwritten note on the rooftop keyhook in the staff room. Unlocks with passcode <code>SUNSET_1994</code>.";
       }
 
       const modalHTML = `
@@ -1171,13 +1054,12 @@
       if (existing) existing.remove();
     }
 
-    // Initialize clock loop & start sporadic live student gossip chatter stream
+    // Initialize clock loop
     setInterval(updateBBSServerClock, 1000);
     updateBBSServerClock();
 
     document.addEventListener('DOMContentLoaded', () => {
       updateVIPView();
-      setTimeout(triggerRandomLiveChatter, 5000); // Kick off live background chat stream 5 seconds after load
     });
   </script>
   <!-- Master Mystery Engine JS -->
