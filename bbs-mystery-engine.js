@@ -25,9 +25,10 @@
    */
   async function loadAndRenderCases() {
     try {
-      const response = await fetch('weekly_cases_catalog.json');
+      // Updated to match your exact file name
+      const response = await fetch('case_105_schedule.json');
       if (!response.ok) {
-        console.warn('[MYSTERY ENGINE] Could not load weekly_cases_catalog.json');
+        console.warn('[MYSTERY ENGINE] Could not load case_105_schedule.json');
         return;
       }
 
