@@ -1025,7 +1025,7 @@
       }
     }
 
-    // Dynamic Time & Relative Date Generator Engine
+    // Dynamic Time Engine Anchored Strictly to Persistent Case Start Time
     function formatTimestamp(date) {
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const month = monthNames[date.getMonth()];
@@ -1038,38 +1038,29 @@
       return `${month} ${day} • ${hours}:${formattedMin} ${ampm}`;
     }
 
-    function getRelativeAgeText(minsAgo) {
-      if (minsAgo < 1) return 'Just now';
-      if (minsAgo < 60) return `${minsAgo}m ago`;
-      const hrs = Math.floor(minsAgo / 60);
-      if (hrs < 24) return `${hrs}h ago`;
-      const days = Math.floor(hrs / 24);
-      return `${days}d ago`;
-    }
-
     function initDynamicPostTimestamps() {
-      const now = new Date();
+      let caseStart = localStorage.getItem('free_case_start_time');
+      const baseDate = caseStart ? new Date(parseInt(caseStart, 10)) : new Date();
       
-      // Update thread headers and post timestamps anchored strictly to current real time
-      document.querySelectorAll('.bbs-post-reply[data-mins-ago]').forEach(post => {
+      // Update thread headers and post timestamps anchored strictly to persistent start date
+      document.querySelectorAll('#bbs-posts-container .bbs-post-reply[data-mins-ago]').forEach(post => {
         const minsAgo = parseInt(post.getAttribute('data-mins-ago'), 10);
-        const postDate = new Date(now.getTime() - minsAgo * 60 * 1000);
+        const postDate = new Date(baseDate.getTime() + minsAgo * 60 * 1000);
         const timeEl = post.querySelector('.post-time');
         if (timeEl) {
-          timeEl.innerText = `${formatTimestamp(postDate)} (${getRelativeAgeText(minsAgo)})`;
+          timeEl.innerText = formatTimestamp(postDate);
         }
       });
 
-      // Update Thread metadata headers with first post date
+      // Update Thread metadata headers with fixed historical start date
       const thread104Meta = document.getElementById('thread-104-meta');
       if (thread104Meta) {
-        const t104StartDate = new Date(now.getTime() - 120 * 60 * 1000);
-        thread104Meta.innerText = `Thread #104 • Started by Hiro_Class2B on ${formatTimestamp(t104StartDate)}`;
+        thread104Meta.innerText = `Thread #104 • Started by Hiro_Class2B on ${formatTimestamp(baseDate)}`;
       }
 
       const thread089Meta = document.getElementById('thread-089-meta');
       if (thread089Meta) {
-        const t089StartDate = new Date(now.getTime() - 1440 * 60 * 1000);
+        const t089StartDate = new Date(baseDate.getTime() - 1440 * 60 * 1000);
         thread089Meta.innerText = `Thread #089 • Started by NightOwl_33 on ${formatTimestamp(t089StartDate)}`;
       }
     }
@@ -1184,7 +1175,7 @@
             <div class="avatar-icon-sm">${npc.avatar}</div>
             <div>
               <strong>${npc.name} <span class="user-badge-student">${npc.class}</span></strong>
-              <div class="post-time">${timeString} (Just now)</div>
+              <div class="post-time">${timeString}</div>
             </div>
           </div>
           <p class="post-content">"${npc.text}"</p>
@@ -1220,7 +1211,7 @@
       if (!text) return;
 
       const now = new Date();
-      const timeStamp = `${formatTimestamp(now)} (Just now)`;
+      const timeStamp = formatTimestamp(now);
 
       const container = document.getElementById('bbs-posts-container');
       const postHTML = `
