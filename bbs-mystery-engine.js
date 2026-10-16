@@ -36,7 +36,7 @@
           { "offset_mins": 1080, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "Sunset just started. Setting up the telescope in the science room across the courtyard.", "is_npc": false },
           { "offset_mins": 1155, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "I hear it right now from the courtyard! It's a sweet lullaby tune playing right as the orange sunset hits Room 302's window!", "is_npc": true },
           { "offset_mins": 1230, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "We're down in our rehearsal room and we can hear the faint melody echo through the courtyard too!", "is_npc": true },
-          { "offset_mins": 1305, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Student Council Notice: Please do not loiter near the 3F B-Wing hallway after evening curfew.", "is_npc": true },
+          { "offset_mins": 1305, "author": "Pres_Haruka", "author_badge": "Student Council Pres", "avatar_icon": "👑", "message": "Student Council Notice: Please do not loiter near the 3F B-Wing hallway after evening curfew.", "is_npc": true },
           { "offset_mins": 1380, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Late night check... the school courtyard is pitch black. Super cozy vibe tonight.", "is_npc": false },
           { "offset_mins": 1425, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Day 1 report logged. More investigations tomorrow morning!", "is_npc": false },
 
@@ -50,7 +50,7 @@
           { "offset_mins": 2355, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi checked our Light Music rehearsal locker during lunch break! We have equipment cases from 1994 stored in the back!", "is_npc": true },
           { "offset_mins": 2430, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Ooh, vintage gear from 1994?! Did you find anything inside?", "is_npc": false },
           { "offset_mins": 2520, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "There's an old setlist card tucked inside one of the bass cases! It lists the 1994 finale song!", "is_npc": true },
-          { "offset_mins": 2595, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Student Council note: Please make sure all clubroom storage lockers are kept tidy after use.", "is_npc": true },
+          { "offset_mins": 2595, "author": "VP_Chiaki", "author_badge": "Student Council VP", "avatar_icon": "📋", "message": "Student Council note: Please make sure all clubroom storage lockers are kept tidy after use.", "is_npc": true },
           { "offset_mins": 2670, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "6:30 PM: I can see the warm orange sunset reflecting in Room 302's window again tonight.", "is_npc": false },
           { "offset_mins": 2745, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Just walked under 302 leaving gym practice. The piano lullaby is definitely playing right now!", "is_npc": false },
           { "offset_mins": 2820, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "It starts every day right as the sunset fills the B-Wing corridor. Keep tracking the clues everyone!", "is_npc": true },
@@ -81,7 +81,7 @@
           { "offset_mins": 5100, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "He said he winds it up every Monday morning before school starts so it plays a sunset melody all week long for the students!", "is_npc": true },
           { "offset_mins": 5235, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "AWH WOW!! The custodian has been keeping the 1994 music box playing as a tradition this whole time!!", "is_npc": false },
           { "offset_mins": 5310, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "That is the sweetest story ever! That's why it plays every single day at sunset!", "is_npc": true },
-          { "offset_mins": 5400, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Student Council confirmation: The 1994 music box is a preserved piece of Sakuraoka High culture.", "is_npc": true },
+          { "offset_mins": 5400, "author": "Pres_Haruka", "author_badge": "Student Council Pres", "avatar_icon": "👑", "message": "Student Council confirmation: The 1994 music box is a preserved piece of Sakuraoka High culture.", "is_npc": true },
           { "offset_mins": 5475, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "Mystery solved! Enter the keyword HARMONY_1994 into the Mystery Decoder tab to claim your badge!", "is_npc": true },
           { "offset_mins": 5550, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "5:45 PM: Sunset hit the window, and the little music box played its song on schedule!", "is_npc": false },
           { "offset_mins": 5625, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Sakuraoka High traditions are pretty amazing.", "is_npc": false },
@@ -98,7 +98,7 @@
           { "offset_mins": 6675, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Got my new badge unlocked!! 'Seven Wonders Sleuth' looks so cool on my handle!", "is_npc": false },
           { "offset_mins": 6750, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "Loved working on this mystery with everyone in Class 2-A this week!", "is_npc": true },
           { "offset_mins": 6840, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "Light Music Club is starting band practice for the culture fest cover track right now!", "is_npc": true },
-          { "offset_mins": 6915, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Official Student Council update: Room 302's music box will remain a protected school treasure.", "is_npc": true },
+          { "offset_mins": 6915, "author": "Pres_Haruka", "author_badge": "Student Council Pres", "avatar_icon": "👑", "message": "Official Student Council update: Room 302's music box will remain a protected school treasure.", "is_npc": true },
           { "offset_mins": 6990, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "5:45 PM: Watching the Friday sunset while listening to the music box one last time this school week.", "is_npc": false },
           { "offset_mins": 7065, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Best mystery of the term! Have a great weekend everyone!", "is_npc": false },
           { "offset_mins": 7140, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Heading home for the weekend! Thanks Class 2-A!", "is_npc": false },
@@ -116,7 +116,7 @@
           { "offset_mins": 8280, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "Clear skies expected for stargazing tonight!", "is_npc": false },
           { "offset_mins": 8355, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Relaxing Saturday afternoon. Sakuraoka BBS is the best place to chill.", "is_npc": false },
           { "offset_mins": 8430, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "Planning out next week's student activities on the BBS!", "is_npc": true },
-          { "offset_mins": 8505, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Have a restful weekend everyone!", "is_npc": true },
+          { "offset_mins": 8505, "author": "Pres_Haruka", "author_badge": "Student Council Pres", "avatar_icon": "👑", "message": "Have a restful weekend everyone!", "is_npc": true },
           { "offset_mins": 8580, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Showing off my 'Seven Wonders Sleuth' badge on my student profile!", "is_npc": false },
           { "offset_mins": 8625, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Saturday night late chatter signing off.", "is_npc": false },
 
@@ -132,7 +132,7 @@
           { "offset_mins": 9720, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "Sunday dusk: Room 302 music box playing its final weekend lullaby.", "is_npc": false },
           { "offset_mins": 9795, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Ready for Monday morning gym class!", "is_npc": false },
           { "offset_mins": 9870, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "[CASE #105 FINAL RESOLUTION REPORT] Case Closed. The solar music box of Room 302 remains a Sakuraoka tradition.", "is_npc": true },
-          { "offset_mins": 9945, "author": "Daiki_Pres", "author_badge": "Student Council", "avatar_icon": "📋", "message": "Thank you to Akari, Aoi, Nekomi, Sera, and all participating students.", "is_npc": true },
+          { "offset_mins": 9945, "author": "Pres_Haruka", "author_badge": "Student Council Pres", "avatar_icon": "👑", "message": "Thank you to Akari, Aoi, Nekomi, Sera, and all participating students.", "is_npc": true },
           { "offset_mins": 10020, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Goodnight everyone! See you at school tomorrow!", "is_npc": false },
           { "offset_mins": 10065, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Weekly cycle complete. Mystery archives locked for reset.", "is_npc": false }
         ]
@@ -148,9 +148,9 @@
         "timeline": [
           {
             "offset_mins": 0,
-            "author": "Daiki_Pres",
-            "author_badge": "Student Council",
-            "avatar_icon": "📋",
+            "author": "Pres_Haruka",
+            "author_badge": "Student Council Pres",
+            "avatar_icon": "👑",
             "message": "Notice: The door to the rooftop staircase remains locked after 5:00 PM for all students.",
             "is_npc": true
           },
@@ -164,6 +164,45 @@
           }
         ]
       }
+    ]
+  };
+
+  // Embedded Gossip & Student Council Fallback Pool
+  const EMBEDDED_GOSSIP_POOL = {
+    "student_council_threads": [
+      {
+        "thread_id": "sc_notice_01",
+        "notice": {
+          "author": "Pres_Haruka",
+          "author_badge": "Class 3-A (Student Body Pres)",
+          "avatar_icon": "👑",
+          "message": "Student Council Notice: Umbrella rack clearance in the main foyer is complete. Unclaimed items are available at the council desk."
+        },
+        "replies": [
+          { "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "@Pres_Haruka Thank you! Heading to retrieve my clear umbrella during lunch!" },
+          { "author": "VP_Chiaki", "author_badge": "Class 2-B (Student Council VP)", "avatar_icon": "📋", "message": "Desk is staffed continuously throughout 2nd and 3rd period breaks!" }
+        ]
+      },
+      {
+        "thread_id": "sc_notice_02",
+        "notice": {
+          "author": "Pres_Haruka",
+          "author_badge": "Class 3-A (Student Body Pres)",
+          "avatar_icon": "👑",
+          "message": "Student Council Survey: Submissions for next month's cafeteria special dessert menu are open in room 2-A drop box!"
+        },
+        "replies": [
+          { "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "NEKOMI VOTES FOR STRAWBERRY CREPES WITH EXTRA WHIPPED CREAM!! 🍓🐾", "is_npc": true },
+          { "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "Seconding Nekomi's crepe vote! Or melon pan ice cream sandwiches!", "is_npc": true }
+        ]
+      }
+    ],
+    "general_gossip": [
+      { "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Did anyone catch the cafeteria's Yakisoba Pan today? Sold out in three minutes flat!" },
+      { "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Neko FM was playing such a cozy lo-fi playlist during lunch today. Perfect courtyard vibe." },
+      { "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "Akari and I trimmed the Class 2-A window garden before homeroom today!", "is_npc": true },
+      { "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi traded half a crepe for Sera's matcha latte during break! Class 2-A desk trades are elite today!", "is_npc": true },
+      { "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Morning lap practice hit a new record today! Autumn breeze feels incredible on the field." }
     ]
   };
 
@@ -198,7 +237,7 @@
         catalog = await response.json();
       }
     } catch (err) {
-      console.warn('[MYSTERY ENGINE] Fetch unavailable or blocked by CORS. Using embedded catalog fallback.');
+      console.warn('[MYSTERY ENGINE] Schedule fetch unavailable. Using embedded catalog fallback.');
     }
 
     if (!catalog) {
@@ -208,26 +247,20 @@
     const epochMs = new Date(catalog.epoch_start_iso || '2026-10-12T00:00:00Z').getTime();
     const nowMs = Date.now();
 
-    // Calculate current week index relative to epoch
     const weekIndex = Math.max(0, Math.floor((nowMs - epochMs) / MS_PER_WEEK));
-
-    // Calculate start timestamp (Monday 00:00:00 UTC) of current week cycle
     const currentWeekStartMs = epochMs + (weekIndex * MS_PER_WEEK);
     const elapsedMinsInCurrentWeek = Math.floor((nowMs - currentWeekStartMs) / 60000);
 
-    // Support multi-case pools and flat single-case JSONs
     const freePool = catalog.free_cases_pool || (catalog.timeline ? [catalog] : []);
     const vipPool = catalog.vip_cases_pool || [];
 
     const activeFreeCase = freePool.length > 0 ? freePool[weekIndex % freePool.length] : null;
     const activeVipCase = vipPool.length > 0 ? vipPool[weekIndex % vipPool.length] : null;
 
-    // Render Free Board
     if (activeFreeCase) {
       renderCase(activeFreeCase, currentWeekStartMs, elapsedMinsInCurrentWeek, 'bbs-posts-container', false);
     }
 
-    // Render VIP Board
     if (activeVipCase) {
       renderCase(activeVipCase, currentWeekStartMs, elapsedMinsInCurrentWeek, 'vip-posts-container', true);
     }
@@ -248,16 +281,19 @@
         gossipData = await response.json();
       }
     } catch (err) {
-      console.warn('[MYSTERY ENGINE] Gossip pool fetch unavailable.');
+      console.warn('[MYSTERY ENGINE] Gossip pool fetch unavailable. Using embedded gossip fallback.');
     }
 
-    if (!gossipData) return;
+    if (!gossipData) {
+      gossipData = EMBEDDED_GOSSIP_POOL;
+    }
 
-    // Render Student Council Tab Feed if container exists
+    const nowMs = Date.now();
+    const daySeed = Math.floor(nowMs / (1000 * 60 * 60 * 24));
+
+    // 1. RENDER STUDENT COUNCIL TAB FEED
     const councilContainer = document.getElementById('council-posts-container');
-    if (councilContainer && gossipData.student_council_threads) {
-      const nowMs = Date.now();
-      const daySeed = Math.floor(nowMs / (1000 * 60 * 60 * 24));
+    if (councilContainer && gossipData.student_council_threads && gossipData.student_council_threads.length > 0) {
       const activeThread = gossipData.student_council_threads[daySeed % gossipData.student_council_threads.length];
 
       if (activeThread) {
@@ -269,9 +305,9 @@
             <div class="thread-replies-chain">
               <div class="bbs-post-reply npc-reply highlight">
                 <div class="bbs-author">
-                  <div class="avatar-icon-sm">${activeThread.notice.avatar_icon}</div>
+                  <div class="avatar-icon-sm">${activeThread.notice.avatar_icon || '👑'}</div>
                   <div>
-                    <strong>${escapeHTML(activeThread.notice.author)} <span class="npc-badge">${escapeHTML(activeThread.notice.author_badge)}</span></strong>
+                    <strong>${escapeHTML(activeThread.notice.author)} <span class="npc-badge">${escapeHTML(activeThread.notice.author_badge || 'Student Council')}</span></strong>
                   </div>
                 </div>
                 <p class="post-content">"${escapeHTML(activeThread.notice.message)}"</p>
@@ -296,10 +332,56 @@
         councilContainer.innerHTML = threadHTML;
       }
     }
+
+    // 2. RENDER GOSSIP & CAMPUS LIFE FEED
+    const gossipContainer = document.getElementById('gossip-posts-container');
+    if (gossipContainer) {
+      let gossipList = [];
+
+      if (gossipData.general_gossip) gossipList = gossipList.concat(gossipData.general_gossip);
+      if (gossipData.class_2a_corner) gossipList = gossipList.concat(gossipData.class_2a_corner);
+
+      if (gossipData.daily_gossip_pool) {
+        Object.values(gossipData.daily_gossip_pool).forEach(category => {
+          if (Array.isArray(category)) gossipList = gossipList.concat(category);
+        });
+      }
+
+      if (gossipList.length > 0) {
+        const gossipHTML = gossipList.map(post => {
+          const avatarIcon = post.avatar_icon || '👤';
+          const isCustomImage = String(avatarIcon).includes('/');
+          const avatarMarkup = isCustomImage
+            ? `<img src="${avatarIcon}" class="author-avatar-sm" alt="${escapeHTML(post.author)}" onerror="this.src='https://via.placeholder.com/36'">`
+            : `<div class="avatar-icon-sm">${avatarIcon}</div>`;
+
+          return `
+            <div class="bbs-post-reply ${post.is_npc ? 'npc-reply highlight' : ''}" style="margin-bottom: 12px;">
+              <div class="bbs-author">
+                ${avatarMarkup}
+                <div>
+                  <strong>${escapeHTML(post.author)} <span class="${post.is_npc ? 'npc-badge' : 'user-badge-student'}">${escapeHTML(post.author_badge || 'Student')}</span></strong>
+                </div>
+              </div>
+              <p class="post-content">"${escapeHTML(post.message)}"</p>
+            </div>
+          `;
+        }).join('');
+
+        gossipContainer.innerHTML = `
+          <article class="bbs-thread-card" style="margin-bottom: 24px;">
+            <div class="thread-main-header">
+              <span class="thread-tag dark">💬 [SAKURAOKA CAMPUS CHATTER & GOSSIP]</span>
+            </div>
+            <div class="thread-replies-chain">${gossipHTML}</div>
+          </article>
+        `;
+      }
+    }
   }
 
   /**
-   * Helper: Extracts minute offset from post object (supports offset_mins or "Day X - HH:MM" strings)
+   * Helper: Extracts minute offset from post object
    */
   function getPostOffsetMins(post) {
     if (typeof post.offset_mins === 'number') {
@@ -308,7 +390,7 @@
     if (post.trigger_time) {
       const match = String(post.trigger_time).match(/Day\s*(\d+)\s*-\s*(\d{1,2}):(\d{2})/i);
       if (match) {
-        const day = parseInt(match[1], 10) - 1; // Day 1 = 0 days elapsed
+        const day = parseInt(match[1], 10) - 1;
         const hours = parseInt(match[2], 10);
         const mins = parseInt(match[3], 10);
         return (day * 24 * 60) + (hours * 60) + mins;
@@ -324,13 +406,11 @@
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    // Normalize property keys for both catalog & legacy formats
     const caseId = caseObj.case_id || caseObj.mystery_id || 'CASE-105';
     const title = caseObj.title || 'Active Mystery Case';
     const passcode = caseObj.required_passcode || caseObj.passcode_trigger;
     const badge = caseObj.reward_badge || caseObj.badge_reward || 'Seven Wonders Sleuth';
 
-    // Register passcode into solution vault
     if (passcode) {
       const cleanPasscode = String(passcode).trim().toUpperCase();
       activeSolutions[cleanPasscode] = {
@@ -340,20 +420,16 @@
       };
     }
 
-    // GATING GUARD: Only allow posts whose calculated minute offset is <= elapsed time
     const timeline = caseObj.timeline || [];
     const unlockedPosts = timeline.filter(post => getPostOffsetMins(post) <= elapsedMins);
 
     if (unlockedPosts.length === 0) return;
 
-    // CHAT PRESERVATION GUARD:
-    // If card already exists and unlocked post count hasn't changed, DO NOT re-render.
     const existingDynamicCard = container.querySelector('.after-dark-glow');
     if (existingDynamicCard && existingDynamicCard.dataset.unlockedCount === String(unlockedPosts.length)) {
       return;
     }
 
-    // Build reply posts HTML
     const postsHTML = unlockedPosts.map(post => {
       const offsetMins = getPostOffsetMins(post);
       const postDate = new Date(weekStartMs + (offsetMins * 60 * 1000));
@@ -378,7 +454,6 @@
       `;
     }).join('');
 
-    // Wrap in main thread article card
     const threadHTML = `
       <article class="bbs-thread-card after-dark-glow" data-category="${isVIP ? 'official' : 'afterdark'}" data-unlocked-count="${unlockedPosts.length}" style="margin-bottom: 24px;">
         <div class="thread-main-header">
@@ -390,7 +465,6 @@
       </article>
     `;
 
-    // Remove old card if new posts unlocked, then prepend updated card
     if (existingDynamicCard) {
       existingDynamicCard.remove();
     }
@@ -398,11 +472,11 @@
   }
 
   /**
-   * Tab Navigation Handler
+   * Unified Tab Navigation Handler (Handles active, active-tab, active-panel)
    */
   function setupTabNavigation() {
     const tabButtons = document.querySelectorAll('[data-tab-target]');
-    const tabPanels = document.querySelectorAll('.bbs-tab-panel');
+    const tabPanels = document.querySelectorAll('.tab-panel, .bbs-tab-panel');
 
     if (tabButtons.length === 0) return;
 
@@ -410,13 +484,13 @@
       button.addEventListener('click', () => {
         const targetId = button.getAttribute('data-tab-target');
 
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        tabPanels.forEach(panel => panel.classList.remove('active'));
+        tabButtons.forEach(btn => btn.classList.remove('active', 'active-tab'));
+        tabPanels.forEach(panel => panel.classList.remove('active', 'active-panel'));
 
-        button.classList.add('active');
+        button.classList.add('active', 'active-tab');
         const activePanel = document.getElementById(targetId);
         if (activePanel) {
-          activePanel.classList.add('active');
+          activePanel.classList.add('active', 'active-panel');
         }
       });
     });
@@ -459,7 +533,7 @@
   }
 
   /**
-   * Helper: Formats Date objects into relative timestamps ("Today at...", "Yesterday at...")
+   * Helper: Formats Date objects into relative timestamps
    */
   function formatRelativeTimestamp(date) {
     const now = new Date();
@@ -496,7 +570,6 @@
       .replace(/'/g, '&#039;');
   }
 
-  // Run engine when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initEngine);
   } else {
