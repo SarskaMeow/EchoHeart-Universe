@@ -7,24 +7,30 @@
   <link rel="stylesheet" href="style.css">
   <script type="module" src="firebase-config.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
     :root {
-      --bg-main: #0F0E17;
-      --card-bg: #1A1829;
-      --card-inner: #120F20;
-      --accent-pink: #FF2A85;
-      --accent-purple: #A88BEB;
+      --bg-main: #0B0914;
+      --card-bg: rgba(23, 18, 38, 0.92);
+      --card-inner: rgba(14, 11, 26, 0.88);
+      --accent-pink: #FF3B8D;
+      --accent-purple: #B282FF;
       --accent-cyan: #00F0FF;
       --accent-gold: #FFD166;
-      --accent-green: #40C057;
-      --text-light: #FFFFFE;
-      --text-muted: #A7A9BE;
-      --border-subtle: rgba(168, 139, 235, 0.25);
+      --accent-green: #38E57C;
+      --text-light: #F4EFFD;
+      --text-muted: #A09BB9;
+      --border-subtle: rgba(178, 130, 255, 0.28);
+      --border-glow: rgba(255, 59, 141, 0.35);
     }
 
     body {
       background: var(--bg-main);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(255, 59, 141, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(0, 240, 255, 0.06) 0%, transparent 45%);
       color: var(--text-light);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'M PLUS Rounded 1c', 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
     }
@@ -35,9 +41,9 @@
       top: 0;
       z-index: 1000;
       width: 100%;
-      background: rgba(15, 14, 23, 0.95);
+      background: rgba(11, 9, 20, 0.94);
       border-bottom: 2px solid var(--border-subtle);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px);
       box-sizing: border-box;
     }
 
@@ -52,10 +58,10 @@
 
     .logo-main {
       font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #FF7BB0, var(--accent-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -70,7 +76,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .nav-item {
@@ -78,17 +84,18 @@
       font-size: 0.88rem;
       font-weight: 700;
       padding: 8px 14px;
-      border-radius: 10px;
+      border-radius: 12px;
       text-decoration: none;
       transition: all 0.25s ease;
     }
 
     .nav-item:hover, .nav-item.active {
-      background: rgba(255, 42, 133, 0.15);
-      color: var(--text-light);
+      background: rgba(255, 59, 141, 0.15);
+      color: #FFFFFF;
+      box-shadow: 0 0 12px rgba(255, 59, 141, 0.2);
     }
 
-    /* MAIN CONTAINER */
+    /* MAIN LORE CONTAINER */
     .lore-container {
       max-width: 1280px;
       margin: 20px auto 50px;
@@ -97,28 +104,43 @@
 
     /* HEADER BANNER */
     .lore-header-card {
-      background: linear-gradient(135deg, rgba(26, 24, 41, 0.95), rgba(15, 14, 23, 0.95));
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
       padding: 24px 28px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     }
 
     .lore-title-group h1 {
       margin: 0 0 6px;
-      font-size: 1.6rem;
-      color: #fff;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      font-weight: 800;
     }
 
     .lore-title-group p {
       margin: 0;
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.88rem;
+    }
+
+    .clearance-badge {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     /* DIEGETIC LORE TABS */
@@ -126,112 +148,160 @@
       display: flex;
       gap: 10px;
       background: var(--card-bg);
-      padding: 10px 14px;
-      border-radius: 16px 16px 0 0;
-      border: 1px solid var(--border-subtle);
+      padding: 12px 16px 0;
+      border-radius: 20px 20px 0 0;
+      border: 1.5px solid var(--border-subtle);
       border-bottom: none;
-      font-family: 'Courier New', monospace;
       flex-wrap: wrap;
     }
 
     .lore-tab {
-      background: rgba(15, 14, 23, 0.8);
+      background: rgba(14, 11, 26, 0.8);
       color: var(--text-muted);
       padding: 12px 20px;
-      border-radius: 10px 10px 0 0;
+      border-radius: 12px 12px 0 0;
       cursor: pointer;
       border: 1px solid transparent;
       font-size: 0.88rem;
-      font-weight: bold;
-      transition: all 0.2s ease;
+      font-weight: 800;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .lore-tab:hover {
-      color: var(--text-light);
-      background: rgba(255, 42, 133, 0.1);
+      color: #FFFFFF;
+      background: rgba(255, 59, 141, 0.15);
     }
 
     .lore-tab.active-tab {
       background: var(--card-bg);
       color: var(--accent-cyan);
       border-color: var(--accent-cyan) var(--accent-cyan) transparent var(--accent-cyan);
+      box-shadow: 0 -4px 15px rgba(0, 240, 255, 0.15);
     }
 
     .tab-panel {
       display: none;
       background: var(--card-bg);
-      border: 1px solid var(--border-subtle);
-      border-radius: 0 0 16px 16px;
-      padding: 28px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 0 0 20px 20px;
+      padding: 26px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.5);
     }
 
     .tab-panel.active-panel {
       display: block;
     }
 
-    /* LIGHT NOVEL READER STYLES */
+    /* TAB 1: LIGHT NOVEL READER STYLES */
     .reader-layout {
       display: grid;
-      grid-template-columns: 300px 1fr;
+      grid-template-columns: 310px 1fr;
       gap: 24px;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 920px) {
       .reader-layout { grid-template-columns: 1fr; }
     }
 
     .volume-card {
       background: var(--card-inner);
-      border: 1px solid var(--border-subtle);
+      border: 1.5px solid var(--border-subtle);
       border-radius: 14px;
       padding: 16px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
     }
 
     .volume-card:hover, .volume-card.active-volume {
       border-color: var(--accent-pink);
-      box-shadow: 0 0 15px rgba(255, 42, 133, 0.2);
+      background: rgba(255, 59, 141, 0.12);
+      box-shadow: 0 0 15px rgba(255, 59, 141, 0.2);
     }
 
-    .volume-title { font-weight: bold; color: #fff; font-size: 0.95rem; margin-bottom: 4px; }
-    .volume-meta { font-size: 0.78rem; color: var(--accent-purple); }
+    .volume-title { font-weight: 800; color: #FFFFFF; font-size: 0.95rem; margin-bottom: 4px; }
+    .volume-meta { font-size: 0.78rem; color: var(--accent-purple); font-weight: 700; }
 
     .reader-window {
-      background: #0D0B16;
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
+      background: #080611;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 16px;
       padding: 32px;
       font-size: 1.02rem;
-      line-height: 1.8;
+      line-height: 1.85;
       color: #E2DAF8;
+      position: relative;
+    }
+
+    .reader-controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .reader-chapter-title {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       color: var(--accent-pink);
-      margin-top: 0;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 12px;
+      margin: 0;
+      font-weight: 800;
+    }
+
+    .reader-btn-sm {
+      background: rgba(178, 130, 255, 0.15);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-light);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .reader-btn-sm:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
     }
 
     .author-margin-note {
       background: rgba(255, 209, 102, 0.08);
-      border-left: 3px solid var(--accent-gold);
-      padding: 12px 16px;
+      border-left: 4px solid var(--accent-gold);
+      padding: 14px 18px;
       margin: 24px 0;
       font-size: 0.88rem;
       color: var(--accent-gold);
-      border-radius: 0 8px 8px 0;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .code-chip {
+      background: rgba(0, 240, 255, 0.2);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    .code-chip:hover {
+      background: var(--accent-cyan);
+      color: #000000;
     }
 
     .buy-book-banner {
-      margin-top: 30px;
-      background: rgba(255, 42, 133, 0.1);
-      border: 1px solid var(--accent-pink);
-      border-radius: 12px;
+      margin-top: 32px;
+      background: linear-gradient(135deg, rgba(255, 59, 141, 0.15), rgba(178, 130, 255, 0.15));
+      border: 1.5px solid var(--accent-pink);
+      border-radius: 14px;
       padding: 20px;
       display: flex;
       justify-content: space-between;
@@ -242,31 +312,36 @@
 
     .action-btn {
       background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      color: #fff;
+      color: #FFFFFF;
       border: none;
       padding: 10px 22px;
-      border-radius: 10px;
-      font-weight: bold;
+      border-radius: 12px;
+      font-weight: 800;
       text-decoration: none;
       font-size: 0.88rem;
+      box-shadow: 0 4px 15px rgba(255, 59, 141, 0.3);
+      transition: transform 0.2s ease;
+      display: inline-block;
     }
 
-    /* CHARACTER DOSSIER GRID */
+    .action-btn:hover { transform: translateY(-2px); }
+
+    /* TAB 2: CHARACTER DOSSIER GRID */
     .character-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
     }
 
     .char-card {
       background: var(--card-inner);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 20px;
-      transition: transform 0.2s ease;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 22px;
+      transition: transform 0.25s ease, border-color 0.25s ease;
     }
 
-    .char-card:hover { transform: translateY(-3px); border-color: var(--accent-cyan); }
+    .char-card:hover { transform: translateY(-4px); border-color: var(--accent-cyan); box-shadow: 0 8px 24px rgba(0, 240, 255, 0.15); }
 
     .char-header {
       display: flex;
@@ -276,20 +351,99 @@
     }
 
     .char-avatar {
-      width: 56px; height: 56px; border-radius: 50%;
+      width: 58px; height: 58px; border-radius: 50%;
       border: 2px solid var(--accent-purple); object-fit: cover;
     }
 
-    .char-name { margin: 0; font-size: 1.1rem; color: #fff; }
-    .char-role { font-size: 0.78rem; color: var(--accent-gold); font-weight: bold; }
+    .char-name { margin: 0; font-size: 1.15rem; color: #FFFFFF; font-weight: 800; }
+    .char-role { font-size: 0.78rem; color: var(--accent-gold); font-weight: 800; }
 
     .char-stat-list {
-      font-size: 0.85rem;
-      line-height: 1.6;
+      font-size: 0.86rem;
+      line-height: 1.65;
       color: var(--text-muted);
     }
 
-    /* HISTORICAL CLUE ARCHIVE GRID */
+    /* TAB 3: INTERACTIVE CAMPUS MAP BLUEPRINT */
+    .blueprint-layout {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 22px;
+    }
+
+    @media (max-width: 900px) {
+      .blueprint-layout { grid-template-columns: 1fr; }
+    }
+
+    .blueprint-canvas {
+      background: #050A14;
+      border: 2px solid var(--accent-cyan);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      min-height: 380px;
+      box-shadow: inset 0 0 30px rgba(0, 240, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .map-grid-bg {
+      background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.12) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .blueprint-hotspot-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .hotspot-card {
+      background: rgba(14, 11, 26, 0.9);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .hotspot-card:hover, .hotspot-card.active-spot {
+      border-color: var(--accent-pink);
+      background: rgba(255, 59, 141, 0.15);
+      box-shadow: 0 0 15px rgba(255, 59, 141, 0.3);
+    }
+
+    .hotspot-title { color: #FFFFFF; font-weight: 800; font-size: 0.92rem; margin-bottom: 4px; }
+    .hotspot-meta { font-size: 0.76rem; color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace; }
+
+    /* TAB 4: HISTORICAL ARCHIVES */
+    .archive-search-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .search-input-field {
+      flex: 1;
+      background: #000000;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 10px 16px;
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .search-input-field:focus {
+      border-color: var(--accent-pink);
+    }
+
     .archive-list {
       display: flex;
       flex-direction: column;
@@ -298,20 +452,50 @@
 
     .archive-item {
       background: var(--card-inner);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 18px;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 20px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .archive-item:hover {
+      border-color: var(--accent-purple);
+      box-shadow: 0 6px 20px rgba(178, 130, 255, 0.15);
     }
 
     .archive-tag {
       font-size: 0.72rem;
-      background: rgba(0, 240, 255, 0.15);
+      background: rgba(0, 240, 255, 0.18);
       color: var(--accent-cyan);
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-weight: 800;
       display: inline-block;
       margin-bottom: 8px;
+    }
+
+    /* MODAL OVERLAY */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5, 3, 12, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 2px solid var(--accent-purple);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 540px;
+      width: 100%;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.85);
     }
   </style>
 </head>
@@ -344,11 +528,14 @@
     <div class="lore-header-card">
       <div class="lore-title-group">
         <h1>📚 Prep Room B Archives & Lore Library</h1>
-        <p>The official character dossiers, historical campus records, and light novel serial reader for EchoHeart.</p>
+        <p>Official character dossiers, architectural blueprints, frequency logs, and Light Novel serial reader for EchoHeart.</p>
       </div>
-      <a href="bbs-forum.html" class="action-btn" style="background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); border: 1px solid var(--accent-cyan);">
-        📟 Open BBS Terminal
-      </a>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <span class="clearance-badge">🕵️ CLEARANCE: INVESTIGATOR LEVEL 2</span>
+        <a href="bbs-forum.html" class="action-btn" style="background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); box-shadow: none;">
+          📟 Open BBS Terminal
+        </a>
+      </div>
     </div>
 
     <!-- DIEGETIC TABS -->
@@ -359,8 +546,11 @@
       <div class="lore-tab" onclick="switchLoreTab('character-dossiers', this)">
         👧 CHARACTER DOSSIERS
       </div>
+      <div class="lore-tab" onclick="switchLoreTab('interactive-map', this)">
+        🗺️ SUB-LEVEL 04 BLUEPRINT
+      </div>
       <div class="lore-tab" onclick="switchLoreTab('historical-archives', this)">
-        🔍 HISTORICAL CAMPUS ARCHIVES
+        🔍 HISTORICAL ARCHIVES
       </div>
     </div>
 
@@ -372,45 +562,57 @@
         
         <!-- VOLUME SELECTOR SIDEBAR -->
         <aside>
-          <div class="volume-card active-volume">
+          <div class="volume-card active-volume" onclick="loadChapter(1)">
             <div class="volume-title">EchoHeart Vol. 1: Whispers in B-Wing</div>
-            <div class="volume-meta">Sample Chapter 1 • Free Access</div>
+            <div class="volume-meta">Chapter 1 • The Sound Beneath Floorboards</div>
           </div>
-          <div class="volume-card">
+          <div class="volume-card" onclick="loadChapter(2)">
+            <div class="volume-title">EchoHeart Vol. 1: Whispers in B-Wing</div>
+            <div class="volume-meta">Chapter 2 • The 2F Glass Incident</div>
+          </div>
+          <div class="volume-card" onclick="loadChapter(3)">
             <div class="volume-title">EchoHeart Vol. 2: The Cavern Frequency</div>
-            <div class="volume-meta">Sample Chapter 1 • Free Access</div>
+            <div class="volume-meta">Chapter 1 Excerpt • Resonance 440Hz</div>
           </div>
         </aside>
 
         <!-- READER DISPLAY WINDOW -->
-        <section class="reader-window">
-          <h2 class="reader-chapter-title">Chapter 1: The Sound Beneath the Floorboards</h2>
-          
-          <p>The rain had been falling over Sakuraoka High since third period, turning the courtyard quad into a mirror of grey asphalt. Inside Sub-Level 04, the hum of the tube amplifiers was the only heat in the room.</p>
-          
-          <p>Akari Minase adjusted the strap of her electric guitar, her eyes fixed on the analog signal meter sitting on the corner of the mixing desk. The needle wasn't moving to the beat of Sera's bass line. It was jittering to a rhythm none of them were playing.</p>
-
-          <p>"Sera, hold up," Akari said, resting her palm over the strings to deaden the resonance. "Did you re-route Channel 3 through the B1 drainage pump line again?"</p>
-
-          <p>Sera didn't look up from her pedalboard. "Channel 3 is muted. The pump hasn't run since four o'clock."</p>
-
-          <!-- DIEGETIC MARGIN NOTE CONTAINING A BBS CLUE -->
-          <div class="author-margin-note">
-            <strong>🕵️ INVESTIGATOR NOTE #104:</strong><br>
-            <em>"If you check the spectrograph log for Channel 3 at 02:15, the frequency code recovered from the drainage line was <code>DRAINAGE_B1</code>. Input this code into the SL-04 Terminal on Sakuraoka BBS to verify."</em>
+        <section class="reader-window" id="reader-window">
+          <div class="reader-controls-bar">
+            <h2 class="reader-chapter-title" id="chapter-title-display">Chapter 1: The Sound Beneath the Floorboards</h2>
+            <div style="display: flex; gap: 8px;">
+              <button class="reader-btn-sm" onclick="toggleReaderFont(1)">A+</button>
+              <button class="reader-btn-sm" onclick="toggleReaderFont(-1)">A-</button>
+            </div>
           </div>
+          
+          <div id="chapter-body-content">
+            <p>The rain had been falling over Sakuraoka High since third period, turning the courtyard quad into a mirror of grey asphalt. Inside Sub-Level 04, the hum of the tube amplifiers was the only heat in the room.</p>
+            
+            <p>Akari Minase adjusted the strap of her electric guitar, her eyes fixed on the analog signal meter sitting on the corner of the mixing desk. The needle wasn't moving to the beat of Sera's bass line. It was jittering to a rhythm none of them were playing.</p>
 
-          <p>Nekomi leaned back against the synth stack, tossing her lyric notebook onto the amp. "If it's not the pump, then someone is broadcasting on our frequency from below the storage lockers..."</p>
+            <p>"Sera, hold up," Akari said, resting her palm over the strings to deaden the resonance. "Did you re-route Channel 3 through the B1 drainage pump line again?"</p>
+
+            <p>Sera didn't look up from her pedalboard. "Channel 3 is muted. The pump hasn't run since four o'clock."</p>
+
+            <!-- DIEGETIC MARGIN NOTE CONTAINING A BBS CLUE -->
+            <div class="author-margin-note">
+              <strong>🕵️ INVESTIGATOR MARGIN NOTE #104:</strong><br>
+              <em>"If you check the spectrograph log for Channel 3 recorded at 02:15 AM, the passcode frequency code recovered from the drainage line was <span class="code-chip" onclick="copyCode('DRAINAGE_B1')">DRAINAGE_B1</span>. Enter this in the BBS Mystery Decoder!"</em>
+            </div>
+
+            <p>Nekomi leaned back against the synth stack, tossing her lyric notebook onto the amp. "If it's not the pump, then someone is broadcasting on our frequency from below the storage lockers..."</p>
+          </div>
 
           <!-- IN-UNIVERSE EBOOK PURCHASE BRIDGE -->
           <div class="buy-book-banner">
             <div>
-              <strong style="color: #fff; font-size: 1rem;">Enjoyed the preview of Volume 1?</strong>
+              <strong style="color: #FFFFFF; font-size: 1rem;">Enjoyed the preview of Volume 1?</strong>
               <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;">
                 Get the full book on Amazon Kindle or unlock advance draft chapters right here!
               </div>
             </div>
-            <a href="#" class="action-btn" onclick="alert('Link to Kindle Direct Store')">Grab Vol. 1 on Kindle ($3.99)</a>
+            <a href="#" class="action-btn" onclick="alert('Redirecting to Amazon Kindle Store...')">Grab Vol. 1 on Kindle ($3.99)</a>
           </div>
         </section>
 
@@ -426,7 +628,7 @@
         <!-- AKARI MINASE -->
         <div class="char-card">
           <div class="char-header">
-            <img src="assets/akari.jpeg" alt="Akari" class="char-avatar" onerror="this.src='https://via.placeholder.com/56'">
+            <img src="assets/akari.jpeg" alt="Akari" class="char-avatar" onerror="this.src='https://via.placeholder.com/58'">
             <div>
               <h3 class="char-name">Akari Minase</h3>
               <div class="char-role">Lead Guitar & Club Founder</div>
@@ -435,14 +637,15 @@
           <div class="char-stat-list">
             <strong>Class:</strong> 2-B<br>
             <strong>Favorite Food:</strong> Strawberry Shortcake<br>
-            <strong>Background:</strong> Founded the Sub-Level 04 studio after discovering the unmapped electrical outlet beneath Prep Room B. Lead investigator on campus anomalies.
+            <strong>Equipment:</strong> Custom Pink Metallic Offset Guitar<br>
+            <strong>Background:</strong> Founded Sub-Level 04 studio beneath Prep Room B. Lead investigator on campus audio anomalies.
           </div>
         </div>
 
         <!-- NEKOMI -->
         <div class="char-card">
           <div class="char-header">
-            <img src="assets/nekomi.jpeg" alt="Nekomi" class="char-avatar" onerror="this.src='https://via.placeholder.com/56'">
+            <img src="assets/nekomi.jpeg" alt="Nekomi" class="char-avatar" onerror="this.src='https://via.placeholder.com/58'">
             <div>
               <h3 class="char-name">Nekomi</h3>
               <div class="char-role">Lead Vocals & Lyricist</div>
@@ -451,14 +654,15 @@
           <div class="char-stat-list">
             <strong>Class:</strong> 2-A<br>
             <strong>Favorite Food:</strong> Iced Matcha Latte<br>
-            <strong>Background:</strong> Writes lyrics inspired by midnight radio broadcasts. Claims to hear melodies echoing through the B1 ventilation shafts.
+            <strong>Equipment:</strong> Retro Ribbon Mic & Neko FM Transmitter<br>
+            <strong>Background:</strong> Writes lyrics inspired by midnight radio signals. Claims to hear melodies echoing through the ventilation shafts.
           </div>
         </div>
 
         <!-- SERA -->
         <div class="char-card">
           <div class="char-header">
-            <img src="assets/sera.jpeg" alt="Sera" class="char-avatar" onerror="this.src='https://via.placeholder.com/56'">
+            <img src="assets/sera.jpeg" alt="Sera" class="char-avatar" onerror="this.src='https://via.placeholder.com/58'">
             <div>
               <h3 class="char-name">Sera</h3>
               <div class="char-role">Bass & Audio Specialist</div>
@@ -467,14 +671,15 @@
           <div class="char-stat-list">
             <strong>Class:</strong> 3-B<br>
             <strong>Favorite Food:</strong> Black Coffee<br>
-            <strong>Background:</strong> Manages Neko FM's 24/7 stream and signal monitors. Bypasses school keycard locks to maintain studio equipment after hours.
+            <strong>Equipment:</strong> 4-String Vintage Active Bass<br>
+            <strong>Background:</strong> Manages Neko FM's 24/7 signal monitors. Bypasses keycard locks to service Sub-Level 04 equipment after hours.
           </div>
         </div>
 
         <!-- AOI -->
         <div class="char-card">
           <div class="char-header">
-            <img src="assets/aoi.jpeg" alt="Aoi" class="char-avatar" onerror="this.src='https://via.placeholder.com/56'">
+            <img src="assets/aoi.jpeg" alt="Aoi" class="char-avatar" onerror="this.src='https://via.placeholder.com/58'">
             <div>
               <h3 class="char-name">Aoi</h3>
               <div class="char-role">Student Council Representative</div>
@@ -483,7 +688,40 @@
           <div class="char-stat-list">
             <strong>Class:</strong> 3-A<br>
             <strong>Favorite Food:</strong> Melon Pan<br>
+            <strong>Equipment:</strong> Campus Master Access Keycard<br>
             <strong>Background:</strong> Officially enforces campus curfew, but quietly covers for Girls Phantom Dead when unexplainable incidents occur in B-Wing.
+          </div>
+        </div>
+
+        <!-- HIRO (NPC) -->
+        <div class="char-card">
+          <div class="char-header">
+            <div class="char-avatar" style="background: rgba(178, 130, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">👦</div>
+            <div>
+              <h3 class="char-name">Hiro</h3>
+              <div class="char-role">Class 2-B Student / Witness #104</div>
+            </div>
+          </div>
+          <div class="char-stat-list">
+            <strong>Class:</strong> 2-B<br>
+            <strong>Favorite Food:</strong> Canned Coffee<br>
+            <strong>Incident Note:</strong> First student to report the figure standing outside the 2F study room window during late-night cram sessions.
+          </div>
+        </div>
+
+        <!-- RINA (NPC) -->
+        <div class="char-card">
+          <div class="char-header">
+            <div class="char-avatar" style="background: rgba(255, 59, 141, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🎨</div>
+            <div>
+              <h3 class="char-name">Rina</h3>
+              <div class="char-role">Art Club Member / Witness #104</div>
+            </div>
+          </div>
+          <div class="char-stat-list">
+            <strong>Class:</strong> 1-C<br>
+            <strong>Favorite Food:</strong> Bubble Tea<br>
+            <strong>Incident Note:</strong> Confirmed shadow observations across the quad while working late in the B1 Basement Art Studio.
           </div>
         </div>
 
@@ -491,24 +729,93 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 3: HISTORICAL CAMPUS ARCHIVES                            -->
+    <!-- TAB 3: INTERACTIVE CAMPUS BLUEPRINT                          -->
+    <!-- ============================================================ -->
+    <div id="interactive-map" class="tab-panel">
+      <div class="blueprint-layout">
+        
+        <div class="blueprint-canvas map-grid-bg">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace;">📐 SAKURAOKA HIGH // SUB-LEVEL 04 BLUEPRINT</strong>
+              <span class="clearance-badge" style="font-size: 0.7rem;">GRID: ANOMALY OVERLAY</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px;">
+              Click hotspots below to inspect structural connections and case anomaly notes.
+            </p>
+          </div>
+
+          <div class="blueprint-hotspot-grid">
+            <div class="hotspot-card active-spot" onclick="inspectHotspot('studyhall')">
+              <div class="hotspot-title">🏢 2F Study Hall (Room B)</div>
+              <div class="hotspot-meta">LOCATION OF CASE #104</div>
+            </div>
+
+            <div class="hotspot-card" onclick="inspectHotspot('phantomroom')">
+              <div class="hotspot-title">🎸 Sub-Level 04 (Phantom Room)</div>
+              <div class="hotspot-meta">BAND STUDIO HEADQUARTERS</div>
+            </div>
+
+            <div class="hotspot-card" onclick="inspectHotspot('drainage')">
+              <div class="hotspot-title">💧 B1 Drainage Pump Line</div>
+              <div class="hotspot-meta">AUDIO STATIC CODE SOURCE</div>
+            </div>
+
+            <div class="hotspot-card" onclick="inspectHotspot('clocktower')">
+              <div class="hotspot-title">🕰️ Courtyard Clock Tower</div>
+              <div class="hotspot-meta">HISTORICAL CASE #1994</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HOTSPOT INSPECTION PANEL -->
+        <div style="background: var(--card-inner); border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 22px;" id="hotspot-info-panel">
+          <span class="archive-tag" id="spot-tag">LOCATION DETAILS</span>
+          <h3 style="margin: 6px 0 10px; color: #FFFFFF;" id="spot-title">2F Study Hall (Room B)</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;" id="spot-desc">
+            Directly above the Sub-Level 04 rehearsal studio. Wet handprints were discovered on the outer glass during late-night study sessions.
+          </p>
+          <div style="margin-top: 16px; padding: 12px; background: rgba(0, 240, 255, 0.08); border-radius: 10px; font-size: 0.84rem; color: var(--accent-cyan);" id="spot-extra">
+            <strong>Key Discovery:</strong> Sound vibrations from the drainage pump below match window resonance patterns.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TAB 4: HISTORICAL CAMPUS ARCHIVES                            -->
     <!-- ============================================================ -->
     <div id="historical-archives" class="tab-panel">
-      <div class="archive-list">
+      
+      <div class="archive-search-bar">
+        <input type="text" id="archiveSearch" class="search-input-field" placeholder="Search historical campus files, passcodes, or case logs..." onkeyup="filterArchives()">
+        <button class="action-btn" onclick="filterArchives()">Search Files</button>
+      </div>
 
-        <div class="archive-item">
+      <div class="archive-list" id="archive-list-container">
+
+        <div class="archive-item" onclick="openArchiveModal(1)" data-keywords="1994 clock tower anomaly harmony_1994">
           <span class="archive-tag">FILE #1994-04</span>
-          <h3 style="margin: 4px 0 8px; color: #fff;">1994 Courtyard Clock Tower Anomaly</h3>
-          <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-            School newspaper clipping recording three separate instances where the courtyard clock second hand stepped counter-clockwise. All three occurrences coincided with midnight rehearsal sessions inside the old storage locker.
+          <h3 style="margin: 4px 0 8px; color: #FFFFFF;">1994 Courtyard Clock Tower Anomaly</h3>
+          <p style="margin: 0; color: var(--text-muted); font-size: 0.88rem; line-height: 1.6;">
+            School newspaper clipping recording three separate instances where the courtyard clock second hand stepped counter-clockwise. Passcode: <span class="code-chip">HARMONY_1994</span>.
           </p>
         </div>
 
-        <div class="archive-item">
+        <div class="archive-item" onclick="openArchiveModal(2)" data-keywords="drainage pump static 440hz b1">
           <span class="archive-tag">FILE #B1-MAP</span>
-          <h3 style="margin: 4px 0 8px; color: #fff;">Sub-Level 04 Architectural Blueprint</h3>
-          <p style="margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-            Floor plan showing the connection between the 2F study hall, B1 art studio, and the sealed drainage cavern system beneath the annex.
+          <h3 style="margin: 4px 0 8px; color: #FFFFFF;">Sub-Level 04 Audio Frequency Log</h3>
+          <p style="margin: 0; color: var(--text-muted); font-size: 0.88rem; line-height: 1.6;">
+            Spectrograph recording showing 440Hz tone interference under Prep Room B. Recovered code: <span class="code-chip">440HZ</span>.
+          </p>
+        </div>
+
+        <div class="archive-item" onclick="openArchiveModal(3)" data-keywords="case 104 window handprint report resolved">
+          <span class="archive-tag">FILE #CASE-104</span>
+          <h3 style="margin: 4px 0 8px; color: #FFFFFF;">Case #104: Window Watcher Resolution Report</h3>
+          <p style="margin: 0; color: var(--text-muted); font-size: 0.88rem; line-height: 1.6;">
+            Complete breakdown showing how Akari and Sera linked the 2F window phenomenon to the basement drainage pump resonance.
           </p>
         </div>
 
@@ -519,6 +826,7 @@
 
   <!-- JAVASCRIPT ENGINE -->
   <script>
+    // 1. Diegetic Tab Switcher
     function switchLoreTab(panelId, tabEl) {
       document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active-panel'));
       document.querySelectorAll('.lore-tab').forEach(tab => tab.classList.remove('active-tab'));
@@ -526,6 +834,163 @@
       document.getElementById(panelId).classList.add('active-panel');
       tabEl.classList.add('active-tab');
     }
+
+    // 2. Light Novel Chapter Switcher Engine
+    const chaptersData = {
+      1: {
+        title: "Chapter 1: The Sound Beneath the Floorboards",
+        content: `
+          <p>The rain had been falling over Sakuraoka High since third period, turning the courtyard quad into a mirror of grey asphalt. Inside Sub-Level 04, the hum of the tube amplifiers was the only heat in the room.</p>
+          <p>Akari Minase adjusted the strap of her electric guitar, her eyes fixed on the analog signal meter sitting on the corner of the mixing desk. The needle wasn't moving to the beat of Sera's bass line. It was jittering to a rhythm none of them were playing.</p>
+          <p>"Sera, hold up," Akari said, resting her palm over the strings to deaden the resonance. "Did you re-route Channel 3 through the B1 drainage pump line again?"</p>
+          <p>Sera didn't look up from her pedalboard. "Channel 3 is muted. The pump hasn't run since four o'clock."</p>
+          <div class="author-margin-note">
+            <strong>🕵️ INVESTIGATOR MARGIN NOTE #104:</strong><br>
+            <em>"If you check the spectrograph log for Channel 3 recorded at 02:15 AM, the passcode frequency code recovered from the drainage line was <span class="code-chip" onclick="copyCode('DRAINAGE_B1')">DRAINAGE_B1</span>. Enter this in the BBS Mystery Decoder!"</em>
+          </div>
+          <p>Nekomi leaned back against the synth stack, tossing her lyric notebook onto the amp. "If it's not the pump, then someone is broadcasting on our frequency from below the storage lockers..."</p>
+        `
+      },
+      2: {
+        title: "Chapter 2: The 2F Glass Incident",
+        content: `
+          <p>At 21:14 PM, Hiro of Class 2-B was cramming alone in Study Room B when he noticed the silhouette standing on the outer concrete ledge of the 2nd floor.</p>
+          <p>When Akari and Sera reached the courtyard 30 minutes later, the air smelled of ozone. Sera shined her inspection lantern up at the glass, illuminating wet, dripping palm prints facing inward.</p>
+          <div class="author-margin-note">
+            <strong>🕵️ INVESTIGATOR MARGIN NOTE #105:</strong><br>
+            <em>"The harmonic pitch recorded outside Study Room B was tuned exactly to <span class="code-chip" onclick="copyCode('440HZ')">440HZ</span>. Use this code to unlock Case #105 data in the decoder!"</em>
+          </div>
+          <p>"It wasn't a phantom," Akari whispered, touching the base of the drainage pipe. "It was resonance reflection..."</p>
+        `
+      },
+      3: {
+        title: "Chapter 1 Excerpt: Resonance 440Hz (Vol. 2)",
+        content: `
+          <p>The old clock tower in the quad chimed twelve times, but on the twelfth stroke, the echo held for an extra seven seconds.</p>
+          <p>Aoi stood at the top of the main stairwell, her student council clipboard tucked under her arm as the floorboards vibrated with a deep chord.</p>
+          <div class="author-margin-note">
+            <strong>🕵️ HISTORICAL CODE NOTE:</strong><br>
+            <em>"The clock tower harmonic frequency unlocked File #1994-04 using code <span class="code-chip" onclick="copyCode('HARMONY_1994')">HARMONY_1994</span>."</em>
+          </div>
+        `
+      }
+    };
+
+    function loadChapter(chapNum) {
+      document.querySelectorAll('.volume-card').forEach((card, idx) => {
+        if (idx === chapNum - 1) card.classList.add('active-volume');
+        else card.classList.remove('active-volume');
+      });
+
+      const chap = chaptersData[chapNum];
+      if (chap) {
+        document.getElementById('chapter-title-display').innerText = chap.title;
+        document.getElementById('chapter-body-content').innerHTML = chap.content;
+      }
+    }
+
+    let currentFontSize = 1.02;
+    function toggleReaderFont(dir) {
+      currentFontSize += dir * 0.08;
+      if (currentFontSize < 0.85) currentFontSize = 0.85;
+      if (currentFontSize > 1.3) currentFontSize = 1.3;
+      document.getElementById('reader-window').style.fontSize = `${currentFontSize}rem`;
+    }
+
+    function copyCode(code) {
+      navigator.clipboard.writeText(code);
+      alert(`Passcode copied to clipboard: ${code}\nPaste this in the Sakuraoka BBS Mystery Decoder!`);
+    }
+
+    // 3. Blueprint Hotspot Inspection Engine
+    const hotspotData = {
+      studyhall: {
+        tag: "LOCATION DETAILS",
+        title: "🏢 2F Study Hall (Room B)",
+        desc: "Directly above the Sub-Level 04 rehearsal studio. Wet handprints were discovered on the outer glass during late-night study sessions.",
+        extra: "<strong>Key Discovery:</strong> Sound vibrations from the drainage pump below match window resonance patterns."
+      },
+      phantomroom: {
+        tag: "BAND HEADQUARTERS",
+        title: "🎸 Sub-Level 04 (Phantom Room)",
+        desc: "Underground rehearsal space for Girls Phantom Dead beneath Prep Room B. Equipped with tube amps and Neko FM signal monitors.",
+        extra: "<strong>Key Discovery:</strong> Connected directly to the old 1994 drainage cavern system."
+      },
+      drainage: {
+        tag: "AUDIO SOURCE",
+        title: "💧 B1 Drainage Pump Line",
+        desc: "Main drainage infrastructure under the courtyard quad. Produced reversed static audio glitches heard on Neko FM broadcasts.",
+        extra: "<strong>Passcode Recovered:</strong> <code>DRAINAGE_B1</code>"
+      },
+      clocktower: {
+        tag: "HISTORICAL ANOMALY",
+        title: "🕰️ Courtyard Clock Tower",
+        desc: "Built in 1994. Known for rare counter-clockwise second hand ticks during midnight band rehearsals.",
+        extra: "<strong>Passcode Recovered:</strong> <code>HARMONY_1994</code>"
+      }
+    };
+
+    function inspectHotspot(key) {
+      document.querySelectorAll('.hotspot-card').forEach(card => card.classList.remove('active-spot'));
+      event.currentTarget.classList.add('active-spot');
+
+      const data = hotspotData[key];
+      if (data) {
+        document.getElementById('spot-tag').innerText = data.tag;
+        document.getElementById('spot-title').innerText = data.title;
+        document.getElementById('spot-desc').innerText = data.desc;
+        document.getElementById('spot-extra').innerHTML = data.extra;
+      }
+    }
+
+    // 4. Archive Search Engine
+    function filterArchives() {
+      const query = document.getElementById('archiveSearch').value.toLowerCase();
+      const items = document.querySelectorAll('.archive-item');
+
+      items.forEach(item => {
+        const keywords = item.getAttribute('data-keywords') || '';
+        const text = item.innerText.toLowerCase();
+        if (text.includes(query) || keywords.includes(query)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function openArchiveModal(id) {
+      removeExistingModals();
+      let title = "🔍 Archive File #" + id;
+      let bodyText = "";
+
+      if (id === 1) {
+        bodyText = "<strong>File #1994-04:</strong><br><br>Detailed newspaper excerpt regarding the clock tower second hand ticks. Passcode <code style='color: var(--accent-cyan);'>HARMONY_1994</code> verified by Akari.";
+      } else if (id === 2) {
+        bodyText = "<strong>File #B1-MAP:</strong><br><br>Spectrograph frequency log showing 440Hz resonance beneath Prep Room B. Passcode: <code style='color: var(--accent-cyan);'>440HZ</code>.";
+      } else if (id === 3) {
+        bodyText = "<strong>Case #104 Resolution Report:</strong><br><br> Akari and Sera confirmed that window moisture vibrations were caused by pump audio feedback, successfully resolving Case #104.";
+      }
+
+      const modalHTML = `
+        <div id="bbs-modal" class="modal-overlay">
+          <div class="modal-card">
+            <h3 style="margin: 0 0 10px; color: #FFFFFF;">${title}</h3>
+            <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">${bodyText}</p>
+            <div style="margin-top: 20px; text-align: right;">
+              <button class="action-btn" onclick="removeExistingModals()">Close Document</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function removeExistingModals() {
+      const existing = document.getElementById('bbs-modal');
+      if (existing) existing.remove();
+    }
   </script>
+  <script src="music-player.js"></script>
 </body>
 </html>
