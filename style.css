@@ -71,7 +71,7 @@
       transition: background-color 0.4s ease, color 0.4s ease;
     }
 
-    /* Universal Navbar Styling */
+    /* Universal Stacked Navbar Styling */
     .navbar {
       position: sticky;
       top: 0;
@@ -81,6 +81,7 @@
       border-bottom: 2px solid var(--nav-border);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      padding: 14px 20px 12px;
       box-sizing: border-box;
       transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
@@ -93,77 +94,138 @@
       box-shadow: 0 4px 20px rgba(255, 209, 102, 0.25);
     }
 
-    .nav-container {
+    .nav-header-stacked {
       max-width: 1300px;
       margin: 0 auto;
-      padding: 12px 20px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
+      gap: 12px;
       position: relative;
     }
 
-    .logo-container {
-      display: flex;
-      align-items: center;
+    /* Centered Branding */
+    .brand-centered {
+      text-align: center;
     }
 
     .logo-link {
       text-decoration: none;
-      display: flex;
+      display: inline-flex;
       flex-direction: column;
+      align-items: center;
     }
 
     .logo-main {
-      font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.2rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      font-family: 'Fredoka', 'Segoe UI', cursive, sans-serif;
+      font-size: 1.85rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 50%, var(--accent-pink) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      transition: background 0.4s ease;
+      filter: drop-shadow(0 0 12px var(--accent-glow));
+      transition: all 0.4s ease;
+    }
+
+    .logo-link:hover .logo-main {
+      transform: scale(1.02);
+      filter: drop-shadow(0 0 18px var(--accent-pink));
     }
 
     .logo-sub {
       font-size: 0.72rem;
       font-weight: 800;
-      letter-spacing: 1.5px;
+      letter-spacing: 3px;
       color: var(--accent-pink);
+      text-transform: uppercase;
       opacity: 0.95;
+      margin-top: 1px;
       transition: color 0.4s ease;
     }
 
+    /* Centered Nav Links Row */
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      width: 100%;
     }
 
     .nav-item {
       color: var(--text-muted);
       font-size: 0.88rem;
       font-weight: 700;
-      padding: 10px 14px;
+      padding: 8px 14px;
       border-radius: 10px;
       text-decoration: none;
+      background: rgba(168, 139, 235, 0.08);
+      border: 1px solid rgba(168, 139, 235, 0.2);
       transition: all 0.25s ease;
       white-space: nowrap;
     }
 
     .nav-item:hover, .nav-item.active {
-      background: rgba(168, 139, 235, 0.18);
+      background: rgba(168, 139, 235, 0.22);
       color: #ffffff;
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 12px var(--accent-glow);
     }
 
     body.basement-mode .nav-item:hover, 
     body.basement-mode .nav-item.active {
-      background: rgba(255, 77, 109, 0.2);
+      background: rgba(255, 77, 109, 0.22);
+      border-color: #ff007f;
+      box-shadow: 0 0 12px rgba(255, 77, 109, 0.35);
     }
 
     body.backstage-mode .nav-item:hover, 
     body.backstage-mode .nav-item.active {
-      background: rgba(255, 209, 102, 0.2);
+      background: rgba(255, 209, 102, 0.22);
+      border-color: #ffd166;
+      box-shadow: 0 0 12px rgba(255, 209, 102, 0.35);
+    }
+
+    /* 3-Tier Switcher Pill */
+    .tier-switcher-pill {
+      display: inline-flex;
+      background: rgba(10, 5, 22, 0.7);
+      border: 1px solid var(--nav-border);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .tier-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .tier-btn.active, .tier-btn:hover {
+      background: rgba(168, 139, 235, 0.25);
+      color: #ffffff;
+    }
+
+    body.basement-mode .tier-btn.active {
+      background: rgba(255, 77, 109, 0.3);
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(255, 77, 109, 0.4);
+    }
+
+    body.backstage-mode .tier-btn.active {
+      background: rgba(255, 209, 102, 0.3);
+      color: #ffd166;
+      box-shadow: 0 0 10px rgba(255, 209, 102, 0.4);
     }
 
     .mobile-menu-btn {
@@ -172,7 +234,13 @@
 
     /* Mobile Collapsible Navigation */
     @media (max-width: 992px) {
-      .nav-container { padding: 10px 16px; }
+      .nav-header-stacked {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .logo-main { font-size: 1.35rem; }
+      .logo-sub { font-size: 0.62rem; letter-spacing: 2px; }
 
       .mobile-menu-btn {
         display: flex !important;
@@ -394,13 +462,13 @@
 
   <!-- Universal Header Navigation Bar -->
   <header class="navbar">
-    <div class="nav-container">
+    <div class="nav-header-stacked">
       
-      <!-- Brand Logo -->
-      <div class="logo-container">
+      <!-- Fancy Centered Brand Title -->
+      <div class="brand-centered">
         <a href="index.html" class="logo-link">
-          <span class="logo-main">🌸 OTAKU OVERLOAD</span>
-          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
+          <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM ✦</span>
         </a>
       </div>
 
@@ -415,6 +483,7 @@
       <nav class="nav-links" id="nav-menu">
         <a href="index.html" class="nav-item active">🏠 Home</a>
         <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="bbs-forum.html" class="nav-item">💬 Sakuraoka BBS</a>
         <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
         <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
         <a href="chat.html" class="nav-item">💬 Live Chat</a>
@@ -468,13 +537,13 @@
       <span class="gateway-link-text">Tune In Now →</span>
     </a>
 
-    <a href="chat.html" class="gateway-card">
+    <a href="bbs-forum.html" class="gateway-card">
       <div>
         <div class="gateway-icon">💬</div>
-        <h3>Locker 102 Live Community</h3>
-        <p>Moderated community chat, custom avatar cosmetics, and real-time classmate feed.</p>
+        <h3>Sakuraoka Student BBS</h3>
+        <p>Anonymized campus board, multi-NPC mystery threads, and investigator badges.</p>
       </div>
-      <span class="gateway-link-text">Open Live Chat →</span>
+      <span class="gateway-link-text">Explore Student BBS →</span>
     </a>
 
     <a href="hub.html" class="gateway-card">
