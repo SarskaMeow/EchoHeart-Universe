@@ -199,7 +199,7 @@
       display: block;
     }
 
-    /* MAIN GRID LAYOUT FOR TAB 1 */
+    /* MAIN GRID LAYOUT */
     .bbs-main-layout {
       display: grid;
       grid-template-columns: 2.8fr 1.2fr;
@@ -445,6 +445,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     .vip-card-locked {
@@ -855,7 +857,7 @@
         </p>
 
         <div class="terminal-code-input-group">
-          <input type="text" id="evidenceInput" class="terminal-text-input" placeholder="Enter mystery passcode (e.g. DRAINAGE_B1, HARMONY_1994)..." autocomplete="off">
+          <input type="text" id="evidenceInput" class="terminal-text-input" placeholder="Enter mystery passcode (e.g. DRAINAGE_B1, HARMONY_1994, PHANTOM_KEY_94)..." autocomplete="off">
           <button class="terminal-submit-btn" onclick="submitEvidence()">SUBMIT CLUE</button>
         </div>
 
@@ -873,33 +875,109 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 3: SECRET CASE FILES [VIP]                               -->
+    <!-- TAB 3: SECRET CASE FILES [VIP] (DUAL BOARD & LIVE CASE #2)   -->
     <!-- ============================================================ -->
     <div id="vip-archive" class="tab-panel">
       <div class="vip-vault-header">
         <div>
-          <h3 style="margin: 0; color: var(--accent-gold); font-size: 1.15rem;">🔒 SECRET CASE FILES & NOVEL LORE</h3>
-          <p style="margin: 4px 0 0; font-size: 0.88rem; color: var(--text-muted);">Unredacted investigation reports and advance EchoHeart story chapters.</p>
+          <h3 style="margin: 0; color: var(--accent-gold); font-size: 1.15rem;">🔒 SECRET CASE FILES & VIP PARALLEL INVESTIGATION</h3>
+          <p style="margin: 4px 0 0; font-size: 0.88rem; color: var(--text-muted);">Exclusive 2nd weekly case thread, live NPC evidence drops, and general school boards.</p>
         </div>
-        <span class="rank-badge-pill">BACKSTAGE VIP ACCESS</span>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <span id="vip-access-status-badge" class="rank-badge-pill" style="background: rgba(255, 209, 102, 0.25);">⭐ BACKSTAGE VIP ACTIVE</span>
+          <button class="filter-btn" onclick="toggleVIPAccess()" style="border-color: var(--accent-gold); color: var(--accent-gold);">⚡ Demo VIP Toggle</button>
+        </div>
       </div>
 
-      <div class="vip-card-locked">
+      <!-- LOCKED STATE VIEW -->
+      <div id="vip-locked-view" class="vip-card-locked" style="display: none;">
         <span class="vip-stamp-overlay">[STAMP: SENIOR INVESTIGATOR CLEARANCE REQUIRED]</span>
-        <h3 style="margin: 8px 0 10px; color: #FFFFFF;">CASE FILE #104: THE WINDOW WATCHER (RESOLVED REPORT)</h3>
+        <h3 style="margin: 8px 0 10px; color: #FFFFFF;">VIP CASE #004 & EXCLUSIVE PARALLEL INVESTIGATION BOARD</h3>
         <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
-          Full audio investigation log, window sill photos, and the unredacted 4-page Light Novel chapter excerpt showing how Akari and Sera resolved the phenomenon in The Phantom Room.
+          Backstage VIP members receive full access to the 2nd parallel weekly mystery thread (Case #004 — Sub-Level 04 Sealed Vault Frequency), unredacted resolution reports, and live NPC chatter drops in the exclusive chat line.
         </p>
 
         <div style="margin-top: 22px; padding: 20px; background: rgba(255, 209, 102, 0.08); border-radius: 12px; text-align: center;">
           <p style="margin: 0 0 14px; color: var(--accent-gold); font-weight: bold; font-size: 0.98rem;">
-            Unlock Secret Files & Support the Studio
+            Unlock Parallel VIP Mysteries & Support the Studio
           </p>
-          <button class="action-btn-primary" onclick="openVIPModal()" style="padding: 12px 28px; font-size: 0.92rem;">
-            ⭐ Upgrade to Backstage Pass ($3/mo)
-          </button>
+          <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="action-btn-primary" onclick="openVIPModal()" style="padding: 12px 28px; font-size: 0.92rem;">
+              ⭐ Upgrade to Backstage Pass ($3/mo)
+            </button>
+            <button class="filter-btn" onclick="toggleVIPAccess()" style="border-color: var(--accent-gold); color: var(--accent-gold);">
+              🔑 Test VIP Access (Demo)
+            </button>
+          </div>
         </div>
       </div>
+
+      <!-- UNLOCKED LIVE VIP DUAL BOARD VIEW -->
+      <div id="vip-unlocked-view" class="bbs-main-layout">
+
+        <!-- LEFT COLUMN: VIP LIVE THREAD FEED -->
+        <section class="bbs-content-left">
+          
+          <div class="investigator-docket" style="border-color: var(--accent-gold); background: linear-gradient(135deg, rgba(45, 32, 18, 0.9), rgba(15, 11, 28, 0.9));">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span style="font-size: 0.74rem; color: var(--accent-gold); font-weight: 800; letter-spacing: 1px;">⭐ VIP INVESTIGATOR DASHBOARD</span>
+                <h3 style="margin: 2px 0 0; color: #FFFFFF; font-size: 1.15rem;">Case #004 Parallel Live Thread & School Feeds</h3>
+              </div>
+              <span class="rank-badge-pill" style="background: var(--accent-gold); color: #000;">CLEARANCE LEVEL 3</span>
+            </div>
+          </div>
+
+          <!-- VIP FEED CONTAINER (INJECTED DUAL CASE #2 + NON-MYSTERY THREADS) -->
+          <div id="vip-posts-container">
+
+            <!-- GENERAL NON-MYSTERY THREADS INCLUDED ON VIP BOARD -->
+            <article class="bbs-thread-card" data-category="official">
+              <div class="thread-main-header">
+                <span class="thread-tag official">📋 [STUDENT COUNCIL]</span>
+                <h2 class="thread-title">#092 — Festival Rehearsal Permit Extensions for Sub-Level 04</h2>
+                <span class="thread-meta">Thread #092 • Started by Aoi_Pres</span>
+              </div>
+              <div class="thread-replies-chain">
+                <div class="bbs-post-reply npc-reply">
+                  <div class="bbs-author">
+                    <img src="assets/aoi.jpeg" alt="Aoi" class="author-avatar-sm" onerror="this.src='https://via.placeholder.com/36'">
+                    <div>
+                      <strong>Aoi_Pres <span class="npc-badge">STUDENT GOV</span></strong>
+                      <div class="post-time">Official Bulletin</div>
+                    </div>
+                  </div>
+                  <p class="post-content">"Rehearsal permits for B-Wing sub-levels have been extended through 22:00 PM for registered music clubs. Please ensure all equipment is powered down and iron gates are latched prior to curfew."</p>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- RIGHT COLUMN: VIP EXCLUSIVE SIDEBAR -->
+        <aside class="bbs-sidebar-right">
+          <div class="sidebar-widget" style="border-color: var(--accent-gold);">
+            <h3 class="widget-title" style="color: var(--accent-gold);">⭐ VIP Clue Stream</h3>
+            <div class="quick-clue-item" onclick="openClueModal(3)">
+              <span class="clue-tag-mini" style="background: rgba(255, 209, 102, 0.2); color: var(--accent-gold);">VIP CASE #004</span>
+              <strong>Sealed Cavern Blueprint Note</strong>
+            </div>
+          </div>
+
+          <div class="sidebar-widget">
+            <h3 class="widget-title">💬 VIP Radio Chat Line</h3>
+            <div style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.6;">
+              <p>Live spectrograph hints drop into this channel during late-night broadcasts on Neko FM.</p>
+              <div style="padding: 10px; background: rgba(0, 240, 255, 0.08); border-radius: 8px; color: var(--accent-cyan); font-family: monospace;">
+                [SIGNAL 14.2kHz]: "Check Chapter 2 key emblem..."
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+
     </div>
 
   </main>
@@ -913,6 +991,38 @@
 
       document.getElementById(panelId).classList.add('active-panel');
       tabEl.classList.add('active-tab');
+    }
+
+    // 2. VIP Access State Toggle & View Handler
+    function toggleVIPAccess() {
+      const isVIP = localStorage.getItem('has_vip_pass') === 'true';
+      localStorage.setItem('has_vip_pass', isVIP ? 'false' : 'true');
+      updateVIPView();
+    }
+
+    function updateVIPView() {
+      const isVIP = localStorage.getItem('has_vip_pass') === 'true';
+      const lockedView = document.getElementById('vip-locked-view');
+      const unlockedView = document.getElementById('vip-unlocked-view');
+      const vipBadge = document.getElementById('vip-access-status-badge');
+
+      if (isVIP) {
+        if (lockedView) lockedView.style.display = 'none';
+        if (unlockedView) unlockedView.style.display = 'grid';
+        if (vipBadge) {
+          vipBadge.innerText = '⭐ BACKSTAGE VIP ACTIVE';
+          vipBadge.style.background = 'rgba(255, 209, 102, 0.25)';
+          vipBadge.style.color = 'var(--accent-gold)';
+        }
+      } else {
+        if (lockedView) lockedView.style.display = 'block';
+        if (unlockedView) unlockedView.style.display = 'none';
+        if (vipBadge) {
+          vipBadge.innerText = '🔒 BACKSTAGE VIP LOCKED';
+          vipBadge.style.background = 'rgba(255, 59, 141, 0.2)';
+          vipBadge.style.color = 'var(--accent-pink)';
+        }
+      }
     }
 
     // Dynamic Time & Relative Date Generator Engine
@@ -964,7 +1074,7 @@
       }
     }
 
-    // 2. Real-Time Clock & Campus Counter
+    // 3. Real-Time Clock & Campus Counter
     function updateBBSServerClock() {
       const now = new Date();
       const formattedTime = formatTimestamp(now);
@@ -1003,7 +1113,7 @@
       }
     }
 
-    // 3. Thread Filter Engine
+    // 4. Thread Filter Engine
     function filterBBS(category) {
       const threads = document.querySelectorAll('.bbs-thread-card');
       const buttons = document.querySelectorAll('.filter-btn');
@@ -1021,8 +1131,8 @@
       });
     }
 
-    // 4. Mystery Decoder Solution Database
-    const caseSolutions = {
+    // 5. Mystery Decoder Solution Database
+    window.caseSolutions = {
       "DRAINAGE_B1": {
         message: "CLEARANCE GRANTED. @Akari_M: 'That's it! The water pump sound matched the audio glitch. Case #104 solved!'",
         badgeUnlocked: "Lead Investigator"
@@ -1034,53 +1144,17 @@
       "HARMONY_1994": {
         message: "CLEARANCE GRANTED. @Akari_M: 'Awesome work!! That 1994 chord code unlocked Case #105! Resonance report archived to Board 03!'",
         badgeUnlocked: "Resonance Detective"
+      },
+      "PHANTOM_KEY_94": {
+        message: "VIP CLEARANCE GRANTED. @Aoi_Pres: 'The iron vault key frequency matches the Sub-Level 04 blueprint!'",
+        badgeUnlocked: "Cavern Archivist"
       }
     };
 
     function submitEvidence() {
-      const input = document.getElementById("evidenceInput").value.trim().toUpperCase();
-      const output = document.getElementById("terminalOutput");
-
-      if (!input) return;
-
-      if (caseSolutions[input]) {
-        const match = caseSolutions[input];
-        output.className = "terminal-output-log success";
-        output.innerHTML = `<strong>[MYSTERY SOLVED!]</strong> ${match.message}`;
-        
-        if (match.badgeUnlocked) {
-          const rankTag = document.getElementById("investigator-rank-tag");
-          if (rankTag) rankTag.innerText = `Rank: ${match.badgeUnlocked}`;
-        }
-      } else {
-        output.className = "terminal-output-log error";
-        output.innerHTML = "<strong>[CODE MISMATCH]</strong> Passcode not recognized. Re-check Neko FM and the chapter notes.";
-      }
-    }
-
-    // 5. Dynamic 7-Day Real-Time JSON Mystery Engine
-    async function loadActiveMysterySchedule() {
-      try {
-        const response = await fetch('case_105_schedule.json');
-        if (!response.ok) return;
-        const mysteryData = await response.json();
-        
-        let eventStartTime = localStorage.getItem('mystery_start_time');
-        if (!eventStartTime) {
-          eventStartTime = Date.now();
-          localStorage.setItem('mystery_start_time', eventStartTime);
-        }
-
-        const elapsedDays = Math.floor((Date.now() - eventStartTime) / (1000 * 60 * 60 * 24)) + 1;
-
-        if (mysteryData.passcode_trigger) {
-          caseSolutions[mysteryData.passcode_trigger] = {
-            message: `CLEARANCE GRANTED. @Akari_M: 'You cracked Case #${mysteryData.mystery_id}! Resonance report archived to Board 03!'`,
-            badgeUnlocked: mysteryData.badge_reward || "Lead Investigator"
-          };
-        }
-      } catch (err) {
-        console.log("Running default built-in case database.");
+      const input = document.getElementById("evidenceInput").value.trim();
+      if (window.verifyMysteryPasscode) {
+        window.verifyMysteryPasscode(input);
       }
     }
 
@@ -1183,6 +1257,8 @@
         bodyText = "<strong>Window Handprint Note:</strong><br><br>Dripping wet handprints were confirmed on the exterior glass pane of 2F Study Room B. The courtyard was empty and dry at the time of discovery.";
       } else if (clueId === 2) {
         bodyText = "<strong>B1 Drainage Note:</strong><br><br>The Phantom Room band desk recorded an audio pulse coming through the floorboards. The passcode <code>DRAINAGE_B1</code> was recovered from the sound file.";
+      } else if (clueId === 3) {
+        bodyText = "<strong>Sealed Cavern Blueprint Note:</strong><br><br>Sub-Level 04 iron gate resonance frequency recorded at 14.2kHz. Unlocks with passcode <code>PHANTOM_KEY_94</code>.";
       }
 
       const modalHTML = `
@@ -1206,10 +1282,10 @@
           <div class="modal-card" style="text-align: center;">
             <h3 style="margin: 0 0 10px; color: var(--accent-gold);">⭐ Backstage VIP Access</h3>
             <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 22px;">
-              Support the studio to unlock Board 03 Secret Files, custom gold chat glows in Locker 102, 2x poll voting on Neko FM, and advance Light Novel chapters!
+              Support the studio to unlock Board 03 Secret Files, parallel VIP weekly cases, custom gold chat glows, and advance Light Novel chapters!
             </p>
             <div class="modal-actions">
-              <button class="modal-btn btn-submit" onclick="alert('Redirecting to studio support page...')">Unlock Backstage Pass ($3/mo)</button>
+              <button class="modal-btn btn-submit" onclick="toggleVIPAccess(); removeExistingModals();">Activate Demo VIP Pass ($3/mo)</button>
               <button class="modal-btn btn-close" onclick="removeExistingModals()">Close Window</button>
             </div>
           </div>
@@ -1230,9 +1306,10 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       initDynamicPostTimestamps();
-      loadActiveMysterySchedule();
+      updateVIPView();
     });
   </script>
+  <script src="bbs-mystery-engine.js"></script>
   <script src="music-player.js"></script>
 </body>
 </html>
