@@ -1000,22 +1000,36 @@
       });
     }
 
-    // Periodic Real-Time NPC Student Chatter Updater
+    // Extended Dynamic School Gossip Pool & Live Stream Generator
     const dynamicSchoolNpcs = [
       { name: "Kenji_Volleyball", class: "Class 3-C", avatar: "🏐", text: "Just walked past the B-wing corridor... the staff locked the emergency fire doors early tonight. Creepy." },
       { name: "Yumi_BioLab", class: "Class 2-A", avatar: "🔬", text: "Did anyone check the humidity sensors near room 204? There was a huge spike recorded right before the lights flickered." },
-      { name: "Daiki_StudentGov", class: "Student Gov", avatar: "📋", text: "Reminder: All students must vacate campus study halls prior to night curfew hours." }
+      { name: "Daiki_StudentGov", class: "Student Gov", avatar: "📋", text: "Reminder: All students must vacate campus study halls prior to night curfew hours." },
+      { name: "Mina_Astronomy", class: "Class 1-B", avatar: "🔭", text: "Saw a weird flickering light through the rooftop telescope dome near Room 302..." },
+      { name: "Ren_Track", class: "Class 3-B", avatar: "🏃", text: "Who left the air intake ducts humming in B1 locker rooms? The pitch sounds like a tuning fork." },
+      { name: "Sora_Drama", class: "Class 2-C", avatar: "🎭", text: "The prop pianos in the auditorium were locked down today. Where is that melody even coming from??" },
+      { name: "Hina_Library", class: "Class 2-A", avatar: "📚", text: "Found an old 1994 music club ledger on the 3F archive table... someone opened it recently." }
     ];
 
-    let npcUpdateIndex = 0;
-    function checkLiveNPCUpdates() {
-      if (npcUpdateIndex >= dynamicSchoolNpcs.length) return;
-      
-      const npc = dynamicSchoolNpcs[npcUpdateIndex];
-      npcUpdateIndex++;
-      
+    let usedNpcIndices = [];
+
+    function triggerRandomLiveChatter() {
+      // Find active thread reply chain in public board
       const chain = document.querySelector('#bbs-posts-container .thread-replies-chain');
       if (!chain) return;
+
+      // Reset pool if all used
+      if (usedNpcIndices.length >= dynamicSchoolNpcs.length) {
+        usedNpcIndices = [];
+      }
+
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * dynamicSchoolNpcs.length);
+      } while (usedNpcIndices.includes(randomIndex) && usedNpcIndices.length < dynamicSchoolNpcs.length);
+
+      usedNpcIndices.push(randomIndex);
+      const npc = dynamicSchoolNpcs[randomIndex];
 
       const now = new Date();
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -1039,6 +1053,10 @@
         </div>
       `;
       chain.insertAdjacentHTML('beforeend', replyHTML);
+
+      // Schedule next sporadic chatter drop between 30 and 90 seconds
+      const nextDelay = Math.floor(Math.random() * (90000 - 30000 + 1)) + 30000;
+      setTimeout(triggerRandomLiveChatter, nextDelay);
     }
 
     // Modals Engine
@@ -1153,13 +1171,13 @@
       if (existing) existing.remove();
     }
 
-    // Initialize clock loop, dynamic post timers & periodic student updates
+    // Initialize clock loop & start sporadic live student gossip chatter stream
     setInterval(updateBBSServerClock, 1000);
-    setInterval(checkLiveNPCUpdates, 90000);
     updateBBSServerClock();
 
     document.addEventListener('DOMContentLoaded', () => {
       updateVIPView();
+      setTimeout(triggerRandomLiveChatter, 5000); // Kick off live background chat stream 5 seconds after load
     });
   </script>
   <!-- Master Mystery Engine JS -->
