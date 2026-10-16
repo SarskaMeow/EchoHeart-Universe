@@ -1,0 +1,252 @@
+{
+  "student_council_threads": [
+    {
+      "thread_id": "sc_notice_01",
+      "notice": {
+        "author": "Pres_Haruka",
+        "author_badge": "Class 3-A (Student Body Pres)",
+        "avatar_icon": "👑",
+        "message": "Student Council Notice: The autumn umbrella rack cleanup in the main foyer is complete. Please retrieve any missing umbrellas from the council office by Friday!"
+      },
+      "replies": [
+        {
+          "author": "Hiro_Class2B",
+          "author_badge": "Class 2-B",
+          "avatar_icon": "🎧",
+          "message": "@Pres_Haruka Thank goodness! I left my clear plastic yellow-handled one near the B-Wing door on Tuesday!"
+        },
+        {
+          "author": "Yumi_Class2A",
+          "author_badge": "Class 2-A",
+          "avatar_icon": "🥪",
+          "message": "Is the lost-and-found box near the council room open during second period break?"
+        },
+        {
+          "author": "VP_Chiaki",
+          "author_badge": "Class 2-B (Student Council VP)",
+          "avatar_icon": "📋",
+          "message": "@Yumi_Class2A Yes! Chiaki will be staffing the desk every day during lunch break!"
+        }
+      ]
+    },
+    {
+      "thread_id": "sc_notice_02",
+      "notice": {
+        "author": "Pres_Haruka",
+        "author_badge": "Class 3-A (Student Body Pres)",
+        "avatar_icon": "👑",
+        "message": "Student Council Survey: We are taking student requests for next month's cafeteria special dessert menu! Drop your suggestions in the suggestion box outside Room 2-A."
+      },
+      "replies": [
+        {
+          "author": "CatEars_Nekomi",
+          "author_badge": "Class 2-A (Light Music)",
+          "avatar_icon": "assets/nekomi.jpeg",
+          "message": "NEKOMI VOTES FOR STRAWBERRY CREPES WITH EXTRA WHIPPED CREAM!! 🍓🐾",
+          "is_npc": true
+        },
+        {
+          "author": "Kenji_Gym",
+          "author_badge": "Class 3-C",
+          "avatar_icon": "🏐",
+          "message": "Matcha parfait or sweet potato pudding would be incredible after gym class!"
+        },
+        {
+          "author": "Bass_Sera",
+          "author_badge": "Class 2-A (Light Music)",
+          "avatar_icon": "assets/sera.jpeg",
+          "message": "Seconding Nekomi's crepe vote! Or maybe melon pan ice cream sandwiches?",
+          "is_npc": true
+        },
+        {
+          "author": "Pres_Haruka",
+          "author_badge": "Class 3-A (Student Body Pres)",
+          "avatar_icon": "👑",
+          "message": "Noted! Crepes and matcha parfaits are officially leading the tally so far!"
+        }
+      ]
+    },
+    {
+      "thread_id": "sc_notice_03",
+      "notice": {
+        "author": "VP_Chiaki",
+        "author_badge": "Class 2-B (Student Council VP)",
+        "avatar_icon": "📋",
+        "message": "Reminder for all Club Captains: Autumn Culture Festival booth applications are due to President Haruka by 4:00 PM this Thursday."
+      },
+      "replies": [
+        {
+          "author": "Akari_M",
+          "author_badge": "Class 2-A",
+          "avatar_icon": "assets/akari.jpeg",
+          "message": "Class 2-A's homeroom booth application was submitted this morning! We're doing a traditional tea and photo lounge!",
+          "is_npc": true
+        },
+        {
+          "author": "Sora_Drama",
+          "author_badge": "Drama Club",
+          "avatar_icon": "🎭",
+          "message": "Drama Club is turning the auditorium stage into a haunted fairy tale set! Form turning in at lunch!"
+        },
+        {
+          "author": "Ren_Track",
+          "author_badge": "Track Team",
+          "avatar_icon": "🏃",
+          "message": "Can track team run the outdoor obstacle challenge again this year?"
+        },
+        {
+          "author": "VP_Chiaki",
+          "author_badge": "Class 2-B (Student Council VP)",
+          "avatar_icon": "📋",
+          "message": "@Ren_Track Approved! Main field space is reserved for Track Team from 10 AM to 2 PM!"
+        }
+      ]
+    },
+    {
+      "thread_id": "sc_notice_04",
+      "notice": {
+        "author": "Pres_Haruka",
+        "author_badge": "Class 3-A (Student Body Pres)",
+        "avatar_icon": "👑",
+        "message": "Campus Announcement: The courtyard bench repaint project is complete! Thank you to the Art Club for painting the maple leaf trim!"
+      },
+      "replies": [
+        {
+          "author": "Aoi",
+          "author_badge": "Class 2-A",
+          "avatar_icon": "assets/aoi.jpeg",
+          "message": "The maple leaves look so pretty! Perfect spot for eating bento under the trees!",
+          "is_npc": true
+        },
+        {
+          "author": "Mina_StarClub",
+          "author_badge": "Astronomy Club",
+          "avatar_icon": "🔭",
+          "message": "The fresh paint made the courtyard look twice as bright during sunset telescope prep!"
+        }
+      ]
+    }
+  ],
+
+  "daily_gossip_pool": {
+    "morning_prep": [
+      {
+        "author": "Ren_Track",
+        "author_badge": "Track Team",
+        "avatar_icon": "🏃",
+        "message": "Morning lap practice done! The brisk autumn breeze hitting the track field feels amazing today!"
+      },
+      {
+        "author": "Yumi_Class2A",
+        "author_badge": "Class 2-A",
+        "avatar_icon": "🥪",
+        "message": "Good morning! Who else is running on three hours of sleep because of the new anime episode last night?"
+      },
+      {
+        "author": "Aoi",
+        "author_badge": "Class 2-A",
+        "avatar_icon": "assets/aoi.jpeg",
+        "message": "Good morning everyone! Akari and I watered the Class 2-A window planters before homeroom!",
+        "is_npc": true
+      },
+      {
+        "author": "Hina_Class1A",
+        "author_badge": "Class 1-A",
+        "avatar_icon": "🌸",
+        "message": "The orange stray cat was taking a morning nap right on top of the shoe lockers again!"
+      },
+      {
+        "author": "Hiro_Class2B",
+        "author_badge": "Class 2-B",
+        "avatar_icon": "🎧",
+        "message": "Walked to school with my headphones on. Early morning Sakuraoka streets feel so cozy."
+      }
+    ],
+
+    "lunch_break": [
+      {
+        "author": "CatEars_Nekomi",
+        "author_badge": "Class 2-A (Light Music)",
+        "avatar_icon": "assets/nekomi.jpeg",
+        "message": "Nekomi traded half a strawberry crepe for Sera's matcha latte! Class 2-A lunch trades are unmatched today!",
+        "is_npc": true
+      },
+      {
+        "author": "Yuki_Library",
+        "author_badge": "Library Committee",
+        "avatar_icon": "📚",
+        "message": "Lunch hour library reminder: The window seats facing the courtyard are open for quiet reading!"
+      },
+      {
+        "author": "Bass_Sera",
+        "author_badge": "Class 2-A (Light Music)",
+        "avatar_icon": "assets/sera.jpeg",
+        "message": "Neko FM played such a good indie bass track during lunch break! Added it straight to my playlist!",
+        "is_npc": true
+      },
+      {
+        "author": "Sora_Drama",
+        "author_badge": "Drama Club",
+        "avatar_icon": "🎭",
+        "message": "Eating egg salad sandwiches in the drama room while going over script lines!"
+      },
+      {
+        "author": "Kenji_Gym",
+        "author_badge": "Class 3-C",
+        "avatar_icon": "🏐",
+        "message": "Who took the last spicy chicken skewer at the cafeteria line?! I was literally one person behind you in line!"
+      }
+    ],
+
+    "after_school_clubs": [
+      {
+        "author": "Mina_StarClub",
+        "author_badge": "Astronomy Club",
+        "avatar_icon": "🔭",
+        "message": "Setting up the telescope tripod on the science roof balcony! Sunset skies are looking super clear!"
+      },
+      {
+        "author": "Akari_M",
+        "author_badge": "Class 2-A",
+        "avatar_icon": "assets/akari.jpeg",
+        "message": "Finishing up Class 2-A homeroom board notes before heading down to the courtyard!",
+        "is_npc": true
+      },
+      {
+        "author": "CatEars_Nekomi",
+        "author_badge": "Class 2-A (Light Music)",
+        "avatar_icon": "assets/nekomi.jpeg",
+        "message": "Light Music band rehearsal time!! Nekomi is tuning her guitar amplifier right now! 🎸",
+        "is_npc": true
+      },
+      {
+        "author": "Hiro_Class2B",
+        "author_badge": "Class 2-B",
+        "avatar_icon": "🎧",
+        "message": "Sitting on the newly painted courtyard bench watching club teams practice."
+      }
+    ],
+
+    "evening_chatter": [
+      {
+        "author": "Anon_Sleuth",
+        "author_badge": "Class 3-C",
+        "avatar_icon": "🕵️",
+        "message": "Evening BBS check-in! Hope everyone finished their homework before Neko FM's 8 PM stream!"
+      },
+      {
+        "author": "NightOwl_Student",
+        "author_badge": "Class 2-A",
+        "avatar_icon": "🌙",
+        "message": "Late night study session lounge open. Sipping warm tea while reading chapter 4 math formulas."
+      },
+      {
+        "author": "Aoi",
+        "author_badge": "Class 2-A",
+        "avatar_icon": "assets/aoi.jpeg",
+        "message": "Goodnight Class 2-A! See everyone at morning homeroom tomorrow!",
+        "is_npc": true
+      }
+    ]
+  }
+}
