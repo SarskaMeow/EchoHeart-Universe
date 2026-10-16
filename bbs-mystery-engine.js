@@ -185,7 +185,11 @@
     let catalog = null;
 
     try {
-      const response = await fetch('case_105_schedule.json');
+      // Check for case_105_schedule.json inside the js/ directory first, then root
+      let response = await fetch('js/case_105_schedule.json');
+      if (!response.ok) {
+        response = await fetch('case_105_schedule.json');
+      }
       if (response.ok) {
         catalog = await response.json();
       }
