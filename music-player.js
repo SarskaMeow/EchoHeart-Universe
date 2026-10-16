@@ -1,4 +1,4 @@
-// music-player.js — High-Priority Floating Mini Audio Player Engine for Neko FM
+// music-player.js — Floating Mini Audio Player Engine with Auto-Override Coordination
 (function() {
   // Do not run on the dedicated Neko FM station hub itself
   if (window.location.pathname.includes('neko-fm.html')) return;
@@ -120,7 +120,7 @@
     localStorage.setItem('neko_radio_url', 'assets/neko-fm-stream.mp3');
   }
 
-  // 3. UI Construction & Mounting Engine
+  // 3. UI Construction & Mounting
   function mountPlayerUI() {
     injectStyles();
 
@@ -158,6 +158,15 @@
     }
   }
 
+  // Pause any on-page media (e.g. Podcast audio) when Neko FM plays
+  function pauseOtherOnPageMedia() {
+    document.querySelectorAll('audio, video').forEach(media => {
+      if (media !== bgAudio && !media.paused) {
+        media.pause();
+      }
+    });
+  }
+
   // 4. Playback State Synchronization
   function togglePlayback() {
     const isCurrentlyPlaying = localStorage.getItem('neko_radio_playing') === 'true';
@@ -170,19 +179,11 @@
     const statusDot = document.getElementById('neko-status-dot');
     const subText = document.getElementById('neko-player-subtext');
 
-    // Mute/Pause on podcast tab
-    if (window.location.pathname.includes('podcast.html')) {
-      bgAudio.pause();
-      if (playBtn) playBtn.innerText = '▶';
-      if (statusDot) statusDot.className = 'neko-live-dot paused';
-      if (subText) subText.innerText = 'Muted (Podcast)';
-      return;
-    }
-
     const isPlaying = localStorage.getItem('neko_radio_playing') === 'true';
     const streamUrl = localStorage.getItem('neko_radio_url') || 'assets/neko-fm-stream.mp3';
 
     if (isPlaying) {
+      pauseOtherOnPageMedia();
       if (bgAudio.src !== streamUrl) {
         bgAudio.src = streamUrl;
       }
@@ -204,6 +205,14 @@
       if (subText) subText.innerText = '24/7 Radio';
     }
   }
+
+  // Auto-Override: If any other audio element plays on the page (e.g. Podcast player), pause Neko FM
+  document.addEventListener('play', (e) => {
+    if (e.target !== bgAudio) {
+      localStorage.setItem('neko_radio_playing', 'false');
+      handleAudioSync();
+    }
+  }, true);
 
   // 5. Event Listeners for Storage Sync & Automatic Loading
   window.addEventListener('storage', (e) => {
