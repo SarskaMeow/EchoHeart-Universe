@@ -9,6 +9,7 @@
   <script type="module" src="age-gate.js"></script>
   <style>
     :root {
+      /* Twilight Mode Palette */
       --nav-bg-twilight: rgba(18, 12, 36, 0.94);
       --nav-border-twilight: rgba(168, 139, 235, 0.35);
       --accent-pink: #f4b8c4;
@@ -35,6 +36,7 @@
     body.basement-mode .navbar {
       background: rgba(15, 8, 22, 0.96);
       border-bottom-color: rgba(255, 77, 109, 0.45);
+      box-shadow: 0 4px 20px rgba(255, 77, 109, 0.18);
     }
 
     body.backstage-mode .navbar {
@@ -43,7 +45,7 @@
       box-shadow: 0 4px 20px rgba(255, 209, 102, 0.25);
     }
 
-    /* Universal Navbar Base Styles */
+    /* Universal Stacked Navbar Styling */
     .navbar {
       position: sticky;
       top: 0;
@@ -53,77 +55,96 @@
       border-bottom: 2px solid var(--nav-border-twilight);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      padding: 14px 20px 12px;
       box-sizing: border-box;
-      transition: background 0.4s ease, border-color 0.4s ease;
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
-    .nav-container {
+    .nav-header-stacked {
       max-width: 1300px;
       margin: 0 auto;
-      padding: 12px 20px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
+      gap: 12px;
       position: relative;
     }
 
-    .logo-container {
-      display: flex;
-      align-items: center;
+    /* Centered Branding */
+    .brand-centered {
+      text-align: center;
     }
 
     .logo-link {
       text-decoration: none;
-      display: flex;
+      display: inline-flex;
       flex-direction: column;
+      align-items: center;
     }
 
     .logo-main {
       font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: 1px;
+      font-size: 1.85rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
       background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 12px rgba(168, 139, 235, 0.35));
+      transition: all 0.4s ease;
     }
 
     body.basement-mode .logo-main {
       background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 12px rgba(255, 77, 109, 0.45));
     }
 
     body.backstage-mode .logo-main {
       background: linear-gradient(135deg, var(--accent-gold), #ff007f);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 12px rgba(255, 209, 102, 0.45));
+    }
+
+    .logo-link:hover .logo-main {
+      transform: scale(1.02);
     }
 
     .logo-sub {
       font-size: 0.72rem;
       font-weight: 800;
-      letter-spacing: 1.5px;
+      letter-spacing: 3px;
       color: var(--accent-pink);
+      text-transform: uppercase;
       opacity: 0.9;
+      margin-top: 1px;
     }
 
     body.basement-mode .logo-sub { color: var(--accent-red); }
     body.backstage-mode .logo-sub { color: var(--accent-gold); }
 
+    /* Centered Nav Links Row */
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      width: 100%;
     }
 
     .nav-item {
       color: #cbb8f6;
       font-size: 0.88rem;
       font-weight: 700;
-      padding: 10px 14px;
+      padding: 8px 14px;
       border-radius: 10px;
       text-decoration: none;
+      background: rgba(168, 139, 235, 0.08);
+      border: 1px solid rgba(168, 139, 235, 0.2);
       transition: all 0.25s ease;
       white-space: nowrap;
     }
@@ -131,6 +152,7 @@
     .nav-item:hover, .nav-item.active {
       background: rgba(168, 139, 235, 0.18);
       color: #ffffff;
+      border-color: var(--accent-pink);
     }
 
     /* Mode Select Dropdown Styling */
@@ -198,7 +220,13 @@
 
     /* Mobile Collapsible Navigation */
     @media (max-width: 992px) {
-      .nav-container { padding: 10px 16px; }
+      .nav-header-stacked {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .logo-main { font-size: 1.35rem; }
+      .logo-sub { font-size: 0.62rem; letter-spacing: 2px; }
 
       .mobile-menu-btn {
         display: flex !important;
@@ -412,13 +440,13 @@
 
   <!-- Universal Header Navigation Bar -->
   <header class="navbar">
-    <div class="nav-container">
+    <div class="nav-header-stacked">
       
-      <!-- Brand Logo -->
-      <div class="logo-container">
+      <!-- Fancy Centered Brand Title -->
+      <div class="brand-centered">
         <a href="index.html" class="logo-link">
-          <span class="logo-main">🌸 OTAKU OVERLOAD</span>
-          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
+          <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM ✦</span>
         </a>
       </div>
 
