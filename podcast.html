@@ -186,72 +186,10 @@
       .mode-select-dropdown { width: 100%; text-align: center; }
     }
 
-    /* Pod Tab Navigation */
-    .tab-nav-wrapper {
-      max-width: 1200px;
-      margin: 20px auto 0;
-      padding: 0 20px;
-      display: flex;
-      gap: 12px;
-    }
-
-    .tab-nav-btn {
-      background: rgba(22, 15, 42, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      color: #cbb8f6;
-      padding: 12px 24px;
-      border-radius: 14px;
-      font-size: 0.95rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .tab-nav-btn:hover {
-      background: rgba(35, 25, 65, 0.9);
-      color: #ffffff;
-    }
-
-    .tab-nav-btn.active {
-      background: linear-gradient(135deg, rgba(168, 139, 235, 0.25), rgba(244, 184, 196, 0.25));
-      border-color: #f4b8c4;
-      color: #ffffff;
-      box-shadow: 0 0 20px rgba(244, 184, 196, 0.2);
-    }
-
-    body.basement-mode .tab-nav-btn.active {
-      border-color: #ff4d6d;
-      box-shadow: 0 0 20px rgba(255, 77, 109, 0.25);
-    }
-
-    body.backstage-mode .tab-nav-btn.active {
-      border-color: #ffd166;
-      box-shadow: 0 0 20px rgba(255, 209, 102, 0.3);
-    }
-
-    .badge-arg {
-      background: #ff007f;
-      color: #fff;
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 8px;
-      letter-spacing: 1px;
-      animation: pulse-glow 1.8s infinite;
-    }
-
-    @keyframes pulse-glow {
-      0% { box-shadow: 0 0 0 0 rgba(255, 0, 127, 0.7); }
-      70% { box-shadow: 0 0 0 8px rgba(255, 0, 127, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 0, 127, 0); }
-    }
-
     /* Podcast Layout Styles */
     .podcast-container {
       max-width: 1200px;
-      margin: 20px auto 30px;
+      margin: 30px auto;
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 24px;
@@ -441,155 +379,6 @@
     body.basement-mode .ep-card:hover, body.basement-mode .ep-card.active { border-color: #ff4d6d; background: rgba(40, 12, 35, 0.9); }
     body.backstage-mode .ep-card:hover, body.backstage-mode .ep-card.active { border-color: #ffd166; background: rgba(30, 10, 40, 0.9); }
 
-    /* Lore & Mystery ARG Tab Styles */
-    .lore-container-full {
-      max-width: 1200px;
-      margin: 20px auto 30px;
-      padding: 0 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .case-file-card {
-      background: linear-gradient(145deg, rgba(25, 16, 48, 0.95), rgba(12, 6, 26, 0.95));
-      border: 2px solid #a88beb;
-      border-radius: 18px;
-      padding: 24px;
-      box-shadow: 0 8px 32px rgba(168, 139, 235, 0.2);
-    }
-
-    .case-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .case-status {
-      background: rgba(255, 209, 102, 0.18);
-      border: 1px solid #ffd166;
-      color: #ffd166;
-      padding: 4px 12px;
-      border-radius: 10px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
-
-    .mystery-progress {
-      margin-top: 16px;
-    }
-
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      color: #cbb8f6;
-      margin-bottom: 6px;
-      font-weight: 700;
-    }
-
-    .progress-track {
-      width: 100%;
-      height: 12px;
-      background: rgba(168, 139, 235, 0.2);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill-arg {
-      height: 100%;
-      width: 78%;
-      background: linear-gradient(90deg, #ff007f, #ffd166);
-      transition: width 0.4s ease;
-    }
-
-    .clue-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-      margin-top: 14px;
-    }
-
-    .clue-card {
-      background: rgba(18, 11, 36, 0.85);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 14px;
-      padding: 18px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      position: relative;
-    }
-
-    .clue-card:hover {
-      transform: translateY(-3px);
-      border-color: #f4b8c4;
-      box-shadow: 0 8px 24px rgba(244, 184, 196, 0.25);
-    }
-
-    .clue-tag {
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: #f4b8c4;
-      background: rgba(244, 184, 196, 0.15);
-      padding: 2px 8px;
-      border-radius: 6px;
-      display: inline-block;
-      margin-bottom: 8px;
-    }
-
-    .clue-card.locked {
-      opacity: 0.6;
-      border-style: dashed;
-      cursor: not-allowed;
-    }
-
-    .bbs-board {
-      background: rgba(18, 12, 36, 0.95);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 18px;
-      padding: 24px;
-    }
-
-    .bbs-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .bbs-post {
-      background: rgba(12, 7, 24, 0.8);
-      border-left: 4px solid #a88beb;
-      border-radius: 0 12px 12px 0;
-      padding: 16px;
-      margin-bottom: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .bbs-post.npc-post {
-      border-left-color: #ffd166;
-      background: rgba(32, 20, 10, 0.4);
-    }
-
-    .bbs-author {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-
-    .author-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1.5px solid #a88beb;
-    }
-
     .npc-badge {
       background: #ffd166;
       color: #000;
@@ -608,18 +397,6 @@
       padding: 1px 6px;
       border-radius: 6px;
       margin-left: 6px;
-    }
-
-    .post-time {
-      font-size: 0.75rem;
-      color: #a88beb;
-      margin-left: auto;
-    }
-
-    .post-content {
-      margin: 0;
-      font-size: 0.95rem;
-      line-height: 1.5;
     }
 
     .action-btn-small {
@@ -806,17 +583,7 @@
     </div>
   </header>
 
-  <!-- PODCAST MAIN NAVIGATION TAB BAR -->
-  <div class="tab-nav-wrapper">
-    <button id="nav-tab-player" class="tab-nav-btn active" onclick="switchPodcastTab('player')">
-      🎙️ Studio Broadcast Player
-    </button>
-    <button id="nav-tab-lore" class="tab-nav-btn" onclick="switchPodcastTab('lore')">
-      🕵️ Lore Board & Mystery ARG <span class="badge-arg">ACTIVE CASE</span>
-    </button>
-  </div>
-
-  <!-- TAB 1: STUDIO BROADCAST PLAYER -->
+  <!-- STUDIO BROADCAST PLAYER -->
   <main id="view-podcast-player" class="podcast-container">
     <section class="wide-stage">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
@@ -874,97 +641,6 @@
       <div id="archive-episode-list"></div>
     </aside>
   </main>
-
-  <!-- TAB 2: LORE BOARD & MYSTERY ARG -->
-  <div id="view-lore-board" class="lore-container-full" style="display: none;">
-    <div class="case-file-card">
-      <div class="case-header">
-        <div>
-          <span class="case-status">📂 CASE FILE #001 • ACTIVE INVESTIGATION</span>
-          <h2 style="margin: 6px 0 0; color: #fff;">The Great Cafeteria Parfait Mystery</h2>
-        </div>
-        <button class="action-btn-small" onclick="openTheoryModal()">+ Post Clue / Theory</button>
-      </div>
-      <p style="color: #cbb8f6; font-size: 0.95rem; margin-bottom: 16px;">
-        Cross-reference timestamps, inspect physical evidence logs, and help Sera and Aoi solve campus mysteries running alongside the live broadcasts.
-      </p>
-
-      <div class="mystery-progress">
-        <div class="progress-info">
-          <span>Fanbase Case Resolution Level</span>
-          <strong style="color: #ffd166;">78% Solved</strong>
-        </div>
-        <div class="progress-track">
-          <div class="progress-bar-fill-arg"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bbs-board">
-      <h3 style="margin-top: 0; color: #f4b8c4;">🔍 Unlocked Evidence Dossier</h3>
-      <div class="clue-grid">
-        <div class="clue-card" onclick="openClueModal(1)">
-          <span class="clue-tag">EP-1 • 01:04</span>
-          <h4 style="margin: 0 0 6px; color: #fff;">Acoustic Spectrogram #1</h4>
-          <p style="font-size: 0.85rem; color: #cbb8f6; margin: 0;">Heavy footsteps detected right outside Prep Room B.</p>
-        </div>
-        <div class="clue-card" onclick="openClueModal(2)">
-          <span class="clue-tag">EP-1 • 02:04</span>
-          <h4 style="margin: 0 0 6px; color: #fff;">Mini-Fridge Keycard Log</h4>
-          <p style="font-size: 0.85rem; color: #cbb8f6; margin: 0;">Access timestamp matches rehearsal break.</p>
-        </div>
-        <div class="clue-card locked" onclick="openClueModal(3)">
-          <span class="clue-tag" style="background: rgba(255, 77, 109, 0.2); color: #ff4d6d;">EP-2 • LOCKED</span>
-          <h4 style="margin: 0 0 6px; color: #fff;">Locker 102 Audio Stem</h4>
-          <p style="font-size: 0.85rem; color: #cbb8f6; margin: 0;">Requires EP-2 Basement Mode listen to unlock.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="bbs-board">
-      <div class="bbs-header">
-        <h3 style="margin: 0; color: #f4b8c4;">💬 Anonymous Campus BBS (Lore & Fan Theories)</h3>
-      </div>
-
-      <div id="bbs-posts-container">
-        <!-- Pinned NPC Post 1 -->
-        <div class="bbs-post npc-post">
-          <div class="bbs-author">
-            <img src="assets/sera.jpeg" alt="Sera" class="author-avatar">
-            <div>
-              <strong>Sera_Keytar <span class="npc-badge">BAND MONITORS</span></strong>
-            </div>
-            <span class="post-time">Timestamp 01:04</span>
-          </div>
-          <p class="post-content">"If you isolate the acoustic frequencies right around 01:04, those footsteps aren't running shoes. They're heavy boots. Someone else was in that hallway."</p>
-        </div>
-
-        <!-- Pinned NPC Post 2 -->
-        <div class="bbs-post npc-post">
-          <div class="bbs-author">
-            <img src="assets/aoi.jpeg" alt="Aoi" class="author-avatar">
-            <div>
-              <strong>Aoi_Pres <span class="npc-badge">OFFICIAL</span></strong>
-            </div>
-            <span class="post-time">Timestamp 02:04</span>
-          </div>
-          <p class="post-content">"To clarify for the forum: I bought three parfaits for rehearsal, but when I opened the fridge later, there were four wrappers in the bin. Who brought the fourth?"</p>
-        </div>
-
-        <!-- Fan User Post -->
-        <div class="bbs-post">
-          <div class="bbs-author">
-            <div style="width: 32px; height: 32px; border-radius: 50%; background: #a88beb; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">🕵️</div>
-            <div>
-              <strong>Anon_Otaku_902 <span class="user-badge">Detective</span></strong>
-            </div>
-            <span class="post-time">15 mins ago</span>
-          </div>
-          <p class="post-content">"Wait! Look at Locker 102! In the After Dark EP-1 teaser, Akari mentions hearing a keytar riff inside Locker 102 at night. Is Locker 102 connected to the Parfait Bandit?!"</p>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- ALWAYS-ON BOTTOM COMMUNITY COMMENT SECTION & SAFETY RULES -->
   <section class="global-comments-wrapper">
@@ -1145,25 +821,6 @@
 
     const audioElement = document.getElementById('audio-player');
 
-    function switchPodcastTab(tabName) {
-      const playerView = document.getElementById('view-podcast-player');
-      const loreView = document.getElementById('view-lore-board');
-      const tabBtnPlayer = document.getElementById('nav-tab-player');
-      const tabBtnLore = document.getElementById('nav-tab-lore');
-
-      if (tabName === 'lore') {
-        playerView.style.display = 'none';
-        loreView.style.display = 'flex';
-        tabBtnPlayer.classList.remove('active');
-        tabBtnLore.classList.add('active');
-      } else {
-        loreView.style.display = 'none';
-        playerView.style.display = 'grid';
-        tabBtnLore.classList.remove('active');
-        tabBtnPlayer.classList.add('active');
-      }
-    }
-
     function postMainComment() {
       const handleInput = document.getElementById('main-comment-handle');
       const textInput = document.getElementById('main-comment-text');
@@ -1208,81 +865,6 @@
         </div>
       `;
       document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function openClueModal(clueId) {
-      removeExistingModals();
-      let title = "🔍 Clue Dossier #00" + clueId;
-      let bodyText = "";
-
-      if (clueId === 1) {
-        bodyText = "<strong>EP-1 Acoustic Spectrogram Log (01:04):</strong><br><br>Sera's audio monitor logged heavy combat-boot footsteps outside Prep Room B. Note: Neither Nekomi nor Akari wear boots to rehearsal.";
-      } else if (clueId === 2) {
-        bodyText = "<strong>Prep Room B Keycard Log (02:04):</strong><br><br>Access keycard #04 was swiped at 12:18 PM. Registered owner: Aoi. However, Aoi was at the cafeteria counter until 12:19 PM.";
-      } else {
-        title = "🔒 EP-2 Locked Clue";
-        bodyText = "Listen to EP-2 in Basement Mode to unlock Locker 102 Audio Stems!";
-      }
-
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3>${title}</h3>
-            <p>${bodyText}</p>
-            <div class="modal-actions">
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Close Dossier</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function openTheoryModal() {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3>🕵️ Submit Lore Theory</h3>
-            <p>Post your mystery deductions to the EchoHeart Campus BBS!</p>
-            <input type="text" id="theory-username" class="form-input-text" placeholder="Your Handle (e.g. Anon_Detective)">
-            <textarea id="theory-text" class="form-input-text" rows="3" placeholder="Enter your theory or timestamp clue..."></textarea>
-            <div class="modal-actions">
-              <button class="modal-btn google-btn" onclick="submitTheory()">Submit Theory</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function submitTheory() {
-      const name = document.getElementById('theory-username').value || "Anon_Student";
-      const text = document.getElementById('theory-text').value;
-
-      if (!text) return;
-
-      if (!checkContentSafety(text) || !checkContentSafety(name)) {
-        showSafetyWarningModal("Theory Blocked by Safety Filter", "Your lore theory contains inappropriate terms. Please refine your submission.");
-        return;
-      }
-
-      const container = document.getElementById('bbs-posts-container');
-      const postHTML = `
-        <div class="bbs-post">
-          <div class="bbs-author">
-            <div style="width: 32px; height: 32px; border-radius: 50%; background: #a88beb; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">🕵️</div>
-            <div>
-              <strong>${name} <span class="user-badge">Detective</span></strong>
-            </div>
-            <span class="post-time">Just now</span>
-          </div>
-          <p class="post-content">"${text}"</p>
-        </div>
-      `;
-      container.insertAdjacentHTML('afterbegin', postHTML);
-      removeExistingModals();
     }
 
     function handleModeChange(targetMode) {
