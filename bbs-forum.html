@@ -590,14 +590,14 @@
 
     <!-- 5 NAVIGATION TABS -->
     <div class="bbs-tab-bar">
-      <div class="bbs-tab active-tab" data-tab-target="public-board" onclick="switchBBSTab('public-board', this)">
+      <div class="bbs-tab active-tab" data-tab-target="gossip-board" onclick="switchBBSTab('gossip-board', this)">
+        📣 PUBLIC CHATTER & TALK
+      </div>
+      <div class="bbs-tab" data-tab-target="public-board" onclick="switchBBSTab('public-board', this)">
         💬 ACTIVE MYSTERY CASE
       </div>
       <div class="bbs-tab" data-tab-target="council-board" onclick="switchBBSTab('council-board', this)">
         📋 STUDENT COUNCIL
-      </div>
-      <div class="bbs-tab" data-tab-target="gossip-board" onclick="switchBBSTab('gossip-board', this)">
-        📣 CAMPUS CHATTER
       </div>
       <div class="bbs-tab" data-tab-target="phantom-terminal" onclick="switchBBSTab('phantom-terminal', this)">
         🔍 MYSTERY DECODER
@@ -608,9 +608,31 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 1: ACTIVE MYSTERY CASE                                  -->
+    <!-- TAB 1: PUBLIC CHATTER & TALK (MAIN LOUNGE)                  -->
     <!-- ============================================================ -->
-    <div id="public-board" class="tab-panel bbs-tab-panel active-panel active">
+    <div id="gossip-board" class="tab-panel bbs-tab-panel active-panel active">
+      <div class="bbs-main-layout">
+        <section class="bbs-content-left">
+          <div id="gossip-posts-container">
+            <p style="color: var(--text-muted);">Loading public student posts and campus chatter...</p>
+          </div>
+        </section>
+
+        <aside class="bbs-sidebar-right">
+          <div class="sidebar-widget">
+            <h3 class="widget-title">📣 Student Lounge</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
+              The general public chat board for all Sakuraoka High students. Share daily life updates, club notes, music chatter, and campus banter!
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TAB 2: ACTIVE MYSTERY CASE                                  -->
+    <!-- ============================================================ -->
+    <div id="public-board" class="tab-panel bbs-tab-panel">
       <div class="bbs-main-layout">
 
         <!-- LEFT COLUMN: THREAD FEED -->
@@ -724,7 +746,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 2: STUDENT COUNCIL FEED                                 -->
+    <!-- TAB 3: STUDENT COUNCIL FEED                                 -->
     <!-- ============================================================ -->
     <div id="council-board" class="tab-panel bbs-tab-panel">
       <div class="bbs-main-layout">
@@ -739,28 +761,6 @@
             <h3 class="widget-title">👑 Student Council Desk</h3>
             <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
               Official notices posted by President Haruka (Class 3-A) and VP Chiaki (Class 2-B). Check here for daily campus updates!
-            </p>
-          </div>
-        </aside>
-      </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- TAB 3: CAMPUS CHATTER & GOSSIP                              -->
-    <!-- ============================================================ -->
-    <div id="gossip-board" class="tab-panel bbs-tab-panel">
-      <div class="bbs-main-layout">
-        <section class="bbs-content-left">
-          <div id="gossip-posts-container">
-            <p style="color: var(--text-muted);">Loading campus chatter...</p>
-          </div>
-        </section>
-
-        <aside class="bbs-sidebar-right">
-          <div class="sidebar-widget">
-            <h3 class="widget-title">📣 Lunch Lounge</h3>
-            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6;">
-              Daily student gossip, club updates, bento trades, and general Sakuraoka High chatter refreshed daily!
             </p>
           </div>
         </aside>
