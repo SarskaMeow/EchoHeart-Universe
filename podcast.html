@@ -564,14 +564,22 @@
         <span class="hamburger-bar"></span>
       </button>
 
-      <nav class="nav-links" id="nav-menu">
+            <nav class="nav-links">
         <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="podcast.html" class="nav-item active">🎙️ Podcast</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
         <a href="bbs-forum.html" class="nav-item">💬 Sakuraoka BBS</a>
         <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-        <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
+        <a href="lore.html" class="nav-item active">📚 Lore & Books</a>
         <a href="chat.html" class="nav-item">💬 Live Chat</a>
-        <a href="hub.html" class="nav-item">🌌 Universe Hub</a>
+
+       
+      </nav>
+    </div>
+  </header>
+
+   <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
+          🔑 Login
+        </button>
 
         <div class="mode-selector-wrapper">
           <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
