@@ -21,7 +21,7 @@
         "mystery_id": "case_105_midnight_piano",
         "title": "Case #105 — The Midnight Lullaby of Room 302",
         "reward_badge": "Seven Wonders Sleuth",
-        "required_passcode": "HARMONY_1994",
+        "required_passcode": "SUNSET_302",
         "timeline": [
           /* ================= DAY 1 (MONDAY) ================= */
           { "offset_mins": 0, "author": "Yuki_Library", "author_badge": "Library Committee", "avatar_icon": "📚", "message": "I was walking down the 3F B-Wing hallway after sunset. Room 302 was pitch dark, but I heard a soft piano melody coming from inside...", "is_npc": false },
@@ -60,12 +60,12 @@
           { "offset_mins": 2925, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Day 3 begins! Mid-week mystery updates loading...", "is_npc": false },
           { "offset_mins": 3330, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "Good morning! @Bass_Sera what was written on that 1994 setlist card you found yesterday?", "is_npc": true },
           { "offset_mins": 3390, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Yeah, spill the details! Track team wants to know!", "is_npc": false },
-          { "offset_mins": 3495, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi read the handwritten setlist card! The title of the 1994 song is 'HARMONY'!", "is_npc": true },
-          { "offset_mins": 3615, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "CLUE UPDATE: 'HARMONY' is the main mystery keyword! Combine it with the 1994 festival year code!", "is_npc": true },
+          { "offset_mins": 3495, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi read the handwritten setlist card! The title of the 1994 song is 'SUNSET_302'!", "is_npc": true },
+          { "offset_mins": 3615, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "CLUE UPDATE: SUNSET_302 is the main mystery passcode! Combine it in the decoder tab!", "is_npc": true },
           { "offset_mins": 3660, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Tuned into Neko FM right now during lunch! The radio ticker just mentioned '1994 Sunset Hits'!", "is_npc": false },
-          { "offset_mins": 3795, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "So combining the setlist keyword and the year gives us the passcode formula!", "is_npc": false },
+          { "offset_mins": 3795, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "So combining the setlist keyword and the room gives us the passcode formula!", "is_npc": false },
           { "offset_mins": 3870, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Class 2-A is solving this so fast haha! Drama club is watching the BBS live!", "is_npc": false },
-          { "offset_mins": 3960, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "So HARMONY + 1994 is definitely our core passcode combination!", "is_npc": true },
+          { "offset_mins": 3960, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "So SUNSET_302 is definitely our core passcode combination!", "is_npc": true },
           { "offset_mins": 4035, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "We're so close to unlocking the Mystery Decoder tab with the full passcode!", "is_npc": true },
           { "offset_mins": 4110, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "5:45 PM: Sunset hit Room 302's window glass again. The music has started right on time!", "is_npc": false },
           { "offset_mins": 4185, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Stood outside Room 302 door just now... you can hear a tiny chime clicking inside as the song plays!", "is_npc": false },
@@ -82,16 +82,16 @@
           { "offset_mins": 5235, "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "AWH WOW!! The custodian has been keeping the 1994 music box playing as a tradition this whole time!!", "is_npc": false },
           { "offset_mins": 5310, "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "That is the sweetest story ever! That's why it plays every single day at sunset!", "is_npc": true },
           { "offset_mins": 5400, "author": "Pres_Haruka", "author_badge": "Student Council Pres", "avatar_icon": "👑", "message": "Student Council confirmation: The 1994 music box is a preserved piece of Sakuraoka High culture.", "is_npc": true },
-          { "offset_mins": 5475, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "Mystery solved! Enter the keyword HARMONY_1994 into the Mystery Decoder tab to claim your badge!", "is_npc": true },
+          { "offset_mins": 5475, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "Mystery solved! Enter the keyword SUNSET_302 into the Mystery Decoder tab to claim your badge!", "is_npc": true },
           { "offset_mins": 5550, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "5:45 PM: Sunset hit the window, and the little music box played its song on schedule!", "is_npc": false },
           { "offset_mins": 5625, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Sakuraoka High traditions are pretty amazing.", "is_npc": false },
           { "offset_mins": 5700, "author": "Hina_Class1A", "author_badge": "Class 1-A", "avatar_icon": "🌸", "message": "Heading to the Mystery Decoder tab right now to claim my badge!", "is_npc": false },
-          { "offset_mins": 5745, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Passcode verified: HARMONY_1994! Get ready for Friday celebration!", "is_npc": false },
+          { "offset_mins": 5745, "author": "NightOwl_Student", "author_badge": "Class 2-A", "avatar_icon": "🌙", "message": "Passcode verified: SUNSET_302! Get ready for Friday celebration!", "is_npc": false },
 
           /* ================= DAY 5 (FRIDAY) ================= */
           { "offset_mins": 5805, "author": "Anon_Sleuth", "author_badge": "Class 3-C", "avatar_icon": "🕵️", "message": "Friday morning on the BBS! Claim your Seven Wonders Sleuth badge today!", "is_npc": false },
           { "offset_mins": 6210, "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Morning practice! Everyone in the halls is talking about the Room 302 music box today.", "is_npc": false },
-          { "offset_mins": 6270, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Enter HARMONY_1994 into the Mystery Decoder tab in the top navigation bar!", "is_npc": false },
+          { "offset_mins": 6270, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Enter SUNSET_302 into the Mystery Decoder tab in the top navigation bar!", "is_npc": false },
           { "offset_mins": 6375, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "I entered it! Got the Seven Wonders Sleuth badge added to my profile!", "is_npc": false },
           { "offset_mins": 6495, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi and Sera are going to perform 'Sunset Harmony' live at the Culture Festival!", "is_npc": true },
           { "offset_mins": 6540, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "CASE COMPLETE! Thank you to everyone who helped investigate the 3F B-Wing hallway!", "is_npc": true },
@@ -112,7 +112,7 @@
           { "offset_mins": 7935, "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi and Sera are rehearsing the 'Sunset Harmony' arrangement in the band room right now!", "is_npc": true },
           { "offset_mins": 7980, "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "We added a synth melody to match Neko FM's weekend vibe!", "is_npc": true },
           { "offset_mins": 8115, "author": "Sora_Drama", "author_badge": "Drama Club", "avatar_icon": "🎭", "message": "Can't wait to hear the performance at the Culture Festival!", "is_npc": false },
-          { "offset_mins": 8190, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Anyone who missed the case during the week can still enter HARMONY_1994 in the Decoder tab!", "is_npc": false },
+          { "offset_mins": 8190, "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Anyone who missed the case during the week can still enter SUNSET_302 in the Decoder tab!", "is_npc": false },
           { "offset_mins": 8280, "author": "Mina_StarClub", "author_badge": "Astronomy Club", "avatar_icon": "🔭", "message": "Clear skies expected for stargazing tonight!", "is_npc": false },
           { "offset_mins": 8355, "author": "Kenji_Gym", "author_badge": "Class 3-C", "avatar_icon": "🏐", "message": "Relaxing Saturday afternoon. Sakuraoka BBS is the best place to chill.", "is_npc": false },
           { "offset_mins": 8430, "author": "Akari_M", "author_badge": "Class 2-A", "avatar_icon": "assets/akari.jpeg", "message": "Planning out next week's student activities on the BBS!", "is_npc": true },
@@ -228,19 +228,28 @@
   async function loadAndRenderCases() {
     let catalog = null;
 
-    try {
-      let response = await fetch('js/case_105_schedule.json');
-      if (!response.ok) {
-        response = await fetch('case_105_schedule.json');
+    // Direct JSON fetch pipeline attempting relative file locations
+    const possiblePaths = [
+      'case105.json',
+      'js/case105.json',
+      'case_105_schedule.json',
+      'js/case_105_schedule.json'
+    ];
+
+    for (const path of possiblePaths) {
+      try {
+        const response = await fetch(path);
+        if (response.ok) {
+          catalog = await response.json();
+          break;
+        }
+      } catch (err) {
+        // Continue searching next path
       }
-      if (response.ok) {
-        catalog = await response.json();
-      }
-    } catch (err) {
-      console.warn('[MYSTERY ENGINE] Schedule fetch unavailable. Using embedded catalog fallback.');
     }
 
     if (!catalog) {
+      console.warn('[MYSTERY ENGINE] External case JSON fetch unavailable. Using embedded catalog fallback.');
       catalog = EMBEDDED_CATALOG;
     }
 
@@ -272,19 +281,25 @@
   async function loadAndRenderGossip() {
     let gossipData = null;
 
-    try {
-      let response = await fetch('js/school_gossip_pool.json');
-      if (!response.ok) {
-        response = await fetch('school_gossip_pool.json');
+    const possibleGossipPaths = [
+      'school_gossip_pool.json',
+      'js/school_gossip_pool.json'
+    ];
+
+    for (const path of possibleGossipPaths) {
+      try {
+        const response = await fetch(path);
+        if (response.ok) {
+          gossipData = await response.json();
+          break;
+        }
+      } catch (err) {
+        // Continue searching next path
       }
-      if (response.ok) {
-        gossipData = await response.json();
-      }
-    } catch (err) {
-      console.warn('[MYSTERY ENGINE] Gossip pool fetch unavailable. Using embedded gossip fallback.');
     }
 
     if (!gossipData) {
+      console.warn('[MYSTERY ENGINE] Gossip pool fetch unavailable. Using embedded gossip fallback.');
       gossipData = EMBEDDED_GOSSIP_POOL;
     }
 
@@ -453,7 +468,7 @@
 
     const caseId = caseObj.case_id || caseObj.mystery_id || 'CASE-105';
     const title = caseObj.title || 'Active Mystery Case';
-    const passcode = caseObj.required_passcode || caseObj.passcode_trigger;
+    const passcode = caseObj.required_passcode || caseObj.passcode_trigger || caseObj.passcode;
     const badge = caseObj.reward_badge || caseObj.badge_reward || 'Seven Wonders Sleuth';
 
     if (passcode) {
@@ -561,8 +576,23 @@
         return;
       }
 
-      if (activeSolutions[userEnteredCode]) {
-        const solution = activeSolutions[userEnteredCode];
+      // Check passcode vault without time/day restrictions
+      if (activeSolutions[userEnteredCode] || userEnteredCode === "SUNSET_302" || userEnteredCode === "HARMONY_1994") {
+        const solution = activeSolutions[userEnteredCode] || {
+          title: "Case #105 — The Midnight Lullaby of Room 302",
+          badge: "Seven Wonders Sleuth",
+          caseId: "CASE-105"
+        };
+
+        // Save unlock status to LocalStorage
+        const badgeData = {
+          id: solution.caseId,
+          name: solution.badge,
+          icon: "🏆",
+          unlockedAt: new Date().toISOString()
+        };
+        localStorage.setItem(`badge_${solution.caseId}`, JSON.stringify(badgeData));
+
         resultBox.className = 'decoder-result-box success';
         resultBox.innerHTML = `
           <strong>CLEARANCE GRANTED!</strong><br>
@@ -570,9 +600,13 @@
           Badge Earned: <strong>[${escapeHTML(solution.badge)}]</strong>
         `;
         inputField.value = '';
+
+        if (typeof renderProfileBadges === 'function') {
+          renderProfileBadges();
+        }
       } else {
         resultBox.className = 'decoder-result-box error';
-        resultBox.textContent = 'ACCESS DENIED: Invalid passcode or frequency out of range.';
+        resultBox.textContent = 'ACCESS DENIED: Invalid passcode sequence. Review the student posts in the BBS threads!';
       }
     });
   }
