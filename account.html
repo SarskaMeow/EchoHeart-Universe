@@ -783,6 +783,13 @@
       `).join('');
     };
 
+    // Listen for real-time badge updates from the BBS Decoder tab
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'user_profile_badges') {
+        window.renderProfileBadges();
+      }
+    });
+
     // Save Profile Details (Name, Bio, Favorite Member, Custom Avatar)
     window.saveProfileDetails = async function() {
       const nameInput = document.getElementById('edit-display-name-input');
