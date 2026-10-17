@@ -184,40 +184,262 @@
   const EMBEDDED_GOSSIP_POOL = {
     "student_council_threads": [
       {
-        "thread_id": "sc_notice_01",
-        "notice": {
-          "author": "Pres_Haruka",
-          "author_badge": "Class 3-A (Student Body Pres)",
-          "avatar_icon": "👑",
-          "message": "Student Council Notice: Umbrella rack clearance in the main foyer is complete. Unclaimed items are available at the council desk."
-        },
-        "replies": [
-          { "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "@Pres_Haruka Thank you! Heading to retrieve my clear umbrella during lunch!" },
-          { "author": "VP_Chiaki", "author_badge": "Class 2-B (Student Council VP)", "avatar_icon": "📋", "message": "Desk is staffed continuously throughout 2nd and 3rd period breaks!" }
-        ]
+  "weekly_gossip": {
+    "0": [
+      {
+        "day_label": "Sunday",
+        "unlock_hour": 10,
+        "post_time": "Sun • 10:15 AM",
+        "name": "Yuki_Library",
+        "badge": "Library Committee",
+        "avatar": "📚",
+        "category": "rumors",
+        "text": "Studying in the library on a Sunday is so peaceful... until you hear the courtyard cat meowing at the window!"
       },
       {
-        "thread_id": "sc_notice_02",
-        "notice": {
-          "author": "Pres_Haruka",
-          "author_badge": "Class 3-A (Student Body Pres)",
-          "avatar_icon": "👑",
-          "message": "Student Council Survey: Submissions for next month's cafeteria special dessert menu are open in room 2-A drop box!"
-        },
-        "replies": [
-          { "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "NEKOMI VOTES FOR STRAWBERRY CREPES WITH EXTRA WHIPPED CREAM!! 🍓🐾", "is_npc": true },
-          { "author": "Bass_Sera", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/sera.jpeg", "message": "Seconding Nekomi's crepe vote! Or melon pan ice cream sandwiches!", "is_npc": true }
-        ]
+        "day_label": "Sunday",
+        "unlock_hour": 13,
+        "post_time": "Sun • 1:45 PM",
+        "name": "Kenji_Gym",
+        "badge": "Class 3-C",
+        "avatar": "🏐",
+        "category": "rumors",
+        "text": "Morning practice finished early! Time to grab strawberry milk from the vending machine before heading home."
+      },
+      {
+        "day_label": "Sunday",
+        "unlock_hour": 21,
+        "post_time": "Sun • 9:30 PM",
+        "name": "Mina_StarClub",
+        "badge": "Astronomy Club",
+        "avatar": "🔭",
+        "category": "afterdark",
+        "text": "Sunday stargazing session set up near the science room balcony. The autumn sky is super clear tonight!"
       }
     ],
-    "general_gossip": [
-      { "author": "Yumi_Class2A", "author_badge": "Class 2-A", "avatar_icon": "🥪", "message": "Did anyone catch the cafeteria's Yakisoba Pan today? Sold out in three minutes flat!" },
-      { "author": "Hiro_Class2B", "author_badge": "Class 2-B", "avatar_icon": "🎧", "message": "Neko FM was playing such a cozy lo-fi playlist during lunch today. Perfect courtyard vibe." },
-      { "author": "Aoi", "author_badge": "Class 2-A", "avatar_icon": "assets/aoi.jpeg", "message": "Akari and I trimmed the Class 2-A window garden before homeroom today!", "is_npc": true },
-      { "author": "CatEars_Nekomi", "author_badge": "Class 2-A (Light Music)", "avatar_icon": "assets/nekomi.jpeg", "message": "Nekomi traded half a crepe for Sera's matcha latte during break! Class 2-A desk trades are elite today!", "is_npc": true },
-      { "author": "Ren_Track", "author_badge": "Track Team", "avatar_icon": "🏃", "message": "Morning lap practice hit a new record today! Autumn breeze feels incredible on the field." }
+    "1": [
+      {
+        "day_label": "Monday",
+        "unlock_hour": 8,
+        "post_time": "Mon • 8:10 AM",
+        "name": "Hiro_Class2B",
+        "badge": "Class 2-B",
+        "avatar": "🎧",
+        "category": "rumors",
+        "text": "Monday morning homeroom teacher gave us a surprise pop quiz... my week is already ruined."
+      },
+      {
+        "day_label": "Monday",
+        "unlock_hour": 12,
+        "post_time": "Mon • 12:22 PM",
+        "name": "Yumi_Class2A",
+        "badge": "Class 2-A",
+        "avatar": "🥪",
+        "category": "rumors",
+        "text": "The cafeteria ran out of yakisoba pan in literally two minutes today... who bought them all?!"
+      },
+      {
+        "day_label": "Monday",
+        "unlock_hour": 16,
+        "post_time": "Mon • 4:05 PM",
+        "name": "Daiki_Pres",
+        "badge": "Student Council",
+        "avatar": "📋",
+        "category": "official",
+        "text": "Student Council Notice: Please remember to change into your indoor shoes at the main entrance lockers!"
+      }
+    ],
+    "2": [
+      {
+        "day_label": "Tuesday",
+        "unlock_hour": 12,
+        "post_time": "Tue • 12:40 PM",
+        "name": "Hina_Class1A",
+        "badge": "Class 1-A",
+        "avatar": "🌸",
+        "category": "rumors",
+        "text": "Someone dropped a handwritten lunch invitation in locker #104! Is it a secret confession?!"
+      },
+      {
+        "day_label": "Tuesday",
+        "unlock_hour": 15,
+        "post_time": "Tue • 3:50 PM",
+        "name": "Ren_Track",
+        "badge": "Track Team",
+        "avatar": "🏃",
+        "category": "rumors",
+        "text": "Who left their sports drink shaker on the track bleacher bench after 7th period?"
+      },
+      {
+        "day_label": "Tuesday",
+        "unlock_hour": 18,
+        "post_time": "Tue • 6:15 PM",
+        "name": "Hiro_Class2B",
+        "badge": "Class 2-B",
+        "avatar": "🎧",
+        "category": "rumors",
+        "text": "Does anyone have the math prep answers for page 42? I fell asleep at my desk during study hour..."
+      }
+    ],
+    "3": [
+      {
+        "day_label": "Wednesday",
+        "unlock_hour": 13,
+        "post_time": "Wed • 1:15 PM",
+        "name": "Yuki_Library",
+        "badge": "Library Committee",
+        "avatar": "📚",
+        "category": "official",
+        "text": "Library Reminder: Overdue graduation yearbooks from box #4 need to be returned by Thursday!"
+      },
+      {
+        "day_label": "Wednesday",
+        "unlock_hour": 16,
+        "post_time": "Wed • 4:30 PM",
+        "name": "Sora_Drama",
+        "badge": "Drama Club",
+        "avatar": "🎭",
+        "category": "rumors",
+        "text": "We're missing two vintage costume props for the culture festival play! Please check the 3F storage room!"
+      },
+      {
+        "day_label": "Wednesday",
+        "unlock_hour": 17,
+        "post_time": "Wed • 5:45 PM",
+        "name": "Mina_StarClub",
+        "badge": "Astronomy Club",
+        "avatar": "🔭",
+        "category": "rumors",
+        "text": "The view of the courtyard from the 2F science window during dusk is honestly top tier."
+      }
+    ],
+    "4": [
+      {
+        "day_label": "Thursday",
+        "unlock_hour": 12,
+        "post_time": "Thu • 12:15 PM",
+        "name": "Kenji_Gym",
+        "badge": "Class 3-C",
+        "avatar": "🏐",
+        "category": "rumors",
+        "text": "Who wants to trade bentos at lunch tomorrow? My mom packed way too much tamagoyaki."
+      },
+      {
+        "day_label": "Thursday",
+        "unlock_hour": 16,
+        "post_time": "Thu • 4:20 PM",
+        "name": "Hina_Class1A",
+        "badge": "Class 1-A",
+        "avatar": "🌸",
+        "category": "rumors",
+        "text": "The cherry blossom trees near the back courtyard gate are starting to drop leaves already."
+      },
+      {
+        "day_label": "Thursday",
+        "unlock_hour": 18,
+        "post_time": "Thu • 6:00 PM",
+        "name": "Ren_Track",
+        "badge": "Track Team",
+        "avatar": "🏃",
+        "category": "rumors",
+        "text": "Track team setting a new lap record today! Evening practice extra pumped!"
+      }
+    ],
+    "5": [
+      {
+        "day_label": "Friday",
+        "unlock_hour": 15,
+        "post_time": "Fri • 3:30 PM",
+        "name": "Sora_Drama",
+        "badge": "Drama Club",
+        "avatar": "🎭",
+        "category": "rumors",
+        "text": "Weekend is finally here! Don't forget your club activity passes if you're staying late!"
+      },
+      {
+        "day_label": "Friday",
+        "unlock_hour": 17,
+        "post_time": "Fri • 5:45 PM",
+        "name": "Daiki_Pres",
+        "badge": "Student Council",
+        "avatar": "📋",
+        "category": "official",
+        "text": "Friday Notice: All clubrooms and B-Wing corridors must be locked by 6:00 PM evening curfew."
+      },
+      {
+        "day_label": "Friday",
+        "unlock_hour": 19,
+        "post_time": "Fri • 7:10 PM",
+        "name": "CatEars_Nekomi",
+        "badge": "Light Music Club",
+        "avatar": "assets/nekomi.jpeg",
+        "category": "rumors",
+        "text": "Nekomi and Sera are staying late in the band room testing out new guitar pedals! Sounds so cool!"
+      }
+    ],
+    "6": [
+      {
+        "day_label": "Saturday",
+        "unlock_hour": 14,
+        "post_time": "Sat • 2:15 PM",
+        "name": "Yumi_Class2A",
+        "badge": "Class 2-A",
+        "avatar": "🥪",
+        "category": "rumors",
+        "text": "Spotted the courtyard stray cat sleeping on the principal's parking spot this afternoon haha!"
+      },
+      {
+        "day_label": "Saturday",
+        "unlock_hour": 20,
+        "post_time": "Sat • 8:40 PM",
+        "name": "Hiro_Class2B",
+        "badge": "Class 2-B",
+        "avatar": "🎧",
+        "category": "rumors",
+        "text": "Is anyone else listening to the Neko FM broadcast while trying to finish weekend homework?"
+      },
+      {
+        "day_label": "Saturday",
+        "unlock_hour": 22,
+        "post_time": "Sat • 10:15 PM",
+        "name": "Mina_StarClub",
+        "badge": "Astronomy Club",
+        "avatar": "🔭",
+        "category": "afterdark",
+        "text": "Saturday evening campus is super quiet... Neko FM is playing really good retro synth tracks right now!"
+      }
     ]
-  };
+  },
+  "after_hours_gossip": [
+    {
+      "unlock_hour": 23,
+      "post_time": "Late Night • 11:45 PM",
+      "name": "NightOwl_Student",
+      "badge": "Class 2-A",
+      "avatar": "🌙",
+      "category": "afterdark",
+      "text": "Should be sleeping, but reading urban legends on the school BBS under my blanket instead..."
+    },
+    {
+      "unlock_hour": 1,
+      "post_time": "Late Night • 1:30 AM",
+      "name": "Anon_Sleuth",
+      "badge": "Class 3-C",
+      "avatar": "🕵️",
+      "category": "afterdark",
+      "text": "Did anyone else hear that distant piano chime while listening to Neko FM late night radio?"
+    },
+    {
+      "unlock_hour": 3,
+      "post_time": "Late Night • 3:00 AM",
+      "name": "LateNight_Reader",
+      "badge": "Class 1-B",
+      "avatar": "📖",
+      "category": "afterdark",
+      "text": "3 AM forum check... the Sakuraoka BBS night theme looks so cozy."
+    }
+  ]
+}
 
   /**
    * Main Initialization
