@@ -62,7 +62,7 @@
     }
 
     .nav-container {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 8px 20px;
       display: flex;
@@ -75,7 +75,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .logo-link {
@@ -88,12 +88,15 @@
 
     .logo-main {
       font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
       background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     body.basement-mode .logo-main {
@@ -111,8 +114,9 @@
     .logo-sub {
       font-size: 0.68rem;
       font-weight: 800;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       color: var(--accent-pink);
+      margin-top: 2px;
     }
 
     body.basement-mode .logo-sub { color: var(--accent-red); }
@@ -131,15 +135,19 @@
       font-size: 0.84rem;
       font-weight: 700;
       padding: 6px 12px;
-      border-radius: 8px;
+      border-radius: 10px;
       text-decoration: none;
       transition: all 0.25s ease;
       white-space: nowrap;
+      background: rgba(22, 15, 42, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.25);
     }
 
     .nav-item:hover, .nav-item.active {
-      background: rgba(168, 139, 235, 0.18);
+      background: rgba(168, 139, 235, 0.25);
+      border-color: var(--accent-purple);
       color: #ffffff;
+      box-shadow: 0 0 10px rgba(168, 139, 235, 0.2);
     }
 
     /* Mode Select Dropdown Styling */
@@ -147,32 +155,32 @@
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      padding: 6px 28px 6px 12px;
-      border-radius: 16px;
+      padding: 6px 30px 6px 12px;
+      border-radius: 10px;
       font-family: 'Segoe UI', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 800;
+      font-size: 0.84rem;
+      font-weight: 700;
       cursor: pointer;
       outline: none;
       transition: all 0.3s ease;
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
       background-repeat: no-repeat;
-      background-position: right 8px center;
+      background-position: right 10px center;
       background-size: 14px;
+      background-color: rgba(22, 15, 42, 0.7);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      color: #cbb8f6;
     }
 
     body.twilight-mode .mode-select-dropdown {
-      background-color: rgba(28, 18, 52, 0.95);
-      border: 1px solid rgba(168, 139, 235, 0.45);
+      border-color: rgba(168, 139, 235, 0.35);
       color: #e2daf8;
-      box-shadow: 0 0 10px rgba(168, 139, 235, 0.2);
     }
 
     body.basement-mode .mode-select-dropdown {
       background-color: rgba(20, 8, 28, 0.95);
       border: 1px solid rgba(255, 77, 109, 0.5);
       color: #ff4d6d;
-      box-shadow: 0 0 10px rgba(255, 77, 109, 0.25);
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     }
 
@@ -180,7 +188,6 @@
       background-color: rgba(22, 12, 38, 0.98);
       border: 1px solid rgba(255, 209, 102, 0.6);
       color: #ffd166;
-      box-shadow: 0 0 12px rgba(255, 209, 102, 0.3);
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     }
 
@@ -200,7 +207,7 @@
       padding: 6px 10px;
       cursor: pointer;
       position: absolute;
-      top: 12px;
+      top: 10px;
       right: 20px;
     }
 
@@ -338,17 +345,16 @@
   <header class="navbar">
     <div class="nav-container">
       
-      <!-- Brand Logo (Centered Top) -->
+      <!-- Brand Logo (Centered Top with Lightning Bolts) -->
       <div class="logo-container">
         <a href="index.html" class="logo-link">
-          <span class="logo-main">🌸 OTAKU OVERLOAD</span>
-          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
+          <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM ✦</span>
         </a>
       </div>
 
       <!-- Mobile Hamburger Toggle Button -->
       <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-        <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>
       </button>
@@ -360,17 +366,13 @@
         <a href="bbs-forum.html" class="nav-item">💬 Sakuraoka BBS</a>
         <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
         <a href="chat.html" class="nav-item active">💬 Live Chat</a>
-        <a href="lore.html" class="nav-item">📚 Lore & Books</a>
-
-        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
-          🔑 Login
-        </button>
+        <a href="account-profile.html" class="nav-item">👤 Profile</a>
 
         <!-- 3-Tier Access Mode Switcher -->
         <div class="mode-selector-wrapper">
           <select id="mode-selector" class="mode-select-dropdown" onchange="window.switchChatChannel(this.value)">
-            <option value="twilight">🌸 Twilight Channel (13+)</option>
-            <option value="basement">⚡ Basement Channel (17+) 🔒</option>
+            <option value="twilight">🌸 Twilight (Public 13+)</option>
+            <option value="basement">⚡ Basement (17+) 🔒</option>
             <option value="backstage">👑 Backstage VIP Mode ✦</option>
           </select>
         </div>
