@@ -380,6 +380,65 @@
       accent-color: var(--accent-purple);
       cursor: pointer;
     }
+
+    /* BADGES TAB STYLES */
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .profile-badge-card {
+      background: rgba(18, 9, 36, 0.8);
+      border: 1px solid var(--accent-gold);
+      box-shadow: 0 4px 15px rgba(255, 209, 102, 0.15);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: transform 0.2s ease;
+    }
+
+    .profile-badge-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .badge-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(255, 209, 102, 0.2), rgba(244, 184, 196, 0.2));
+      border: 1px solid var(--accent-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .badge-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .badge-name {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .badge-date {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .no-badges-box {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
@@ -432,6 +491,7 @@
 
       <nav class="side-tabs-menu">
         <button class="tab-btn active" onclick="switchDashboardTab('profile')">👤 Profile & Bio</button>
+        <button class="tab-btn" onclick="switchDashboardTab('badges')">🏆 Badges & Achievements</button>
         <button class="tab-btn" onclick="switchDashboardTab('wardrobe')">🎨 Wardrobe & Cosmetics</button>
         <button class="tab-btn" onclick="switchDashboardTab('tiers')">🎟️ VIP Pass & Tiers</button>
         <button class="tab-btn" onclick="switchDashboardTab('settings')">⚙️ App & Audio Settings</button>
@@ -484,7 +544,21 @@
         </div>
       </section>
 
-      <!-- PANEL 2: WARDROBE & COSMETICS -->
+      <!-- PANEL 2: BADGES & ACHIEVEMENTS -->
+      <section id="panel-badges" class="tab-panel">
+        <div class="panel-header">
+          <h2>Unlocked Mystery Badges</h2>
+          <p>View your earned event rewards from solving Sakuraoka BBS forum cases.</p>
+        </div>
+
+        <div class="content-card">
+          <div id="account-badges-container" class="badges-grid">
+            <!-- Badges render here dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 3: WARDROBE & COSMETICS -->
       <section id="panel-wardrobe" class="tab-panel">
         <div class="panel-header">
           <h2>Wardrobe & Equipped Flair</h2>
@@ -529,7 +603,7 @@
         </div>
       </section>
 
-      <!-- PANEL 3: VIP PASS & TIERS -->
+      <!-- PANEL 4: VIP PASS & TIERS -->
       <section id="panel-tiers" class="tab-panel">
         <div class="panel-header">
           <h2>Membership Tiers & Perks</h2>
@@ -566,7 +640,7 @@
         </div>
       </section>
 
-      <!-- PANEL 4: APP & AUDIO SETTINGS -->
+      <!-- PANEL 5: APP & AUDIO SETTINGS -->
       <section id="panel-settings" class="tab-panel">
         <div class="panel-header">
           <h2>App & Audio Preferences</h2>
@@ -608,7 +682,7 @@
         </div>
       </section>
 
-      <!-- PANEL 5: ACCOUNT & SAFETY -->
+      <!-- PANEL 6: ACCOUNT & SAFETY -->
       <section id="panel-safety" class="tab-panel">
         <div class="panel-header">
           <h2>Account Security & Verification</h2>
@@ -655,6 +729,7 @@
           window.userData = { displayName: user.displayName, email: user.email };
         }
         window.updatePageUI();
+        window.renderProfileBadges();
       } else {
         window.location.href = "index.html";
       }
@@ -668,6 +743,44 @@
       const targetPanel = document.getElementById(`panel-${tabName}`);
       if (targetPanel) targetPanel.classList.add('active');
       if (event && event.currentTarget) event.currentTarget.classList.add('active');
+
+      if (tabName === 'badges') {
+        window.renderProfileBadges();
+      }
+    };
+
+    // Render Badges from LocalStorage
+    window.renderProfileBadges = function() {
+      const container = document.getElementById('account-badges-container');
+      if (!container) return;
+
+      let savedBadges = [];
+      try {
+        savedBadges = JSON.parse(localStorage.getItem('user_profile_badges')) || [];
+      } catch (err) {
+        savedBadges = [];
+      }
+
+      if (savedBadges.length === 0) {
+        container.innerHTML = `
+          <div class="no-badges-box">
+            <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">🔍</span>
+            <p style="font-size: 0.95rem; color: var(--text-light); font-weight: 700;">No Badges Unlocked Yet</p>
+            <p style="font-size: 0.82rem; margin-top: 4px;">Solve weekly mystery cases on the Sakuraoka BBS and enter the passcodes in the Mystery Decoder tab!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = savedBadges.map(badge => `
+        <div class="profile-badge-card">
+          <div class="badge-icon-box">${badge.icon || '🏆'}</div>
+          <div class="badge-info">
+            <span class="badge-name">${badge.name}</span>
+            <span class="badge-date">Unlocked: ${badge.unlockedAt}</span>
+          </div>
+        </div>
+      `).join('');
     };
 
     // Save Profile Details (Name, Bio, Favorite Member, Custom Avatar)
@@ -864,6 +977,6 @@
       }
     }
   </script>
-   <script src="music-player.js"></script>
+  <script src="music-player.js"></script>
 </body>
 </html>
