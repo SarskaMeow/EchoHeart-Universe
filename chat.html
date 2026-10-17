@@ -8,12 +8,12 @@
   
   <style>
     :root {
-      --nav-bg-twilight: rgba(18, 12, 36, 0.94);
-      --nav-bg-basement: rgba(15, 8, 22, 0.96);
-      --nav-bg-backstage: rgba(14, 6, 22, 0.98);
-      --nav-border-twilight: rgba(168, 139, 235, 0.35);
-      --nav-border-basement: rgba(255, 77, 109, 0.45);
-      --nav-border-backstage: rgba(255, 209, 102, 0.5);
+      --nav-bg-twilight: rgba(10, 7, 20, 0.96);
+      --nav-bg-basement: rgba(8, 4, 15, 0.98);
+      --nav-bg-backstage: rgba(5, 2, 10, 0.99);
+      --nav-border-twilight: rgba(168, 139, 235, 0.25);
+      --nav-border-basement: rgba(255, 77, 109, 0.35);
+      --nav-border-backstage: rgba(255, 209, 102, 0.4);
       --accent-pink: #f4b8c4;
       --accent-purple: #a88beb;
       --accent-red: #ff4d6d;
@@ -32,9 +32,9 @@
     }
 
     /* 3-Tier Mode Themes */
-    body.twilight-mode { background: #0d0b18; color: #e2daf8; }
-    body.basement-mode { background: #08030f; color: #fce8ec; }
-    body.backstage-mode { background: #05020a; color: #ffffff; }
+    body.twilight-mode { background: #070510; color: #e2daf8; }
+    body.basement-mode { background: #05020a; color: #fce8ec; }
+    body.backstage-mode { background: #030106; color: #ffffff; }
 
     body.basement-mode .navbar {
       background: var(--nav-bg-basement);
@@ -44,17 +44,17 @@
     body.backstage-mode .navbar {
       background: var(--nav-bg-backstage);
       border-bottom: 2px solid var(--accent-gold);
-      box-shadow: 0 4px 20px rgba(255, 209, 102, 0.25);
+      box-shadow: 0 4px 20px rgba(255, 209, 102, 0.2);
     }
 
-    /* Universal Header Navbar */
+    /* Ultra-Slim & Dark Universal Header Navbar */
     .navbar {
       position: sticky;
       top: 0;
       z-index: 1000;
       width: 100%;
       background: var(--nav-bg-twilight);
-      border-bottom: 2px solid var(--nav-border-twilight);
+      border-bottom: 1px solid var(--nav-border-twilight);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       transition: background 0.4s ease, border-color 0.4s ease;
@@ -64,7 +64,7 @@
     .nav-container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 8px 20px;
+      padding: 4px 16px 6px; /* Ultra-slim top/bottom spacing */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -75,7 +75,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 3px;
     }
 
     .logo-link {
@@ -88,35 +88,37 @@
 
     .logo-main {
       font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.35rem;
+      font-size: 1.12rem;
       font-weight: 800;
-      letter-spacing: 2px;
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      letter-spacing: 1.5px;
+      background: linear-gradient(135deg, #cbb8f6, #f4b8c4);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 6px;
+      filter: drop-shadow(0 2px 6px rgba(168, 139, 235, 0.3));
     }
 
     body.basement-mode .logo-main {
-      background: linear-gradient(135deg, #ff4d6d, var(--accent-purple));
+      background: linear-gradient(135deg, #ff4d6d, #cbb8f6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     body.backstage-mode .logo-main {
-      background: linear-gradient(135deg, var(--accent-gold), #ff007f);
+      background: linear-gradient(135deg, #ffd166, #ff007f);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .logo-sub {
-      font-size: 0.68rem;
+      font-size: 0.58rem;
       font-weight: 800;
       letter-spacing: 2px;
       color: var(--accent-pink);
-      margin-top: 2px;
+      opacity: 0.85;
+      margin-top: -1px;
     }
 
     body.basement-mode .logo-sub { color: var(--accent-red); }
@@ -126,93 +128,93 @@
       display: flex; 
       align-items: center; 
       justify-content: center;
-      gap: 10px; 
+      gap: 6px; 
       flex-wrap: wrap;
     }
     
     .nav-item {
-      color: #cbb8f6;
-      font-size: 0.84rem;
+      color: #bfaee8;
+      font-size: 0.78rem;
       font-weight: 700;
-      padding: 6px 12px;
-      border-radius: 10px;
+      padding: 4px 10px;
+      border-radius: 6px;
       text-decoration: none;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
       white-space: nowrap;
-      background: rgba(22, 15, 42, 0.7);
-      border: 1px solid rgba(168, 139, 235, 0.25);
+      background: rgba(14, 9, 28, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.15);
     }
 
     .nav-item:hover, .nav-item.active {
-      background: rgba(168, 139, 235, 0.25);
-      border-color: var(--accent-purple);
+      background: rgba(168, 139, 235, 0.2);
+      border-color: rgba(168, 139, 235, 0.4);
       color: #ffffff;
-      box-shadow: 0 0 10px rgba(168, 139, 235, 0.2);
+      box-shadow: 0 0 10px rgba(168, 139, 235, 0.15);
     }
 
-    /* Mode Select Dropdown Styling */
+    /* Dark Mode Select Dropdown Styling */
     .mode-select-dropdown {
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      padding: 6px 30px 6px 12px;
-      border-radius: 10px;
+      padding: 4px 26px 4px 10px;
+      border-radius: 6px;
       font-family: 'Segoe UI', sans-serif;
-      font-size: 0.84rem;
+      font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
       outline: none;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
       background-repeat: no-repeat;
-      background-position: right 10px center;
-      background-size: 14px;
-      background-color: rgba(22, 15, 42, 0.7);
-      border: 1px solid rgba(168, 139, 235, 0.25);
-      color: #cbb8f6;
+      background-position: right 8px center;
+      background-size: 12px;
+      background-color: rgba(14, 9, 28, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.2);
+      color: #bfaee8;
     }
 
-    body.twilight-mode .mode-select-dropdown {
-      border-color: rgba(168, 139, 235, 0.35);
-      color: #e2daf8;
+    body.twilight-mode .mode-select-dropdown:hover {
+      border-color: rgba(168, 139, 235, 0.4);
+      color: #fff;
     }
 
     body.basement-mode .mode-select-dropdown {
-      background-color: rgba(20, 8, 28, 0.95);
-      border: 1px solid rgba(255, 77, 109, 0.5);
+      background-color: rgba(12, 4, 18, 0.95);
+      border: 1px solid rgba(255, 77, 109, 0.4);
       color: #ff4d6d;
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     }
 
     body.backstage-mode .mode-select-dropdown {
-      background-color: rgba(22, 12, 38, 0.98);
-      border: 1px solid rgba(255, 209, 102, 0.6);
+      background-color: rgba(14, 8, 24, 0.98);
+      border: 1px solid rgba(255, 209, 102, 0.5);
       color: #ffd166;
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
     }
 
     .mode-select-dropdown option {
-      background-color: #120924;
+      background-color: #0b0716;
       color: #e2daf8;
-      padding: 10px;
+      padding: 8px;
       font-weight: 700;
     }
 
     /* Mobile Hamburger Toggle Button */
     .mobile-menu-btn {
       display: none;
-      background: rgba(168, 139, 235, 0.15);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 8px;
-      padding: 6px 10px;
+      background: rgba(14, 9, 28, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.2);
+      border-radius: 6px;
+      padding: 4px 8px;
       cursor: pointer;
       position: absolute;
-      top: 10px;
-      right: 20px;
+      top: 6px;
+      right: 16px;
     }
 
     .hamburger-bar {
-      width: 20px;
+      width: 18px;
       height: 2px;
       background: var(--accent-pink);
       border-radius: 2px;
@@ -224,11 +226,11 @@
       .nav-links {
         display: none;
         width: 100%;
-        background: rgba(15, 10, 30, 0.98);
+        background: rgba(8, 5, 18, 0.98);
         border-top: 1px solid var(--nav-border-twilight);
         flex-direction: column;
-        padding: 12px 0;
-        gap: 8px;
+        padding: 10px 0;
+        gap: 6px;
         box-sizing: border-box;
       }
       .nav-links.open { display: flex; }
@@ -249,34 +251,34 @@
     @media (max-width: 850px) { .chat-container { grid-template-columns: 1fr; } }
 
     .chat-feed-box {
-      background: rgba(22, 15, 42, 0.92);
-      border: 2px solid rgba(168, 139, 235, 0.35);
-      border-radius: 20px;
-      padding: 24px;
+      background: rgba(14, 9, 28, 0.9);
+      border: 2px solid rgba(168, 139, 235, 0.25);
+      border-radius: 16px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       height: 560px;
       transition: border-color 0.4s ease;
     }
 
-    body.basement-mode .chat-feed-box { border-color: rgba(255, 77, 109, 0.5); }
-    body.backstage-mode .chat-feed-box { border-color: rgba(255, 209, 102, 0.5); }
+    body.basement-mode .chat-feed-box { border-color: rgba(255, 77, 109, 0.4); }
+    body.backstage-mode .chat-feed-box { border-color: rgba(255, 209, 102, 0.4); }
 
     .channel-tabs-bar {
       display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 8px;
+      margin-bottom: 14px;
       flex-wrap: wrap;
     }
 
     .channel-tab-btn {
-      padding: 10px 16px;
+      padding: 8px 14px;
       font-weight: 800;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       border: 1px solid transparent;
       transition: all 0.2s ease;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
     }
 
     .chat-messages {
@@ -292,44 +294,44 @@
     .glow-pink_glow { text-shadow: 0 0 8px var(--accent-pink); color: var(--accent-pink) !important; }
     .glow-gold_glow { text-shadow: 0 0 8px var(--accent-gold); color: var(--accent-gold) !important; }
 
-    .emote-bar { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-    .emote-btn { background: rgba(35, 25, 65, 0.8); border: 1px solid rgba(168, 139, 235, 0.3); color: #fff; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+    .emote-bar { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+    .emote-btn { background: rgba(22, 15, 42, 0.8); border: 1px solid rgba(168, 139, 235, 0.25); color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; }
     .emote-btn:hover { background: var(--accent-purple); color: #000; }
 
     .post-panel {
-      background: rgba(22, 15, 42, 0.92);
-      border: 2px solid rgba(168, 139, 235, 0.35);
-      border-radius: 20px;
-      padding: 24px;
+      background: rgba(14, 9, 28, 0.9);
+      border: 2px solid rgba(168, 139, 235, 0.25);
+      border-radius: 16px;
+      padding: 20px;
       transition: border-color 0.4s ease;
     }
 
-    body.basement-mode .post-panel { border-color: rgba(255, 77, 109, 0.5); }
-    body.backstage-mode .post-panel { border-color: rgba(255, 209, 102, 0.5); }
+    body.basement-mode .post-panel { border-color: rgba(255, 77, 109, 0.4); }
+    body.backstage-mode .post-panel { border-color: rgba(255, 209, 102, 0.4); }
 
     .form-control {
       width: 100%;
-      padding: 12px;
-      background: rgba(15, 10, 30, 0.7);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 10px;
+      padding: 10px;
+      background: rgba(8, 5, 16, 0.85);
+      border: 1px solid rgba(168, 139, 235, 0.25);
+      border-radius: 8px;
       color: #fff;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       box-sizing: border-box;
       outline: none;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
     }
 
     .action-btn {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       background: linear-gradient(135deg, #a88beb, #f4b8c4);
       border: none;
-      border-radius: 10px;
-      color: #0d0b18;
+      border-radius: 8px;
+      color: #070510;
       font-weight: 800;
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       transition: opacity 0.2s ease;
     }
 
