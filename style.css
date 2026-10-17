@@ -26,6 +26,185 @@
       --card-hover-shadow: rgba(244, 184, 196, 0.25);
     }
 
+/* ============================================================ */
+/* 🕵️ SAKURAOKA MYSTERY DECODER & BADGE GRID STYLES             */
+/* ============================================================ */
+
+/* --- INVESTIGATOR DOSSIER & BADGE GRID --- */
+.investigator-docket {
+  background: linear-gradient(135deg, rgba(30, 22, 50, 0.95), rgba(15, 11, 28, 0.95));
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 20px 24px;
+  margin-bottom: 22px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.rank-badge-pill {
+  background: rgba(255, 209, 102, 0.18);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* 6-Badge Showcase Layout */
+.badge-collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* Locked Card State */
+.badge-item-card {
+  background: var(--card-inner);
+  border: 1px dashed rgba(160, 155, 185, 0.3);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  opacity: 0.45;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  user-select: none;
+}
+
+/* Unlocked Card State */
+.badge-item-card.unlocked {
+  opacity: 1;
+  color: var(--text-light);
+  border: 1.5px solid var(--accent-gold);
+  background: rgba(255, 209, 102, 0.08);
+  box-shadow: 0 0 16px rgba(255, 209, 102, 0.18);
+  transform: translateY(-2px);
+}
+
+.badge-item-card.unlocked:hover {
+  box-shadow: 0 0 22px rgba(255, 209, 102, 0.35);
+  border-color: #FFE599;
+}
+
+.badge-icon-disp {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.badge-title-disp {
+  line-height: 1.3;
+}
+
+
+/* --- MYSTERY DECODER TERMINAL --- */
+.terminal-analyzer-box {
+  background: rgba(11, 9, 20, 0.95);
+  border: 2px solid var(--accent-cyan);
+  border-radius: 18px;
+  padding: 26px;
+  box-shadow: 0 0 28px rgba(0, 240, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.terminal-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+}
+
+.terminal-code-input-group {
+  display: flex;
+  gap: 12px;
+  margin: 22px 0 16px;
+}
+
+.terminal-text-input {
+  flex: 1;
+  background: #05040A;
+  border: 1.5px solid var(--accent-cyan);
+  border-radius: 12px;
+  padding: 12px 18px;
+  color: var(--accent-cyan);
+  font-family: 'M PLUS Rounded 1c', monospace;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.terminal-text-input:focus {
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
+  border-color: #70F8FF;
+}
+
+.terminal-submit-btn {
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 26px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255, 59, 141, 0.3);
+  transition: all 0.2s ease;
+}
+
+.terminal-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 59, 141, 0.45);
+}
+
+.terminal-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Feedback Box Output */
+.terminal-output-log {
+  background: #05040A;
+  border: 1px solid rgba(178, 130, 255, 0.3);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  display: none;
+  margin-top: 14px;
+  animation: fadeInLog 0.3s ease-out forwards;
+}
+
+@keyframes fadeInLog {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.terminal-output-log.success {
+  display: block;
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  background: rgba(255, 209, 102, 0.08);
+  box-shadow: 0 0 16px rgba(255, 209, 102, 0.15);
+}
+
+.terminal-output-log.error {
+  display: block;
+  border-color: var(--accent-pink);
+  color: var(--accent-pink);
+  background: rgba(255, 59, 141, 0.08);
+  box-shadow: 0 0 16px rgba(255, 59, 141, 0.15);
+}
+
     /* Basement Mode Color Overrides (17+ Subterranean) */
     body.basement-mode {
       --bg-dark: #05020c;
