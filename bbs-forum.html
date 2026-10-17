@@ -949,7 +949,7 @@
         card.querySelector('.badge-title-disp').innerText = badgeName;
       }
 
-      // 1. Local Dossier Storage
+      // 1. Local Forum Dossier Key
       localStorage.setItem(`badge_${caseId}`, JSON.stringify({ name: badgeName, icon: badgeIcon }));
 
       // 2. Account Profile Hub Storage Binding
@@ -960,7 +960,9 @@
         savedBadges = [];
       }
 
-      if (!savedBadges.some(b => b.id === caseId)) {
+      // Prevent duplicates
+      const exists = savedBadges.some(badge => badge.id === caseId);
+      if (!exists) {
         savedBadges.push({
           id: caseId,
           name: badgeName,
