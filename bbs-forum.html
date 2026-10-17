@@ -246,7 +246,17 @@
       gap: 10px;
       font-size: 0.84rem;
       font-weight: 700;
+      color: var(--text-muted);
+      opacity: 0.5;
+      transition: all 0.3s ease;
+    }
+
+    .badge-item-card.unlocked {
+      opacity: 1;
       color: var(--text-light);
+      border-color: var(--accent-gold);
+      background: rgba(255, 209, 102, 0.08);
+      box-shadow: 0 0 12px rgba(255, 209, 102, 0.2);
     }
 
     /* FILTER BUTTONS */
@@ -608,7 +618,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 1: PUBLIC CHATTER & TALK (MAIN LOUNGE)                  -->
+    <!-- TAB 1: PUBLIC CHATTER & TALK (MAIN LOUNGE)                   -->
     <!-- ============================================================ -->
     <div id="gossip-board" class="tab-panel bbs-tab-panel active-panel active">
       <div class="bbs-main-layout">
@@ -630,7 +640,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 2: ACTIVE MYSTERY CASE                                  -->
+    <!-- TAB 2: ACTIVE MYSTERY CASE                                   -->
     <!-- ============================================================ -->
     <div id="public-board" class="tab-panel bbs-tab-panel">
       <div class="bbs-main-layout">
@@ -638,28 +648,40 @@
         <!-- LEFT COLUMN: THREAD FEED -->
         <section class="bbs-content-left">
 
-          <!-- INVESTIGATOR DOSSIER -->
+          <!-- INVESTIGATOR DOSSIER (6-BADGE PROFILE GRID) -->
           <div class="investigator-docket">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
               <div>
                 <span style="font-size: 0.74rem; color: var(--accent-gold); font-weight: 800; letter-spacing: 1px;">🕵️ STUDENT MYSTERY DOSSIER</span>
-                <h3 style="margin: 2px 0 0; color: #FFFFFF; font-size: 1.15rem;">School Mystery Badges</h3>
+                <h3 style="margin: 2px 0 0; color: #FFFFFF; font-size: 1.15rem;">School Mystery Badges (<span id="unlocked-badge-count">0</span>/6)</h3>
               </div>
               <span id="investigator-rank-tag" class="rank-badge-pill">Rank: Novice Sleuth</span>
             </div>
 
             <div class="badge-collection-grid">
-              <div id="badge-window" class="badge-item-card">
-                <span style="font-size: 1.2rem;">👁️</span>
-                <span>Window Watcher</span>
+              <div id="badge-CASE-105" class="badge-item-card">
+                <span class="badge-icon-disp" style="font-size: 1.2rem;">🔒</span>
+                <span class="badge-title-disp">Seven Wonders Sleuth</span>
               </div>
-              <div id="badge-frequency" class="badge-item-card">
-                <span style="font-size: 1.2rem;">🎧</span>
-                <span>Signal Listener</span>
+              <div id="badge-CASE-106" class="badge-item-card">
+                <span class="badge-icon-disp" style="font-size: 1.2rem;">🔒</span>
+                <span class="badge-title-disp">Secret Menu Gourmet</span>
               </div>
-              <div id="badge-phantom" class="badge-item-card">
-                <span style="font-size: 1.2rem;">🗝️</span>
-                <span>Seven Wonders Sleuth</span>
+              <div id="badge-CASE-107" class="badge-item-card">
+                <span class="badge-icon-disp" style="font-size: 1.2rem;">🔒</span>
+                <span class="badge-title-disp">Rooftop Stargazer</span>
+              </div>
+              <div id="badge-CASE-108" class="badge-item-card">
+                <span class="badge-icon-disp" style="font-size: 1.2rem;">🔒</span>
+                <span class="badge-title-disp">Whisker Detective</span>
+              </div>
+              <div id="badge-CASE-109" class="badge-item-card">
+                <span class="badge-icon-disp" style="font-size: 1.2rem;">🔒</span>
+                <span class="badge-title-disp">Archival Scholar</span>
+              </div>
+              <div id="badge-CASE-110" class="badge-item-card">
+                <span class="badge-icon-disp" style="font-size: 1.2rem;">🔒</span>
+                <span class="badge-title-disp">Stage Light Maestro</span>
               </div>
             </div>
           </div>
@@ -746,7 +768,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 3: STUDENT COUNCIL FEED                                 -->
+    <!-- TAB 3: STUDENT COUNCIL FEED                                  -->
     <!-- ============================================================ -->
     <div id="council-board" class="tab-panel bbs-tab-panel">
       <div class="bbs-main-layout">
@@ -768,7 +790,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 4: MYSTERY DECODER                                      -->
+    <!-- TAB 4: MYSTERY DECODER                                       -->
     <!-- ============================================================ -->
     <div id="phantom-terminal" class="tab-panel bbs-tab-panel">
       <div class="terminal-analyzer-box">
@@ -781,9 +803,9 @@
           Hear a clue on Neko FM or spot a mystery keyword in the forum chatter? Enter the passcode below to complete the case solution and unlock your badge!
         </p>
 
-        <!-- Form linked directly to bbs-mystery-engine.js -->
-        <form id="decoder-form" class="terminal-code-input-group">
-          <input type="text" id="passcode-input" class="terminal-text-input" placeholder="Enter mystery passcode (e.g. HARMONY_1994, CRANE_2004, LANTERN_2012)..." autocomplete="off">
+        <!-- Form linked directly to JS decoder engine -->
+        <form id="decoder-form" class="terminal-code-input-group" onsubmit="handlePasscodeSubmit(event)">
+          <input type="text" id="passcode-input" class="terminal-text-input" placeholder="Enter mystery passcode (e.g. SUNSET_302, YAKISOBA_SPECIAL)..." autocomplete="off">
           <button type="submit" class="terminal-submit-btn">SUBMIT CLUE</button>
         </form>
 
@@ -801,7 +823,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- TAB 5: SECRET CASE FILES [VIP]                              -->
+    <!-- TAB 5: SECRET CASE FILES [VIP]                               -->
     <!-- ============================================================ -->
     <div id="vip-archive" class="tab-panel bbs-tab-panel">
       <div class="vip-vault-header">
@@ -887,7 +909,75 @@
 
   <!-- JAVASCRIPT ENGINE -->
   <script>
-    // 1. Diegetic Tab Switcher
+    // Master 6-Badge Reward Registry
+    const BADGE_REGISTRY = {
+      "SUNSET_302": { case_id: "CASE-105", badge_name: "Seven Wonders Sleuth", badge_icon: "🏆" },
+      "YAKISOBA_SPECIAL": { case_id: "CASE-106", badge_name: "Secret Menu Gourmet", badge_icon: "🍱" },
+      "ASTRONOMY_ROOF": { case_id: "CASE-107", badge_name: "Rooftop Stargazer", badge_icon: "🔭" },
+      "CAT_FEET_LOUNGE": { case_id: "CASE-108", badge_name: "Whisker Detective", badge_icon: "🐾" },
+      "LIBRARY_SILENCE": { case_id: "CASE-109", badge_name: "Archival Scholar", badge_icon: "📖" },
+      "FESTIVAL_ECHO": { case_id: "CASE-110", badge_name: "Stage Light Maestro", badge_icon: "🎸" }
+    };
+
+    // 1. Mystery Decoder Submission Logic
+    function handlePasscodeSubmit(event) {
+      event.preventDefault();
+      const inputEl = document.getElementById('passcode-input');
+      const resultEl = document.getElementById('decoder-result');
+      const rawCode = inputEl.value.trim().toUpperCase();
+
+      if (!rawCode) return;
+
+      if (BADGE_REGISTRY[rawCode]) {
+        const badgeData = BADGE_REGISTRY[rawCode];
+        unlockStudentBadge(badgeData.case_id, badgeData.badge_name, badgeData.badge_icon);
+        
+        resultEl.className = 'terminal-output-log success';
+        resultEl.innerHTML = `<strong>🎉 MYSTERY DECODED!</strong><br>Correct Passcode! You unlocked the <strong>${badgeData.badge_icon} ${badgeData.badge_name}</strong> badge on your student dossier!`;
+        inputEl.value = '';
+      } else {
+        resultEl.className = 'terminal-output-log error';
+        resultEl.innerHTML = `<strong>❌ ACCESS DENIED</strong><br>Invalid passcode. Double check the BBS thread clues or listen closely to 24/7 Neko FM broadcasts!`;
+      }
+    }
+
+    function unlockStudentBadge(caseId, badgeName, badgeIcon) {
+      const card = document.getElementById(`badge-${caseId}`);
+      if (card) {
+        card.classList.add('unlocked');
+        card.querySelector('.badge-icon-disp').innerText = badgeIcon;
+        card.querySelector('.badge-title-disp').innerText = badgeName;
+      }
+
+      localStorage.setItem(`badge_${caseId}`, JSON.stringify({ name: badgeName, icon: badgeIcon }));
+      updateUnlockedBadgeCounter();
+    }
+
+    function updateUnlockedBadgeCounter() {
+      const unlockedCount = document.querySelectorAll('.badge-item-card.unlocked').length;
+      const countEl = document.getElementById('unlocked-badge-count');
+      if (countEl) countEl.innerText = unlockedCount;
+
+      const rankEl = document.getElementById('investigator-rank-tag');
+      if (rankEl) {
+        if (unlockedCount >= 6) rankEl.innerText = "Rank: Master Sleuth 👑";
+        else if (unlockedCount >= 3) rankEl.innerText = "Rank: Senior Detective 🕵️";
+        else if (unlockedCount >= 1) rankEl.innerText = "Rank: Junior Sleuth 🔍";
+        else rankEl.innerText = "Rank: Novice Sleuth";
+      }
+    }
+
+    function loadSavedBadges() {
+      Object.values(BADGE_REGISTRY).forEach(badge => {
+        const saved = localStorage.getItem(`badge_${badge.case_id}`);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          unlockStudentBadge(badge.case_id, parsed.name, parsed.icon);
+        }
+      });
+    }
+
+    // 2. Diegetic Tab Switcher
     function switchBBSTab(panelId, tabEl) {
       document.querySelectorAll('.tab-panel, .bbs-tab-panel').forEach(panel => {
         panel.classList.remove('active-panel', 'active');
@@ -905,7 +995,7 @@
       }
     }
 
-    // 2. VIP Access State Toggle & View Handler
+    // 3. VIP Access State Toggle & View Handler
     function toggleVIPAccess() {
       const isVIP = localStorage.getItem('has_vip_pass') === 'true';
       localStorage.setItem('has_vip_pass', isVIP ? 'false' : 'true');
@@ -937,7 +1027,7 @@
       }
     }
 
-    // 3. Real-Time Clock & Campus Counter
+    // 4. Real-Time Clock & Campus Counter
     function updateBBSServerClock() {
       const now = new Date();
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -979,7 +1069,7 @@
       }
     }
 
-    // 4. Thread Filter Engine
+    // 5. Thread Filter Engine
     function filterBBS(category) {
       const threads = document.querySelectorAll('.bbs-thread-card');
       const buttons = document.querySelectorAll('.filter-btn');
@@ -1109,12 +1199,13 @@
       if (existing) existing.remove();
     }
 
-    // Initialize clock loop
+    // Initialize clock loop & load saved badges
     setInterval(updateBBSServerClock, 1000);
     updateBBSServerClock();
 
     document.addEventListener('DOMContentLoaded', () => {
       updateVIPView();
+      loadSavedBadges();
     });
   </script>
   <!-- Master Mystery Engine JS -->
