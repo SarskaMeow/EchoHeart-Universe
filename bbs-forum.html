@@ -919,7 +919,7 @@
       "FESTIVAL_ECHO": { case_id: "CASE-110", badge_name: "Stage Light Maestro", badge_icon: "🎸" }
     };
 
-    // 1. Mystery Decoder Submission Logic
+    // 1. Mystery Decoder Submission Logic (Saves to user_profile_badges for Account Page)
     function handlePasscodeSubmit(event) {
       event.preventDefault();
       const inputEl = document.getElementById('passcode-input');
@@ -933,7 +933,7 @@
         unlockStudentBadge(badgeData.case_id, badgeData.badge_name, badgeData.badge_icon);
         
         resultEl.className = 'terminal-output-log success';
-        resultEl.innerHTML = `<strong>🎉 MYSTERY DECODED!</strong><br>Correct Passcode! You unlocked the <strong>${badgeData.badge_icon} ${badgeData.badge_name}</strong> badge on your student dossier!`;
+        resultEl.innerHTML = `<strong>🎉 MYSTERY DECODED!</strong><br>Correct Passcode! You unlocked the <strong>${badgeData.badge_icon} ${badgeData.badge_name}</strong> badge on your Account Profile!`;
         inputEl.value = '';
       } else {
         resultEl.className = 'terminal-output-log error';
@@ -949,7 +949,27 @@
         card.querySelector('.badge-title-disp').innerText = badgeName;
       }
 
+      // 1. Local Dossier Storage
       localStorage.setItem(`badge_${caseId}`, JSON.stringify({ name: badgeName, icon: badgeIcon }));
+
+      // 2. Account Profile Hub Storage Binding
+      let savedBadges = [];
+      try {
+        savedBadges = JSON.parse(localStorage.getItem('user_profile_badges')) || [];
+      } catch (err) {
+        savedBadges = [];
+      }
+
+      if (!savedBadges.some(b => b.id === caseId)) {
+        savedBadges.push({
+          id: caseId,
+          name: badgeName,
+          icon: badgeIcon,
+          unlockedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        });
+        localStorage.setItem('user_profile_badges', JSON.stringify(savedBadges));
+      }
+
       updateUnlockedBadgeCounter();
     }
 
@@ -1208,7 +1228,8 @@
       loadSavedBadges();
     });
   </script>
-  <!-- Master Mystery Engine JS -->
+
+  <!-- Master Mystery Engine JS Link -->
   <script src="bbs-mystery-engine.js"></script>
   <script src="music-player.js"></script>
 </body>
