@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Girls of Phantom — Lore & Universe</title>
+  <style>
+    /* RESET & GLOBALS */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #0b0c10;
+      color: #c5c6c7;
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* HEADER SECTION */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid #1f2833;
+      padding-bottom: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: #66fcf1;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(102, 252, 241, 0.4);
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: #45a29e;
+      margin-top: 0.5rem;
+    }
+
+    /* HUD STATUS BANNER WIDGET */
+    .hud-banner {
+      background: #1f2833;
+      border: 1px solid #66fcf1;
+      border-radius: 6px;
+      padding: 1.2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 0 15px rgba(102, 252, 241, 0.15);
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .hud-header {
+      font-size: 0.85rem;
+      color: #ff007f;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 0.8rem;
+      font-weight: bold;
+    }
+
+    .hud-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.8rem;
+    }
+
+    .hud-metric {
+      background: #0b0c10;
+      padding: 0.6rem 1rem;
+      border-left: 3px solid #66fcf1;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    /* SECTIONS & HEADINGS */
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: #ffffff;
+      border-bottom: 2px solid #ff007f;
+      display: inline-block;
+      padding-bottom: 0.3rem;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* BAND DOSSIER */
+    .dossier-card {
+      background: #1f2833;
+      padding: 1.5rem;
+      border-radius: 6px;
+      border-left: 4px solid #ff007f;
+    }
+
+    .dossier-card p {
+      margin-bottom: 0.8rem;
+    }
+
+    /* CHARACTER CARDS GRID */
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .char-card {
+      background: #1f2833;
+      border: 1px solid #2c3e50;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .char-card:hover {
+      transform: translateY(-4px);
+      border-color: #66fcf1;
+    }
+
+    .char-name {
+      font-size: 1.3rem;
+      color: #66fcf1;
+      margin-bottom: 0.2rem;
+    }
+
+    .char-role {
+      font-size: 0.85rem;
+      color: #ff007f;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    .char-desc {
+      font-size: 0.95rem;
+      color: #c5c6c7;
+    }
+
+    /* SYSTEM MECHANICS (CODEX) */
+    .codex-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .codex-item {
+      background: #1f2833;
+      padding: 1.2rem;
+      border-radius: 6px;
+    }
+
+    .codex-title {
+      color: #66fcf1;
+      font-weight: bold;
+      margin-bottom: 0.4rem;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #5d6d7e;
+      margin-top: 4rem;
+      border-top: 1px solid #1f2833;
+      padding-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <header>
+      <h1>Girls of Phantom</h1>
+      <p>Underground Sound • Phantom Frequencies • Real-World Dissonance</p>
+    </header>
+
+    <!-- LIVE HUD STATUS WIDGET -->
+    <div class="hud-banner">
+      <div class="hud-header">// System Status Monitor — Active Frequency</div>
+      <div class="hud-grid">
+        <div class="hud-metric">[Echo Resonance: 35%]</div>
+        <div class="hud-metric">[Heart Sync: Resonant]</div>
+        <div class="hud-metric">[Familiar Awareness: Alert]</div>
+        <div class="hud-metric">[Magical Pressure: Surging]</div>
+      </div>
+    </div>
+
+    <!-- BAND DOSSIER -->
+    <section>
+      <h2>Band Dossier</h2>
+      <div class="dossier-card">
+        <p>Beyond the surface-level indie music scene lies a hidden frequency layer. <strong>Girls of Phantom</strong> (GoP / GoPhantom) is an underground unit bridging the gap between raw J-Rock energy and spatial distortion.</p>
+        <p>Their music isn't just performed—it stabilizes ambient Dissonance leaking into reality. When environmental resonance spikes, their sound acts as the counterweight holding the boundary together.</p>
+      </div>
+    </section>
+
+    <!-- CORE FOUR PROFILES -->
+    <section>
+      <h2>The Core Four</h2>
+      <div class="character-grid">
+        
+        <div class="char-card">
+          <div class="char-name">Akari Minase</div>
+          <div class="char-role">Lead Vocalist & Dissonance Anchor</div>
+          <div class="char-desc">The emotional center of the band. Her vocals drive the group’s Heart Sync, allowing them to channel high-pressure audio signals during live underground sets.</div>
+        </div>
+
+        <div class="char-card">
+          <div class="char-name">Nekomi</div>
+          <div class="char-role">Keyboards / Synth & Frequency Mapper</div>
+          <div class="char-desc">The architect behind their 16-bit cat/synth motifs and electronic soundscapes. Tracks atmospheric shifts and converts raw data into melody.</div>
+        </div>
+
+        <div class="char-card">
+          <div class="char-name">Sera</div>
+          <div class="char-role">Drums & High-Energy Counterweight</div>
+          <div class="char-desc">Provides the explosive pulse that maintains the band's rhythm under heavy Magical Pressure. Direct, high-energy, and unstoppable on stage.</div>
+        </div>
+
+        <div class="char-card">
+          <div class="char-name">Aoi</div>
+          <div class="char-role">Bassist & Harmonic Grounding</div>
+          <div class="char-desc">Completes the primary lineup. Her low-end basslines ground the group's resonance, keeping the stage from collapsing into full Dissonance breaches.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SYSTEM MECHANICS -->
+    <section>
+      <h2>System & World Mechanics</h2>
+      <div class="codex-list">
+        
+        <div class="codex-item">
+          <div class="codex-title">Dissonance Layer</div>
+          <div class="codex-desc">Corrupted environmental frequencies that distort audio signals, glitch equipment, and warp spatial reality during high-tension events.</div>
+        </div>
+
+        <div class="codex-item">
+          <div class="codex-title">Echo Resonance (0% to 100%)</div>
+          <div class="codex-desc">Measures environmental Dissonance levels. Higher percentages signal imminent atmospheric disruption and magical interference.</div>
+        </div>
+
+        <div class="codex-item">
+          <div class="codex-title">Heart Sync</div>
+          <div class="codex-desc">Tracks emotional and musical alignment among the four members (Low → Building → Resonant → Harmonized → Overdrive).</div>
+        </div>
+
+        <div class="codex-item">
+          <div class="codex-title">Familiar Awareness & Magical Pressure</div>
+          <div class="codex-desc">Monitors entity presence and surrounding atmospheric strain (Calm → Detected → Surging → Dissonant Breach).</div>
+        </div>
+
+      </div>
+    </section>
+
+    <footer>
+      <p>EchoHeart / Girls of Phantom Lore Codex • All Rights Reserved</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>
