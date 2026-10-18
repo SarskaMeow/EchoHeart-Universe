@@ -24,14 +24,7 @@
       --text-muted: #b8a7d4;
       --card-border: rgba(255, 0, 127, 0.35);
       --border-cyan: rgba(0, 240, 255, 0.35);
-
-      /* Tier Navigation Tokens */
-      --nav-bg-twilight: rgba(9, 4, 18, 0.96);
-      --nav-bg-basement: rgba(18, 4, 25, 0.98);
-      --nav-bg-backstage: rgba(25, 12, 5, 0.99);
       --nav-border-twilight: rgba(0, 240, 255, 0.4);
-      --nav-border-basement: rgba(255, 0, 127, 0.5);
-      --nav-border-backstage: rgba(255, 209, 102, 0.6);
     }
 
     * {
@@ -46,69 +39,37 @@
       color: var(--text-main);
       min-height: 100vh;
       line-height: 1.6;
-      padding-bottom: 120px; /* Space for bottom-left docked player */
+      padding-bottom: 110px; /* Room for compact bottom-left player */
       overflow-x: hidden;
       background-image: 
         radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.22) 0%, transparent 50%),
         radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.18) 0%, transparent 50%);
-      transition: background 0.4s ease, color 0.4s ease;
     }
 
-    /* 3-Tier Mode Themes */
-    body.twilight-mode { background: #040209; color: var(--text-main); }
-    body.basement-mode { background: #08020e; color: #fce8ec; }
-    body.backstage-mode { background: #0a0502; color: #ffffff; }
-
-    /* Universal Header Navbar (Capsule Pill Layout matching screenshot) */
+    /* TIGHTENED UNIVERSAL NAVBAR */
     .navbar {
       position: sticky;
       top: 0;
       z-index: 1000;
       width: 100%;
-      background: var(--nav-bg-twilight);
+      background: var(--nav-bg);
       border-bottom: 1.5px solid var(--nav-border-twilight);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      transition: background 0.4s ease, border-color 0.4s ease;
       box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2);
     }
 
     .nav-container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 10px 20px;
+      padding: 8px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      flex-wrap: wrap;
     }
 
-    .nav-left-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo-link {
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .logo-main {
-      font-size: 1.15rem;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      color: var(--accent-cyan);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      text-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
-      animation: cyberGlitch 3.5s infinite;
-    }
-
-    /* Screenshot Pill Navigation Links Bar */
+    /* Left-Aligned Nav Pills Row */
     .nav-pills-row {
       display: flex;
       align-items: center;
@@ -118,9 +79,9 @@
 
     .nav-item-pill {
       color: var(--text-muted);
-      font-size: 0.83rem;
+      font-size: 0.82rem;
       font-weight: 800;
-      padding: 6px 16px;
+      padding: 5px 14px;
       border-radius: 12px;
       text-decoration: none;
       transition: all 0.25s ease;
@@ -147,20 +108,21 @@
       animation: pulseGlow 2.5s infinite alternate;
     }
 
-    /* Right-side Live Status Badge */
+    /* Right-Side Podcast Status Badge */
     .nav-status-badge {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 900;
       letter-spacing: 1px;
       color: var(--accent-cyan);
       text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
       background: rgba(0, 240, 255, 0.08);
       border: 1px solid rgba(0, 240, 255, 0.35);
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 20px;
+      white-space: nowrap;
     }
 
     .status-dot {
@@ -172,26 +134,6 @@
       animation: statusBlink 1.2s infinite;
     }
 
-    .mode-select-dropdown {
-      appearance: none;
-      padding: 6px 28px 6px 12px;
-      border-radius: 10px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      cursor: pointer;
-      outline: none;
-      transition: all 0.3s ease;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f0ff'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 8px center;
-      background-size: 12px;
-      background-color: rgba(10, 4, 22, 0.95);
-      border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
-    }
-
-    /* Mobile Menu Toggle */
     .mobile-menu-btn {
       display: none;
       background: rgba(14, 9, 28, 0.8);
@@ -215,14 +157,14 @@
         display: none;
         width: 100%;
         flex-direction: column;
-        padding-top: 10px;
+        padding-top: 8px;
         gap: 8px;
       }
       .nav-pills-row.open { display: flex; }
       .nav-item-pill { width: 100%; justify-content: center; }
     }
 
-    /* Podcast Layout Styles */
+    /* PODCAST STAGE LAYOUT */
     .podcast-container {
       max-width: 1300px;
       margin: 28px auto;
@@ -415,7 +357,7 @@
       box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
     }
 
-    /* ALWAYS-ON COMMUNITY COMMENTS SECTION */
+    /* COMMUNITY COMMENTS SECTION */
     .global-comments-wrapper {
       max-width: 1300px;
       margin: 10px auto 50px;
@@ -490,22 +432,20 @@
       padding: 14px 18px;
     }
 
-    /* ====================================================== */
-    /* DOCKED BOTTOM-LEFT MUSIC PLAYER WIDGET                 */
-    /* ====================================================== */
+    /* COMPACT DOCKED BOTTOM-LEFT MUSIC PLAYER WIDGET */
     .docked-music-player {
       position: fixed;
-      bottom: 20px;
-      left: 20px;
+      bottom: 16px;
+      left: 16px;
       z-index: 1000;
-      width: 320px;
+      width: 240px;
       background: rgba(8, 3, 16, 0.96);
       border: 1.5px solid var(--accent-cyan);
-      border-radius: 16px;
-      padding: 14px;
+      border-radius: 12px;
+      padding: 10px 12px;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 14px rgba(0, 240, 255, 0.25);
       transition: all 0.3s ease;
     }
 
@@ -513,39 +453,39 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .docked-player-title {
-      font-size: 0.72rem;
+      font-size: 0.65rem;
       font-weight: 900;
       color: var(--accent-cyan);
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .docked-minimize-btn {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       cursor: pointer;
-      padding: 0 4px;
+      padding: 0 2px;
     }
 
     .docked-track-info {
       background: #030108;
       border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 8px 12px;
-      margin-bottom: 10px;
+      border-radius: 8px;
+      padding: 6px 10px;
+      margin-bottom: 8px;
     }
 
     .docked-song-title {
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       font-weight: 800;
       color: #ffffff;
       white-space: nowrap;
@@ -554,7 +494,7 @@
     }
 
     .docked-artist-sub {
-      font-size: 0.72rem;
+      font-size: 0.65rem;
       color: var(--accent-pink);
       font-weight: 700;
     }
@@ -563,24 +503,24 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
     }
 
     .docked-play-btn {
       flex: 1;
-      padding: 8px 12px;
+      padding: 6px 10px;
       background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       color: #ffffff;
       font-weight: 800;
-      font-size: 0.82rem;
+      font-size: 0.75rem;
       cursor: pointer;
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
     }
 
     .docked-vol-slider {
-      width: 80px;
+      width: 60px;
       accent-color: var(--accent-pink);
       cursor: pointer;
     }
@@ -590,14 +530,7 @@
       display: none;
     }
 
-    /* GLITCH & PULSE ANIMATIONS */
-    @keyframes cyberGlitch {
-      0%, 90%, 100% { transform: translate(0, 0); }
-      91% { transform: translate(-2px, 1px); filter: drop-shadow(0 0 8px var(--accent-pink)); }
-      93% { transform: translate(2px, -1px); filter: drop-shadow(0 0 12px var(--accent-cyan)); }
-      95% { transform: translate(0, 0); }
-    }
-
+    /* ANIMATIONS */
     @keyframes textGlitchRGB {
       0%, 100% { text-shadow: 2px 0 var(--accent-pink), -2px 0 var(--accent-cyan); }
       50% { text-shadow: -2px 0 var(--accent-pink), 2px 0 var(--accent-cyan); }
@@ -620,29 +553,17 @@
     }
   </style>
 </head>
-<body class="twilight-mode">
+<body>
 
-  <!-- Audio Elements for Podcast & Docked Music -->
+  <!-- Audio Elements -->
   <audio id="audio-player" style="display: none;"></audio>
   <audio id="docked-radio-audio" crossorigin="anonymous" style="display: none;"></audio>
 
-  <!-- Screenshot-Matched Navigation Bar -->
+  <!-- Tightened Navigation Bar -->
   <header class="navbar">
     <div class="nav-container">
       
-      <div class="nav-left-group">
-        <a href="index.html" class="logo-link">
-          <span class="logo-main">⚡ OTAKU OVERLOAD</span>
-        </a>
-
-        <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-          <option value="twilight">🌸 Twilight (13+)</option>
-          <option value="basement">⚡ Basement (17+)</option>
-          <option value="backstage">👑 VIP Mode</option>
-        </select>
-      </div>
-
-      <!-- Screenshot Nav Pill Row -->
+      <!-- Left-Aligned Navigation Link Pills -->
       <nav class="nav-pills-row" id="nav-menu">
         <a href="index.html" class="nav-item-pill">🏠 Home</a>
         <a href="echoheart.html" class="nav-item-pill">📚 Lore & Books</a>
@@ -652,10 +573,10 @@
         <a href="podcast.html" class="nav-item-pill active">🎙️ Podcast</a>
       </nav>
 
-      <!-- Right Status Relay Badge -->
+      <!-- Right-Aligned Podcast Relay Status -->
       <div class="nav-status-badge">
         <span class="status-dot"></span>
-        SUB-STAGE RELAY: ACTIVE
+        🎙️ WHISPER RELAY: ONLINE
       </div>
 
       <button class="mobile-menu-btn" id="mobile-menu-toggle" onclick="toggleMobileMenu()">
@@ -765,19 +686,19 @@
     </div>
   </section>
 
-  <!-- FLOATING BOTTOM-LEFT DOCKED MUSIC PLAYER WIDGET -->
+  <!-- COMPACT BOTTOM-LEFT DOCKED MUSIC PLAYER WIDGET -->
   <div class="docked-music-player" id="docked-player">
     <div class="docked-player-header">
       <div class="docked-player-title">
-        <span style="display:inline-block; width:8px; height:8px; background:var(--accent-pink); border-radius:50%; box-shadow:0 0 8px var(--accent-pink);"></span>
-        NEKO FM STREAM DECK
+        <span style="display:inline-block; width:6px; height:6px; background:var(--accent-pink); border-radius:50%; box-shadow:0 0 6px var(--accent-pink);"></span>
+        NEKO FM DECK
       </div>
       <button class="docked-minimize-btn" onclick="toggleDockedCollapse()">➖</button>
     </div>
 
     <div class="docked-track-info">
       <div class="docked-song-title" id="docked-song-title">J-Pop Powerplay Kawaii 🌸</div>
-      <div class="docked-artist-sub" id="docked-artist-sub">24/7 Background Music Stream</div>
+      <div class="docked-artist-sub" id="docked-artist-sub">24/7 Music Stream</div>
     </div>
 
     <div class="docked-controls-row">
@@ -798,45 +719,67 @@
     let syncInterval = null;
     let elapsedSeconds = 0;
     let totalSeconds = 186;
+    let currentEpisodeIdx = 0;
 
     const defaultStreamUrl = "https://kathy.torontocast.com:3060/stream";
 
-    const EPISODES_BY_MODE = {
-      twilight: [
-        {
-          title: "EchoHeart Whisper Podcast EP-1",
-          runtime: "03:06",
-          audioUrl: "assets/audio/EchoHeart Whisper Podcast EP-1.mp3",
-          tag: "Free",
-          script: [
-            { startTime: 0, endTime: 14, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome, welcome, everyone! You're tuned into the very first official broadcast of EchoHeart Whisper Radio! I'm your lead vocalist, and Guitarist, Nekomi!" },
-            { startTime: 14, endTime: 21, speaker: "akari", title: "Akari Minase (Drums)", text: "Yaho~! Akari Minase here, Drums overdrive ready to turn every quiet afternoon into a rock concert!" },
-            { startTime: 22, endTime: 28, speaker: "sera", title: "Sera (Keytar)", text: "Sera... keytarist and audio monitor. Frequency check looks clean." },
-            { startTime: 28, endTime: 40, speaker: "aoi", title: "Aoi (Bass)", text: "And I'm Aoi, I'm the bassist and I'm keeping our band on schedule. Whether you're listening between classes or after practice, thanks for dropping in for our 3-minute campus catch-up!" },
-            { startTime: 40, endTime: 52, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Okay, team, let's jump straight into today's big story! Did anyone else notice the utter chaos outside the main cafeteria at 12:15 PM today?" },
-            { startTime: 53, endTime: 64, speaker: "akari", title: "Akari Minase (Drums)", text: "Oh, I saw it! It was an absolute stampede! The line for the new limited-edition Strawberry Shortcake Parfait was longer than our festival queue!" },
-            { startTime: 64, endTime: 72, speaker: "sera", title: "Sera (Keytar)", text: "It sold out in exactly forty-two seconds... I was three people away from the counter. A tragedy." },
-            { startTime: 72, endTime: 83, speaker: "aoi", title: "Aoi (Bass)", text: "A tragedy might be an exaggeration, Sera, but the rumor is someone bought the last three parfaits all at once and sprinted out the side doors toward the music wing." },
-            { startTime: 83, endTime: 91, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Wait... toward our wing?! Are you saying the Parfait Bandit is a musician?" },
-            { startTime: 91, endTime: 104, speaker: "akari", title: "Akari Minase (Drums)", text: "Hey, don't look at me! I was stuck tuning my amp in the storage closet during lunch! Though... if whoever took them wants to trade one for a drum solo, my door is open!" },
-            { startTime: 104, endTime: 115, speaker: "sera", title: "Sera (Keytar)", text: "Actually... I checked the audio logs on my soundboard. I heard heavy footsteps in the hallway right around twelve-twenty... followed by the sound of plastic spoons." },
-            { startTime: 115, endTime: 124, speaker: "aoi", title: "Aoi (Bass)", text: "Alright, alright, let me clear the air before this turns into a full investigation. The three parfaits were purchased by me." },
-            { startTime: 124, endTime: 129, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "What?! Aoi, you're the Parfait Bandit?!" },
-            { startTime: 129, endTime: 139, speaker: "aoi", title: "Aoi (Bass)", text: "I am not a bandit! I bought them for all of us as a treat for locking down our rehearsal schedule this week! They're in the prep room mini-fridge right now." },
-            { startTime: 139, endTime: 146, speaker: "akari", title: "Akari Minase (Drums)", text: "Whaaat?! Aoi, you're an absolute legend! First dibs on the extra strawberries!" },
-            { startTime: 146, endTime: 155, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "And that's our very first piece of good news on Whisper Radio! Case closed, and dessert secured!" },
-            { startTime: 155, endTime: 166, speaker: "aoi", title: "Aoi (Bass)", text: "Remember to check back next week for more daily news around school. Now, let me make sure Akari doesn't eat all three parfaits before practice starts." },
-            { startTime: 166, endTime: 173, speaker: "sera", title: "Sera (Keytar)", text: "Save one for me... Goodbye, everyone. Keep your headphones warm." },
-            { startTime: 173, endTime: 180, speaker: "akari", title: "Akari Minase (Drums)", text: "Catch ya later, everyone! Don't forget to turn the volume all the way up next week! Bye-bye!" },
-            { startTime: 180, endTime: 186, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thanks for tuning in! See you next time, everyone! Bye-bye~!" }
-          ]
-        }
-      ]
-    };
+    // Complete Episode Script Catalog
+    const EPISODES = [
+      {
+        title: "EchoHeart Whisper Podcast EP-1",
+        runtime: "03:06",
+        audioUrl: "assets/audio/EchoHeart Whisper Podcast EP-1.mp3",
+        tag: "Free",
+        script: [
+          { startTime: 0, endTime: 14, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome, welcome, everyone! You're tuned into the very first official broadcast of EchoHeart Whisper Radio! I'm your lead vocalist, and Guitarist, Nekomi!" },
+          { startTime: 14, endTime: 21, speaker: "akari", title: "Akari Minase (Drums)", text: "Yaho~! Akari Minase here, Drums overdrive ready to turn every quiet afternoon into a rock concert!" },
+          { startTime: 22, endTime: 28, speaker: "sera", title: "Sera (Keytar)", text: "Sera... keytarist and audio monitor. Frequency check looks clean." },
+          { startTime: 28, endTime: 40, speaker: "aoi", title: "Aoi (Bass)", text: "And I'm Aoi, I'm the bassist and I'm keeping our band on schedule. Whether you're listening between classes or after practice, thanks for dropping in for our 3-minute campus catch-up!" },
+          { startTime: 40, endTime: 52, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Okay, team, let's jump straight into today's big story! Did anyone else notice the utter chaos outside the main cafeteria at 12:15 PM today?" },
+          { startTime: 53, endTime: 64, speaker: "akari", title: "Akari Minase (Drums)", text: "Oh, I saw it! It was an absolute stampede! The line for the new limited-edition Strawberry Shortcake Parfait was longer than our festival queue!" },
+          { startTime: 64, endTime: 72, speaker: "sera", title: "Sera (Keytar)", text: "It sold out in exactly forty-two seconds... I was three people away from the counter. A tragedy." },
+          { startTime: 72, endTime: 83, speaker: "aoi", title: "Aoi (Bass)", text: "A tragedy might be an exaggeration, Sera, but the rumor is someone bought the last three parfaits all at once and sprinted out the side doors toward the music wing." },
+          { startTime: 83, endTime: 91, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Wait... toward our wing?! Are you saying the Parfait Bandit is a musician?" },
+          { startTime: 91, endTime: 104, speaker: "akari", title: "Akari Minase (Drums)", text: "Hey, don't look at me! I was stuck tuning my amp in the storage closet during lunch! Though... if whoever took them wants to trade one for a drum solo, my door is open!" },
+          { startTime: 104, endTime: 115, speaker: "sera", title: "Sera (Keytar)", text: "Actually... I checked the audio logs on my soundboard. I heard heavy footsteps in the hallway right around twelve-twenty... followed by the sound of plastic spoons." },
+          { startTime: 115, endTime: 124, speaker: "aoi", title: "Aoi (Bass)", text: "Alright, alright, let me clear the air before this turns into a full investigation. The three parfaits were purchased by me." },
+          { startTime: 124, endTime: 129, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "What?! Aoi, you're the Parfait Bandit?!" },
+          { startTime: 129, endTime: 139, speaker: "aoi", title: "Aoi (Bass)", text: "I am not a bandit! I bought them for all of us as a treat for locking down our rehearsal schedule this week! They're in the prep room mini-fridge right now." },
+          { startTime: 139, endTime: 146, speaker: "akari", title: "Akari Minase (Drums)", text: "Whaaat?! Aoi, you're an absolute legend! First dibs on the extra strawberries!" },
+          { startTime: 146, endTime: 155, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "And that's our very first piece of good news on Whisper Radio! Case closed, and dessert secured!" },
+          { startTime: 155, endTime: 166, speaker: "aoi", title: "Aoi (Bass)", text: "Remember to check back next week for more daily news around school. Now, let me make sure Akari doesn't eat all three parfaits before practice starts." },
+          { startTime: 166, endTime: 173, speaker: "sera", title: "Sera (Keytar)", text: "Save one for me... Goodbye, everyone. Keep your headphones warm." },
+          { startTime: 173, endTime: 180, speaker: "akari", title: "Akari Minase (Drums)", text: "Catch ya later, everyone! Don't forget to turn the volume all the way up next week! Bye-bye!" },
+          { startTime: 180, endTime: 186, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thanks for tuning in! See you next time, everyone! Bye-bye~!" }
+        ]
+      },
+      {
+        title: "Episode 2: After-School Sweets & Rehearsal Routines",
+        runtime: "03:30",
+        audioUrl: "",
+        tag: "Free",
+        script: [
+          { startTime: 0, endTime: 45, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Hey there, Whisper Radio listeners! Nekomi here on vocals!" },
+          { startTime: 45, endTime: 90, speaker: "sera", title: "Sera (Keytar)", text: "Greetings, everyone. Sera on keytar duty." },
+          { startTime: 90, endTime: 140, speaker: "akari", title: "Akari Minase (Drums)", text: "Akari Minase in the house! Drums tuned and ready!" },
+          { startTime: 140, endTime: 210, speaker: "aoi", title: "Aoi (Bass)", text: "And Aoi on bass! Welcome to Episode Two of our afternoon broadcast!" }
+        ]
+      },
+      {
+        title: "Episode 3: Sunset Rooftop Jam & Evening Walk",
+        runtime: "03:45",
+        audioUrl: "",
+        tag: "Free",
+        script: [
+          { startTime: 0, endTime: 50, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Good evening, Sakuraoka High! Nekomi greeting you as the sun sets!" },
+          { startTime: 50, endTime: 105, speaker: "sera", title: "Sera (Keytar)", text: "Hello everyone, Sera here as the evening dusk settles over campus." },
+          { startTime: 105, endTime: 160, speaker: "akari", title: "Akari Minase (Drums)", text: "Akari Minase here! Sunset is the coolest time for acoustic jam sessions!" },
+          { startTime: 160, endTime: 225, speaker: "aoi", title: "Aoi (Bass)", text: "And Aoi here to wrap up today's school hours with all of you." }
+        ]
+      }
+    ];
 
-    let currentEpisodeIdx = 0;
-
-    /* DOCKED MUSIC PLAYER LOGIC */
+    /* DOCKED MUSIC PLAYER FUNCTIONALITY */
     function toggleDockedMusic() {
       const playBtn = document.getElementById('docked-play-btn');
 
@@ -854,7 +797,7 @@
         dockedAudio.play().then(() => {
           isDockedMusicPlaying = true;
           playBtn.innerText = "⏸ PAUSE MUSIC";
-        }).catch(err => console.error("Playback blocked:", err));
+        }).catch(err => console.error("Playback error:", err));
       }
     }
 
@@ -866,7 +809,7 @@
       document.getElementById('docked-player').classList.toggle('collapsed');
     }
 
-    /* PODCAST PLAYBACK & OVERRIDE LOGIC */
+    /* PODCAST PLAYBACK & SYNC LOGIC */
     function togglePodcastPlayback() {
       if (isPodcastPlaying) {
         stopPodcastPlayback();
@@ -886,16 +829,20 @@
       isPodcastPlaying = true;
       document.getElementById('podcast-play-btn').innerText = '⏸ Pause Broadcast';
 
-      const ep = EPISODES_BY_MODE.twilight[currentEpisodeIdx];
+      const ep = EPISODES[currentEpisodeIdx];
 
       if (ep && ep.audioUrl && audioElement) {
         audioElement.play().then(() => {
           startHighFreqSync();
-        }).catch(() => runSimulatedTimer());
+        }).catch(err => {
+          console.warn("Audio element play error, using clock timer fallback:", err);
+          runSimulatedTimer();
+        });
 
         audioElement.onended = () => {
           stopPodcastPlayback();
-          document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode."`;
+          updateTimeUI(totalSeconds, totalSeconds);
+          document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode from the archive."`;
         };
       } else {
         runSimulatedTimer();
@@ -917,7 +864,7 @@
       syncInterval = setInterval(() => {
         if (!isPodcastPlaying || !audioElement) return;
         elapsedSeconds = audioElement.currentTime;
-        totalSeconds = (audioElement.duration && !isNaN(audioElement.duration)) ? audioElement.duration : 186;
+        totalSeconds = (audioElement.duration && !isNaN(audioElement.duration)) ? audioElement.duration : parseRuntimeSeconds(EPISODES[currentEpisodeIdx]?.runtime);
         updateTimeUI(elapsedSeconds, totalSeconds);
         syncSpeakerDialogue();
       }, 100);
@@ -925,35 +872,101 @@
 
     function runSimulatedTimer() {
       if (clockTimer) clearInterval(clockTimer);
+      syncSpeakerDialogue();
       clockTimer = setInterval(() => {
         if (!isPodcastPlaying) return;
         elapsedSeconds++;
         updateTimeUI(elapsedSeconds, totalSeconds);
         syncSpeakerDialogue();
-        if (elapsedSeconds >= totalSeconds) stopPodcastPlayback();
+
+        if (elapsedSeconds >= totalSeconds) {
+          stopPodcastPlayback();
+          updateTimeUI(totalSeconds, totalSeconds);
+          document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode from the archive."`;
+        }
       }, 1000);
     }
 
     function syncSpeakerDialogue() {
-      const ep = EPISODES_BY_MODE.twilight[currentEpisodeIdx];
-      if (!ep || !ep.script) return;
+      const ep = EPISODES[currentEpisodeIdx];
+      if (!ep || !ep.script || ep.script.length === 0) return;
 
-      const currentTime = (audioElement && audioElement.src && !audioElement.paused) ? audioElement.currentTime : elapsedSeconds;
-      let activeLine = ep.script.find(line => currentTime >= line.startTime && currentTime < line.endTime);
+      const currentTime = (audioElement && audioElement.src && !audioElement.paused && !isNaN(audioElement.currentTime))
+                          ? audioElement.currentTime
+                          : elapsedSeconds;
+
+      let activeLine = null;
+      for (let i = 0; i < ep.script.length; i++) {
+        const line = ep.script[i];
+        if (currentTime >= line.startTime && currentTime < line.endTime) {
+          activeLine = line;
+          break;
+        }
+      }
 
       document.querySelectorAll('.speaker-avatar').forEach(a => a.classList.remove('speaking'));
 
       if (activeLine) {
-        const avatar = document.getElementById(`spk-${activeLine.speaker}`);
-        if (avatar) avatar.classList.add('speaking');
+        const activeAvatar = document.getElementById(`spk-${activeLine.speaker}`);
+        if (activeAvatar) activeAvatar.classList.add('speaking');
+
         document.getElementById('speaker-title-display').innerText = `🎙️ ${activeLine.title}`;
         document.getElementById('dialogue-line-display').innerText = `"${activeLine.text}"`;
       }
     }
 
+    function selectEpisode(index) {
+      stopPodcastPlayback();
+      currentEpisodeIdx = index;
+      elapsedSeconds = 0;
+
+      document.querySelectorAll('.ep-card').forEach((card, idx) => {
+        if (idx === index) card.classList.add('active');
+        else card.classList.remove('active');
+      });
+
+      const ep = EPISODES[currentEpisodeIdx];
+      if (ep) {
+        totalSeconds = parseRuntimeSeconds(ep.runtime);
+        document.getElementById('speaker-title-display').innerText = `🎙️ ${ep.title.toUpperCase()}`;
+        document.getElementById('dialogue-line-display').innerText = `"Press start to listen to ${ep.title}!"`;
+        
+        updateTimeUI(0, totalSeconds);
+
+        if (ep.audioUrl && audioElement) {
+          audioElement.src = ep.audioUrl;
+          audioElement.load();
+        } else if (audioElement) {
+          audioElement.removeAttribute('src');
+        }
+      }
+    }
+
+    function seekPodcast(event) {
+      const track = document.getElementById('progress-bar-track');
+      const rect = track.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, clickX / rect.width));
+
+      elapsedSeconds = pct * totalSeconds;
+      const ep = EPISODES[currentEpisodeIdx];
+
+      if (ep && ep.audioUrl && audioElement && audioElement.src) {
+        audioElement.currentTime = elapsedSeconds;
+      }
+
+      updateTimeUI(elapsedSeconds, totalSeconds);
+      syncSpeakerDialogue();
+    }
+
     function updateTimeUI(currentSec, maxSec) {
+      const remainingSec = Math.max(0, maxSec - currentSec);
       document.getElementById('ep-time-current').innerText = formatTime(currentSec);
-      document.getElementById('ep-progress-fill').style.width = `${Math.min(100, (currentSec / maxSec) * 100)}%`;
+      document.getElementById('ep-time-total').innerText = `Total Length: ${formatTime(maxSec)}`;
+      document.getElementById('ep-time-remaining').innerText = `Remaining: -${formatTime(remainingSec)}`;
+
+      const pct = maxSec > 0 ? (currentSec / maxSec) * 100 : 0;
+      document.getElementById('ep-progress-fill').style.width = `${Math.min(100, pct)}%`;
     }
 
     function formatTime(sec) {
@@ -963,9 +976,24 @@
       return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
+    function parseRuntimeSeconds(str) {
+      if (!str) return 186;
+      const parts = str.split(':');
+      if (parts.length === 2) {
+        return parseInt(parts[0], 10) * 60 + parseFloat(parts[1]);
+      } else if (parts.length === 3) {
+        return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+      }
+      return 186;
+    }
+
     function postMainComment() {
-      const handle = document.getElementById('main-comment-handle').value.trim() || "Anon_Listener";
-      const text = document.getElementById('main-comment-text').value.trim();
+      const handleInput = document.getElementById('main-comment-handle');
+      const textInput = document.getElementById('main-comment-text');
+
+      const handle = handleInput.value.trim() || "Anon_Listener";
+      const text = textInput.value.trim();
+
       if (!text) return;
 
       const feed = document.getElementById('main-comments-feed');
@@ -978,32 +1006,37 @@
           <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"${text}"</p>
         </div>
       `);
-      document.getElementById('main-comment-text').value = '';
-    }
-
-    function handleModeChange(mode) {
-      document.body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
-      document.body.classList.add(`${mode}-mode`);
-      localStorage.setItem('neko_active_mode', mode);
+      textInput.value = '';
     }
 
     function toggleMobileMenu() {
       document.getElementById('nav-menu').classList.toggle('open');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const list = document.getElementById('archive-episode-list');
-      if (list) {
-        EPISODES_BY_MODE.twilight.forEach((ep, idx) => {
-          list.innerHTML += `
-            <div class="ep-card ${idx === 0 ? 'active' : ''}">
-              <strong style="color:#fff;">${ep.title}</strong>
-              <p style="font-size:0.8rem; color:var(--accent-cyan); margin:4px 0 0;">Runtime: ${ep.runtime} • ${ep.tag}</p>
-            </div>
+    function initPodcastStudio() {
+      const container = document.getElementById('archive-episode-list');
+      if (container) {
+        container.innerHTML = '';
+        EPISODES.forEach((ep, index) => {
+          const card = document.createElement('div');
+          card.id = `ep-${index}`;
+          card.className = `ep-card ${index === 0 ? 'active' : ''}`;
+          card.onclick = () => selectEpisode(index);
+          card.innerHTML = `
+            <strong style="color: #ffffff;">${ep.title}</strong>
+            <p style="font-size: 0.8rem; margin: 4px 0 0; color: var(--accent-cyan); font-weight: 700;">Runtime: ${ep.runtime} • ${ep.tag}</p>
           `;
+          container.appendChild(card);
         });
       }
-    });
+      selectEpisode(0);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPodcastStudio);
+    } else {
+      initPodcastStudio();
+    }
   </script>
   <script src="global-player.js"></script>
 </body>
