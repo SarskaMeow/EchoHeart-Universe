@@ -14,18 +14,19 @@
       --card-bg: rgba(15, 8, 28, 0.94);
       --card-inner: rgba(8, 4, 18, 0.92);
       --nav-bg: rgba(9, 4, 18, 0.96);
-      --nav-border: rgba(255, 0, 127, 0.4);
+      --nav-border: rgba(0, 240, 255, 0.45);
       --accent-purple: #9d4edd;
       --accent-pink: #ff007f;
       --accent-cyan: #00f0ff;
       --accent-gold: #ffd166;
-      --accent-glow: rgba(255, 0, 127, 0.4);
+      --accent-glow: rgba(255, 0, 127, 0.55);
+      --cyan-glow: rgba(0, 240, 255, 0.55);
       --text-main: #e8dff5;
       --text-light: #ffffff;
       --text-muted: #b8a7d4;
       --btn-grad: linear-gradient(135deg, #ff007f 0%, #7209b7 100%);
       --btn-text: #ffffff;
-      --card-border: rgba(255, 0, 127, 0.35);
+      --card-border: rgba(255, 0, 127, 0.45);
       --border-subtle: rgba(0, 240, 255, 0.3);
       --card-hover-border: #ff007f;
       --card-hover-shadow: rgba(255, 0, 127, 0.35);
@@ -42,12 +43,17 @@
       background-color: var(--bg-dark);
       color: var(--text-main);
       line-height: 1.6;
-      padding-bottom: 90px; /* Offset for bottom player bar */
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(157, 78, 221, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.22) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12) 0%, transparent 60%);
       transition: background-color 0.4s ease, color 0.4s ease;
     }
 
     /* ============================================================ */
-    /* ⚡ MATCHED SINGLE-LINE HEADER NAVBAR                         */
+    /* ⚡ HIGH-GLOW STREAMLINED NAVBAR (TITLE & SELECTOR REMOVED)    */
     /* ============================================================ */
     .navbar {
       position: sticky;
@@ -58,9 +64,9 @@
       border-bottom: 1.5px solid var(--nav-border);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      padding: 10px 24px;
+      padding: 12px 24px;
       box-sizing: border-box;
-      box-shadow: 0 4px 25px rgba(255, 0, 127, 0.15);
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.25), 0 0 15px rgba(255, 0, 127, 0.15);
     }
 
     .nav-container-single {
@@ -68,102 +74,36 @@
       margin: 0 auto;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    /* Far Left: Mode Selector Pill Dropdown */
-    .nav-left-pill { flex: 0 0 auto; }
-
-    .mode-dropdown-btn {
-      background: rgba(20, 8, 35, 0.85);
-      border: 1px solid rgba(255, 0, 127, 0.5);
-      color: var(--accent-pink);
-      padding: 7px 16px;
-      border-radius: 20px;
-      font-size: 0.82rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.2);
-      transition: all 0.25s ease;
-    }
-
-    .mode-dropdown-btn:hover {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
-      color: #ffffff;
-    }
-
-    /* Center Section: Stacked Title + Row Nav Links */
-    .nav-center-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      flex: 1;
-    }
-
-    .logo-link {
-      text-decoration: none;
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .logo-main {
-      font-family: 'Fredoka', 'Segoe UI', cursive, sans-serif;
-      font-size: 1.25rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--accent-pink);
-      text-shadow: 0 0 10px var(--accent-pink);
-    }
-
-    .logo-sub {
-      font-size: 0.62rem;
-      font-weight: 800;
-      letter-spacing: 2.5px;
-      color: var(--accent-pink);
-      text-transform: uppercase;
-      opacity: 0.95;
+      justify-content: center;
     }
 
     .nav-links-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .nav-item-pill {
       color: var(--text-muted);
       font-size: 0.82rem;
-      font-weight: 700;
-      padding: 5px 14px;
-      border-radius: 8px;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 12px;
       text-decoration: none;
-      background: rgba(30, 15, 55, 0.6);
-      border: 1px solid rgba(157, 78, 221, 0.3);
+      background: rgba(22, 10, 36, 0.85);
+      border: 1px solid rgba(157, 78, 221, 0.35);
       transition: all 0.25s ease;
       white-space: nowrap;
     }
 
     .nav-item-pill:hover, .nav-item-pill.active {
-      background: rgba(255, 0, 127, 0.22);
+      background: rgba(255, 0, 127, 0.25);
       color: #ffffff;
       border-color: var(--accent-pink);
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
-    }
-
-    @media (max-width: 992px) {
-      .nav-container-single { flex-wrap: wrap; }
-      .nav-center-group { order: 1; width: 100%; }
-      .nav-left-pill { order: 2; }
+      box-shadow: 0 0 18px var(--accent-glow), inset 0 0 8px rgba(255, 0, 127, 0.4);
+      animation: navPulseGlow 2.5s infinite alternate;
     }
 
     /* ============================================================ */
@@ -188,8 +128,9 @@
       color: var(--accent-cyan);
       letter-spacing: 3px;
       text-transform: uppercase;
-      text-shadow: 0 0 18px rgba(0, 240, 255, 0.7);
+      text-shadow: 0 0 18px rgba(0, 240, 255, 0.85), 0 0 25px rgba(255, 0, 127, 0.5);
       font-weight: 900;
+      animation: textGlitch 3.5s infinite alternate;
     }
 
     header.lore-header p {
@@ -198,19 +139,21 @@
       margin-top: 0.5rem;
       font-weight: 700;
       letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
     }
 
     /* ANIMATED INTERACTIVE HUD STATUS BANNER WIDGET */
     .hud-banner {
       background: var(--card-inner);
       border: 1.5px solid var(--accent-cyan);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 1.2rem;
       margin-bottom: 2.5rem;
       position: relative;
       overflow: hidden;
       animation: hudPulse 3s infinite ease-in-out;
       font-family: 'Courier New', Courier, monospace;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
     }
 
     .hud-banner::before {
@@ -241,6 +184,7 @@
       letter-spacing: 2px;
       font-weight: bold;
       animation: textGlitch 4s infinite;
+      text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
     }
 
     .hud-hint {
@@ -248,6 +192,7 @@
       color: var(--accent-cyan);
       letter-spacing: 1px;
       opacity: 0.85;
+      text-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
     }
 
     .hud-grid {
@@ -262,13 +207,13 @@
       background: #030108;
       padding: 0.75rem 1rem;
       border-left: 3.5px solid var(--accent-cyan);
-      border-top: 1px solid rgba(0, 240, 255, 0.15);
-      border-right: 1px solid rgba(0, 240, 255, 0.15);
-      border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+      border-top: 1px solid rgba(0, 240, 255, 0.2);
+      border-right: 1px solid rgba(0, 240, 255, 0.2);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.2);
       font-size: 0.9rem;
       color: #fff;
-      border-radius: 6px;
-      box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.12);
+      border-radius: 8px;
+      box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.15);
       transition: all 0.3s ease;
       cursor: pointer;
       user-select: none;
@@ -281,25 +226,25 @@
 
     .hud-metric-btn:hover {
       border-left-color: var(--accent-pink);
-      box-shadow: 0 0 16px rgba(255, 0, 127, 0.45);
+      box-shadow: 0 0 18px rgba(255, 0, 127, 0.55);
       transform: translateY(-2px);
     }
 
     .hud-metric-btn.warn {
       border-left-color: var(--accent-gold);
-      box-shadow: 0 0 16px rgba(255, 209, 102, 0.35);
+      box-shadow: 0 0 18px rgba(255, 209, 102, 0.45);
     }
 
     .hud-metric-btn.alert {
       border-left-color: var(--accent-pink);
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+      box-shadow: 0 0 22px rgba(255, 0, 127, 0.75);
       animation: textGlitch 2s infinite;
     }
 
     .hud-click-icon {
       font-size: 0.7rem;
       color: var(--accent-cyan);
-      opacity: 0.6;
+      opacity: 0.8;
     }
 
     /* INTERNAL LORE TABS SYSTEM */
@@ -317,7 +262,7 @@
       border: 1px solid var(--card-border);
       color: var(--text-muted);
       padding: 10px 20px;
-      border-radius: 10px 10px 0 0;
+      border-radius: 12px 12px 0 0;
       font-size: 0.95rem;
       font-weight: 800;
       cursor: pointer;
@@ -325,10 +270,11 @@
     }
 
     .lore-tab-btn.active, .lore-tab-btn:hover {
-      background: var(--accent-pink);
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
       color: #ffffff;
       border-color: var(--accent-pink);
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 22px rgba(255, 0, 127, 0.65);
+      text-shadow: 0 0 6px #fff;
     }
 
     .tab-content {
@@ -362,13 +308,14 @@
       margin: 1.5rem 0 0.8rem;
       text-transform: uppercase;
       letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
     }
 
     /* CARDS & GRID LAYOUTS */
     .dossier-card {
       background: var(--card-bg);
       padding: 1.8rem;
-      border-radius: 12px;
+      border-radius: 14px;
       border-left: 5px solid var(--accent-pink);
       border-top: 1px solid var(--card-border);
       border-right: 1px solid var(--card-border);
@@ -394,6 +341,7 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 0.6rem;
+      box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
     }
 
     /* CHARACTER CARDS GRID */
@@ -406,7 +354,7 @@
     .char-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 1.5rem;
       transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
       position: relative;
@@ -415,7 +363,7 @@
     .char-card:hover {
       transform: translateY(-6px);
       border-color: var(--accent-cyan);
-      box-shadow: 0 0 22px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
     }
 
     .char-name {
@@ -423,6 +371,7 @@
       color: var(--accent-cyan);
       margin-bottom: 0.2rem;
       font-weight: 800;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
     }
 
     .char-role {
@@ -432,6 +381,7 @@
       letter-spacing: 1px;
       margin-bottom: 0.6rem;
       font-weight: bold;
+      text-shadow: 0 0 6px rgba(255, 0, 127, 0.5);
     }
 
     .familiar-tag {
@@ -444,6 +394,7 @@
       font-weight: 700;
       margin-bottom: 1rem;
       display: inline-block;
+      box-shadow: 0 0 10px rgba(157, 78, 221, 0.3);
     }
 
     .char-desc {
@@ -462,14 +413,14 @@
     .codex-item {
       background: var(--card-bg);
       padding: 1.4rem;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid var(--card-border);
       transition: all 0.25s ease;
     }
 
     .codex-item:hover {
       border-color: var(--accent-purple);
-      box-shadow: 0 0 18px var(--accent-glow);
+      box-shadow: 0 0 20px var(--accent-glow);
     }
 
     .codex-title {
@@ -477,15 +428,16 @@
       font-weight: 800;
       font-size: 1.1rem;
       margin-bottom: 0.4rem;
+      text-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
     }
 
     /* BUY & RELEASES CARD STYLES */
     .store-card {
       background: linear-gradient(135deg, rgba(20, 10, 38, 0.95) 0%, rgba(38, 12, 50, 0.95) 100%);
       border: 1.5px solid var(--accent-pink);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 2rem;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 0, 127, 0.3);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 28px rgba(255, 0, 127, 0.35);
       display: flex;
       flex-direction: column;
       gap: 1.2rem;
@@ -502,6 +454,7 @@
       border-radius: 20px;
       text-transform: uppercase;
       letter-spacing: 1.5px;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
     }
 
     .store-title {
@@ -509,6 +462,7 @@
       color: #ffffff;
       font-weight: 900;
       margin: 0;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
     }
 
     .store-desc {
@@ -530,7 +484,7 @@
       font-weight: 900;
       font-size: 0.95rem;
       padding: 12px 24px;
-      border-radius: 10px;
+      border-radius: 12px;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -552,7 +506,7 @@
       font-weight: 800;
       font-size: 0.95rem;
       padding: 12px 24px;
-      border-radius: 10px;
+      border-radius: 12px;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -563,107 +517,7 @@
     .kdp-btn:hover {
       background: rgba(0, 240, 255, 0.2);
       color: #ffffff;
-      box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
-    }
-
-    /* ============================================================ */
-    /* 🎵 PERSISTENT BOTTOM ON-PAGE NEKO FM AUDIO PLAYER BAR         */
-    /* ============================================================ */
-    .bottom-player-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 68px;
-      background: rgba(10, 4, 22, 0.96);
-      border-top: 2px solid var(--accent-pink);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      z-index: 2000;
-      box-shadow: 0 -4px 25px rgba(255, 0, 127, 0.3);
-    }
-
-    .player-meta {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .player-pulse-indicator {
-      width: 12px;
-      height: 12px;
-      background-color: var(--accent-pink);
-      border-radius: 50%;
-      box-shadow: 0 0 12px var(--accent-pink);
-      animation: blink 1.5s infinite;
-    }
-
-    .player-info-text {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .player-title {
-      font-size: 0.92rem;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-    }
-
-    .player-subtitle {
-      font-size: 0.72rem;
-      color: var(--accent-cyan);
-      font-weight: 700;
-    }
-
-    .player-controls-group {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .player-play-btn {
-      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
-      color: #ffffff;
-      border: none;
-      padding: 10px 22px;
-      border-radius: 20px;
-      font-size: 0.88rem;
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 0 16px rgba(255, 0, 127, 0.4);
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .player-play-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 24px rgba(255, 0, 127, 0.7);
-    }
-
-    .player-play-btn.playing {
-      background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
-    }
-
-    .volume-container {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .volume-slider {
-      width: 90px;
-      accent-color: var(--accent-pink);
-      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
     }
 
     /* FOOTER */
@@ -674,9 +528,15 @@
       margin-top: 4rem;
       border-top: 1px solid var(--card-border);
       padding-top: 1.5rem;
+      padding-bottom: 2rem;
     }
 
     /* KEYFRAMES */
+    @keyframes navPulseGlow {
+      from { box-shadow: 0 0 10px rgba(255, 0, 127, 0.4); }
+      to { box-shadow: 0 0 22px rgba(255, 0, 127, 0.85); }
+    }
+
     @keyframes hudPulse {
       0% {
         box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
@@ -714,36 +574,17 @@
 </head>
 <body class="twilight-mode">
 
-  <!-- Matched Single-Line Header Navigation Bar -->
+  <!-- Streamlined Header Navigation Bar -->
   <header class="navbar">
     <div class="nav-container-single">
-      
-      <!-- Far Left: Mode Selector Dropdown Button -->
-      <div class="nav-left-pill">
-        <button class="mode-dropdown-btn" onclick="handleModeChange('twilight')">
-          <span>🌸 Twilight (Public 13+)</span>
-          <span style="font-size: 0.65rem;">▼</span>
-        </button>
-      </div>
-
-      <!-- Center: Main Title Branding + Navigation Pills -->
-      <div class="nav-center-group">
-        <a href="index.html" class="logo-link">
-          <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
-          <span class="logo-sub">✦ GIRLS OF PHANTOM ✦</span>
-        </a>
-
-        <nav class="nav-links-row">
-          <a href="index.html" class="nav-item-pill">🏠 Home</a>
-          <a href="podcast.html" class="nav-item-pill">🎙️ Podcast</a>
-          <a href="bbs-forum.html" class="nav-item-pill">💬 Sakuraoka BBS</a>
-          <a href="neko-fm.html" class="nav-item-pill">📻 24/7 Neko FM</a>
-          <a href="chat.html" class="nav-item-pill">💬 Live Chat</a>
-          <a href="profile.html" class="nav-item-pill">👤 Profile</a>
-          <a href="echoheart.html" class="nav-item-pill active">📚 Lore & Books</a>
-        </nav>
-      </div>
-
+      <nav class="nav-links-row">
+        <a href="index.html" class="nav-item-pill">🏠 Home</a>
+        <a href="echoheart.html" class="nav-item-pill active">📚 Lore & Books</a>
+        <a href="neko-fm.html" class="nav-item-pill">📻 24/7 Neko FM</a>
+        <a href="bbs-forum.html" class="nav-item-pill">💬 Sakuraoka BBS</a>
+        <a href="chat.html" class="nav-item-pill">💬 Live Chat</a>
+        <a href="podcast.html" class="nav-item-pill">🎙️ Podcast</a>
+      </nav>
     </div>
   </header>
 
@@ -810,318 +651,4 @@
         <div class="dossier-card">
           <span class="badge-pill">Dual Persona System</span>
           <p><strong>The "Official" Persona (Light Music Research Group):</strong> Polite, low-volume acoustic pop and soft instrumental arrangements to keep faculty members satisfied and avoid club suspension.</p>
-          <p><strong>The "Underground" Persona (Girls of Phantom / Phantom Club):</strong> High-decibel, heavily distorted 180 BPM driving J-Rock and K-Pop hybrid tracks played exclusively in the Sub-Stage or during secret guerrilla performances.</p>
-        </div>
-
-        <div class="dossier-card">
-          <span class="badge-pill">Investigation & Live Performance Workflow</span>
-          <div class="codex-list" style="margin-top: 0.8rem;">
-            <div class="codex-item">
-              <div class="codex-title">1. Dissonance Radar</div>
-              <div class="codex-desc">Detects sudden atmospheric temperature drops and localizes students drowning in emotional static.</div>
-            </div>
-            <div class="codex-item">
-              <div class="codex-title">2. Tactical Containment</div>
-              <div class="codex-desc">Maps target schedules, secures acoustic permits, and builds green chalkboard profiles.</div>
-            </div>
-            <div class="codex-item">
-              <div class="codex-title">3. Delivery & Tickets</div>
-              <div class="codex-desc">Intercepts targets or slips cardstock tickets into shoe lockers to bring listeners to the Sub-Stage.</div>
-            </div>
-            <div class="codex-item">
-              <div class="codex-title">4. Frontline Performance</div>
-              <div class="codex-desc">Leads the musical attack, shreds high-gain J-Rock solos, and shatters Dissonance cores.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- SUB-TAB 2: CORE FOUR & FAMILIARS -->
-    <div id="tab-characters" class="tab-content">
-      <section>
-        <h2>The Core Four Dossiers</h2>
-        
-        <div class="character-grid">
-          
-          <!-- SERA -->
-          <div class="char-card">
-            <div class="char-name">Sera Hanibara (花原 セラ)</div>
-            <div class="char-role">The Sun Voice • Lead Synth & Keytar</div>
-            <div class="familiar-tag">✦ Familiar: Byakko (White Celestial Fox)</div>
-            <p class="char-desc"><strong>Title:</strong> The Blushing Sunlight / Light Harmony | Class 3-A</p>
-            <p class="char-desc"><strong>Aura:</strong> Shimmering rose-gold morning light (#FFB7C5).</p>
-            <p class="char-desc"><strong>Visuals:</strong> Short pastel-pink hair with white tips, warm pink eyes, expressive cat ears.</p>
-            <p class="char-desc"><strong>Personality:</strong> Gentle, empathetic, polite, sweet, and easily flustered near Nekomi.</p>
-          </div>
-
-          <!-- NEKOMI -->
-          <div class="char-card">
-            <div class="char-name">Nekomi Aoyama (青山 ねこみ)</div>
-            <div class="char-role">The Moon Voice • Lead Electric Guitar</div>
-            <div class="familiar-tag">✦ Familiar: Yozora (Crescent Black Cat)</div>
-            <p class="char-desc"><strong>Title:</strong> The Moonlit Echo / Emotional Anchor | Class 3-A</p>
-            <p class="char-desc"><strong>Aura:</strong> Deep, reflective violet moonlight (#8A2BE2).</p>
-            <p class="char-desc"><strong>Visuals:</strong> Long flowing lavender hair, blue-tipped bangs, dark purple eyes, cool rockstar aesthetic.</p>
-            <p class="char-desc"><strong>Personality:</strong> Projects a cool, aloof rockstar persona, but harbors a frantic internal panic when Sera gets close.</p>
-          </div>
-
-          <!-- AKARI -->
-          <div class="char-card">
-            <div class="char-name">Akari Minase (水瀬 あかり)</div>
-            <div class="char-role">The Flame Pulse • Vocal Anchor & Drums</div>
-            <div class="familiar-tag">✦ Familiar: Kagerou (Ember Marten)</div>
-            <p class="char-desc"><strong>Title:</strong> The Scarlet Tempest / Tempo Ignition | Class 3-A</p>
-            <p class="char-desc"><strong>Aura:</strong> Roaring crimson and orange fire (#FF4500).</p>
-            <p class="char-desc"><strong>Visuals:</strong> Messy red ponytail, red eyes, red cardigan slipping off one shoulder.</p>
-            <p class="char-desc"><strong>Personality:</strong> Explosive, hyperactive, chaotic, highly competitive, treats every rehearsal like a stadium concert.</p>
-          </div>
-
-          <!-- AOI -->
-          <div class="char-card">
-            <div class="char-name">Aoi Mizuhara (水原 葵)</div>
-            <div class="char-role">The Grounding Voice • Bass & Strategist</div>
-            <div class="familiar-tag">✦ Familiar: Komorebi (Tanuki Spirit)</div>
-            <p class="char-desc"><strong>Title:</strong> The Celestial Grounding / Earth Heart | Class 3-A</p>
-            <p class="char-desc"><strong>Aura:</strong> Deep mossy teal and indigo field (#008080).</p>
-            <p class="char-desc"><strong>Visuals:</strong> Neat hair with star clips, wire-rimmed glasses, crisp uniform.</p>
-            <p class="char-desc"><strong>Personality:</strong> Unflappable, polite, calm, highly organized, parental manager who builds blueprints and maps logistics.</p>
-          </div>
-
-        </div>
-      </section>
-    </div>
-
-    <!-- SUB-TAB 3: SYSTEM MECHANICS -->
-    <div id="tab-mechanics" class="tab-content">
-      <section>
-        <h2>System & World Mechanics</h2>
-        
-        <div class="codex-list">
-          <div class="codex-item">
-            <div class="codex-title">Dissonance (Emotional Static)</div>
-            <div class="codex-desc">Accumulated human grief, stress, imposter syndrome, and loneliness. Manifests as freezing drafts, static shockwaves, atmospheric pressure, gray smog, or frozen chains.</div>
-          </div>
-
-          <div class="codex-item">
-            <div class="codex-title">Resonance (Musical Frequency)</div>
-            <div class="codex-desc">Pure emotional energy generated when playing weaponized instruments with genuine intent. Forms a color-coded 4-element barrier (Sanctuary Domain) that insulates targets and shatters Dissonance.</div>
-          </div>
-
-          <div class="codex-item">
-            <div class="codex-title">Heart Sync</div>
-            <div class="codex-desc">Tracks emotional and musical alignment among the four members (Low → Building → Resonant → Harmonized → Overdrive).</div>
-          </div>
-
-          <div class="codex-item">
-            <div class="codex-title">Magical Pressure & Familiar Awareness</div>
-            <div class="codex-desc">Monitors spirit entity presence and surrounding atmospheric strain (Calm → Detected → Surging → Dissonant Breach).</div>
-          </div>
-        </div>
-
-        <h3 class="sub-heading">Sound & Atmospheric Textures</h3>
-        <div class="dossier-card">
-          <p><strong>Heart Sync Pulses:</strong> Internal emotional flutters and resonance surges felt by the band during high-tension performances.</p>
-          <p><strong>Resonance Barriers:</strong> Multi-color acoustic fields (Violet, Rose-Gold, Crimson, Teal) that insulate students from emotional static corruption.</p>
-          <p><strong>Underground Acoustics:</strong> High-decibel distortion, sub-bass thumps, and sparkling synth notes echoing through the Sub-Stage amphitheater.</p>
-        </div>
-      </section>
-    </div>
-
-    <!-- SUB-TAB 4: BOOKS & FUTURE RELEASES -->
-    <div id="tab-future" class="tab-content">
-      <section>
-        <h2>Books, Media & Future Releases</h2>
-        
-        <div class="store-card">
-          <span class="store-badge">Now Available / KDP & Paperback</span>
-          <h3 class="store-title">EchoHeart Volume 1: Girls of Phantom</h3>
-          <p class="store-desc">
-            Enter the hidden underground music scene of EchoHeart Senior Academy. Follow Akari, Nekomi, Sera, and Aoi as they battle emotional static, restore lost frequencies, and balance high school drama with high-decibel J-Rock performances!
-          </p>
-          <div class="store-btn-group">
-            <a href="https://www.amazon.com" target="_blank" rel="noopener noreferrer" class="amazon-btn">
-              🛒 Get Volume 1 on Amazon Kindle
-            </a>
-            <a href="https://author.amazon.com" target="_blank" rel="noopener noreferrer" class="kdp-btn">
-              📖 KDP Print Edition
-            </a>
-          </div>
-        </div>
-
-        <div class="dossier-card">
-          <span class="badge-pill">Upcoming Releases</span>
-          <p><strong>Volume 2 (In Development):</strong> Expanding beyond Sakuraoka Academy into the broader Shibuya underground live house district.</p>
-          <p><strong>Official Original Soundtrack:</strong> 16-bit synth remixes and full J-Rock character singles featured on 24/7 Neko FM.</p>
-          <p><strong>Side Stories & Audio Dramas:</strong> Exclusive bonus chapters dropping right here in the Otaku Overload portal.</p>
-        </div>
-      </section>
-    </div>
-
-    <footer>
-      <p>EchoHeart / Girls of Phantom Lore Codex • All Rights Reserved</p>
-    </footer>
-
-  </div>
-
-  <!-- PERSISTENT BOTTOM ON-PAGE AUDIO PLAYER -->
-  <div class="bottom-player-bar">
-    <div class="player-meta">
-      <div class="player-pulse-indicator"></div>
-      <div class="player-info-text">
-        <span class="player-title">📻 24/7 NEKO FM — Live Stream</span>
-        <span class="player-subtitle">Girls of Phantom Underground Frequency</span>
-      </div>
-    </div>
-    <div class="player-controls-group">
-      <button class="player-play-btn" id="local-play-btn" onclick="toggleLocalNekoStream()">
-        <span id="play-btn-icon">▶</span>
-        <span id="play-btn-text">LISTEN LIVE</span>
-      </button>
-      <div class="volume-container">
-        <span>🔊</span>
-        <input type="range" class="volume-slider" id="neko-volume" min="0" max="1" step="0.05" value="0.8" oninput="setStreamVolume(this.value)">
-      </div>
-    </div>
-    <audio id="neko-live-audio" src="https://stream.zeno.fm/f3wvbbqmdg8uv" preload="none"></audio>
-  </div>
-
-  <script>
-    /* ON-PAGE AUDIO PLAYER LOGIC */
-    function toggleLocalNekoStream() {
-      const audio = document.getElementById('neko-live-audio');
-      const btn = document.getElementById('local-play-btn');
-      const icon = document.getElementById('play-btn-icon');
-      const text = document.getElementById('play-btn-text');
-
-      if (audio.paused) {
-        audio.play().then(() => {
-          btn.classList.add('playing');
-          icon.textContent = '⏸';
-          text.textContent = 'PAUSE';
-        }).catch(err => {
-          console.error("Audio playback error:", err);
-        });
-      } else {
-        audio.pause();
-        btn.classList.remove('playing');
-        icon.textContent = '▶';
-        text.textContent = 'LISTEN LIVE';
-      }
-    }
-
-    function setStreamVolume(val) {
-      const audio = document.getElementById('neko-live-audio');
-      if (audio) {
-        audio.volume = val;
-      }
-    }
-
-    /* INTERACTIVE HUD CYCLING LOGIC */
-    const echoStates = [
-      { text: "[Echo Resonance: 15%]", mode: "" },
-      { text: "[Echo Resonance: 35%]", mode: "" },
-      { text: "[Echo Resonance: 65%]", mode: "warn" },
-      { text: "[Echo Resonance: 95% BREACH!]", mode: "alert" }
-    ];
-
-    const heartStates = [
-      { text: "[Heart Sync: Low]", mode: "" },
-      { text: "[Heart Sync: Building]", mode: "" },
-      { text: "[Heart Sync: Resonant]", mode: "" },
-      { text: "[Heart Sync: Harmonized]", mode: "warn" },
-      { text: "[Heart Sync: 100% OVERDRIVE]", mode: "alert" }
-    ];
-
-    const familiarStates = [
-      { text: "[Familiar Awareness: Calm]", mode: "" },
-      { text: "[Familiar Awareness: Alert]", mode: "" },
-      { text: "[Familiar Awareness: Entity Detected]", mode: "warn" },
-      { text: "[Familiar Awareness: Active Domain]", mode: "alert" }
-    ];
-
-    const pressureStates = [
-      { text: "[Magical Pressure: Stable]", mode: "" },
-      { text: "[Magical Pressure: Surging]", mode: "" },
-      { text: "[Magical Pressure: High Strain]", mode: "warn" },
-      { text: "[Magical Pressure: Critical Overload!]", mode: "alert" }
-    ];
-
-    let idxEcho = 1;
-    let idxHeart = 2;
-    let idxFamiliar = 1;
-    let idxPressure = 1;
-
-    function updateHudBtn(btnId, textId, stateArr, currentIdx) {
-      const btn = document.getElementById(btnId);
-      const textSpan = document.getElementById(textId);
-      const state = stateArr[currentIdx];
-
-      textSpan.textContent = state.text;
-      btn.classList.remove('warn', 'alert');
-      if (state.mode) {
-        btn.classList.add(state.mode);
-      }
-    }
-
-    function cycleEchoResonance() {
-      idxEcho = (idxEcho + 1) % echoStates.length;
-      updateHudBtn('btn-echo', 'text-echo', echoStates, idxEcho);
-    }
-
-    function cycleHeartSync() {
-      idxHeart = (idxHeart + 1) % heartStates.length;
-      updateHudBtn('btn-heart', 'text-heart', heartStates, idxHeart);
-    }
-
-    function cycleFamiliarAwareness() {
-      idxFamiliar = (idxFamiliar + 1) % familiarStates.length;
-      updateHudBtn('btn-familiar', 'text-familiar', familiarStates, idxFamiliar);
-    }
-
-    function cycleMagicalPressure() {
-      idxPressure = (idxPressure + 1) % pressureStates.length;
-      updateHudBtn('btn-pressure', 'text-pressure', pressureStates, idxPressure);
-    }
-
-    /* SUB-TAB SWITCHING LOGIC */
-    function switchLoreSubtab(subtabName) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.lore-tab-btn').forEach(btn => btn.classList.remove('active'));
-
-      const targetTab = document.getElementById(`tab-${subtabName}`);
-      if (targetTab) targetTab.classList.add('active');
-
-      if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-      }
-    }
-
-    /* GLOBAL SITE TIER SCRIPT */
-    async function handleModeChange(targetMode) {
-      if (targetMode === 'twilight') {
-        applyThemeMode('twilight');
-        return;
-      }
-    }
-
-    function getCurrentMode() {
-      return localStorage.getItem('neko_active_mode') || 'twilight';
-    }
-
-    function applyThemeMode(mode) {
-      localStorage.setItem('neko_active_mode', mode);
-      const body = document.body;
-
-      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
-      body.classList.add(`${mode}-mode`);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      applyThemeMode(getCurrentMode());
-    });
-  </script>
-
-   <script src="music-player.js"></script>
-</body>
-</html>
+          <p><strong>The "Underground" Persona (Girls of Phantom / Phantom Club):</strong> High-decibel, heavily distorted 180 BPM driving J-Rock and K-Pop hybrid tracks played exclusively in the Sub
