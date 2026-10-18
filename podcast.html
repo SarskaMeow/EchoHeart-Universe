@@ -39,7 +39,7 @@
       color: var(--text-main);
       min-height: 100vh;
       line-height: 1.6;
-      padding-bottom: 110px; /* Room for compact bottom-left player */
+      padding-bottom: 110px;
       overflow-x: hidden;
       background-image: 
         radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.22) 0%, transparent 50%),
@@ -69,7 +69,6 @@
       gap: 16px;
     }
 
-    /* Left-Aligned Nav Pills Row */
     .nav-pills-row {
       display: flex;
       align-items: center;
@@ -108,7 +107,6 @@
       animation: pulseGlow 2.5s infinite alternate;
     }
 
-    /* Right-Side Podcast Status Badge */
     .nav-status-badge {
       display: flex;
       align-items: center;
@@ -205,11 +203,30 @@
       box-shadow: 0 0 14px rgba(255, 0, 127, 0.6);
     }
 
+    /* SPECTRUM VISUALIZER CANVAS STYLES */
+    .visualizer-wrapper {
+      position: relative;
+      width: 100%;
+      height: 90px;
+      background: #020106;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 14px;
+      margin: 16px 0;
+      overflow: hidden;
+      box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.15);
+    }
+
+    #visualizer-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
     .speaker-booth-wide {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
-      margin: 22px 0;
+      margin: 16px 0;
       background: rgba(10, 4, 22, 0.85);
       border: 1px solid var(--border-cyan);
       padding: 18px;
@@ -357,7 +374,6 @@
       box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
     }
 
-    /* COMMUNITY COMMENTS SECTION */
     .global-comments-wrapper {
       max-width: 1300px;
       margin: 10px auto 50px;
@@ -432,7 +448,6 @@
       padding: 14px 18px;
     }
 
-    /* COMPACT DOCKED BOTTOM-LEFT MUSIC PLAYER WIDGET */
     .docked-music-player {
       position: fixed;
       bottom: 16px;
@@ -530,7 +545,6 @@
       display: none;
     }
 
-    /* ANIMATIONS */
     @keyframes textGlitchRGB {
       0%, 100% { text-shadow: 2px 0 var(--accent-pink), -2px 0 var(--accent-cyan); }
       50% { text-shadow: -2px 0 var(--accent-pink), 2px 0 var(--accent-cyan); }
@@ -556,14 +570,13 @@
 <body>
 
   <!-- Audio Elements -->
-  <audio id="audio-player" style="display: none;"></audio>
+  <audio id="audio-player" crossorigin="anonymous" style="display: none;"></audio>
   <audio id="docked-radio-audio" crossorigin="anonymous" style="display: none;"></audio>
 
   <!-- Tightened Navigation Bar -->
   <header class="navbar">
     <div class="nav-container">
       
-      <!-- Left-Aligned Navigation Link Pills -->
       <nav class="nav-pills-row" id="nav-menu">
         <a href="index.html" class="nav-item-pill">🏠 Home</a>
         <a href="echoheart.html" class="nav-item-pill">📚 Lore & Books</a>
@@ -573,7 +586,6 @@
         <a href="podcast.html" class="nav-item-pill active">🎙️ Podcast</a>
       </nav>
 
-      <!-- Right-Aligned Podcast Relay Status -->
       <div class="nav-status-badge">
         <span class="status-dot"></span>
         🎙️ WHISPER RELAY: ONLINE
@@ -594,6 +606,11 @@
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
         <h2 id="stage-main-title" class="stage-glitch-header">🎙️ WHISPER RADIO STUDIO STAGE</h2>
         <span id="stage-air-badge" class="on-air-badge">ON AIR</span>
+      </div>
+
+      <!-- SPECTRUM VISUALIZER CANVAS -->
+      <div class="visualizer-wrapper">
+        <canvas id="visualizer-canvas"></canvas>
       </div>
 
       <div class="speaker-booth-wide">
@@ -647,7 +664,6 @@
     </aside>
   </main>
 
-  <!-- ALWAYS-ON COMMUNITY COMMENT SECTION -->
   <section class="global-comments-wrapper">
     <div class="comments-card-main">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
@@ -721,9 +737,14 @@
     let totalSeconds = 186;
     let currentEpisodeIdx = 0;
 
+    // WEB AUDIO API VISUALIZER STATE
+    let audioCtx = null;
+    let analyserNode = null;
+    let sourceNode = null;
+    let visualizerAnimFrame = null;
+
     const defaultStreamUrl = "https://kathy.torontocast.com:3060/stream";
 
-    // Complete Episode Script Catalog
     const EPISODES = [
       {
         title: "EchoHeart Whisper Podcast EP-1",
@@ -779,6 +800,74 @@
       }
     ];
 
+    /* SPECTRUM VISUALIZER INITIALIZATION & RENDER */
+    function initVisualizer() {
+      if (audioCtx) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        analyserNode = audioCtx.createAnalyser();
+        analyserNode.fftSize = 128;
+        
+        sourceNode = audioCtx.createMediaElementSource(audioElement);
+        sourceNode.connect(analyserNode);
+        analyserNode.connect(audioCtx.destination);
+      } catch (err) {
+        console.warn("Web Audio API visualizer init warning:", err);
+      }
+    }
+
+    function renderVisualizer() {
+      const canvas = document.getElementById('visualizer-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+
+      const bufferLength = analyserNode ? analyserNode.frequencyBinCount : 32;
+      const dataArray = new Uint8Array(bufferLength);
+
+      function draw() {
+        visualizerAnimFrame = requestAnimationFrame(draw);
+
+        if (analyserNode && isPodcastPlaying) {
+          analyserNode.getByteFrequencyData(dataArray);
+        } else {
+          for (let i = 0; i < bufferLength; i++) {
+            dataArray[i] = Math.max(0, dataArray[i] - 4);
+          }
+        }
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const barWidth = (canvas.width / bufferLength) * 1.8;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+          let barHeight = (dataArray[i] / 255) * canvas.height * 0.85;
+          if (barHeight < 4) barHeight = 4;
+
+          const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+          gradient.addColorStop(0, '#9d4edd');
+          gradient.addColorStop(0.5, '#ff007f');
+          gradient.addColorStop(1, '#00f0ff');
+
+          ctx.fillStyle = gradient;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = '#00f0ff';
+
+          ctx.beginPath();
+          ctx.roundRect(x, canvas.height - barHeight, barWidth - 3, barHeight, [4, 4, 0, 0]);
+          ctx.fill();
+
+          x += barWidth;
+        }
+      }
+
+      draw();
+    }
+
     /* DOCKED MUSIC PLAYER FUNCTIONALITY */
     function toggleDockedMusic() {
       const playBtn = document.getElementById('docked-play-btn');
@@ -788,7 +877,6 @@
         isDockedMusicPlaying = false;
         playBtn.innerText = "▶ PLAY MUSIC";
       } else {
-        // OVERRIDE: Stop podcast if currently playing
         if (isPodcastPlaying) {
           stopPodcastPlayback();
         }
@@ -819,11 +907,15 @@
     }
 
     function startPodcastPlayback() {
-      // OVERRIDE: Pause bottom-left docked music player
       if (isDockedMusicPlaying) {
         dockedAudio.pause();
         isDockedMusicPlaying = false;
         document.getElementById('docked-play-btn').innerText = "▶ PLAY MUSIC";
+      }
+
+      initVisualizer();
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
       }
 
       isPodcastPlaying = true;
@@ -835,7 +927,7 @@
         audioElement.play().then(() => {
           startHighFreqSync();
         }).catch(err => {
-          console.warn("Audio element play error, using clock timer fallback:", err);
+          console.warn("Audio element play error, using fallback:", err);
           runSimulatedTimer();
         });
 
@@ -1030,6 +1122,7 @@
         });
       }
       selectEpisode(0);
+      renderVisualizer();
     }
 
     if (document.readyState === 'loading') {
