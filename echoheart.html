@@ -42,6 +42,7 @@
       background-color: var(--bg-dark);
       color: var(--text-main);
       line-height: 1.6;
+      padding-bottom: 90px; /* Offset for bottom player bar */
       transition: background-color 0.4s ease, color 0.4s ease;
     }
 
@@ -72,9 +73,7 @@
     }
 
     /* Far Left: Mode Selector Pill Dropdown */
-    .nav-left-pill {
-      flex: 0 0 auto;
-    }
+    .nav-left-pill { flex: 0 0 auto; }
 
     .mode-dropdown-btn {
       background: rgba(20, 8, 35, 0.85);
@@ -161,84 +160,10 @@
       box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
     }
 
-    /* Far Right: Floating Neko FM Radio Badge */
-    .nav-right-pill {
-      flex: 0 0 auto;
-    }
-
-    .neko-radio-pill {
-      background: rgba(10, 4, 22, 0.9);
-      border: 1.5px solid var(--accent-cyan);
-      border-radius: 24px;
-      padding: 5px 16px 5px 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
-      transition: all 0.25s ease;
-    }
-
-    .neko-radio-pill:hover {
-      box-shadow: 0 0 22px rgba(0, 240, 255, 0.5);
-      border-color: #70f8ff;
-    }
-
-    .play-icon-circle {
-      width: 28px;
-      height: 28px;
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      font-size: 0.75rem;
-      padding-left: 2px;
-      box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
-    }
-
-    .radio-text-group {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-    }
-
-    .radio-title-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.82rem;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-    }
-
-    .radio-pulse-dot {
-      width: 6px;
-      height: 6px;
-      background-color: var(--accent-pink);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent-pink);
-      animation: blink 1.5s infinite;
-    }
-
-    .radio-sub-text {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
     @media (max-width: 992px) {
       .nav-container-single { flex-wrap: wrap; }
       .nav-center-group { order: 1; width: 100%; }
       .nav-left-pill { order: 2; }
-      .nav-right-pill { order: 3; }
     }
 
     /* ============================================================ */
@@ -275,7 +200,7 @@
       letter-spacing: 1px;
     }
 
-    /* ANIMATED HUD STATUS BANNER WIDGET */
+    /* ANIMATED INTERACTIVE HUD STATUS BANNER WIDGET */
     .hud-banner {
       background: var(--card-inner);
       border: 1.5px solid var(--accent-cyan);
@@ -300,16 +225,29 @@
       opacity: 0.7;
     }
 
+    .hud-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      position: relative;
+      z-index: 2;
+    }
+
     .hud-header {
       font-size: 0.85rem;
       color: var(--accent-pink);
       text-transform: uppercase;
       letter-spacing: 2px;
-      margin-bottom: 0.8rem;
       font-weight: bold;
-      position: relative;
-      z-index: 2;
       animation: textGlitch 4s infinite;
+    }
+
+    .hud-hint {
+      font-size: 0.7rem;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+      opacity: 0.85;
     }
 
     .hud-grid {
@@ -320,20 +258,48 @@
       z-index: 2;
     }
 
-    .hud-metric {
+    .hud-metric-btn {
       background: #030108;
-      padding: 0.65rem 1rem;
+      padding: 0.75rem 1rem;
       border-left: 3.5px solid var(--accent-cyan);
-      font-size: 0.95rem;
+      border-top: 1px solid rgba(0, 240, 255, 0.15);
+      border-right: 1px solid rgba(0, 240, 255, 0.15);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+      font-size: 0.9rem;
       color: #fff;
-      border-radius: 4px;
+      border-radius: 6px;
       box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.12);
       transition: all 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      width: 100%;
     }
 
-    .hud-metric:hover {
+    .hud-metric-btn:hover {
       border-left-color: var(--accent-pink);
-      box-shadow: 0 0 14px rgba(255, 0, 127, 0.4);
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .hud-metric-btn.warn {
+      border-left-color: var(--accent-gold);
+      box-shadow: 0 0 16px rgba(255, 209, 102, 0.35);
+    }
+
+    .hud-metric-btn.alert {
+      border-left-color: var(--accent-pink);
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+      animation: textGlitch 2s infinite;
+    }
+
+    .hud-click-icon {
+      font-size: 0.7rem;
+      color: var(--accent-cyan);
+      opacity: 0.6;
     }
 
     /* INTERNAL LORE TABS SYSTEM */
@@ -370,9 +336,7 @@
       animation: fadeInTab 0.35s ease-out forwards;
     }
 
-    .tab-content.active {
-      display: block;
-    }
+    .tab-content.active { display: block; }
 
     @keyframes fadeInTab {
       from { opacity: 0; transform: translateY(6px); }
@@ -602,6 +566,106 @@
       box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
     }
 
+    /* ============================================================ */
+    /* 🎵 PERSISTENT BOTTOM ON-PAGE NEKO FM AUDIO PLAYER BAR         */
+    /* ============================================================ */
+    .bottom-player-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      background: rgba(10, 4, 22, 0.96);
+      border-top: 2px solid var(--accent-pink);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 2000;
+      box-shadow: 0 -4px 25px rgba(255, 0, 127, 0.3);
+    }
+
+    .player-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .player-pulse-indicator {
+      width: 12px;
+      height: 12px;
+      background-color: var(--accent-pink);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent-pink);
+      animation: blink 1.5s infinite;
+    }
+
+    .player-info-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .player-title {
+      font-size: 0.92rem;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+
+    .player-subtitle {
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    .player-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .player-play-btn {
+      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+      color: #ffffff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 20px;
+      font-size: 0.88rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.4);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .player-play-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 24px rgba(255, 0, 127, 0.7);
+    }
+
+    .player-play-btn.playing {
+      background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+    }
+
+    .volume-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .volume-slider {
+      width: 90px;
+      accent-color: var(--accent-pink);
+      cursor: pointer;
+    }
+
     /* FOOTER */
     footer {
       text-align: center;
@@ -680,20 +744,6 @@
         </nav>
       </div>
 
-      <!-- Far Right: Floating Neko FM Player Pill -->
-      <div class="nav-right-pill">
-        <a href="neko-fm.html" class="neko-radio-pill">
-          <div class="play-icon-circle">▶</div>
-          <div class="radio-text-group">
-            <div class="radio-title-row">
-              <span class="radio-pulse-dot"></span>
-              <span>NEKO FM</span>
-            </div>
-            <span class="radio-sub-text">24/7 Radio</span>
-          </div>
-        </a>
-      </div>
-
     </div>
   </header>
 
@@ -705,14 +755,29 @@
       <p>Underground Sound • Phantom Frequencies • Real-World Dissonance</p>
     </header>
 
-    <!-- LIVE HUD STATUS WIDGET -->
+    <!-- LIVE INTERACTIVE HUD STATUS WIDGET -->
     <div class="hud-banner">
-      <div class="hud-header">// System Status Monitor — Active Frequency</div>
+      <div class="hud-header-bar">
+        <div class="hud-header">// System Status Monitor — Active Frequency</div>
+        <div class="hud-hint">⚡ [Click metrics to cycle frequency states]</div>
+      </div>
       <div class="hud-grid">
-        <div class="hud-metric">[Echo Resonance: 35%]</div>
-        <div class="hud-metric">[Heart Sync: Resonant]</div>
-        <div class="hud-metric">[Familiar Awareness: Alert]</div>
-        <div class="hud-metric">[Magical Pressure: Surging]</div>
+        <button class="hud-metric-btn" id="btn-echo" onclick="cycleEchoResonance()">
+          <span id="text-echo">[Echo Resonance: 35%]</span>
+          <span class="hud-click-icon">🔄</span>
+        </button>
+        <button class="hud-metric-btn" id="btn-heart" onclick="cycleHeartSync()">
+          <span id="text-heart">[Heart Sync: Resonant]</span>
+          <span class="hud-click-icon">🔄</span>
+        </button>
+        <button class="hud-metric-btn" id="btn-familiar" onclick="cycleFamiliarAwareness()">
+          <span id="text-familiar">[Familiar Awareness: Alert]</span>
+          <span class="hud-click-icon">🔄</span>
+        </button>
+        <button class="hud-metric-btn" id="btn-pressure" onclick="cycleMagicalPressure()">
+          <span id="text-pressure">[Magical Pressure: Surging]</span>
+          <span class="hud-click-icon">🔄</span>
+        </button>
       </div>
     </div>
 
@@ -899,7 +964,126 @@
 
   </div>
 
+  <!-- PERSISTENT BOTTOM ON-PAGE AUDIO PLAYER -->
+  <div class="bottom-player-bar">
+    <div class="player-meta">
+      <div class="player-pulse-indicator"></div>
+      <div class="player-info-text">
+        <span class="player-title">📻 24/7 NEKO FM — Live Stream</span>
+        <span class="player-subtitle">Girls of Phantom Underground Frequency</span>
+      </div>
+    </div>
+    <div class="player-controls-group">
+      <button class="player-play-btn" id="local-play-btn" onclick="toggleLocalNekoStream()">
+        <span id="play-btn-icon">▶</span>
+        <span id="play-btn-text">LISTEN LIVE</span>
+      </button>
+      <div class="volume-container">
+        <span>🔊</span>
+        <input type="range" class="volume-slider" id="neko-volume" min="0" max="1" step="0.05" value="0.8" oninput="setStreamVolume(this.value)">
+      </div>
+    </div>
+    <audio id="neko-live-audio" src="https://stream.zeno.fm/f3wvbbqmdg8uv" preload="none"></audio>
+  </div>
+
   <script>
+    /* ON-PAGE AUDIO PLAYER LOGIC */
+    function toggleLocalNekoStream() {
+      const audio = document.getElementById('neko-live-audio');
+      const btn = document.getElementById('local-play-btn');
+      const icon = document.getElementById('play-btn-icon');
+      const text = document.getElementById('play-btn-text');
+
+      if (audio.paused) {
+        audio.play().then(() => {
+          btn.classList.add('playing');
+          icon.textContent = '⏸';
+          text.textContent = 'PAUSE';
+        }).catch(err => {
+          console.error("Audio playback error:", err);
+        });
+      } else {
+        audio.pause();
+        btn.classList.remove('playing');
+        icon.textContent = '▶';
+        text.textContent = 'LISTEN LIVE';
+      }
+    }
+
+    function setStreamVolume(val) {
+      const audio = document.getElementById('neko-live-audio');
+      if (audio) {
+        audio.volume = val;
+      }
+    }
+
+    /* INTERACTIVE HUD CYCLING LOGIC */
+    const echoStates = [
+      { text: "[Echo Resonance: 15%]", mode: "" },
+      { text: "[Echo Resonance: 35%]", mode: "" },
+      { text: "[Echo Resonance: 65%]", mode: "warn" },
+      { text: "[Echo Resonance: 95% BREACH!]", mode: "alert" }
+    ];
+
+    const heartStates = [
+      { text: "[Heart Sync: Low]", mode: "" },
+      { text: "[Heart Sync: Building]", mode: "" },
+      { text: "[Heart Sync: Resonant]", mode: "" },
+      { text: "[Heart Sync: Harmonized]", mode: "warn" },
+      { text: "[Heart Sync: 100% OVERDRIVE]", mode: "alert" }
+    ];
+
+    const familiarStates = [
+      { text: "[Familiar Awareness: Calm]", mode: "" },
+      { text: "[Familiar Awareness: Alert]", mode: "" },
+      { text: "[Familiar Awareness: Entity Detected]", mode: "warn" },
+      { text: "[Familiar Awareness: Active Domain]", mode: "alert" }
+    ];
+
+    const pressureStates = [
+      { text: "[Magical Pressure: Stable]", mode: "" },
+      { text: "[Magical Pressure: Surging]", mode: "" },
+      { text: "[Magical Pressure: High Strain]", mode: "warn" },
+      { text: "[Magical Pressure: Critical Overload!]", mode: "alert" }
+    ];
+
+    let idxEcho = 1;
+    let idxHeart = 2;
+    let idxFamiliar = 1;
+    let idxPressure = 1;
+
+    function updateHudBtn(btnId, textId, stateArr, currentIdx) {
+      const btn = document.getElementById(btnId);
+      const textSpan = document.getElementById(textId);
+      const state = stateArr[currentIdx];
+
+      textSpan.textContent = state.text;
+      btn.classList.remove('warn', 'alert');
+      if (state.mode) {
+        btn.classList.add(state.mode);
+      }
+    }
+
+    function cycleEchoResonance() {
+      idxEcho = (idxEcho + 1) % echoStates.length;
+      updateHudBtn('btn-echo', 'text-echo', echoStates, idxEcho);
+    }
+
+    function cycleHeartSync() {
+      idxHeart = (idxHeart + 1) % heartStates.length;
+      updateHudBtn('btn-heart', 'text-heart', heartStates, idxHeart);
+    }
+
+    function cycleFamiliarAwareness() {
+      idxFamiliar = (idxFamiliar + 1) % familiarStates.length;
+      updateHudBtn('btn-familiar', 'text-familiar', familiarStates, idxFamiliar);
+    }
+
+    function cycleMagicalPressure() {
+      idxPressure = (idxPressure + 1) % pressureStates.length;
+      updateHudBtn('btn-pressure', 'text-pressure', pressureStates, idxPressure);
+    }
+
     /* SUB-TAB SWITCHING LOGIC */
     function switchLoreSubtab(subtabName) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
