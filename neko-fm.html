@@ -19,20 +19,15 @@
       --accent-cyan: #00f0ff;
       --accent-gold: #ffd166;
       --accent-green: #00ffaa;
-      --accent-glow: rgba(255, 0, 127, 0.45);
+      --accent-glow: rgba(255, 0, 127, 0.55);
+      --cyan-glow: rgba(0, 240, 255, 0.55);
+      --gold-glow: rgba(255, 209, 102, 0.55);
       --text-main: #e8dff5;
       --text-light: #ffffff;
       --text-muted: #b8a7d4;
-      --card-border: rgba(255, 0, 127, 0.35);
-      --border-cyan: rgba(0, 240, 255, 0.35);
-
-      /* Tier Navigation Border Tokens */
-      --nav-bg-twilight: rgba(9, 4, 18, 0.96);
-      --nav-bg-basement: rgba(18, 4, 25, 0.98);
-      --nav-bg-backstage: rgba(25, 12, 5, 0.99);
+      --card-border: rgba(255, 0, 127, 0.45);
+      --border-cyan: rgba(0, 240, 255, 0.45);
       --nav-border-twilight: rgba(0, 240, 255, 0.4);
-      --nav-border-basement: rgba(255, 0, 127, 0.5);
-      --nav-border-backstage: rgba(255, 209, 102, 0.6);
     }
 
     * {
@@ -50,209 +45,106 @@
       padding-bottom: 60px;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.18) 0%, transparent 50%),
-        radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.14) 0%, transparent 50%);
-      transition: background 0.4s ease, color 0.4s ease;
+        radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.22) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12) 0%, transparent 60%);
     }
 
-    /* BACKGROUND SCANLINE EFFECT */
-    body::before {
-      content: " ";
-      position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
-      background-size: 100% 4px;
-      z-index: 999;
-      pointer-events: none;
-      opacity: 0.5;
-    }
-
-    /* 3-Tier Mode Themes */
-    body.twilight-mode { background: #040209; color: var(--text-main); }
-    body.basement-mode { background: #08020e; color: #fce8ec; }
-    body.backstage-mode { background: #0a0502; color: #ffffff; }
-
-    body.basement-mode .navbar {
-      background: var(--nav-bg-basement);
-      border-bottom-color: var(--nav-border-basement);
-      box-shadow: 0 4px 20px rgba(255, 0, 127, 0.3);
-    }
-
-    body.backstage-mode .navbar {
-      background: var(--nav-bg-backstage);
-      border-bottom: 2px solid var(--accent-gold);
-      box-shadow: 0 4px 20px rgba(255, 209, 102, 0.3);
-    }
-
-    /* Universal Header Navbar */
+    /* TIGHTENED UNIVERSAL NAVBAR (LEFT-ALIGNED) */
     .navbar {
       position: sticky;
       top: 0;
       z-index: 1000;
       width: 100%;
-      background: var(--nav-bg-twilight);
+      background: var(--nav-bg);
       border-bottom: 1.5px solid var(--nav-border-twilight);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      transition: background 0.4s ease, border-color 0.4s ease;
-      box-sizing: border-box;
-      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2);
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.25), 0 0 15px rgba(255, 0, 127, 0.15);
     }
 
     .nav-container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 8px 20px 10px;
+      padding: 8px 20px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      position: relative;
-    }
-
-    .nav-top-row {
-      width: 100%;
-      display: flex;
       justify-content: space-between;
-      align-items: center;
-      position: relative;
+      gap: 16px;
     }
 
-    .mode-selector-wrapper {
+    /* Left-Aligned Nav Pills Row */
+    .nav-pills-row {
       display: flex;
       align-items: center;
-    }
-
-    .logo-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 3px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .logo-link {
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .logo-main {
-      font-size: 1.25rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: var(--accent-cyan);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
-      animation: textGlitch 4s infinite;
-    }
-
-    body.basement-mode .logo-main {
-      color: var(--accent-pink);
-      text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
-    }
-
-    body.backstage-mode .logo-main {
-      color: var(--accent-gold);
-      text-shadow: 0 0 15px rgba(255, 209, 102, 0.8);
-    }
-
-    .logo-sub {
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: var(--accent-pink);
-      opacity: 0.9;
-      margin-top: -1px;
-      text-shadow: 0 0 8px var(--accent-glow);
-    }
-
-    body.basement-mode .logo-sub { color: var(--accent-pink); }
-    body.backstage-mode .logo-sub { color: var(--accent-gold); }
-
-    .nav-links { 
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      gap: 8px; 
+      gap: 8px;
       flex-wrap: wrap;
-      margin-top: 6px;
     }
-    
-    .nav-item {
+
+    .nav-item-pill {
       color: var(--text-muted);
       font-size: 0.82rem;
-      font-weight: 700;
-      padding: 6px 14px;
-      border-radius: 8px;
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: 12px;
       text-decoration: none;
       transition: all 0.25s ease;
       white-space: nowrap;
-      background: rgba(30, 15, 55, 0.6);
-      border: 1px solid rgba(157, 78, 221, 0.3);
+      background: rgba(22, 10, 36, 0.85);
+      border: 1px solid rgba(157, 78, 221, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .nav-item:hover, .nav-item.active {
+    .nav-item-pill:hover {
+      background: rgba(157, 78, 221, 0.3);
+      color: #ffffff;
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 14px rgba(157, 78, 221, 0.6);
+    }
+
+    .nav-item-pill.active {
       background: rgba(255, 0, 127, 0.25);
       color: #ffffff;
       border-color: var(--accent-pink);
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 18px var(--accent-glow), inset 0 0 8px rgba(255, 0, 127, 0.4);
+      animation: navPulseGlow 2.5s infinite alternate;
     }
 
-    /* Glowing Mode Select Dropdown */
-    .mode-select-dropdown {
-      appearance: none;
-      -webkit-appearance: none;
-      padding: 6px 28px 6px 14px;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 800;
-      cursor: pointer;
-      outline: none;
-      transition: all 0.3s ease;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f0ff'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 8px center;
-      background-size: 14px;
-      background-color: rgba(10, 4, 22, 0.95);
-      border: 1.5px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      box-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
-    }
-
-    .mode-select-dropdown:hover {
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
-      border-color: #70f8ff;
-      color: #fff;
-    }
-
-    body.basement-mode .mode-select-dropdown {
+    .nav-item-pill.auth-pill {
+      background: rgba(255, 0, 127, 0.2);
       border-color: var(--accent-pink);
-      color: var(--accent-pink);
-      box-shadow: 0 0 14px rgba(255, 0, 127, 0.4);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff007f'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      cursor: pointer;
     }
 
-    body.backstage-mode .mode-select-dropdown {
-      border-color: var(--accent-gold);
-      color: var(--accent-gold);
-      box-shadow: 0 0 14px rgba(255, 209, 102, 0.4);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    /* Right-Side Station Live Badge */
+    .nav-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid rgba(0, 240, 255, 0.45);
+      padding: 5px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
     }
 
-    .mode-select-dropdown option {
-      background-color: #0b0716;
-      color: #e2daf8;
-      padding: 8px;
-      font-weight: 700;
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: statusBlink 1.2s infinite;
     }
 
-    /* Mobile Hamburger */
     .mobile-menu-btn {
       display: none;
       background: rgba(14, 9, 28, 0.8);
@@ -271,49 +163,35 @@
     }
 
     @media (max-width: 992px) {
-      .logo-container { position: static; transform: none; }
-      .nav-top-row { justify-content: space-between; }
       .mobile-menu-btn { display: flex; flex-direction: column; }
-      .nav-links {
+      .nav-pills-row {
         display: none;
         width: 100%;
-        background: rgba(8, 5, 18, 0.98);
-        border-top: 1px solid var(--card-border);
         flex-direction: column;
-        padding: 12px 0;
+        padding-top: 8px;
         gap: 8px;
       }
-      .nav-links.open { display: flex; }
-      .nav-item, .mode-selector-wrapper { width: 100%; text-align: center; justify-content: center; }
-      .mode-select-dropdown { width: 100%; text-align: center; }
+      .nav-pills-row.open { display: flex; }
+      .nav-item-pill { width: 100%; justify-content: center; }
     }
 
     /* Studio Dashboard Container */
     .studio-dashboard {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 30px auto;
       background: var(--card-inner);
       border: 1.5px solid var(--accent-cyan);
       border-radius: 20px;
       padding: 28px;
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 240, 255, 0.2);
-      animation: hudPulse 4s infinite ease-in-out;
-    }
-
-    body.basement-mode .studio-dashboard {
-      border-color: var(--accent-pink);
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(255, 0, 127, 0.3);
-    }
-
-    body.backstage-mode .studio-dashboard {
-      border-color: var(--accent-gold);
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(255, 209, 102, 0.3);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0, 240, 255, 0.35);
+      animation: neonHudPulse 3.5s infinite ease-in-out;
+      position: relative;
     }
 
     .dashboard-tabs {
       display: flex;
       gap: 12px;
-      border-bottom: 2px solid var(--card-border);
+      border-bottom: 2px solid rgba(255, 0, 127, 0.4);
       padding-bottom: 14px;
       margin-bottom: 24px;
       flex-wrap: wrap;
@@ -329,41 +207,51 @@
       font-size: 0.9rem;
       cursor: pointer;
       transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .tab-btn.active-tab, .tab-btn:hover {
+    .tab-btn:hover {
+      color: #ffffff;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+    }
+
+    .tab-btn.active-tab {
       background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
       color: #ffffff;
       border-color: var(--accent-pink);
-      box-shadow: 0 0 18px rgba(255, 0, 127, 0.5);
-    }
-
-    body.basement-mode .tab-btn.active-tab {
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      color: #ffffff;
-    }
-
-    body.backstage-mode .tab-btn.active-tab {
-      background: linear-gradient(135deg, var(--accent-gold), var(--accent-pink));
-      color: #000000;
+      box-shadow: 0 0 22px rgba(255, 0, 127, 0.75), inset 0 0 8px rgba(255, 255, 255, 0.3);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+      animation: glitchGlowTab 4s infinite alternate;
     }
 
     .tab-content { display: none; }
     .tab-content.active-content { display: block; animation: fadeInTab 0.35s ease-out forwards; }
 
+    /* GLITCH TEXT & GLOW HEADERS */
+    .glitch-header {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #ffffff;
+      animation: neonGlitchText 3s infinite alternate;
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.8), 0 0 20px rgba(255, 0, 127, 0.5);
+    }
+
     /* NEKO RADIO DECK STYLES */
     .neko-radio-deck {
       background: rgba(10, 4, 22, 0.85);
-      border: 1px solid var(--border-cyan);
+      border: 1.5px solid var(--border-cyan);
       border-radius: 18px;
       padding: 24px;
-      max-width: 720px;
+      max-width: 780px;
       margin: 0 auto;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 8px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 240, 255, 0.25);
     }
 
     .preset-btn {
-      background: rgba(30, 15, 55, 0.8);
+      background: rgba(30, 15, 55, 0.85);
       border: 1px solid var(--card-border);
       color: var(--text-main);
       padding: 12px 16px;
@@ -379,7 +267,8 @@
       background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
       color: #ffffff;
       border-color: var(--accent-pink);
-      box-shadow: 0 0 16px rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.7);
+      text-shadow: 0 0 6px #fff;
     }
 
     .action-btn, .power-btn {
@@ -392,13 +281,14 @@
       font-weight: 900;
       cursor: pointer;
       font-size: 1rem;
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 24px rgba(255, 0, 127, 0.65);
       transition: all 0.25s ease;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
     }
 
     .action-btn:hover, .power-btn:hover {
       transform: scale(1.02);
-      box-shadow: 0 0 28px rgba(255, 0, 127, 0.8);
+      box-shadow: 0 0 32px rgba(255, 0, 127, 0.95), 0 0 16px var(--accent-cyan);
     }
 
     /* NEKO-88 SYNTH DECK LCD CARD */
@@ -406,7 +296,8 @@
       background: rgba(8, 3, 16, 0.95);
       border: 1.5px solid var(--accent-cyan);
       border-radius: 16px;
-      padding: 22px;
+      padding: 24px;
+      box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.15), 0 0 20px rgba(0, 240, 255, 0.2);
     }
 
     .lcd-header {
@@ -415,9 +306,10 @@
       font-size: 0.75rem;
       font-weight: 800;
       color: var(--accent-cyan);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       text-transform: uppercase;
       letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.7);
     }
 
     .pulse-dot {
@@ -427,66 +319,69 @@
       background: var(--accent-pink);
       border-radius: 50%;
       margin-right: 6px;
-      box-shadow: 0 0 8px var(--accent-pink);
-      animation: blinkDot 1.4s infinite;
+      box-shadow: 0 0 12px var(--accent-pink);
+      animation: blinkDot 1.2s infinite;
     }
 
     .lcd-screen {
       background: #030108;
-      border: 1px solid var(--accent-pink);
+      border: 1.5px solid var(--accent-pink);
       border-radius: 12px;
-      padding: 18px 20px;
+      padding: 20px 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 18px;
-      box-shadow: inset 0 0 16px rgba(255, 0, 127, 0.2);
+      margin-bottom: 20px;
+      box-shadow: inset 0 0 20px rgba(255, 0, 127, 0.28), 0 0 16px rgba(255, 0, 127, 0.25);
     }
 
     .lcd-station-name {
       font-family: 'Courier New', monospace;
       font-weight: 900;
       color: var(--accent-cyan);
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       letter-spacing: 0.5px;
       margin-bottom: 4px;
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.85);
+      animation: neonGlitchText 3.5s infinite alternate;
     }
 
     .lcd-status-msg {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--accent-pink);
       font-weight: 700;
+      text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
     }
 
     .lcd-eq-bars {
       display: flex;
       align-items: flex-end;
       gap: 4px;
-      height: 28px;
+      height: 32px;
     }
 
     .lcd-eq-bars span {
-      width: 4px;
+      width: 5px;
       height: 4px;
       background: var(--accent-gold);
       border-radius: 2px;
       transition: height 0.15s ease;
+      box-shadow: 0 0 8px var(--accent-gold);
     }
 
     .lcd-eq-bars.playing span {
-      animation: eqBar 0.8s infinite alternate ease-in-out;
+      animation: eqBar 0.7s infinite alternate ease-in-out;
     }
-    .lcd-eq-bars.playing span:nth-child(2) { animation-delay: 0.15s; }
-    .lcd-eq-bars.playing span:nth-child(3) { animation-delay: 0.3s; }
-    .lcd-eq-bars.playing span:nth-child(4) { animation-delay: 0.45s; }
-    .lcd-eq-bars.playing span:nth-child(5) { animation-delay: 0.6s; }
+    .lcd-eq-bars.playing span:nth-child(2) { animation-delay: 0.12s; }
+    .lcd-eq-bars.playing span:nth-child(3) { animation-delay: 0.25s; }
+    .lcd-eq-bars.playing span:nth-child(4) { animation-delay: 0.38s; }
+    .lcd-eq-bars.playing span:nth-child(5) { animation-delay: 0.5s; }
 
     .station-presets {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 22px;
     }
 
     .radio-deck-controls {
@@ -500,10 +395,11 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      background: rgba(10, 4, 22, 0.8);
+      background: rgba(10, 4, 22, 0.9);
       padding: 10px 18px;
       border-radius: 12px;
       border: 1px solid var(--card-border);
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.2);
     }
 
     .volume-slider-group input {
@@ -514,7 +410,7 @@
 
     /* Setlist Poll & Countdown Banner */
     .poll-header-banner {
-      background: rgba(15, 7, 28, 0.9);
+      background: rgba(15, 7, 28, 0.95);
       border: 1.5px solid var(--accent-cyan);
       border-radius: 16px;
       padding: 22px 26px;
@@ -524,10 +420,17 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 16px;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
     }
 
-    .poll-header-text h3 { margin: 0 0 6px; color: #ffffff; font-size: 1.3rem; font-weight: 900; }
+    .poll-header-text h3 {
+      margin: 0 0 6px;
+      color: #ffffff;
+      font-size: 1.3rem;
+      font-weight: 900;
+      text-shadow: 0 0 10px var(--cyan-glow);
+    }
+    
     .poll-header-text p { margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
 
     .countdown-timer-box {
@@ -536,7 +439,7 @@
       border-radius: 14px;
       padding: 12px 20px;
       text-align: center;
-      box-shadow: 0 0 18px rgba(255, 0, 127, 0.4);
+      box-shadow: 0 0 22px rgba(255, 0, 127, 0.5);
       min-width: 220px;
     }
 
@@ -547,6 +450,7 @@
       letter-spacing: 1px;
       text-transform: uppercase;
       margin-bottom: 2px;
+      text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
     }
 
     .countdown-digits {
@@ -555,11 +459,12 @@
       font-weight: 900;
       color: #ffffff;
       letter-spacing: 2px;
+      text-shadow: 0 0 12px var(--accent-pink);
     }
 
     /* Premiere Showcase Card */
     .premiere-showcase-card {
-      background: linear-gradient(135deg, rgba(30, 12, 50, 0.95), rgba(10, 4, 22, 0.95));
+      background: linear-gradient(135deg, rgba(35, 12, 55, 0.95), rgba(10, 4, 22, 0.95));
       border: 2px solid var(--accent-pink);
       border-radius: 16px;
       padding: 22px 26px;
@@ -569,7 +474,7 @@
       justify-content: space-between;
       gap: 16px;
       flex-wrap: wrap;
-      box-shadow: 0 0 24px rgba(255, 0, 127, 0.35);
+      box-shadow: 0 0 30px rgba(255, 0, 127, 0.45);
     }
 
     .premiere-info-group {
@@ -588,7 +493,7 @@
     }
 
     .premiere-10min-timer-badge {
-      background: rgba(255, 0, 127, 0.2);
+      background: rgba(255, 0, 127, 0.22);
       border: 1px solid var(--accent-pink);
       color: #ffffff;
       padding: 8px 14px;
@@ -600,7 +505,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.3);
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.4);
     }
 
     .premiere-badge {
@@ -614,10 +519,11 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       width: fit-content;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
     }
 
-    .premiere-title { font-size: 1.25rem; font-weight: 900; color: #ffffff; margin: 4px 0; }
-    .premiere-sub { font-size: 0.88rem; color: var(--accent-cyan); margin: 0; }
+    .premiere-title { font-size: 1.25rem; font-weight: 900; color: #ffffff; margin: 4px 0; text-shadow: 0 0 8px rgba(255, 255, 255, 0.6); }
+    .premiere-sub { font-size: 0.88rem; color: var(--accent-cyan); margin: 0; text-shadow: 0 0 6px rgba(0, 240, 255, 0.5); }
 
     .poll-card {
       background: var(--card-bg);
@@ -626,12 +532,18 @@
       padding: 18px 22px;
       margin-bottom: 16px;
       transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .poll-card:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 22px rgba(0, 240, 255, 0.35);
     }
 
     .poll-card.voted-card {
       border-color: var(--accent-cyan);
       background: rgba(10, 4, 22, 0.95);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.45);
     }
 
     .poll-info-top {
@@ -660,12 +572,14 @@
       background: rgba(255, 0, 127, 0.2);
       color: var(--accent-pink);
       border: 1px solid var(--accent-pink);
+      box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
     }
 
     .poll-stats {
       font-size: 0.88rem;
       font-weight: 800;
       color: var(--accent-cyan);
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
     }
 
     .poll-progress-bg {
@@ -676,14 +590,16 @@
       overflow: hidden;
       margin: 12px 0;
       border: 1px solid var(--card-border);
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.8);
     }
 
     .poll-progress-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink), var(--accent-cyan));
       border-radius: 10px;
       transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.8);
     }
 
     .poll-actions-bottom {
@@ -700,7 +616,7 @@
     }
 
     .vote-btn {
-      background: rgba(157, 78, 221, 0.25);
+      background: rgba(157, 78, 221, 0.3);
       border: 1px solid var(--accent-purple);
       color: #ffffff;
       padding: 8px 18px;
@@ -709,12 +625,13 @@
       font-weight: 800;
       cursor: pointer;
       transition: all 0.25s ease;
+      box-shadow: 0 0 10px rgba(157, 78, 221, 0.3);
     }
 
     .vote-btn:hover {
       background: var(--accent-pink);
       border-color: var(--accent-pink);
-      box-shadow: 0 0 16px rgba(255, 0, 127, 0.6);
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.8);
     }
 
     .vote-btn.voted-btn {
@@ -722,16 +639,17 @@
       color: #000000;
       border-color: var(--accent-cyan);
       cursor: default;
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.6);
     }
 
     /* GIRLS DEAD PHANTOM HUB STYLES */
     .gdp-hero-banner {
-      background: linear-gradient(135deg, rgba(20, 8, 38, 0.95), rgba(8, 3, 16, 0.98));
+      background: linear-gradient(135deg, rgba(28, 10, 48, 0.95), rgba(8, 3, 16, 0.98));
       border: 2px solid var(--accent-pink);
       border-radius: 20px;
       padding: 28px;
       margin-bottom: 28px;
-      box-shadow: 0 0 28px rgba(255, 0, 127, 0.35);
+      box-shadow: 0 0 35px rgba(255, 0, 127, 0.45);
       position: relative;
     }
 
@@ -745,7 +663,7 @@
     }
 
     .gdp-hero-title {
-      font-size: 2rem;
+      font-size: 2.1rem;
       font-weight: 900;
       color: var(--accent-cyan);
       margin: 0;
@@ -753,7 +671,8 @@
       align-items: center;
       gap: 10px;
       letter-spacing: 1px;
-      text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+      text-shadow: 0 0 16px rgba(0, 240, 255, 0.9), 0 0 25px rgba(255, 0, 127, 0.6);
+      animation: neonGlitchText 3.2s infinite alternate;
     }
 
     .gdp-roster-chips {
@@ -764,8 +683,8 @@
     }
 
     .member-chip {
-      background: rgba(10, 4, 22, 0.9);
-      border: 1px solid var(--card-border);
+      background: rgba(10, 4, 22, 0.95);
+      border: 1px solid var(--border-cyan);
       color: #ffffff;
       padding: 6px 16px;
       border-radius: 20px;
@@ -774,9 +693,10 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
     }
 
-    .member-role { color: var(--accent-pink); font-weight: 700; }
+    .member-role { color: var(--accent-pink); font-weight: 700; text-shadow: 0 0 6px rgba(255, 0, 127, 0.5); }
 
     .gdp-spotlight-box {
       background: rgba(8, 3, 16, 0.95);
@@ -784,7 +704,7 @@
       border-radius: 18px;
       padding: 24px;
       margin-bottom: 28px;
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -804,6 +724,7 @@
       width: 4px;
       background: var(--accent-pink);
       border-radius: 2px;
+      box-shadow: 0 0 8px var(--accent-pink);
       animation: soundwavePulse 1.2s infinite ease-in-out alternate;
     }
 
@@ -833,12 +754,13 @@
       align-items: center;
       gap: 16px;
       transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
     }
 
     .disco-track-card:hover {
       border-color: var(--accent-cyan);
       transform: translateY(-3px);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
     }
 
     .vinyl-icon-box {
@@ -853,10 +775,10 @@
       font-size: 1.3rem;
       color: #ffffff;
       flex-shrink: 0;
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.5);
     }
 
-    .disco-title { font-weight: 900; font-size: 1.05rem; color: #ffffff; margin-bottom: 4px; }
+    .disco-title { font-weight: 900; font-size: 1.05rem; color: #ffffff; margin-bottom: 4px; text-shadow: 0 0 6px rgba(255, 255, 255, 0.5); }
     .disco-meta { font-size: 0.82rem; color: var(--text-muted); }
 
     .disco-tier-badge {
@@ -867,9 +789,9 @@
       text-transform: uppercase;
     }
 
-    .badge-twilight { background: rgba(0, 240, 255, 0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); }
-    .badge-basement { background: rgba(255, 0, 127, 0.2); color: var(--accent-pink); border: 1px solid var(--accent-pink); }
-    .badge-backstage { background: rgba(255, 209, 102, 0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold); }
+    .badge-twilight { background: rgba(0, 240, 255, 0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); box-shadow: 0 0 8px rgba(0, 240, 255, 0.4); }
+    .badge-basement { background: rgba(255, 0, 127, 0.2); color: var(--accent-pink); border: 1px solid var(--accent-pink); box-shadow: 0 0 8px rgba(255, 0, 127, 0.4); }
+    .badge-backstage { background: rgba(255, 209, 102, 0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold); box-shadow: 0 0 8px rgba(255, 209, 102, 0.4); }
 
     .preview-active-pill {
       background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
@@ -880,14 +802,16 @@
       border-radius: 12px;
       display: inline-block;
       margin-top: 4px;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
     }
 
     .suggestion-box-panel {
-      background: rgba(10, 4, 22, 0.9);
+      background: rgba(10, 4, 22, 0.95);
       border: 1px solid var(--card-border);
       border-radius: 16px;
       padding: 22px 26px;
       margin-top: 28px;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.25);
     }
 
     .form-control-poll {
@@ -904,15 +828,15 @@
 
     .form-control-poll:focus {
       border-color: var(--accent-cyan);
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
     }
 
     /* Modal Overlay */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(4, 2, 9, 0.88);
-      backdrop-filter: blur(10px);
+      background: rgba(4, 2, 9, 0.92);
+      backdrop-filter: blur(12px);
       z-index: 2000;
       display: flex;
       align-items: center;
@@ -928,10 +852,10 @@
       max-width: 440px;
       width: 100%;
       text-align: center;
-      box-shadow: 0 0 35px rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 45px rgba(255, 0, 127, 0.6);
     }
 
-    .vip-modal-card { border-color: var(--accent-gold); box-shadow: 0 0 35px rgba(255, 209, 102, 0.5); }
+    .vip-modal-card { border-color: var(--accent-gold); box-shadow: 0 0 45px rgba(255, 209, 102, 0.6); }
     .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.35rem; font-weight: 900; }
     .modal-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; margin-bottom: 20px; }
     .modal-price-tag {
@@ -951,18 +875,26 @@
     .stripe-btn { background: linear-gradient(135deg, var(--accent-pink), var(--accent-gold)); color: #000; }
     .close-btn { background: transparent; color: var(--accent-pink); border: 1px solid var(--card-border); }
 
-    /* Keyframes */
-    @keyframes hudPulse {
-      0% { border-color: rgba(0, 240, 255, 0.35); box-shadow: 0 0 12px rgba(0, 240, 255, 0.15); }
-      50% { border-color: rgba(0, 240, 255, 0.85); box-shadow: 0 0 25px rgba(0, 240, 255, 0.4); }
-      100% { border-color: rgba(0, 240, 255, 0.35); box-shadow: 0 0 12px rgba(0, 240, 255, 0.15); }
+    /* CYBERPUNK ANIMATIONS */
+    @keyframes neonHudPulse {
+      0% { border-color: rgba(0, 240, 255, 0.45); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
+      50% { border-color: rgba(0, 240, 255, 0.95); box-shadow: 0 0 35px rgba(0, 240, 255, 0.5), 0 0 15px rgba(255, 0, 127, 0.3); }
+      100% { border-color: rgba(0, 240, 255, 0.45); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
     }
 
-    @keyframes textGlitch {
-      0%, 92%, 100% { transform: translate(0, 0); }
-      93% { transform: translate(-2px, 1px); }
-      94% { transform: translate(2px, -1px); }
-      95% { transform: translate(0, 0); }
+    @keyframes neonGlitchText {
+      0%, 100% { text-shadow: 2px 0 var(--accent-pink), -2px 0 var(--accent-cyan); }
+      50% { text-shadow: -2px 0 var(--accent-pink), 2px 0 var(--accent-cyan); }
+    }
+
+    @keyframes glitchGlowTab {
+      from { box-shadow: 0 0 16px rgba(255, 0, 127, 0.6); }
+      to { box-shadow: 0 0 28px rgba(255, 0, 127, 0.95), 0 0 12px var(--accent-cyan); }
+    }
+
+    @keyframes statusBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
     }
 
     @keyframes blinkDot {
@@ -972,7 +904,7 @@
 
     @keyframes eqBar {
       0% { height: 4px; }
-      100% { height: 28px; }
+      100% { height: 32px; }
     }
 
     @keyframes soundwavePulse {
@@ -984,54 +916,43 @@
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    @keyframes navPulseGlow {
+      from { box-shadow: 0 0 10px rgba(255, 0, 127, 0.4); }
+      to { box-shadow: 0 0 22px rgba(255, 0, 127, 0.85); }
+    }
   </style>
 </head>
-<body class="twilight-mode">
+<body>
 
-  <!-- Universal Header Navigation Bar -->
+  <!-- Universal Header Navigation Bar (Tightened Left-Aligned) -->
   <header class="navbar">
     <div class="nav-container">
       
-      <!-- Top Row: Mode Switcher (Left) & Centered Brand Logo -->
-      <div class="nav-top-row">
-        <!-- 3-Tier Access Mode Switcher on Left -->
-        <div class="mode-selector-wrapper">
-          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-            <option value="twilight">🌸 Twilight (Public 13+)</option>
-            <option value="basement">⚡ Basement (17+ 🔒)</option>
-            <option value="backstage">👑 Backstage VIP Mode ✦</option>
-          </select>
-        </div>
-
-        <!-- Centered Brand Logo with Lightning Bolts -->
-        <div class="logo-container">
-          <a href="index.html" class="logo-link">
-            <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
-            <span class="logo-sub">✦ GIRLS DEAD PHANTOM ✦</span>
-          </a>
-        </div>
-
-        <!-- Mobile Hamburger Toggle Button -->
-        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-        </button>
-      </div>
-
-      <!-- Main Navigation Links Below -->
-      <nav class="nav-links" id="nav-menu">
-        <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
-        <a href="bbs-forum.html" class="nav-item">💬 Sakuraoka BBS</a>
-        <a href="neko-fm.html" class="nav-item active">📻 24/7 Neko FM</a>
-        <a href="chat.html" class="nav-item">💬 Live Chat</a>
-        <a href="echoheart.html" class="nav-item">🌌 Lore & Books</a>
-
-        <button id="nav-auth-btn" onclick="openAuthOrAccount()" class="nav-item" style="background: rgba(255, 0, 127, 0.25); border: 1px solid var(--accent-pink); cursor: pointer;">
+      <!-- Left-Aligned Navigation Link Pills -->
+      <nav class="nav-pills-row" id="nav-menu">
+        <a href="index.html" class="nav-item-pill">🏠 Home</a>
+        <a href="echoheart.html" class="nav-item-pill">📚 Lore & Books</a>
+        <a href="neko-fm.html" class="nav-item-pill active">📻 24/7 Neko FM</a>
+        <a href="bbs-forum.html" class="nav-item-pill">💬 Sakuraoka BBS</a>
+        <a href="chat.html" class="nav-item-pill">💬 Live Chat</a>
+        <a href="podcast.html" class="nav-item-pill">🎙️ Podcast</a>
+        <button id="nav-auth-btn" onclick="openAuthOrAccount()" class="nav-item-pill auth-pill">
           🔑 Login
         </button>
       </nav>
+
+      <!-- Right-Aligned Station Live Badge -->
+      <div class="nav-status-badge">
+        <span class="status-dot"></span>
+        📻 NEKO FM: LIVE BROADCAST
+      </div>
+
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
 
     </div>
   </header>
@@ -1054,7 +975,7 @@
       <!-- Poll & Hourly Live Countdown Header Banner -->
       <div class="poll-header-banner">
         <div class="poll-header-text">
-          <h3>📋 Prep Room B — Hourly Setlist Voting</h3>
+          <h3 class="glitch-header">📋 PREP ROOM B — HOURLY SETLIST VOTING</h3>
           <p>Vote for the next broadcast song cover! The winning arrangement will be performed by <strong>Girls Dead Phantom</strong> in Prep Room B.</p>
         </div>
 
@@ -1090,7 +1011,7 @@
 
       <!-- Fan Song Suggestion Drawer -->
       <div class="suggestion-box-panel">
-        <h4 style="margin:0 0 6px; color:#ffffff;">💡 Suggest a Song for Girls Dead Phantom</h4>
+        <h4 style="margin:0 0 6px; color:#ffffff; font-size: 1.1rem; text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);">💡 Suggest a Song for Girls Dead Phantom</h4>
         <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Have a J-Rock, Vocaloid, or anime track you want Akari Minase, Nekomi, Sera, and Aoi to cover?</p>
         <input type="text" id="song-suggestion-input" class="form-control-poll" placeholder="e.g. 'Subterranean Resonance (Keytar & Acoustic Duo)'">
         <button class="vote-btn" onclick="submitSongSuggestion()">🌸 Submit Suggestion to Prep Room B</button>
@@ -1131,7 +1052,6 @@
             <button id="yt-power-btn" class="power-btn" onclick="toggleSynthPower()">
               ▶ PLAY
             </button>
-            
 
             <div class="volume-slider-group">
               <span class="vol-icon">🔊</span>
@@ -1151,15 +1071,14 @@
         <div class="gdp-hero-top">
           <div>
             <h2 class="gdp-hero-title">🎸 GIRLS DEAD PHANTOM</h2>
-            <p style="margin: 6px 0 0; color: var(--accent-cyan); font-size: 0.9rem;">
+            <p style="margin: 6px 0 0; color: var(--accent-cyan); font-size: 0.9rem; text-shadow: 0 0 6px var(--cyan-glow);">
               Prep Room B Sound Engineers • Sakuraoka High Underground Ensemble
             </p>
           </div>
           <div style="text-align: right;">
-            <span class="premiere-badge" style="background: linear-gradient(135deg, var(--accent-gold), var(--accent-pink)); color: #000;">
+            <span class="premiere-badge" style="background: linear-gradient(135deg, var(--accent-gold), var(--accent-pink)); color: #000; box-shadow: 0 0 14px var(--gold-glow);">
               ✨ 10 OFFICIAL RELEASES
             </span>
-
           </div>
         </div>
 
@@ -1206,7 +1125,7 @@
 
       <!-- Discography Section Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
+        <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);">
           CD Official Studio Tracklist <span style="font-size: 0.8rem; color: var(--accent-pink); font-weight: 600;">(20s Preview Teasers & Stem Downloads)</span>
         </h3>
         <span style="font-size: 0.8rem; color: var(--text-muted);">Showing 10 Tracks</span>
@@ -1469,8 +1388,6 @@
     let pollData = getStoredPollData();
 
     function handleModeChange(targetMode) {
-      const selector = document.getElementById('mode-selector');
-
       if (targetMode === 'twilight') {
         applyThemeMode('twilight');
         currentMode = 'twilight';
@@ -1481,7 +1398,6 @@
 
       if (targetMode === 'basement') {
         if (!userState.isLoggedIn) {
-          if (selector) selector.value = getCurrentMode();
           showAuthModal('Sign-In Required', 'Sign in with Google to access After-Hours Basement streams.');
           return;
         }
@@ -1501,12 +1417,9 @@
               currentMode = 'basement';
               localStorage.setItem('neko_active_mode', 'basement');
               renderDiscography();
-            } else if (selector) {
-              selector.value = getCurrentMode();
             }
           });
         } else {
-          if (selector) selector.value = getCurrentMode();
           alert("The Basement Channel requires 17+ age verification.");
         }
         return;
@@ -1514,7 +1427,6 @@
 
       if (targetMode === 'backstage') {
         if (!userState.isLoggedIn) {
-          if (selector) selector.value = getCurrentMode();
           showAuthModal('Sign-In Required', 'Sign in with Google to check your VIP Backstage status.');
           return;
         }
@@ -1525,7 +1437,6 @@
           localStorage.setItem('neko_active_mode', 'backstage');
           renderDiscography();
         } else {
-          if (selector) selector.value = getCurrentMode();
           showVIPPromoModal();
         }
       }
@@ -1537,10 +1448,8 @@
 
     function applyThemeMode(mode) {
       const body = document.body;
-      const selector = document.getElementById('mode-selector');
       body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
       body.classList.add(`${mode}-mode`);
-      if (selector) selector.value = mode;
     }
 
     function initMasterTimers() {
@@ -1862,6 +1771,14 @@
     function toggleMobileMenu() {
       const navMenu = document.getElementById('nav-menu');
       if (navMenu) navMenu.classList.toggle('open');
+    }
+
+    function openAuthOrAccount() {
+      if (!userState.isLoggedIn) {
+        showAuthModal('Account Login', 'Sign in with Google to access member features.');
+      } else {
+        alert("You are logged in!");
+      }
     }
 
     function showAuthModal(title, message) {
