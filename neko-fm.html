@@ -50,7 +50,7 @@
         radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12) 0%, transparent 60%);
     }
 
-    /* TIGHTENED UNIVERSAL NAVBAR (LEFT-ALIGNED) */
+    /* TIGHTENED UNIVERSAL NAVBAR */
     .navbar {
       position: sticky;
       top: 0;
@@ -73,7 +73,6 @@
       gap: 16px;
     }
 
-    /* Left-Aligned Nav Pills Row */
     .nav-pills-row {
       display: flex;
       align-items: center;
@@ -118,7 +117,6 @@
       cursor: pointer;
     }
 
-    /* Right-Side Station Live Badge */
     .nav-status-badge {
       display: flex;
       align-items: center;
@@ -175,7 +173,7 @@
       .nav-item-pill { width: 100%; justify-content: center; }
     }
 
-    /* Studio Dashboard Container */
+    /* STUDIO DASHBOARD CONTAINER */
     .studio-dashboard {
       max-width: 1240px;
       margin: 30px auto;
@@ -229,7 +227,6 @@
     .tab-content { display: none; }
     .tab-content.active-content { display: block; animation: fadeInTab 0.35s ease-out forwards; }
 
-    /* GLITCH TEXT & GLOW HEADERS */
     .glitch-header {
       font-size: 1.35rem;
       font-weight: 900;
@@ -248,6 +245,25 @@
       max-width: 780px;
       margin: 0 auto;
       box-shadow: 0 8px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 240, 255, 0.25);
+    }
+
+    /* SPECTRUM VISUALIZER CANVAS STYLES */
+    .synth-visualizer-wrapper {
+      position: relative;
+      width: 100%;
+      height: 95px;
+      background: #020106;
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      border-radius: 14px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: inset 0 0 18px rgba(0, 240, 255, 0.25), 0 0 14px rgba(255, 0, 127, 0.2);
+    }
+
+    #synth-visualizer-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
     .preset-btn {
@@ -291,7 +307,6 @@
       box-shadow: 0 0 32px rgba(255, 0, 127, 0.95), 0 0 16px var(--accent-cyan);
     }
 
-    /* NEKO-88 SYNTH DECK LCD CARD */
     .yt-radio-card {
       background: rgba(8, 3, 16, 0.95);
       border: 1.5px solid var(--accent-cyan);
@@ -462,7 +477,6 @@
       text-shadow: 0 0 12px var(--accent-pink);
     }
 
-    /* Premiere Showcase Card */
     .premiere-showcase-card {
       background: linear-gradient(135deg, rgba(35, 12, 55, 0.95), rgba(10, 4, 22, 0.95));
       border: 2px solid var(--accent-pink);
@@ -925,11 +939,10 @@
 </head>
 <body>
 
-  <!-- Universal Header Navigation Bar (Tightened Left-Aligned) -->
+  <!-- Universal Header Navigation Bar -->
   <header class="navbar">
     <div class="nav-container">
       
-      <!-- Left-Aligned Navigation Link Pills -->
       <nav class="nav-pills-row" id="nav-menu">
         <a href="index.html" class="nav-item-pill">🏠 Home</a>
         <a href="echoheart.html" class="nav-item-pill">📚 Lore & Books</a>
@@ -942,7 +955,6 @@
         </button>
       </nav>
 
-      <!-- Right-Aligned Station Live Badge -->
       <div class="nav-status-badge">
         <span class="status-dot"></span>
         📻 NEKO FM: LIVE BROADCAST
@@ -957,7 +969,7 @@
     </div>
   </header>
 
-  <!-- HTML5 Audio Engines (Hidden) -->
+  <!-- HTML5 Audio Engines -->
   <audio id="radio-audio-player" crossorigin="anonymous"></audio>
   <audio id="synth-deck-audio" crossorigin="anonymous"></audio>
 
@@ -972,21 +984,18 @@
     <!-- TAB 1: PREP ROOM BOARD & SETLIST POLLS -->
     <section id="board-tab" class="tab-content active-content">
       
-      <!-- Poll & Hourly Live Countdown Header Banner -->
       <div class="poll-header-banner">
         <div class="poll-header-text">
           <h3 class="glitch-header">📋 PREP ROOM B — HOURLY SETLIST VOTING</h3>
           <p>Vote for the next broadcast song cover! The winning arrangement will be performed by <strong>Girls Dead Phantom</strong> in Prep Room B.</p>
         </div>
 
-        <!-- Persistent Hourly Countdown Box -->
         <div class="countdown-timer-box">
           <div class="countdown-label" id="poll-timer-label">⚡ Voting Closes In</div>
           <div class="countdown-digits" id="poll-countdown-digits">50:00</div>
         </div>
       </div>
 
-      <!-- Girls Dead Phantom Premiere Showcase Card -->
       <div class="premiere-showcase-card">
         <div class="premiere-info-group">
           <span class="premiere-badge">🌟 Girls Dead Phantom Leader</span>
@@ -1004,12 +1013,8 @@
         </div>
       </div>
 
-      <!-- Dynamic Poll List Container -->
-      <div id="poll-container">
-        <!-- Rendered via JavaScript -->
-      </div>
+      <div id="poll-container"></div>
 
-      <!-- Fan Song Suggestion Drawer -->
       <div class="suggestion-box-panel">
         <h4 style="margin:0 0 6px; color:#ffffff; font-size: 1.1rem; text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);">💡 Suggest a Song for Girls Dead Phantom</h4>
         <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Have a J-Rock, Vocaloid, or anime track you want Akari Minase, Nekomi, Sera, and Aoi to cover?</p>
@@ -1018,17 +1023,22 @@
       </div>
     </section>
 
-    <!-- TAB 2: NEKO SYNTH DECK (PURE NATIVE HTML5 DIRECT STREAMS) -->
+    <!-- TAB 2: NEKO SYNTH DECK WITH LIVE SPECTRUM CANVAS -->
     <section id="youtube-tab" class="tab-content">
       <div class="neko-radio-deck">
         <div class="yt-radio-card">
-          <!-- Player LCD Display Header -->
+          
           <div class="lcd-header">
             <span class="live-indicator"><span class="pulse-dot"></span> LIVE BROADCAST</span>
             <span class="deck-model">NEKO-88 DIRECT SYNTH DECK</span>
           </div>
 
-          <!-- Main LCD Screen -->
+          <!-- SPECTRUM VISUALIZER CANVAS -->
+          <div class="synth-visualizer-wrapper">
+            <canvas id="synth-visualizer-canvas"></canvas>
+          </div>
+
+          <!-- LCD Screen -->
           <div class="lcd-screen">
             <div class="lcd-meta">
               <div class="lcd-station-name" id="yt-channel-title">J-Pop Powerplay Kawaii 🌸</div>
@@ -1039,7 +1049,7 @@
             </div>
           </div>
 
-          <!-- Station Preset Selector Buttons -->
+          <!-- Presets -->
           <div class="station-presets">
             <button class="preset-btn active" onclick="selectSynthPreset(0)">🌸 J-Pop Kawaii</button>
             <button class="preset-btn" onclick="selectSynthPreset(1)">⚡ J-Rock Powerplay</button>
@@ -1047,7 +1057,7 @@
             <button class="preset-btn" onclick="selectSynthPreset(3)">🎙️ Japan Hits</button>
           </div>
 
-          <!-- Controls & Volume -->
+          <!-- Controls -->
           <div class="radio-deck-controls">
             <button id="yt-power-btn" class="power-btn" onclick="toggleSynthPower()">
               ▶ PLAY
@@ -1066,7 +1076,6 @@
     <!-- TAB 3: DISCOGRAPHY & PREVIEW HUB -->
     <section id="discography-tab" class="tab-content">
       
-      <!-- Fancy Hero Band Header & Roster Banner -->
       <div class="gdp-hero-banner">
         <div class="gdp-hero-top">
           <div>
@@ -1086,7 +1095,6 @@
           Welcome to the official <strong>Girls Dead Phantom</strong> audio lounge! Formed inside Sakuraoka High's Prep Room B by Drums <strong>Akari Minase</strong>. Explore all 10 official studio releases, subterranean B-Sides, and preview 20-second teasers directly in your browser!
         </p>
 
-        <!-- Band Member Roster Chips -->
         <div class="gdp-roster-chips">
           <div class="member-chip">🥁 Akari Minase <span class="member-role">(Drums)</span></div>
           <div class="member-chip">🎙️ Nekomi <span class="member-role">(Vocals & Guitar)</span></div>
@@ -1095,7 +1103,6 @@
         </div>
       </div>
 
-      <!-- Main Concert Spotlight Card -->
       <div class="gdp-spotlight-box">
         <div class="premiere-info-group">
           <div style="display: flex; align-items: center; gap: 10px;">
@@ -1123,7 +1130,6 @@
         </div>
       </div>
 
-      <!-- Discography Section Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);">
           CD Official Studio Tracklist <span style="font-size: 0.8rem; color: var(--accent-pink); font-weight: 600;">(20s Preview Teasers & Stem Downloads)</span>
@@ -1131,16 +1137,12 @@
         <span style="font-size: 0.8rem; color: var(--text-muted);">Showing 10 Tracks</span>
       </div>
 
-      <!-- Discography Grid Container -->
-      <div class="discography-grid" id="discography-container">
-        <!-- Rendered dynamically by JavaScript -->
-      </div>
+      <div class="discography-grid" id="discography-container"></div>
     </section>
   </main>
 
   <script src="global-player.js"></script>
   <script>
-    // Master Radio Stations Repository
     const RADIO_STATIONS = {
       twilight: [
         { freq: "98.4 FM", name: "LISTEN.moe (24/7 Anime & Vocaloid)", genre: "Anime & Vocaloid Stream", url: "http://kathy.torontocast.com:3350/stream" },
@@ -1162,7 +1164,6 @@
       ]
     };
 
-    // 10 Official Songs for Girls Dead Phantom Discography
     const DISCOGRAPHY_CATALOG = [
       { id: 'gdp-1', trackNo: '01', title: 'Subterranean Resonance', type: 'Debut Single (2026)', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/fallback' },
       { id: 'gdp-2', trackNo: '02', title: 'Keytar Midnight Run', type: '180 BPM Synth Remix', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.gensokyoradio.net/1' },
@@ -1176,9 +1177,6 @@
       { id: 'gdp-10', trackNo: '10', title: 'After Dark Distortion', type: 'Uncompressed Master Stem', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://listen.moe/fallback' }
     ];
 
-    // ==========================================
-    // NEKO SYNTH DECK ENGINE STATE & CONTROLLER
-    // ==========================================
     const synthPresets = [
       { name: "J-Pop Powerplay Kawaii 🌸", url: "https://kathy.torontocast.com:3060/stream", desc: "Asia DREAM Radio • Kawaii J-Pop" },
       { name: "J-Rock Powerplay ⚡", url: "https://kathy.torontocast.com:3340/stream", desc: "Asia DREAM Radio • High-Energy J-Rock" },
@@ -1191,7 +1189,89 @@
     let trackRefreshTimer = null;
     const synthAudioPlayer = document.getElementById('synth-deck-audio');
 
-    // Starts or resets the 15-second background refresh loop
+    // WEB AUDIO API SPECTRUM VISUALIZER ENGINE
+    let synthAudioCtx = null;
+    let synthAnalyser = null;
+    let synthSource = null;
+    let synthAnimFrame = null;
+    let phase = 0;
+
+    function initSynthVisualizer() {
+      if (synthAudioCtx) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        synthAudioCtx = new AudioContext();
+        synthAnalyser = synthAudioCtx.createAnalyser();
+        synthAnalyser.fftSize = 128;
+        
+        synthSource = synthAudioCtx.createMediaElementSource(synthAudioPlayer);
+        synthSource.connect(synthAnalyser);
+        synthAnalyser.connect(synthAudioCtx.destination);
+      } catch (e) {
+        console.warn("Synth visualizer audio context setup warning:", e);
+      }
+    }
+
+    function renderSynthVisualizer() {
+      const canvas = document.getElementById('synth-visualizer-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+
+      const bufferLength = synthAnalyser ? synthAnalyser.frequencyBinCount : 32;
+      const dataArray = new Uint8Array(bufferLength);
+
+      function draw() {
+        synthAnimFrame = requestAnimationFrame(draw);
+        phase += 0.05;
+
+        let hasData = false;
+        if (synthAnalyser && isSynthPlaying) {
+          synthAnalyser.getByteFrequencyData(dataArray);
+          for (let i = 0; i < bufferLength; i++) {
+            if (dataArray[i] > 0) { hasData = true; break; }
+          }
+        }
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const barWidth = (canvas.width / bufferLength) * 1.8;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+          let val = dataArray[i];
+          if (!hasData) {
+            // Ambient animated fallback wave when stream buffering or paused
+            val = isSynthPlaying 
+              ? Math.floor((Math.sin(phase + i * 0.3) + 1) * 60 + Math.random() * 30)
+              : Math.floor((Math.sin(phase * 0.5 + i * 0.2) + 1) * 10 + 5);
+          }
+
+          let barHeight = (val / 255) * canvas.height * 0.85;
+          if (barHeight < 3) barHeight = 3;
+
+          const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+          gradient.addColorStop(0, '#9d4edd');
+          gradient.addColorStop(0.5, '#ff007f');
+          gradient.addColorStop(1, '#00f0ff');
+
+          ctx.fillStyle = gradient;
+          ctx.shadowBlur = isSynthPlaying ? 12 : 4;
+          ctx.shadowColor = '#00f0ff';
+
+          ctx.beginPath();
+          ctx.roundRect(x, canvas.height - barHeight, barWidth - 3, barHeight, [4, 4, 0, 0]);
+          ctx.fill();
+
+          x += barWidth;
+        }
+      }
+
+      draw();
+    }
+
     function startTrackRefreshTimer() {
       stopTrackRefreshTimer();
       triggerShazamFingerprint();
@@ -1203,7 +1283,6 @@
       }, 15000);
     }
 
-    // Stops background track metadata refresh timer
     function stopTrackRefreshTimer() {
       if (trackRefreshTimer) {
         clearInterval(trackRefreshTimer);
@@ -1224,6 +1303,11 @@
       const statusMsg = document.getElementById('yt-status-text');
       const powerBtn = document.getElementById('yt-power-btn');
       const eqVisualizer = document.getElementById('yt-eq-visualizer');
+
+      initSynthVisualizer();
+      if (synthAudioCtx && synthAudioCtx.state === 'suspended') {
+        synthAudioCtx.resume();
+      }
 
       if (isSynthPlaying) {
         synthAudioPlayer.pause();
@@ -1284,16 +1368,11 @@
       }
     }
 
-    /**
-     * Fetches live artist and song title from AWS Lambda ICY extractor
-     */
     async function triggerShazamFingerprint() {
       const statusMsgEl = document.getElementById('yt-status-text');
       const titleEl = document.getElementById('yt-channel-title');
 
       const currentPreset = synthPresets[currentSynthPresetIdx];
-      
-      // 🔗 AWS Lambda Function URL
       const lambdaUrl = "https://5x4kcoismesnfh7b5rcqllrcau0pxdbt.lambda-url.us-east-2.on.aws/";
       const endpoint = `${lambdaUrl}?url=${encodeURIComponent(currentPreset.url)}`;
 
@@ -1302,7 +1381,6 @@
         const data = await res.json();
 
         if (data.success && (data.title || data.raw)) {
-          // 1. Smart Split handling all dash variants (hyphen, en-dash, em-dash, full-width)
           const rawString = data.raw || `${data.artist} - ${data.title}`;
           const parts = rawString.split(/\s*[-–—－]\s*/);
 
@@ -1317,7 +1395,6 @@
             artistName = currentPreset.name;
           }
 
-          // 2. Display track title on top line and artist on status line
           if (titleEl) titleEl.innerText = `🎵 ${trackTitle}`;
           if (statusMsgEl) statusMsgEl.innerText = `🎤 ${artistName} • ${currentPreset.name}`;
 
@@ -1332,7 +1409,6 @@
       }
     }
 
-    // Helper: Generate 4 random songs from the catalog for the hourly poll
     function generateRandomPollItems() {
       const performerOptions = [
         'Akari Minase (Drums) & Nekomi (Vocals)',
@@ -1863,6 +1939,7 @@
       renderSetlistPolls();
       renderDiscography();
       initMasterTimers();
+      renderSynthVisualizer();
 
       document.addEventListener('click', function(event) {
         const navMenu = document.getElementById('nav-menu');
