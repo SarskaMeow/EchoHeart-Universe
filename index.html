@@ -40,133 +40,44 @@
       position: relative;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 50% 20%, rgba(157, 78, 221, 0.15) 0%, transparent 60%),
-        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.1) 0%, transparent 50%);
-    }
-
-    /* BACKGROUND SCANLINES & GLITCH ATMOSPHERE */
-    body::before {
-      content: " ";
-      position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
-      background-size: 100% 4px;
-      z-index: 999;
-      pointer-events: none;
-      opacity: 0.6;
+        radial-gradient(circle at 50% 20%, rgba(157, 78, 221, 0.18) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.12) 0%, transparent 50%);
     }
 
     /* ============================================================ */
-    /* ⚡ TOP RIGHT FLOATING ACTION BAR (LOGIN + NEKO FM PLAYER)    */
+    /* ⚡ TOP LEFT PROMINENT LOGIN BUTTON                           */
     /* ============================================================ */
-    .top-float-bar {
+    .top-header-bar {
       position: absolute;
-      top: 20px;
-      right: 24px;
+      top: 24px;
+      left: 28px;
       z-index: 1000;
       display: flex;
       align-items: center;
-      gap: 12px;
     }
 
-    .top-auth-btn {
-      background: rgba(20, 8, 35, 0.85);
-      border: 1.5px solid var(--accent-purple);
+    .top-left-login-btn {
+      background: linear-gradient(135deg, rgba(20, 8, 35, 0.9) 0%, rgba(45, 12, 60, 0.9) 100%);
+      border: 1.5px solid var(--accent-pink);
       color: #ffffff;
-      padding: 8px 18px;
-      border-radius: 20px;
-      font-size: 0.82rem;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 0 12px rgba(157, 78, 221, 0.3);
-      transition: all 0.25s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .top-auth-btn:hover {
-      background: rgba(255, 0, 127, 0.25);
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 18px rgba(255, 0, 127, 0.5);
-    }
-
-    .top-radio-pill {
-      background: rgba(10, 4, 22, 0.92);
-      border: 1.5px solid var(--accent-cyan);
+      padding: 10px 24px;
       border-radius: 24px;
-      padding: 6px 16px 6px 8px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(255, 0, 127, 0.35);
+      transition: all 0.25s ease;
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
-      transition: all 0.25s ease;
     }
 
-    .top-radio-pill:hover {
-      box-shadow: 0 0 24px rgba(0, 240, 255, 0.6);
-      border-color: #70f8ff;
-    }
-
-    .top-play-btn {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      border: none;
-      border-radius: 50%;
-      color: #ffffff;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.6);
-      transition: transform 0.2s ease, background 0.2s ease;
-    }
-
-    .top-play-btn:hover {
-      transform: scale(1.1);
-    }
-
-    .top-play-btn.playing {
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.8);
-    }
-
-    .radio-meta-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-    }
-
-    .radio-title-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.82rem;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-    }
-
-    .radio-pulse-dot {
-      width: 6px;
-      height: 6px;
-      background-color: var(--accent-pink);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent-pink);
-      animation: blink 1.5s infinite;
-    }
-
-    .radio-sub-text {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+    .top-left-login-btn:hover {
+      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.7);
+      transform: translateY(-2px);
     }
 
     /* ============================================================ */
@@ -229,18 +140,6 @@
       animation: hudPulse 3s infinite ease-in-out;
       font-family: 'Courier New', Courier, monospace;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-    }
-
-    .hud-banner::before {
-      content: " ";
-      display: block;
-      position: absolute;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
-      background-size: 100% 4px;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.7;
     }
 
     .hud-header-bar {
@@ -436,27 +335,12 @@
 </head>
 <body class="twilight-mode">
 
-  <!-- TOP RIGHT FLOATING ACTION BAR -->
-  <div class="top-float-bar">
-    <button class="top-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }">
-      🔑 Login
+  <!-- TOP LEFT PROMINENT LOGIN BAR -->
+  <div class="top-header-bar">
+    <button class="top-left-login-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }">
+      🔑 Account Login
     </button>
-
-    <div class="top-radio-pill">
-      <button class="top-play-btn" id="top-play-btn" onclick="toggleTopRadioStream()">
-        <span id="top-play-icon">▶</span>
-      </button>
-      <div class="radio-meta-text">
-        <div class="radio-title-row">
-          <span class="radio-pulse-dot"></span>
-          <span>NEKO FM</span>
-        </div>
-        <span class="radio-sub-text">24/7 Live Stream</span>
-      </div>
-    </div>
   </div>
-
-  <audio id="index-neko-audio" src="https://stream.zeno.fm/f3wvbbqmdg8uv" preload="none"></audio>
 
   <div class="container">
 
@@ -495,7 +379,7 @@
       </div>
     </div>
 
-    <!-- DESTINATION CARDS GRID (UNIVERSE HUB REMOVED) -->
+    <!-- DESTINATION CARDS GRID -->
     <h2 class="portal-section-title">Portal Destinations</h2>
     <div class="portal-grid">
 
@@ -559,6 +443,20 @@
         <a href="podcast.html" class="card-link-btn">Listen to Podcast →</a>
       </div>
 
+      <!-- CARD 6: MORE COMING SOON -->
+      <div class="portal-card" style="border-color: rgba(255, 209, 102, 0.4);">
+        <div>
+          <span class="card-badge" style="border-color: var(--accent-gold); color: var(--accent-gold); background: rgba(255, 209, 102, 0.15);">Under Development</span>
+          <h3 class="card-title" style="color: var(--accent-gold);">⚡ More Coming Soon</h3>
+          <p class="card-desc">
+            Interactive Sub-Stage mini-games, digital art galleries, downloadable 16-bit desktop wallpapers, and secret side stories are currently in development.
+          </p>
+        </div>
+        <div class="card-link-btn" style="border-color: var(--accent-gold); color: var(--accent-gold); background: rgba(255, 209, 102, 0.1); cursor: default;">
+          ✦ Transmission Pending...
+        </div>
+      </div>
+
     </div>
 
     <footer>
@@ -568,26 +466,6 @@
   </div>
 
   <script>
-    /* TOP-RIGHT INLINE RADIO PLAYER LOGIC */
-    function toggleTopRadioStream() {
-      const audio = document.getElementById('index-neko-audio');
-      const btn = document.getElementById('top-play-btn');
-      const icon = document.getElementById('top-play-icon');
-
-      if (audio.paused) {
-        audio.play().then(() => {
-          btn.classList.add('playing');
-          icon.textContent = '⏸';
-        }).catch(err => {
-          console.error("Audio playback error:", err);
-        });
-      } else {
-        audio.pause();
-        btn.classList.remove('playing');
-        icon.textContent = '▶';
-      }
-    }
-
     /* INTERACTIVE HUD CYCLING LOGIC FOR LANDING PAGE */
     const gateStates = [
       { text: "[Sub-Stage Gate: Online]", mode: "" },
