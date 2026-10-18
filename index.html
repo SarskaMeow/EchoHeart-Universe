@@ -1,310 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EchoHeart & Girls Phantom Dead — Otaku Overload</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Otaku Overload — Home Portal</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="firebase-config.js?v=2"></script>
   <script type="module" src="age-gate.js"></script>
   <style>
     :root {
-      --nav-bg-twilight: rgba(10, 7, 20, 0.96);
-      --nav-bg-basement: rgba(8, 4, 15, 0.98);
-      --nav-bg-backstage: rgba(5, 2, 10, 0.99);
-      --nav-border-twilight: rgba(168, 139, 235, 0.25);
-      --nav-border-basement: rgba(255, 77, 109, 0.35);
-      --nav-border-backstage: rgba(255, 209, 102, 0.4);
-      --accent-pink: #f4b8c4;
-      --accent-purple: #a88beb;
-      --accent-red: #ff4d6d;
+      /* Deepened Girls of Phantom & Otaku Overload Dark-Mode Palette */
+      --bg-dark: #05030a;
+      --card-bg: rgba(15, 8, 28, 0.94);
+      --card-inner: rgba(8, 4, 18, 0.92);
+      --nav-bg: rgba(9, 4, 18, 0.96);
+      --nav-border: rgba(255, 0, 127, 0.4);
+      --accent-purple: #9d4edd;
+      --accent-pink: #ff007f;
+      --accent-cyan: #00f0ff;
       --accent-gold: #ffd166;
-      --text-light: #e2daf8;
+      --accent-glow: rgba(255, 0, 127, 0.4);
+      --text-main: #e8dff5;
+      --text-light: #ffffff;
+      --text-muted: #b8a7d4;
+      --btn-grad: linear-gradient(135deg, #ff007f 0%, #7209b7 100%);
+      --btn-text: #ffffff;
+      --card-border: rgba(255, 0, 127, 0.35);
+      --border-subtle: rgba(0, 240, 255, 0.3);
+      --card-hover-border: #ff007f;
+      --card-hover-shadow: rgba(255, 0, 127, 0.35);
     }
-    
-    body {
-      background: #070510;
-      color: var(--text-light);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      transition: background 0.4s ease, color 0.4s ease;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
     }
 
-    /* 3-Tier Mode Themes */
-    body.twilight-mode { background: #070510; color: #e2daf8; }
-    body.basement-mode { background: #05020a; color: #fce8ec; }
-    body.backstage-mode { background: #030106; color: #ffffff; }
-
-    body.basement-mode .navbar {
-      background: var(--nav-bg-basement);
-      border-bottom-color: var(--nav-border-basement);
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 90px; /* Offset for bottom audio player bar */
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
 
-    body.backstage-mode .navbar {
-      background: var(--nav-bg-backstage);
-      border-bottom: 2px solid var(--accent-gold);
-      box-shadow: 0 4px 20px rgba(255, 209, 102, 0.2);
-    }
-
-    /* Ultra-Slim & Dark Universal Header Navbar */
+    /* ============================================================ */
+    /* ⚡ MATCHED SINGLE-LINE HEADER NAVBAR                         */
+    /* ============================================================ */
     .navbar {
       position: sticky;
       top: 0;
       z-index: 1000;
       width: 100%;
-      background: var(--nav-bg-twilight);
-      border-bottom: 1px solid var(--nav-border-twilight);
+      background: var(--nav-bg);
+      border-bottom: 1.5px solid var(--nav-border);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      transition: background 0.4s ease, border-color 0.4s ease;
+      padding: 10px 24px;
       box-sizing: border-box;
+      box-shadow: 0 4px 25px rgba(255, 0, 127, 0.15);
     }
 
-    .nav-container {
+    .nav-container-single {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 4px 16px 6px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      position: relative;
-    }
-
-    /* Top Row Container for Mode Switcher & Title/Nav Balance */
-    .nav-top-row {
-      width: 100%;
-      display: flex;
       justify-content: space-between;
-      align-items: center;
-      position: relative;
+      gap: 16px;
     }
 
-    /* Left-aligned Mode Switcher */
-    .mode-selector-wrapper {
-      display: flex;
+    /* Far Left: Mode Selector Pill Dropdown */
+    .nav-left-pill { flex: 0 0 auto; }
+
+    .mode-dropdown-btn {
+      background: rgba(20, 8, 35, 0.85);
+      border: 1px solid rgba(255, 0, 127, 0.5);
+      color: var(--accent-pink);
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
       align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.2);
+      transition: all 0.25s ease;
     }
 
-    .logo-container {
+    .mode-dropdown-btn:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
+      color: #ffffff;
+    }
+
+    /* Center Section: Stacked Title + Row Nav Links */
+    .nav-center-group {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 3px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
+      gap: 8px;
+      flex: 1;
     }
 
     .logo-link {
       text-decoration: none;
-      display: flex;
+      display: inline-flex;
       flex-direction: column;
       align-items: center;
-      text-align: center;
     }
 
     .logo-main {
-      font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.12rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      background: linear-gradient(135deg, #cbb8f6, #f4b8c4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      filter: drop-shadow(0 2px 6px rgba(168, 139, 235, 0.3));
-    }
-
-    body.basement-mode .logo-main {
-      background: linear-gradient(135deg, #ff4d6d, #cbb8f6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    body.backstage-mode .logo-main {
-      background: linear-gradient(135deg, var(--accent-gold), #ff007f);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-family: 'Fredoka', 'Segoe UI', cursive, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-pink);
+      text-shadow: 0 0 10px var(--accent-pink);
     }
 
     .logo-sub {
-      font-size: 0.58rem;
+      font-size: 0.62rem;
       font-weight: 800;
-      letter-spacing: 2px;
+      letter-spacing: 2.5px;
       color: var(--accent-pink);
-      opacity: 0.85;
-      margin-top: -1px;
+      text-transform: uppercase;
+      opacity: 0.95;
     }
 
-    body.basement-mode .logo-sub { color: var(--accent-red); }
-    body.backstage-mode .logo-sub { color: var(--accent-gold); }
-
-    /* Compact Nav Links Row */
-    .nav-links { 
-      display: flex; 
-      align-items: center; 
+    .nav-links-row {
+      display: flex;
+      align-items: center;
       justify-content: center;
-      gap: 6px; 
+      gap: 8px;
       flex-wrap: wrap;
-      margin-top: 2px;
     }
-    
-    .nav-item {
-      color: #bfaee8;
-      font-size: 0.78rem;
+
+    .nav-item-pill {
+      color: var(--text-muted);
+      font-size: 0.82rem;
       font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      background: rgba(14, 9, 28, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.15);
-    }
-
-    .nav-item:hover, .nav-item.active {
-      background: rgba(168, 139, 235, 0.2);
-      border-color: rgba(168, 139, 235, 0.4);
-      color: #ffffff;
-      box-shadow: 0 0 10px rgba(168, 139, 235, 0.15);
-    }
-
-    /* Glowing Dark Mode Select Dropdown Styling */
-    .mode-select-dropdown {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      padding: 5px 28px 5px 12px;
+      padding: 5px 14px;
       border-radius: 8px;
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 800;
-      cursor: pointer;
-      outline: none;
-      transition: all 0.3s ease;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 8px center;
-      background-size: 12px;
-      background-color: rgba(18, 12, 36, 0.95);
-      border: 1px solid rgba(168, 139, 235, 0.45);
-      color: #e2daf8;
-      box-shadow: 0 0 12px rgba(168, 139, 235, 0.35);
+      text-decoration: none;
+      background: rgba(30, 15, 55, 0.6);
+      border: 1px solid rgba(157, 78, 221, 0.3);
+      transition: all 0.25s ease;
+      white-space: nowrap;
     }
 
-    .mode-select-dropdown:hover {
-      box-shadow: 0 0 16px rgba(168, 139, 235, 0.5);
-      border-color: var(--accent-purple);
-      color: #fff;
-    }
-
-    body.basement-mode .mode-select-dropdown {
-      background-color: rgba(15, 6, 24, 0.95);
-      border: 1px solid rgba(255, 77, 109, 0.6);
-      color: #ff4d6d;
-      box-shadow: 0 0 12px rgba(255, 77, 109, 0.4);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    }
-
-    body.backstage-mode .mode-select-dropdown {
-      background-color: rgba(18, 10, 30, 0.98);
-      border: 1px solid rgba(255, 209, 102, 0.7);
-      color: #ffd166;
-      box-shadow: 0 0 14px rgba(255, 209, 102, 0.45);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    }
-
-    .mode-select-dropdown option {
-      background-color: #0b0716;
-      color: #e2daf8;
-      padding: 8px;
-      font-weight: 700;
-    }
-
-    /* Mobile Hamburger Toggle Button */
-    .mobile-menu-btn {
-      display: none;
-      background: rgba(14, 9, 28, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.2);
-      border-radius: 6px;
-      padding: 4px 8px;
-      cursor: pointer;
-    }
-
-    .hamburger-bar {
-      width: 18px;
-      height: 2px;
-      background: var(--accent-pink);
-      border-radius: 2px;
-      margin: 3px 0;
+    .nav-item-pill:hover, .nav-item-pill.active {
+      background: rgba(255, 0, 127, 0.22);
+      color: #ffffff;
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
     }
 
     @media (max-width: 992px) {
-      .logo-container { position: static; transform: none; }
-      .nav-top-row { justify-content: space-between; }
-      .mobile-menu-btn { display: flex; flex-direction: column; }
-      .nav-links {
-        display: none;
-        width: 100%;
-        background: rgba(8, 5, 18, 0.98);
-        border-top: 1px solid var(--nav-border-twilight);
-        flex-direction: column;
-        padding: 10px 0;
-        gap: 6px;
-        box-sizing: border-box;
-      }
-      .nav-links.open { display: flex; }
-      .nav-item, .mode-selector-wrapper { width: 100%; text-align: center; box-sizing: border-box; justify-content: center; }
-      .mode-select-dropdown { width: 100%; text-align: center; }
+      .nav-container-single { flex-wrap: wrap; }
+      .nav-center-group { order: 1; width: 100%; }
+      .nav-left-pill { order: 2; }
     }
 
-    /* Hero Banner */
-    .hero-container {
-      max-width: 1200px;
-      margin: 24px auto 20px;
-      padding: 36px 20px;
+    /* ============================================================ */
+    /* ⚡ MAIN PORTAL HERO & GLITCH EFFECTS                         */
+    /* ============================================================ */
+    .container {
+      max-width: 1250px;
+      margin: 30px auto 2rem;
+      padding: 0 1rem;
+    }
+
+    .hero-banner {
       text-align: center;
-      background: linear-gradient(145deg, rgba(22, 15, 42, 0.9), rgba(12, 8, 24, 0.95));
-      border: 2px solid rgba(168, 139, 235, 0.35);
-      border-radius: 24px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-      transition: border-color 0.4s ease;
-    }
-
-    body.basement-mode .hero-container { border-color: rgba(255, 77, 109, 0.5); }
-    body.backstage-mode .hero-container { border-color: rgba(255, 209, 102, 0.5); }
-
-    .hero-badge {
-      display: inline-block;
-      padding: 5px 14px;
+      padding: 3.5rem 1.5rem 2.5rem;
+      background: radial-gradient(circle at center, rgba(157, 78, 221, 0.2) 0%, rgba(5, 3, 10, 0.95) 75%);
+      border: 1px solid var(--card-border);
       border-radius: 20px;
-      background: rgba(168, 139, 235, 0.2);
-      border: 1px solid rgba(168, 139, 235, 0.4);
-      color: #f4b8c4;
-      font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 0, 127, 0.25);
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
     }
 
     .hero-title {
-      font-size: 2.6rem;
-      margin: 0 0 14px;
-      background: linear-gradient(135deg, #ffffff, #f4b8c4, #a88beb);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+      animation: textGlitch 5s infinite;
+      margin-bottom: 0.5rem;
     }
 
     .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--accent-pink);
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-description {
+      max-width: 780px;
+      margin: 0 auto 2rem;
       font-size: 1.05rem;
-      color: #cbb8f6;
-      max-width: 750px;
-      margin: 0 auto 26px;
-      line-height: 1.5;
+      color: var(--text-main);
+      line-height: 1.7;
     }
 
     .hero-cta-group {
@@ -314,275 +222,567 @@
       flex-wrap: wrap;
     }
 
-    .cta-btn-primary {
-      background: linear-gradient(135deg, #a88beb, #f4b8c4);
-      color: #0d0b18;
-      font-weight: 800;
-      padding: 12px 24px;
+    .cta-btn {
+      padding: 12px 28px;
       border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
       text-decoration: none;
-      box-shadow: 0 4px 20px rgba(168, 139, 235, 0.4);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    body.basement-mode .cta-btn-primary { background: linear-gradient(135deg, #ff4d6d, #a88beb); color: #ffffff; }
-    body.backstage-mode .cta-btn-primary { background: linear-gradient(135deg, #ffd166, #ff007f); color: #000000; }
-
-    .cta-btn-secondary {
-      background: rgba(35, 25, 65, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.4);
-      color: #e2daf8;
-      font-weight: 800;
-      padding: 12px 24px;
-      border-radius: 12px;
-      text-decoration: none;
-      transition: background 0.2s ease;
+    .cta-primary {
+      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+      color: #ffffff;
+      box-shadow: 0 0 18px rgba(255, 0, 127, 0.5);
     }
 
-    .cta-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(244, 184, 196, 0.5); }
-    .cta-btn-secondary:hover { background: rgba(168, 139, 235, 0.25); color: #ffffff; }
+    .cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 28px rgba(255, 0, 127, 0.8);
+    }
 
-    /* Gateway Grid Cards */
-    .gateway-grid {
-      max-width: 1200px;
-      margin: 24px auto 50px;
-      padding: 0 20px;
+    .cta-secondary {
+      background: rgba(15, 8, 28, 0.8);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .cta-secondary:hover {
+      background: rgba(0, 240, 255, 0.15);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      transform: translateY(-3px);
+    }
+
+    /* ANIMATED INTERACTIVE HUD STATUS BANNER WIDGET */
+    .hud-banner {
+      background: var(--card-inner);
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      animation: hudPulse 3s infinite ease-in-out;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .hud-banner::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
+      background-size: 100% 4px;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .hud-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hud-header {
+      font-size: 0.85rem;
+      color: var(--accent-pink);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      animation: textGlitch 4s infinite;
+    }
+
+    .hud-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.8rem;
+      position: relative;
+      z-index: 2;
     }
 
-    .gateway-card {
-      background: rgba(22, 15, 42, 0.85);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 18px;
-      padding: 22px;
-      text-decoration: none;
-      color: inherit;
+    .hud-metric-btn {
+      background: #030108;
+      padding: 0.75rem 1rem;
+      border-left: 3.5px solid var(--accent-cyan);
+      border-top: 1px solid rgba(0, 240, 255, 0.15);
+      border-right: 1px solid rgba(0, 240, 255, 0.15);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+      font-size: 0.9rem;
+      color: #fff;
+      border-radius: 6px;
+      box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.12);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hud-metric-btn:hover {
+      border-left-color: var(--accent-pink);
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.45);
+      transform: translateY(-2px);
+    }
+
+    /* GRID FEATURE CARDS */
+    .portal-section-title {
+      font-size: 1.8rem;
+      color: var(--text-light);
+      border-bottom: 2px solid var(--accent-pink);
+      display: inline-block;
+      padding-bottom: 0.3rem;
+      margin-bottom: 1.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.8rem;
+      margin-bottom: 3rem;
+    }
+
+    .portal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.8rem;
       transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
     }
 
-    .gateway-card:hover {
-      transform: translateY(-4px);
-      border-color: #f4b8c4;
-      box-shadow: 0 10px 28px rgba(244, 184, 196, 0.25);
-      background: rgba(30, 20, 58, 0.95);
+    .portal-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.35);
     }
 
-    .gateway-icon {
-      font-size: 2.2rem;
-      margin-bottom: 12px;
-    }
-
-    .gateway-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      margin: 0 0 6px;
+    .card-badge {
+      align-self: flex-start;
+      background: rgba(255, 0, 127, 0.2);
+      border: 1px solid var(--accent-pink);
       color: #ffffff;
-    }
-
-    .gateway-card p {
-      font-size: 0.86rem;
-      color: #cbb8f6;
-      line-height: 1.4;
-      margin: 0 0 14px;
-    }
-
-    .gateway-link-text {
-      font-size: 0.82rem;
+      font-size: 0.7rem;
       font-weight: 800;
-      color: #f4b8c4;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      padding: 3px 12px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
     }
 
-    /* Modal Overlay Styles */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(5, 2, 12, 0.85);
-      backdrop-filter: blur(10px);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+    .card-title {
+      font-size: 1.4rem;
+      color: var(--accent-cyan);
+      font-weight: 900;
+      margin-bottom: 0.6rem;
     }
 
-    .modal-card {
-      background: rgba(22, 15, 42, 0.96);
-      border: 2px solid #a88beb;
-      border-radius: 20px;
-      padding: 28px;
-      max-width: 440px;
-      width: 100%;
+    .card-desc {
+      font-size: 0.98rem;
+      color: var(--text-main);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .card-link-btn {
+      background: rgba(157, 78, 221, 0.15);
+      border: 1px solid var(--accent-purple);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.88rem;
       text-align: center;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.8);
+      transition: all 0.25s ease;
     }
 
-    .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.3rem; }
-    .modal-card p { color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
-    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
-    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
-    .google-btn { background: #ffffff; color: #111; }
-    .close-btn { background: transparent; color: #a88beb; border: 1px solid rgba(168, 139, 235, 0.3); }
+    .card-link-btn:hover {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 18px rgba(255, 0, 127, 0.5);
+    }
+
+    /* ============================================================ */
+    /* 🎵 PERSISTENT BOTTOM ON-PAGE NEKO FM AUDIO PLAYER BAR         */
+    /* ============================================================ */
+    .bottom-player-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      background: rgba(10, 4, 22, 0.96);
+      border-top: 2px solid var(--accent-pink);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 2000;
+      box-shadow: 0 -4px 25px rgba(255, 0, 127, 0.3);
+    }
+
+    .player-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .player-pulse-indicator {
+      width: 12px;
+      height: 12px;
+      background-color: var(--accent-pink);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent-pink);
+      animation: blink 1.5s infinite;
+    }
+
+    .player-info-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .player-title {
+      font-size: 0.92rem;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+
+    .player-subtitle {
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    .player-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .player-play-btn {
+      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+      color: #ffffff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 20px;
+      font-size: 0.88rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.4);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .player-play-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 24px rgba(255, 0, 127, 0.7);
+    }
+
+    .player-play-btn.playing {
+      background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+    }
+
+    .volume-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .volume-slider {
+      width: 90px;
+      accent-color: var(--accent-pink);
+      cursor: pointer;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 1.5rem;
+    }
+
+    /* KEYFRAMES */
+    @keyframes hudPulse {
+      0% {
+        box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+        border-color: rgba(0, 240, 255, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 26px rgba(0, 240, 255, 0.65);
+        border-color: rgba(0, 240, 255, 1);
+      }
+      100% {
+        box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+        border-color: rgba(0, 240, 255, 0.5);
+      }
+    }
+
+    @keyframes textGlitch {
+      0%, 92%, 100% {
+        transform: translate(0, 0);
+        text-shadow: none;
+      }
+      93% {
+        transform: translate(-2px, 1px);
+        text-shadow: -2px 0 var(--accent-cyan), 2px 0 var(--accent-pink);
+      }
+      94% {
+        transform: translate(2px, -1px);
+        text-shadow: 2px 0 var(--accent-cyan), -2px 0 var(--accent-pink);
+      }
+      95% {
+        transform: translate(0, 0);
+        text-shadow: none;
+      }
+    }
   </style>
 </head>
 <body class="twilight-mode">
 
-  <!-- Universal Header Navigation Bar -->
+  <!-- Matched Single-Line Header Navigation Bar -->
   <header class="navbar">
-    <div class="nav-container">
+    <div class="nav-container-single">
       
-      <!-- Top Row: Mode Switcher (Left) & Centered Brand Logo -->
-      <div class="nav-top-row">
-        <!-- 3-Tier Access Mode Switcher on Left -->
-        <div class="mode-selector-wrapper">
-          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-            <option value="twilight">🌸 Twilight (Public 13+)</option>
-            <option value="basement">⚡ Basement (17+ 🔒)</option>
-            <option value="backstage">👑 Backstage VIP ✦</option>
-          </select>
-        </div>
-
-        <!-- Centered Brand Logo with Lightning Bolts -->
-        <div class="logo-container">
-          <a href="index.html" class="logo-link">
-            <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
-            <span class="logo-sub">✦ GIRLS DEAD PHANTOM ✦</span>
-          </a>
-        </div>
-
-        <!-- Mobile Hamburger Toggle Button -->
-        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
+      <!-- Far Left: Mode Selector Dropdown Button -->
+      <div class="nav-left-pill">
+        <button class="mode-dropdown-btn" onclick="handleModeChange('twilight')">
+          <span>🌸 Twilight (Public 13+)</span>
+          <span style="font-size: 0.65rem;">▼</span>
         </button>
       </div>
 
-      <!-- Main Navigation Links Below -->
-      <nav class="nav-links" id="nav-menu">
-        <a href="index.html" class="nav-item active">🏠 Home</a>
-        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
-        <a href="bbs-forum.html" class="nav-item">💬 Sakuraoka BBS</a>
-        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-        <a href="chat.html" class="nav-item">💬 Live Chat</a>
-        <a href="lore.html" class="nav-item">🌌 Lore & Books</a>
-        <a href="echoheart.html" class="nav-item active">🎸 Girls of Phantom</a>
+      <!-- Center: Main Title Branding + Navigation Pills -->
+      <div class="nav-center-group">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
+          <span class="logo-sub">✦ UNIVERSE PORTAL ✦</span>
+        </a>
 
-        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
-          🔑 Login
-        </button>
-      </nav>
+        <nav class="nav-links-row">
+          <a href="index.html" class="nav-item-pill active">🏠 Home</a>
+          <a href="podcast.html" class="nav-item-pill">🎙️ Podcast</a>
+          <a href="bbs-forum.html" class="nav-item-pill">💬 Sakuraoka BBS</a>
+          <a href="neko-fm.html" class="nav-item-pill">📻 24/7 Neko FM</a>
+          <a href="chat.html" class="nav-item-pill">💬 Live Chat</a>
+          <a href="profile.html" class="nav-item-pill">👤 Profile</a>
+          <a href="echoheart.html" class="nav-item-pill">📚 Lore & Books</a>
+        </nav>
+      </div>
 
     </div>
   </header>
 
-  <!-- Hero Banner -->
-  <section class="hero-container">
-    <span class="hero-badge">✦ Official Audio Drama & Fan Portal</span>
-    <h1 class="hero-title">EchoHeart & Girls Phantom Dead</h1>
-    <p class="hero-subtitle">
-      Step into Sakuraoka High's Prep Room B. Listen to weekly audio drama broadcasts, stream 24/7 J-Rock radio, chat with fellow listeners, and explore cavern lore.
-    </p>
-    <div class="hero-cta-group">
-      <a href="podcast.html" class="cta-btn-primary">🎙️ Listen to Podcast</a>
-      <a href="chat.html" class="cta-btn-secondary">💬 Enter Locker 102 Chat</a>
+  <div class="container">
+
+    <!-- HERO PORTAL BANNER -->
+    <section class="hero-banner">
+      <h1 class="hero-title">OTAKU OVERLOAD</h1>
+      <div class="hero-subtitle">✦ Girls of Phantom • EchoHeart Universe ✦</div>
+      <p class="hero-description">
+        Welcome to the central gateway for original light novels, 24/7 radio streams, underground J-Rock lore, community forums, and live podcasts. Step into the Sub-Stage frequency below.
+      </p>
+      <div class="hero-cta-group">
+        <a href="echoheart.html" class="cta-btn cta-primary">🎸 Read Girls of Phantom Lore</a>
+        <a href="neko-fm.html" class="cta-btn cta-secondary">📻 Tune in to 24/7 Neko FM</a>
+      </div>
+    </section>
+
+    <!-- LIVE INTERACTIVE HUD STATUS WIDGET -->
+    <div class="hud-banner">
+      <div class="hud-header-bar">
+        <div class="hud-header">// Global Portal Frequency Monitor</div>
+        <div style="font-size: 0.7rem; color: var(--accent-cyan);">⚡ [Sub-Stage Network Online]</div>
+      </div>
+      <div class="hud-grid">
+        <div class="hud-metric-btn">
+          <span>[Portal Resonance: 100%]</span>
+          <span style="color: var(--accent-cyan);">ONLINE</span>
+        </div>
+        <div class="hud-metric-btn">
+          <span>[Neko FM Radio: Active]</span>
+          <span style="color: var(--accent-pink);">LIVE</span>
+        </div>
+        <div class="hud-metric-btn">
+          <span>[EchoHeart Vol. 1: Published]</span>
+          <span style="color: var(--accent-gold);">KDP</span>
+        </div>
+        <div class="hud-metric-btn">
+          <span>[Community BBS: Open]</span>
+          <span style="color: var(--accent-cyan);">ACTIVE</span>
+        </div>
+      </div>
     </div>
-  </section>
 
-  <!-- Primary Feature Gateway Grid -->
-  <main class="gateway-grid">
-    <a href="podcast.html" class="gateway-card">
-      <div>
-        <div class="gateway-icon">🎙️</div>
-        <div class="gateway-title">Whisper Radio Podcast Studio</div>
-        <p>Full-length audio drama episodes featuring Nekomi, Sera, Akari Minase, and Aoi.</p>
-      </div>
-      <span class="gateway-link-text">Launch Studio Stage →</span>
-    </a>
+    <!-- MAIN PORTAL DESTINATIONS GRID -->
+    <h2 class="portal-section-title">Explore Portal Destinations</h2>
+    <div class="portal-grid">
 
-    <a href="neko-fm.html" class="gateway-card">
-      <div>
-        <div class="gateway-icon">📻</div>
-        <div class="gateway-title">24/7 Neko FM Radio Lounge</div>
-        <p>Continuous J-Pop/J-Rock streams, station tuner presets, and setlist voting polls.</p>
+      <!-- CARD 1: GIRLS OF PHANTOM -->
+      <div class="portal-card">
+        <div>
+          <span class="card-badge">Original Light Novel</span>
+          <h3 class="card-title">🎸 Girls of Phantom (EchoHeart)</h3>
+          <p class="card-desc">
+            Explore the master lore codex, character dossiers for Akari, Nekomi, Sera, and Aoi, system mechanics, and direct Amazon book links.
+          </p>
+        </div>
+        <a href="echoheart.html" class="card-link-btn">Enter Lore Codex →</a>
       </div>
-      <span class="gateway-link-text">Tune In Now →</span>
-    </a>
 
-    <a href="chat.html" class="gateway-card">
-      <div>
-        <div class="gateway-icon">💬</div>
-        <div class="gateway-title">Locker 102 Live Community</div>
-        <p>Moderated community chat, custom avatar cosmetics, and real-time classmate feed.</p>
+      <!-- CARD 2: 24/7 NEKO FM RADIO -->
+      <div class="portal-card">
+        <div>
+          <span class="card-badge">24/7 Underground Radio</span>
+          <h3 class="card-title">📻 Neko FM Broadcast</h3>
+          <p class="card-desc">
+            Stream high-energy J-Rock, synthwave, 16-bit remixes, and live DJ commentary directly in your browser 24 hours a day.
+          </p>
+        </div>
+        <a href="neko-fm.html" class="card-link-btn">Open Radio Station →</a>
       </div>
-      <span class="gateway-link-text">Open Live Chat →</span>
-    </a>
 
-    <a href="hub.html" class="gateway-card">
-      <div>
-        <div class="gateway-icon">🌌</div>
-        <div class="gateway-title">Universe Hub Portal</div>
-        <p>Light novel lore, character bio archives, stem mixer, and Atelier asset downloads.</p>
+      <!-- CARD 3: SAKURAOKA BBS FORUM -->
+      <div class="portal-card">
+        <div>
+          <span class="card-badge">Community Forum</span>
+          <h3 class="card-title">💬 Sakuraoka BBS</h3>
+          <p class="card-desc">
+            Join fan theories, episode breakdowns, music production debates, and lore discussions with fellow Otaku Overload readers.
+          </p>
+        </div>
+        <a href="bbs-forum.html" class="card-link-btn">Visit BBS Forum →</a>
       </div>
-      <span class="gateway-link-text">Explore Portal →</span>
-    </a>
-  </main>
+
+      <!-- CARD 4: LIVE CHAT -->
+      <div class="portal-card">
+        <div>
+          <span class="card-badge">Real-Time Chat</span>
+          <h3 class="card-title">💬 Community Live Chat</h3>
+          <p class="card-desc">
+            Hang out with members in real time, discuss live radio broadcasts, and get instant updates on new chapter releases.
+          </p>
+        </div>
+        <a href="chat.html" class="card-link-btn">Join Live Chat →</a>
+      </div>
+
+      <!-- CARD 5: PODCAST HUB -->
+      <div class="portal-card">
+        <div>
+          <span class="card-badge">Audio Discussions</span>
+          <h3 class="card-title">🎙️ Otaku Overload Podcast</h3>
+          <p class="card-desc">
+            Listen to deep-dive commentary episodes on anime, light novel writing, indie game design, and lore breakdowns.
+          </p>
+        </div>
+        <a href="podcast.html" class="card-link-btn">Listen to Podcast →</a>
+      </div>
+
+      <!-- CARD 6: UNIVERSE HUB -->
+      <div class="portal-card">
+        <div>
+          <span class="card-badge">Master Franchise Map</span>
+          <h3 class="card-title">🌌 Universe Hub</h3>
+          <p class="card-desc">
+            The overarching universe index linking all creative projects, character timelines, and side projects in one place.
+          </p>
+        </div>
+        <a href="hub.html" class="card-link-btn">Open Universe Hub →</a>
+      </div>
+
+    </div>
+
+    <footer>
+      <p>Otaku Overload Portal • EchoHeart / Girls of Phantom • All Rights Reserved</p>
+    </footer>
+
+  </div>
+
+  <!-- PERSISTENT BOTTOM ON-PAGE AUDIO PLAYER -->
+  <div class="bottom-player-bar">
+    <div class="player-meta">
+      <div class="player-pulse-indicator"></div>
+      <div class="player-info-text">
+        <span class="player-title">📻 24/7 NEKO FM — Live Stream</span>
+        <span class="player-subtitle">Girls of Phantom Underground Frequency</span>
+      </div>
+    </div>
+    <div class="player-controls-group">
+      <button class="player-play-btn" id="local-play-btn" onclick="toggleLocalNekoStream()">
+        <span id="play-btn-icon">▶</span>
+        <span id="play-btn-text">LISTEN LIVE</span>
+      </button>
+      <div class="volume-container">
+        <span>🔊</span>
+        <input type="range" class="volume-slider" id="neko-volume" min="0" max="1" step="0.05" value="0.8" oninput="setStreamVolume(this.value)">
+      </div>
+    </div>
+    <audio id="neko-live-audio" src="https://stream.zeno.fm/f3wvbbqmdg8uv" preload="none"></audio>
+  </div>
 
   <script>
-    async function handleModeChange(targetMode) {
-      const selector = document.getElementById('mode-selector');
+    /* ON-PAGE AUDIO PLAYER LOGIC */
+    function toggleLocalNekoStream() {
+      const audio = document.getElementById('neko-live-audio');
+      const btn = document.getElementById('local-play-btn');
+      const icon = document.getElementById('play-btn-icon');
+      const text = document.getElementById('play-btn-text');
 
+      if (audio.paused) {
+        audio.play().then(() => {
+          btn.classList.add('playing');
+          icon.textContent = '⏸';
+          text.textContent = 'PAUSE';
+        }).catch(err => {
+          console.error("Audio playback error:", err);
+        });
+      } else {
+        audio.pause();
+        btn.classList.remove('playing');
+        icon.textContent = '▶';
+        text.textContent = 'LISTEN LIVE';
+      }
+    }
+
+    function setStreamVolume(val) {
+      const audio = document.getElementById('neko-live-audio');
+      if (audio) {
+        audio.volume = val;
+      }
+    }
+
+    /* GLOBAL SITE TIER SCRIPT */
+    async function handleModeChange(targetMode) {
       if (targetMode === 'twilight') {
         applyThemeMode('twilight');
         return;
-      }
-
-      if (targetMode === 'basement') {
-        if (!window.currentUser) {
-          if (selector) selector.value = getCurrentMode();
-          showAuthModal('Sign-In Required', 'Sign in with Google to access After-Hours Basement streams.');
-          return;
-        }
-
-        if (window.userData && window.userData.ageVerified17) {
-          applyThemeMode('basement');
-          return;
-        }
-
-        if (typeof window.handleContentAccess === "function") {
-          const allowed = await window.handleContentAccess('basement');
-          if (allowed) {
-            applyThemeMode('basement');
-          } else if (selector) {
-            selector.value = getCurrentMode();
-          }
-        } else {
-          if (selector) selector.value = getCurrentMode();
-          alert("The Basement Channel requires 17+ age verification.");
-        }
-        return;
-      }
-
-      if (targetMode === 'backstage') {
-        if (!window.currentUser) {
-          if (selector) selector.value = getCurrentMode();
-          showAuthModal('Sign-In Required', 'Sign in with Google to check your VIP Backstage status.');
-          return;
-        }
-
-        if (window.userData && window.userData.isVIP) {
-          applyThemeMode('backstage');
-        } else {
-          if (selector) selector.value = getCurrentMode();
-          showVIPPromoModal();
-        }
       }
     }
 
@@ -593,80 +793,16 @@
     function applyThemeMode(mode) {
       localStorage.setItem('neko_active_mode', mode);
       const body = document.body;
-      const selector = document.getElementById('mode-selector');
 
       body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
       body.classList.add(`${mode}-mode`);
-
-      if (selector) selector.value = mode;
-    }
-
-    function showVIPPromoModal() {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card" style="border-color: #ffd166;">
-            <span style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; font-weight: 900; font-size: 0.72rem; padding: 4px 12px; border-radius: 20px; text-transform: uppercase;">Backstage Pass Locked</span>
-            <h3 style="margin: 14px 0 8px; color: #ffd166;">👑 VIP Backstage Access</h3>
-            <p style="color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px;">
-              Get access to exclusive stem mixers, gold name glows, custom avatar frames, and private band lounge chats!
-            </p>
-            <div style="background: rgba(30, 20, 50, 0.6); padding: 14px; border-radius: 12px; border: 1px solid rgba(255, 209, 102, 0.2); margin-bottom: 18px; text-align: left; font-size: 0.82rem;">
-              <div style="font-weight: 800; color: #ffd166; margin-bottom: 6px;">🎁 How to get 30 Days Free:</div>
-              • Vote in daily <b>Neko FM Setlist Polls</b><br>
-              • Catch random <b>Golden Key drops</b> in Live Chat<br>
-              • Win weekly <b>Prep Room B Trivia Events</b>
-            </div>
-            <div class="modal-actions">
-              <a href="neko-fm.html" class="modal-btn" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; text-decoration: none; display: block; box-sizing: border-box;">📊 Vote in Polls & Earn VIP</a>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Close</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function showAuthModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3>🔑 ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-actions">
-              <button class="modal-btn google-btn" onclick="if (window.loginWithGoogle) { window.loginWithGoogle(); }">Sign In with Google</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function removeExistingModals() {
-      const existing = document.getElementById('neko-gate-modal');
-      if (existing) existing.remove();
-    }
-
-    function toggleMobileMenu() {
-      const navMenu = document.getElementById('nav-menu');
-      if (navMenu) navMenu.classList.toggle('open');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       applyThemeMode(getCurrentMode());
-
-      document.addEventListener('click', function(event) {
-        const navMenu = document.getElementById('nav-menu');
-        const isInsideNavbar = event.target.closest('.navbar');
-        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
-          navMenu.classList.remove('open');
-        }
-      });
     });
   </script>
 
-  <script src="music-player.js"></script>
+  <script src="global-player.js"></script>
 </body>
 </html>
