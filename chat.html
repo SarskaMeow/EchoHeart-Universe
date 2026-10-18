@@ -777,9 +777,9 @@
     <div class="nav-inner">
       <nav class="nav-portal-links">
         <a href="index.html" class="nav-pill">🏠 Home</a>
-        <a href="echoheart.html" class="nav-pill active">📚 girls of phantom</a>
+        <a href="echoheart.html" class="nav-pill">📚 girls of phantom</a>
         <a href="neko-fm.html" class="nav-pill">📻 24/7 Neko FM</a>
-        <a href="chat.html" class="nav-pill">💬 Live Chat</a>
+        <a href="chat.html" class="nav-pill active">💬 Live Chat</a>
         <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
         <a href="profile.html" class="nav-pill">👤 Account</a>
       </nav>
@@ -822,8 +822,8 @@
     <!-- CENTER EXPANDED CHAT FEED -->
     <main class="chat-main-window" id="main-chat-window-box">
       <div class="chat-window-header" id="chat-window-hdr">
-        <span class="active-room-name" id="current-room-title">📚 GIRLS OF PHANTOM // BOOK RELEASES</span>
-        <span style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold;" id="chat-sub-status">AUTHOR ARCHIVE RELAY ACTIVE</span>
+        <span class="active-room-name" id="current-room-title">⚡ GENERAL-LOUNGE</span>
+        <span style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold;" id="chat-sub-status">SUB-STAGE ENCRYPTION ACTIVE</span>
       </div>
 
       <!-- MODERATOR OVERWATCH BANNER -->
@@ -833,54 +833,53 @@
       </div>
 
       <div class="chat-messages-area" id="chat-feed">
-        <!-- Girls Introducing Their Books -->
-        <div class="msg-row incoming" data-msg-id="book-intro-1">
+        <!-- Default Welcome & Interactive Messages -->
+        <div class="msg-row incoming bot-msg" data-msg-id="neko-bot-welcome">
+          <div class="msg-meta">
+            <span class="msg-author bot">🛡️ NekoBot (Mod)</span>
+            <span class="msg-time">Just now</span>
+          </div>
+          <div class="msg-bubble">
+            🤖 [System Notice]: Welcome to Otaku Overload! Keep the vibes cyberpunk, stay respectful, and enjoy the 24/7 Neko FM stream 🌸
+          </div>
+        </div>
+
+        <div class="msg-row incoming" data-msg-id="welcome-1">
           <div class="msg-meta">
             <span class="msg-author npc">Nekomi Aoyama [NPC]</span>
-            <span class="msg-time">Just now</span>
+            <span class="msg-time">10:42 PM</span>
             <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
           </div>
           <div class="msg-bubble">
-            ✨ Hey everyone! Nekomi here! We are so beyond hyped to finally introduce our upcoming stories, <strong>EchoHeart</strong> and <strong>Lily of the Valley</strong>! Physical paperbacks and hardcovers are coming very soon through <strong>Amazon Kindle Direct Publishing (KDP)</strong>, so you'll be able to hold our world right in your hands! Stay tuned—they'll be available on Amazon real soon! 📖💖
+            Welcome to the Sub-Stage lounge! Check out the 24/7 Neko FM stream or grab the volume 1 codex on the lore tab. 🎸
           </div>
         </div>
 
-        <div class="msg-row incoming" data-msg-id="book-intro-2">
+        <div class="msg-row incoming" data-msg-id="welcome-2">
           <div class="msg-meta">
             <span class="msg-author npc">Akari Minase [NPC]</span>
-            <span class="msg-time">1 min ago</span>
+            <span class="msg-time">10:43 PM</span>
             <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
           </div>
           <div class="msg-bubble">
-            🔥 Akari stepping in! Every raw beat, every midnight secret, and every high-stakes moment we've lived through is packed straight into these pages. You'll be able to grab your copies physically through KDP very soon. Keep your eyes on the portal for the official drop date! 🎸✨
+            Who's ready for the next live rehearsal set? Drums are tuned and ready to blast! 🔥
           </div>
         </div>
 
-        <div class="msg-row incoming" data-msg-id="book-intro-3">
+        <div class="msg-row incoming" data-msg-id="welcome-3">
           <div class="msg-meta">
-            <span class="msg-author npc">Sera Hanibara [NPC]</span>
-            <span class="msg-time">2 mins ago</span>
+            <span class="msg-author">Guest_Otaku99</span>
+            <span class="msg-time">10:44 PM</span>
             <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
           </div>
           <div class="msg-bubble">
-            🌸 Sera here! The synth melodies and atmospheric vibes of our journey look gorgeous in print. We're launching physical editions via Amazon KDP very soon, so you can add them straight to your bookshelf collection. You won't want to miss this release! 📚✨
-          </div>
-        </div>
-
-        <div class="msg-row incoming" data-msg-id="book-intro-4">
-          <div class="msg-meta">
-            <span class="msg-author npc">Aoi Mizuhara [NPC]</span>
-            <span class="msg-time">3 mins ago</span>
-            <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
-          </div>
-          <div class="msg-bubble">
-            🌱 Aoi checking in. All the groundwork is finished, and our books are heading to print via Amazon KDP very soon. Look out for them on Amazon shortly—we can't wait for you all to read what we've built together. 📖🌿
+            The new cyberpunk styling on the portal looks insane!
           </div>
         </div>
       </div>
 
       <div class="chat-input-bar">
-        <input type="text" id="user-input-msg" class="chat-input-field" placeholder="Ask the girls about their upcoming book release..." onkeydown="handleKeyPress(event)">
+        <input type="text" id="user-input-msg" class="chat-input-field" placeholder="Transmit message to Sub-Stage channel..." onkeydown="handleKeyPress(event)">
         <button class="send-msg-btn" onclick="sendChatMessage()">TRANSMIT ⚡</button>
       </div>
     </main>
