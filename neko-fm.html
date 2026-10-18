@@ -247,11 +247,11 @@
       box-shadow: 0 8px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 240, 255, 0.25);
     }
 
-    /* SPECTRUM VISUALIZER CANVAS & MODE TOGGLE */
+    /* SPECTRUM VISUALIZER CANVAS & HUD OVERLAY */
     .synth-visualizer-wrapper {
       position: relative;
       width: 100%;
-      height: 100px;
+      height: 110px;
       background: #020106;
       border: 1px solid rgba(0, 240, 255, 0.4);
       border-radius: 14px;
@@ -270,7 +270,7 @@
       background: rgba(10, 4, 22, 0.9);
       border: 1px solid var(--accent-cyan);
       color: var(--accent-cyan);
-      padding: 4px 10px;
+      padding: 3px 10px;
       border-radius: 8px;
       font-size: 0.72rem;
       font-weight: 800;
@@ -1043,21 +1043,32 @@
       </div>
     </section>
 
-    <!-- TAB 2: NEKO SYNTH DECK WITH SPECTRUM & OSCILLOSCOPE TOGGLE -->
+    <!-- TAB 2: NEKO SYNTH DECK WITH LIVE SPECTRUM CANVAS & TELEMETRY HUD -->
     <section id="youtube-tab" class="tab-content">
       <div class="neko-radio-deck">
         <div class="yt-radio-card">
           
           <div class="lcd-header">
             <span class="live-indicator"><span class="pulse-dot"></span> LIVE BROADCAST</span>
-            <button class="visualizer-toggle-btn" id="viz-mode-toggle-btn" onclick="toggleVisualizerMode()">
-              📊 MODE: SPECTRUM BARS
-            </button>
             <span class="deck-model">NEKO-88 DIRECT SYNTH DECK</span>
           </div>
 
-          <!-- SPECTRUM & OSCILLOSCOPE CANVAS -->
+          <!-- SPECTRUM VISUALIZER CANVAS WITH HUD TELEMETRY OVERLAY -->
           <div class="synth-visualizer-wrapper">
+            <!-- Telemetry HUD Text Overlay -->
+            <div style="position: absolute; top: 8px; left: 12px; z-index: 10; font-family: 'Courier New', monospace; font-size: 0.7rem; color: var(--accent-cyan); text-shadow: 0 0 6px var(--accent-cyan); pointer-events: none; display: flex; gap: 12px; opacity: 0.85;">
+              <span>RATE: 44.1 kHz</span>
+              <span>BITRATE: 320 kbps</span>
+              <span>PEAK: -1.8 dB</span>
+            </div>
+
+            <!-- Floating Mode Toggle Button -->
+            <div style="position: absolute; top: 6px; right: 8px; z-index: 10;">
+              <button class="visualizer-toggle-btn" id="viz-mode-toggle-btn" onclick="toggleVisualizerMode()">
+                📊 SPECTRUM
+              </button>
+            </div>
+
             <canvas id="synth-visualizer-canvas"></canvas>
           </div>
 
@@ -1224,7 +1235,7 @@
       visualizerMode = (visualizerMode === 'bars') ? 'oscilloscope' : 'bars';
       const btn = document.getElementById('viz-mode-toggle-btn');
       if (btn) {
-        btn.innerText = (visualizerMode === 'bars') ? '📊 MODE: SPECTRUM BARS' : '🌊 MODE: OSCILLOSCOPE';
+        btn.innerText = (visualizerMode === 'bars') ? '📊 SPECTRUM' : '🌊 WAVEFORM';
       }
     }
 
@@ -1260,6 +1271,18 @@
         phase += 0.05;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Render ambient matrix grid lines so visualizer box is never black
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.07)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let gx = 0; gx < canvas.width; gx += 24) {
+          ctx.moveTo(gx, 0); ctx.lineTo(gx, canvas.height);
+        }
+        for (let gy = 0; gy < canvas.height; gy += 20) {
+          ctx.moveTo(0, gy); ctx.lineTo(canvas.width, gy);
+        }
+        ctx.stroke();
 
         if (visualizerMode === 'bars') {
           // MODE 1: SPECTRUM FREQUENCY BARS
