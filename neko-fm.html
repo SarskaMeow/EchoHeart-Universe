@@ -50,7 +50,7 @@
         radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12) 0%, transparent 60%);
     }
 
-    /* TIGHTENED UNIVERSAL NAVBAR */
+    /* UNIVERSAL NAVBAR */
     .navbar {
       position: sticky;
       top: 0;
@@ -247,11 +247,11 @@
       box-shadow: 0 8px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 240, 255, 0.25);
     }
 
-    /* SPECTRUM VISUALIZER CANVAS STYLES */
+    /* SPECTRUM VISUALIZER CANVAS & MODE TOGGLE */
     .synth-visualizer-wrapper {
       position: relative;
       width: 100%;
-      height: 95px;
+      height: 100px;
       background: #020106;
       border: 1px solid rgba(0, 240, 255, 0.4);
       border-radius: 14px;
@@ -264,6 +264,25 @@
       width: 100%;
       height: 100%;
       display: block;
+    }
+
+    .visualizer-toggle-btn {
+      background: rgba(10, 4, 22, 0.9);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+    }
+
+    .visualizer-toggle-btn:hover {
+      background: var(--accent-cyan);
+      color: #000000;
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.7);
     }
 
     .preset-btn {
@@ -318,6 +337,7 @@
     .lcd-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       font-size: 0.75rem;
       font-weight: 800;
       color: var(--accent-cyan);
@@ -1023,17 +1043,20 @@
       </div>
     </section>
 
-    <!-- TAB 2: NEKO SYNTH DECK WITH LIVE SPECTRUM CANVAS -->
+    <!-- TAB 2: NEKO SYNTH DECK WITH SPECTRUM & OSCILLOSCOPE TOGGLE -->
     <section id="youtube-tab" class="tab-content">
       <div class="neko-radio-deck">
         <div class="yt-radio-card">
           
           <div class="lcd-header">
             <span class="live-indicator"><span class="pulse-dot"></span> LIVE BROADCAST</span>
+            <button class="visualizer-toggle-btn" id="viz-mode-toggle-btn" onclick="toggleVisualizerMode()">
+              📊 MODE: SPECTRUM BARS
+            </button>
             <span class="deck-model">NEKO-88 DIRECT SYNTH DECK</span>
           </div>
 
-          <!-- SPECTRUM VISUALIZER CANVAS -->
+          <!-- SPECTRUM & OSCILLOSCOPE CANVAS -->
           <div class="synth-visualizer-wrapper">
             <canvas id="synth-visualizer-canvas"></canvas>
           </div>
@@ -1189,12 +1212,21 @@
     let trackRefreshTimer = null;
     const synthAudioPlayer = document.getElementById('synth-deck-audio');
 
-    // WEB AUDIO API SPECTRUM VISUALIZER ENGINE
+    // WEB AUDIO API VISUALIZER & MODE TOGGLE STATE
     let synthAudioCtx = null;
     let synthAnalyser = null;
     let synthSource = null;
     let synthAnimFrame = null;
+    let visualizerMode = 'bars'; // 'bars' or 'oscilloscope'
     let phase = 0;
+
+    function toggleVisualizerMode() {
+      visualizerMode = (visualizerMode === 'bars') ? 'oscilloscope' : 'bars';
+      const btn = document.getElementById('viz-mode-toggle-btn');
+      if (btn) {
+        btn.innerText = (visualizerMode === 'bars') ? '📊 MODE: SPECTRUM BARS' : '🌊 MODE: OSCILLOSCOPE';
+      }
+    }
 
     function initSynthVisualizer() {
       if (synthAudioCtx) return;
@@ -1202,7 +1234,7 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         synthAudioCtx = new AudioContext();
         synthAnalyser = synthAudioCtx.createAnalyser();
-        synthAnalyser.fftSize = 128;
+        synthAnalyser.fftSize = 256;
         
         synthSource = synthAudioCtx.createMediaElementSource(synthAudioPlayer);
         synthSource.connect(synthAnalyser);
@@ -1220,52 +1252,96 @@
       canvas.width = canvas.parentElement.clientWidth;
       canvas.height = canvas.parentElement.clientHeight;
 
-      const bufferLength = synthAnalyser ? synthAnalyser.frequencyBinCount : 32;
+      const bufferLength = synthAnalyser ? synthAnalyser.frequencyBinCount : 64;
       const dataArray = new Uint8Array(bufferLength);
 
       function draw() {
         synthAnimFrame = requestAnimationFrame(draw);
         phase += 0.05;
 
-        let hasData = false;
-        if (synthAnalyser && isSynthPlaying) {
-          synthAnalyser.getByteFrequencyData(dataArray);
-          for (let i = 0; i < bufferLength; i++) {
-            if (dataArray[i] > 0) { hasData = true; break; }
-          }
-        }
-
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        const barWidth = (canvas.width / bufferLength) * 1.8;
-        let x = 0;
-
-        for (let i = 0; i < bufferLength; i++) {
-          let val = dataArray[i];
-          if (!hasData) {
-            // Ambient animated fallback wave when stream buffering or paused
-            val = isSynthPlaying 
-              ? Math.floor((Math.sin(phase + i * 0.3) + 1) * 60 + Math.random() * 30)
-              : Math.floor((Math.sin(phase * 0.5 + i * 0.2) + 1) * 10 + 5);
+        if (visualizerMode === 'bars') {
+          // MODE 1: SPECTRUM FREQUENCY BARS
+          let hasData = false;
+          if (synthAnalyser && isSynthPlaying) {
+            synthAnalyser.getByteFrequencyData(dataArray);
+            for (let i = 0; i < bufferLength; i++) {
+              if (dataArray[i] > 0) { hasData = true; break; }
+            }
           }
 
-          let barHeight = (val / 255) * canvas.height * 0.85;
-          if (barHeight < 3) barHeight = 3;
+          const barWidth = (canvas.width / bufferLength) * 1.8;
+          let x = 0;
 
-          const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-          gradient.addColorStop(0, '#9d4edd');
-          gradient.addColorStop(0.5, '#ff007f');
-          gradient.addColorStop(1, '#00f0ff');
+          for (let i = 0; i < bufferLength; i++) {
+            let val = dataArray[i];
+            if (!hasData) {
+              val = isSynthPlaying 
+                ? Math.floor((Math.sin(phase + i * 0.3) + 1) * 60 + Math.random() * 30)
+                : Math.floor((Math.sin(phase * 0.5 + i * 0.2) + 1) * 8 + 4);
+            }
 
-          ctx.fillStyle = gradient;
-          ctx.shadowBlur = isSynthPlaying ? 12 : 4;
+            let barHeight = (val / 255) * canvas.height * 0.85;
+            if (barHeight < 3) barHeight = 3;
+
+            const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+            gradient.addColorStop(0, '#9d4edd');
+            gradient.addColorStop(0.5, '#ff007f');
+            gradient.addColorStop(1, '#00f0ff');
+
+            ctx.fillStyle = gradient;
+            ctx.shadowBlur = isSynthPlaying ? 12 : 4;
+            ctx.shadowColor = '#00f0ff';
+
+            ctx.beginPath();
+            ctx.roundRect(x, canvas.height - barHeight, barWidth - 3, barHeight, [4, 4, 0, 0]);
+            ctx.fill();
+
+            x += barWidth;
+          }
+
+        } else {
+          // MODE 2: OSCILLOSCOPE TIME-DOMAIN WAVEFORM
+          let hasData = false;
+          if (synthAnalyser && isSynthPlaying) {
+            synthAnalyser.getByteTimeDomainData(dataArray);
+            for (let i = 0; i < bufferLength; i++) {
+              if (Math.abs(dataArray[i] - 128) > 2) { hasData = true; break; }
+            }
+          }
+
+          ctx.lineWidth = 2.5;
+          ctx.strokeStyle = '#00f0ff';
+          ctx.shadowBlur = isSynthPlaying ? 14 : 4;
           ctx.shadowColor = '#00f0ff';
 
           ctx.beginPath();
-          ctx.roundRect(x, canvas.height - barHeight, barWidth - 3, barHeight, [4, 4, 0, 0]);
-          ctx.fill();
 
-          x += barWidth;
+          const sliceWidth = canvas.width / bufferLength;
+          let x = 0;
+
+          for (let i = 0; i < bufferLength; i++) {
+            let v = dataArray[i] / 128.0;
+            if (!hasData) {
+              v = isSynthPlaying 
+                ? 1 + Math.sin(phase * 2 + i * 0.25) * 0.35 + (Math.random() - 0.5) * 0.1
+                : 1 + Math.sin(phase * 0.8 + i * 0.15) * 0.08;
+            }
+
+            const y = (v * canvas.height) / 2;
+
+            if (i === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
+
+            x += sliceWidth;
+          }
+
+          ctx.lineTo(canvas.width, canvas.height / 2);
+          ctx.stroke();
         }
       }
 
