@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Community Live Chat — Otaku Overload</title>
   <link rel="stylesheet" href="style.css">
-  <script type="module" src="firebase-config.js?v=2"></script>
+  <script type="module" src="firebase-config.js?v=3"></script>
   <script type="module" src="age-gate.js"></script>
   <style>
     :root {
@@ -228,6 +228,40 @@
       animation: textGlitchRGB 3.5s infinite alternate;
     }
 
+    /* ADMIN / MODERATOR OVERWATCH BAR */
+    .mod-overwatch-bar {
+      display: none;
+      background: rgba(255, 0, 85, 0.15);
+      border-bottom: 1px solid var(--accent-red);
+      padding: 8px 16px;
+      font-size: 0.78rem;
+      color: var(--accent-pink);
+      font-weight: 800;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mod-overwatch-bar.active {
+      display: flex;
+    }
+
+    .mod-action-btn {
+      background: rgba(255, 0, 85, 0.25);
+      border: 1px solid var(--accent-red);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mod-action-btn:hover {
+      background: var(--accent-red);
+      box-shadow: 0 0 10px var(--accent-red);
+    }
+
     .chat-messages-area {
       flex: 1;
       padding: 1.2rem;
@@ -244,6 +278,7 @@
       flex-direction: column;
       max-width: 80%;
       animation: fadeInMsg 0.25s ease-out;
+      position: relative;
     }
 
     .msg-row.incoming { align-self: flex-start; }
@@ -269,7 +304,35 @@
       text-shadow: 0 0 10px var(--accent-pink);
     }
 
+    .msg-author.mod {
+      color: #ff007f;
+      font-weight: 900;
+      text-shadow: 0 0 12px #ff007f, 0 0 20px rgba(255, 0, 127, 0.8);
+      letter-spacing: 0.5px;
+    }
+
     .msg-time { opacity: 0.6; }
+
+    .delete-msg-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--accent-red);
+      font-size: 0.72rem;
+      cursor: pointer;
+      margin-left: 8px;
+      font-weight: 800;
+      transition: color 0.2s ease;
+    }
+
+    .delete-msg-btn:hover {
+      color: #ffffff;
+      text-shadow: 0 0 8px var(--accent-red);
+    }
+
+    .msg-row:hover .delete-msg-btn {
+      display: inline-block;
+    }
 
     .msg-bubble {
       padding: 10px 16px;
@@ -294,6 +357,11 @@
       color: #ffffff;
       border-top-right-radius: 2px;
       box-shadow: 0 0 18px rgba(255, 0, 127, 0.45);
+    }
+
+    .mod-msg .msg-bubble {
+      border-color: #ff007f;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
     }
 
     /* INPUT CONTROL BAR */
@@ -639,9 +707,8 @@
         <a href="index.html" class="nav-pill">🏠 Home</a>
         <a href="echoheart.html" class="nav-pill">📚 Lore & Books</a>
         <a href="neko-fm.html" class="nav-pill">📻 24/7 Neko FM</a>
-        <a href="bbs-forum.html" class="nav-pill">💬 Sakuraoka BBS</a>
         <a href="chat.html" class="nav-pill active">💬 Live Chat</a>
-        <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
+        <a href="profile.html" class="nav-pill">👤 Account</a>
       </nav>
 
       <div class="chat-status-indicator">
@@ -681,32 +748,41 @@
         <span style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold;">SUB-STAGE ENCRYPTION ACTIVE</span>
       </div>
 
+      <!-- MODERATOR OVERWATCH BANNER -->
+      <div class="mod-overwatch-bar" id="mod-overwatch-banner">
+        <span>🛡️ MODERATOR OVERWATCH MODE ACTIVE</span>
+        <button class="mod-action-btn" onclick="clearRoomFeed()">🗑️ Clear Room Feed</button>
+      </div>
+
       <div class="chat-messages-area" id="chat-feed">
         <!-- Default Welcome & Interactive Messages -->
-        <div class="msg-row incoming">
+        <div class="msg-row incoming" data-msg-id="welcome-1">
           <div class="msg-meta">
             <span class="msg-author npc">Nekomi Aoyama [NPC]</span>
             <span class="msg-time">10:42 PM</span>
+            <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
           </div>
           <div class="msg-bubble">
             Welcome to the Sub-Stage lounge! Check out the 24/7 Neko FM stream or grab the volume 1 codex on the lore tab. 🎸
           </div>
         </div>
 
-        <div class="msg-row incoming">
+        <div class="msg-row incoming" data-msg-id="welcome-2">
           <div class="msg-meta">
             <span class="msg-author npc">Akari Minase [NPC]</span>
             <span class="msg-time">10:43 PM</span>
+            <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
           </div>
           <div class="msg-bubble">
             Who's ready for the next live rehearsal set? Drums are tuned and ready to blast! 🔥
           </div>
         </div>
 
-        <div class="msg-row incoming">
+        <div class="msg-row incoming" data-msg-id="welcome-3">
           <div class="msg-meta">
             <span class="msg-author">Guest_Otaku99</span>
             <span class="msg-time">10:44 PM</span>
+            <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
           </div>
           <div class="msg-bubble">
             The new cyberpunk styling on the portal looks insane!
@@ -727,10 +803,10 @@
       <div class="panel-title">// Personal Chat Space</div>
       <div class="chatter-card personal-space-card" id="user-chatter-card">
         <div class="personal-space-top">
-          <div class="chatter-avatar" style="background: linear-gradient(135deg, #00f0ff, #9d4edd);">U</div>
+          <div class="chatter-avatar" id="user-avatar-box" style="background: linear-gradient(135deg, #00f0ff, #9d4edd);">U</div>
           <div class="chatter-info">
             <span class="chatter-name" id="user-display-name">You (Logged In)</span>
-            <span class="chatter-role">Portal Member</span>
+            <span class="chatter-role" id="user-role-display">Portal Member</span>
           </div>
           <span class="status-dot-indicator active" id="user-status-dot" title="Active"></span>
         </div>
@@ -830,6 +906,49 @@
     </div>
   </div>
 
+  <script type="module">
+    import { auth, db } from './firebase-config.js?v=3';
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    window.currentUser = null;
+    window.isUserAdmin = false;
+
+    // Listen for Auth changes and verify Admin / Moderator roles
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        window.currentUser = user;
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const snap = await getDoc(userRef);
+          if (snap.exists()) {
+            const data = snap.data();
+            window.isUserAdmin = data.role === 'admin' || data.role === 'moderator' || data.isAdmin === true;
+            
+            const nameEl = document.getElementById('user-display-name');
+            const roleEl = document.getElementById('user-role-display');
+            const avatarBox = document.getElementById('user-avatar-box');
+
+            if (window.isUserAdmin) {
+              if (nameEl) nameEl.innerHTML = `<span style="color:#ff007f; font-weight:900;">🛡️ MODERATOR</span>`;
+              if (roleEl) roleEl.innerText = "System Overwatch";
+              if (avatarBox) avatarBox.style.background = "linear-gradient(135deg, #ff007f, #ffd166)";
+              
+              // Reveal Moderator Bar
+              const modBanner = document.getElementById('mod-overwatch-banner');
+              if (modBanner) modBanner.classList.add('active');
+            } else {
+              if (nameEl) nameEl.innerText = data.displayName || "Lounge Member";
+              if (roleEl) roleEl.innerText = data.isVIP ? "Backstage VIP" : "Portal Member";
+            }
+          }
+        } catch (e) {
+          console.error("Firestore admin check error:", e);
+        }
+      }
+    });
+  </script>
+
   <script>
     /* REAL-TIME USER STATUS MANAGEMENT & 5-MINUTE AUTO-AWAY TIMER */
     let currentUserStatus = 'active'; // 'active', 'away', or 'busy'
@@ -853,28 +972,22 @@
         select.value = newStatus;
       }
 
-      // Sync status to localStorage for session persistence & chat.js binding
       localStorage.setItem('neko_user_status', newStatus);
-
-      // Dispatch custom status event for chat.js / Firebase sync
       window.dispatchEvent(new CustomEvent('userStatusChanged', { detail: { status: newStatus } }));
     }
 
     function recordUserActivity() {
       lastActivityTimestamp = Date.now();
-      // If automatically set to away by inactivity timer, restore to active upon user action
       if (isAutoAway && currentUserStatus === 'away') {
         isAutoAway = false;
         changeUserStatus('active');
       }
     }
 
-    // Register user activity listeners for auto-away timer
     ['mousemove', 'keydown', 'click', 'touchstart'].forEach(evt => {
       window.addEventListener(evt, recordUserActivity, { passive: true });
     });
 
-    // Check inactivity every 10 seconds
     setInterval(() => {
       const now = Date.now();
       if (now - lastActivityTimestamp >= INACTIVITY_TIMEOUT_MS && currentUserStatus === 'active') {
@@ -911,24 +1024,30 @@
       document.getElementById('docked-player').classList.toggle('collapsed');
     }
 
-    /* CHAT TRANSMISSION LOGIC */
+    /* CHAT TRANSMISSION LOGIC & MODERATION */
     function sendChatMessage() {
       const input = document.getElementById('user-input-msg');
       const text = input.value.trim();
       if (!text) return;
 
-      recordUserActivity(); // Reset inactivity timer on transmit
+      recordUserActivity();
 
       const chatFeed = document.getElementById('chat-feed');
       const now = new Date();
       const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
       const msgRow = document.createElement('div');
-      msgRow.className = 'msg-row outgoing';
+      msgRow.className = 'msg-row outgoing' + (window.isUserAdmin ? ' mod-msg' : '');
+      
+      const authorHtml = window.isUserAdmin 
+        ? `<span class="msg-author mod">🛡️ MODERATOR</span>`
+        : `<span class="msg-author">You</span>`;
+
       msgRow.innerHTML = `
         <div class="msg-meta">
-          <span class="msg-author">You</span>
+          ${authorHtml}
           <span class="msg-time">${timeStr}</span>
+          <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
         </div>
         <div class="msg-bubble">${escapeHtml(text)}</div>
       `;
@@ -936,6 +1055,24 @@
       chatFeed.appendChild(msgRow);
       input.value = '';
       chatFeed.scrollTop = chatFeed.scrollHeight;
+    }
+
+    function deleteMessage(btnEl) {
+      if (!window.isUserAdmin && !confirm("Delete this message from feed?")) return;
+      const msgRow = btnEl.closest('.msg-row');
+      if (msgRow) {
+        msgRow.style.opacity = '0';
+        msgRow.style.transform = 'translateY(-6px)';
+        msgRow.style.transition = 'all 0.2s ease';
+        setTimeout(() => msgRow.remove(), 200);
+      }
+    }
+
+    function clearRoomFeed() {
+      if (confirm("🛡️ Moderator Action: Are you sure you want to clear all messages in this room?")) {
+        const chatFeed = document.getElementById('chat-feed');
+        if (chatFeed) chatFeed.innerHTML = '';
+      }
     }
 
     function handleKeyPress(e) {
@@ -956,7 +1093,6 @@
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    // Initialize initial status on load
     document.addEventListener('DOMContentLoaded', () => {
       const savedStatus = localStorage.getItem('neko_user_status') || 'active';
       changeUserStatus(savedStatus);
