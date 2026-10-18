@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Otaku Overload Podcast — Sub-Stage Audio Studio</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whisper Radio Podcast Studio — EchoHeart & Girls Dead Phantom</title>
   <link rel="stylesheet" href="style.css">
-  <script type="module" src="firebase-config.js?v=2"></script>
-  <script type="module" src="age-gate.js"></script>
+  <script type="module" src="firebase-config.js"></script>
   <style>
     :root {
-      /* Deep Dark Cyberpunk Palette */
+      /* Cyberpunk Neon Palette from Neko FM */
       --bg-dark: #040209;
       --card-bg: rgba(15, 7, 28, 0.94);
       --card-inner: rgba(8, 3, 16, 0.94);
@@ -25,6 +24,14 @@
       --text-muted: #b8a7d4;
       --card-border: rgba(255, 0, 127, 0.35);
       --border-cyan: rgba(0, 240, 255, 0.35);
+
+      /* Tier Navigation Border Tokens */
+      --nav-bg-twilight: rgba(9, 4, 18, 0.96);
+      --nav-bg-basement: rgba(18, 4, 25, 0.98);
+      --nav-bg-backstage: rgba(25, 12, 5, 0.99);
+      --nav-border-twilight: rgba(0, 240, 255, 0.4);
+      --nav-border-basement: rgba(255, 0, 127, 0.5);
+      --nav-border-backstage: rgba(255, 209, 102, 0.6);
     }
 
     * {
@@ -39,11 +46,12 @@
       color: var(--text-main);
       min-height: 100vh;
       line-height: 1.6;
-      padding-bottom: 80px;
+      padding-bottom: 60px;
       overflow-x: hidden;
       background-image: 
         radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.18) 0%, transparent 50%),
         radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.14) 0%, transparent 50%);
+      transition: background 0.4s ease, color 0.4s ease;
     }
 
     /* BACKGROUND SCANLINE EFFECT */
@@ -58,433 +66,643 @@
       opacity: 0.5;
     }
 
-    /* ============================================================ */
-    /* ⚡ STREAMLINED TOP NAVIGATION BAR                            */
-    /* ============================================================ */
-    .podcast-navbar {
-      background: var(--nav-bg);
-      border-bottom: 1.5px solid var(--card-border);
-      padding: 10px 24px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 4px 20px rgba(255, 0, 127, 0.2);
+    /* 3-Tier Mode Themes */
+    body.twilight-mode { background: #040209; color: var(--text-main); }
+    body.basement-mode { background: #08020e; color: #fce8ec; }
+    body.backstage-mode { background: #0a0502; color: #ffffff; }
+
+    body.basement-mode .navbar {
+      background: var(--nav-bg-basement);
+      border-bottom-color: var(--nav-border-basement);
+      box-shadow: 0 4px 20px rgba(255, 0, 127, 0.3);
+    }
+
+    body.backstage-mode .navbar {
+      background: var(--nav-bg-backstage);
+      border-bottom: 2px solid var(--accent-gold);
+      box-shadow: 0 4px 20px rgba(255, 209, 102, 0.3);
+    }
+
+    /* Universal Header Navbar */
+    .navbar {
       position: sticky;
       top: 0;
       z-index: 1000;
+      width: 100%;
+      background: var(--nav-bg-twilight);
+      border-bottom: 1.5px solid var(--nav-border-twilight);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: background 0.4s ease, border-color 0.4s ease;
+      box-sizing: border-box;
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2);
     }
 
-    .nav-inner {
+    .nav-container {
       max-width: 1400px;
       margin: 0 auto;
+      padding: 8px 20px 10px;
       display: flex;
+      flex-direction: column;
       align-items: center;
+      position: relative;
+    }
+
+    .nav-top-row {
+      width: 100%;
+      display: flex;
       justify-content: space-between;
-      gap: 16px;
+      align-items: center;
+      position: relative;
     }
 
-    .nav-portal-links {
+    .mode-selector-wrapper {
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
     }
 
-    .nav-pill {
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 3px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .logo-link {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .logo-main {
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+      animation: textGlitch 4s infinite;
+    }
+
+    body.basement-mode .logo-main {
+      color: var(--accent-pink);
+      text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
+    }
+
+    body.backstage-mode .logo-main {
+      color: var(--accent-gold);
+      text-shadow: 0 0 15px rgba(255, 209, 102, 0.8);
+    }
+
+    .logo-sub {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--accent-pink);
+      opacity: 0.9;
+      margin-top: -1px;
+      text-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    body.basement-mode .logo-sub { color: var(--accent-pink); }
+    body.backstage-mode .logo-sub { color: var(--accent-gold); }
+
+    .nav-links { 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      gap: 8px; 
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    
+    .nav-item {
       color: var(--text-muted);
       font-size: 0.82rem;
       font-weight: 700;
       padding: 6px 14px;
       border-radius: 8px;
       text-decoration: none;
-      background: rgba(30, 15, 55, 0.6);
-      border: 1px solid rgba(157, 78, 221, 0.3);
       transition: all 0.25s ease;
       white-space: nowrap;
+      background: rgba(30, 15, 55, 0.6);
+      border: 1px solid rgba(157, 78, 221, 0.3);
     }
 
-    .nav-pill:hover, .nav-pill.active {
+    .nav-item:hover, .nav-item.active {
       background: rgba(255, 0, 127, 0.25);
       color: #ffffff;
       border-color: var(--accent-pink);
       box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
     }
 
-    .podcast-status-indicator {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    /* Glowing Mode Select Dropdown */
+    .mode-select-dropdown {
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 6px 28px 6px 14px;
+      border-radius: 10px;
       font-size: 0.82rem;
-      color: var(--accent-cyan);
       font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .status-pulse {
-      width: 10px;
-      height: 10px;
-      background-color: var(--accent-green);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--accent-green);
-      animation: pulse 1.8s infinite;
-    }
-
-    /* ============================================================ */
-    /* ⚡ CONTAINER & HERO SECTION                                  */
-    /* ============================================================ */
-    .container {
-      max-width: 1350px;
-      margin: 30px auto 2rem;
-      padding: 0 1.2rem;
-    }
-
-    header.podcast-hero {
-      text-align: center;
-      margin-bottom: 2.5rem;
-      border-bottom: 1px solid var(--card-border);
-      padding-bottom: 1.8rem;
-    }
-
-    .podcast-glitch-title {
-      font-size: 2.8rem;
-      font-weight: 900;
-      color: var(--accent-cyan);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
-      animation: textGlitch 4s infinite;
-      margin-bottom: 0.4rem;
-    }
-
-    .podcast-subtitle {
-      font-size: 1.15rem;
-      color: var(--accent-pink);
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      text-shadow: 0 0 10px var(--accent-glow);
-    }
-
-    /* ============================================================ */
-    /* 🎙️ FEATURED PODCAST PLAYER DECK                               */
-    /* ============================================================ */
-    .featured-player-card {
-      background: var(--card-inner);
-      border: 1.5px solid var(--accent-cyan);
-      border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 3rem;
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 240, 255, 0.2);
-      animation: hudPulse 4s infinite ease-in-out;
-      position: relative;
-    }
-
-    .player-header-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      color: #ffffff;
-      font-size: 0.72rem;
-      font-weight: 900;
-      padding: 4px 14px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 1rem;
-    }
-
-    .now-playing-title {
-      font-size: 1.75rem;
-      color: #ffffff;
-      font-weight: 900;
-      margin-bottom: 0.4rem;
-    }
-
-    .now-playing-desc {
-      font-size: 0.98rem;
-      color: var(--text-muted);
-      margin-bottom: 1.8rem;
-      line-height: 1.6;
-    }
-
-    .audio-controls-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .main-play-btn {
-      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
-      color: #ffffff;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 24px;
-      font-size: 0.95rem;
-      font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 0 18px rgba(255, 0, 127, 0.5);
-      transition: all 0.25s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .main-play-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 28px rgba(255, 0, 127, 0.8);
-    }
-
-    .main-play-btn.playing {
-      background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
-      box-shadow: 0 0 22px rgba(0, 240, 255, 0.7);
-    }
-
-    .progress-bar-container {
-      flex: 1;
-      min-width: 220px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(10, 4, 22, 0.8);
-      border: 1px solid var(--card-border);
-      padding: 8px 16px;
-      border-radius: 12px;
-    }
-
-    .time-stamp {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.82rem;
-      color: var(--accent-cyan);
-      font-weight: bold;
-    }
-
-    .progress-slider {
-      flex: 1;
-      height: 6px;
-      accent-color: var(--accent-pink);
-      cursor: pointer;
-    }
-
-    .volume-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(10, 4, 22, 0.8);
-      border: 1px solid var(--card-border);
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-    }
-
-    .vol-slider {
-      width: 80px;
-      accent-color: var(--accent-pink);
-      cursor: pointer;
-    }
-
-    /* ============================================================ */
-    /* 👯 GIRLS OF PHANTOM HOSTS WINDOW (HOST DISPLAY CARDS)        */
-    /* ============================================================ */
-    .hosts-section-title {
-      font-size: 1.8rem;
-      color: var(--text-light);
-      border-bottom: 2px solid var(--accent-pink);
-      display: inline-block;
-      padding-bottom: 0.3rem;
-      margin-bottom: 1.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      text-shadow: 0 0 12px var(--accent-glow);
-    }
-
-    .girls-hosts-window {
-      background: var(--card-bg);
-      border: 1.5px solid var(--card-border);
-      border-radius: 16px;
-      padding: 1.8rem;
-      margin-bottom: 3.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-    }
-
-    .hosts-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .host-card {
-      background: rgba(8, 3, 16, 0.92);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 1.2rem;
-      display: flex;
-      align-items: center;
-      gap: 16px;
+      outline: none;
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .host-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 22px rgba(0, 240, 255, 0.35);
-    }
-
-    .host-avatar-box {
-      width: 72px;
-      height: 72px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      font-weight: 900;
-      color: #ffffff;
-      box-shadow: 0 0 16px rgba(255, 0, 127, 0.5);
-      flex-shrink: 0;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f0ff'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 14px;
+      background-color: rgba(10, 4, 22, 0.95);
       border: 1.5px solid var(--accent-cyan);
-    }
-
-    .host-details {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .host-name {
-      font-size: 1.15rem;
-      font-weight: 900;
-      color: #ffffff;
-      margin-bottom: 2px;
-    }
-
-    .host-role-badge {
-      font-size: 0.7rem;
-      font-weight: 800;
       color: var(--accent-cyan);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 6px;
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
     }
 
-    .host-status {
-      font-size: 0.75rem;
-      color: var(--accent-green);
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    .mode-select-dropdown:hover {
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+      border-color: #70f8ff;
+      color: #fff;
+    }
+
+    body.basement-mode .mode-select-dropdown {
+      border-color: var(--accent-pink);
+      color: var(--accent-pink);
+      box-shadow: 0 0 14px rgba(255, 0, 127, 0.4);
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff007f'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    }
+
+    body.backstage-mode .mode-select-dropdown {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      box-shadow: 0 0 14px rgba(255, 209, 102, 0.4);
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    }
+
+    .mode-select-dropdown option {
+      background-color: #0b0716;
+      color: #e2daf8;
+      padding: 8px;
       font-weight: 700;
     }
 
-    .mini-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background-color: var(--accent-green);
-      box-shadow: 0 0 6px var(--accent-green);
+    /* Mobile Hamburger Toggle Button */
+    .mobile-menu-btn {
+      display: none;
+      background: rgba(14, 9, 28, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
     }
 
-    /* ============================================================ */
-    /* 📻 FULL EPISODE ARCHIVES GRID                                */
-    /* ============================================================ */
-    .episodes-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
+    .hamburger-bar {
+      width: 20px;
+      height: 2px;
+      background: var(--accent-pink);
+      border-radius: 2px;
+      margin: 3px 0;
     }
 
-    .episode-card {
-      background: var(--card-bg);
-      border: 1.5px solid var(--card-border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-      transition: all 0.3s ease;
+    @media (max-width: 992px) {
+      .logo-container { position: static; transform: none; }
+      .nav-top-row { justify-content: space-between; }
+      .mobile-menu-btn { display: flex; flex-direction: column; }
+      .nav-links {
+        display: none;
+        width: 100%;
+        background: rgba(8, 5, 18, 0.98);
+        border-top: 1px solid var(--card-border);
+        flex-direction: column;
+        padding: 12px 0;
+        gap: 8px;
+      }
+      .nav-links.open { display: flex; }
+      .nav-item, .mode-selector-wrapper { width: 100%; text-align: center; justify-content: center; }
+      .mode-select-dropdown { width: 100%; text-align: center; }
     }
 
-    .episode-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 24px rgba(0, 240, 255, 0.3);
+    /* Podcast Layout Styles */
+    .podcast-container {
+      max-width: 1300px;
+      margin: 30px auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      padding: 0 20px;
     }
 
-    .ep-info-group {
-      flex: 1;
+    @media (max-width: 900px) { .podcast-container { grid-template-columns: 1fr; } }
+
+    .wide-stage {
+      background: var(--card-inner);
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 240, 255, 0.2);
+      animation: hudPulse 4s infinite ease-in-out;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
     }
 
-    .ep-tag-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 0.4rem;
+    body.basement-mode .wide-stage {
+      border-color: var(--accent-pink);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(255, 0, 127, 0.3);
     }
 
-    .ep-badge {
-      background: rgba(255, 0, 127, 0.18);
-      border: 1px solid var(--accent-pink);
+    body.backstage-mode .wide-stage {
+      border-color: var(--accent-gold);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(255, 209, 102, 0.3);
+    }
+
+    .on-air-badge {
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
       color: #ffffff;
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 2px 10px;
-      border-radius: 10px;
-      text-transform: uppercase;
-    }
-
-    .ep-duration {
-      font-size: 0.75rem;
-      color: var(--accent-cyan);
-      font-family: 'Courier New', Courier, monospace;
-    }
-
-    .ep-title {
-      font-size: 1.25rem;
-      color: var(--text-light);
-      font-weight: 800;
-      margin-bottom: 0.4rem;
-    }
-
-    .ep-desc {
-      font-size: 0.92rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    .ep-play-btn {
-      background: rgba(10, 4, 22, 0.9);
-      border: 1.5px solid var(--accent-pink);
-      color: var(--accent-pink);
-      padding: 10px 22px;
+      padding: 4px 14px;
       border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
+    }
+
+    body.basement-mode .on-air-badge {
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+    }
+
+    body.backstage-mode .on-air-badge {
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-pink));
+      color: #000;
+    }
+
+    .speaker-booth-wide {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 22px 0;
+      background: rgba(10, 4, 22, 0.85);
+      border: 1px solid var(--border-cyan);
+      padding: 18px;
+      border-radius: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .speaker-booth-wide { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .speaker-avatar {
+      text-align: center;
+      opacity: 0.45;
+      transition: all 0.25s ease;
+    }
+
+    .speaker-avatar.speaking {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+
+    .speaker-icon-box {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: rgba(8, 3, 16, 0.95);
+      border: 2px solid var(--border-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .speaker-icon-box img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .speaker-avatar.speaking .speaker-icon-box {
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 20px var(--accent-pink);
+    }
+
+    body.basement-mode .speaker-avatar.speaking .speaker-icon-box {
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 20px var(--accent-pink);
+    }
+
+    body.backstage-mode .speaker-avatar.speaking .speaker-icon-box {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 20px var(--accent-gold);
+    }
+
+    .script-transcript-box {
+      background: #030108;
+      border: 1px solid var(--accent-pink);
+      border-left: 5px solid var(--accent-cyan);
+      padding: 20px 22px;
+      border-radius: 0 14px 14px 0;
+      min-height: 110px;
+      margin-bottom: 20px;
+      box-shadow: inset 0 0 16px rgba(255, 0, 127, 0.2);
+    }
+
+    body.basement-mode .script-transcript-box { border-left-color: var(--accent-pink); }
+    body.backstage-mode .script-transcript-box { border-left-color: var(--accent-gold); }
+
+    .current-speaker-title {
+      color: var(--accent-cyan);
       font-weight: 800;
       font-size: 0.88rem;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
     }
 
-    .ep-play-btn:hover {
-      background: var(--accent-pink);
+    body.basement-mode .current-speaker-title { color: var(--accent-pink); }
+    body.backstage-mode .current-speaker-title { color: var(--accent-gold); }
+
+    .current-dialogue-line {
+      font-size: 1.05rem;
+      font-style: italic;
+      line-height: 1.5;
       color: #ffffff;
-      box-shadow: 0 0 18px rgba(255, 0, 127, 0.6);
     }
 
-    /* FOOTER */
-    footer {
-      text-align: center;
+    .time-display-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 0.85rem;
       color: var(--text-muted);
-      margin-top: 4rem;
-      border-top: 1px solid var(--card-border);
-      padding-top: 1.5rem;
+      margin-bottom: 8px;
+      font-weight: 700;
     }
 
-    /* KEYFRAMES */
+    .progress-bar-container {
+      width: 100%;
+      height: 10px;
+      background: rgba(10, 4, 22, 0.8);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--card-border);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
+      border-radius: 10px;
+      transition: width 0.1s linear;
+    }
+
+    body.basement-mode .progress-bar-fill { background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink)); }
+    body.backstage-mode .progress-bar-fill { background: linear-gradient(90deg, var(--accent-gold), var(--accent-pink)); }
+
+    .action-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+      border: none;
+      border-radius: 12px;
+      color: #ffffff;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+      transition: all 0.25s ease;
+    }
+
+    .action-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 28px rgba(255, 0, 127, 0.8);
+    }
+
+    body.basement-mode .action-btn { background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); color: #ffffff; }
+    body.backstage-mode .action-btn { background: linear-gradient(135deg, var(--accent-gold), var(--accent-pink)); color: #000000; }
+
+    .archive-drawer {
+      background: rgba(10, 4, 22, 0.9);
+      border: 1.5px solid var(--border-cyan);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    body.basement-mode .archive-drawer { border-color: var(--accent-pink); }
+    body.backstage-mode .archive-drawer { border-color: var(--accent-gold); }
+
+    .ep-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .ep-card:hover, .ep-card.active {
+      border-color: var(--accent-cyan);
+      background: rgba(20, 10, 40, 0.95);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+    }
+
+    body.basement-mode .ep-card:hover, body.basement-mode .ep-card.active {
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.4);
+    }
+
+    body.backstage-mode .ep-card:hover, body.backstage-mode .ep-card.active {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 16px rgba(255, 209, 102, 0.4);
+    }
+
+    .npc-badge {
+      background: var(--accent-gold);
+      color: #000;
+      font-size: 0.68rem;
+      font-weight: 900;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-left: 6px;
+    }
+
+    .user-badge {
+      background: rgba(0, 240, 255, 0.2);
+      color: var(--accent-cyan);
+      border: 1px solid var(--accent-cyan);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-left: 6px;
+    }
+
+    .action-btn-small {
+      padding: 10px 18px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.25s ease;
+    }
+
+    .action-btn-small:hover {
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.6);
+    }
+
+    .form-input-text {
+      width: 100%;
+      padding: 12px 16px;
+      background: #030108;
+      border: 1.5px solid var(--card-border);
+      border-radius: 10px;
+      color: #ffffff;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    .form-input-text:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+    }
+
+    /* ALWAYS-ON BOTTOM COMMUNITY COMMENTS SECTION & SAFETY RULES */
+    .global-comments-wrapper {
+      max-width: 1300px;
+      margin: 10px auto 50px;
+      padding: 0 20px;
+    }
+
+    .comments-card-main {
+      background: var(--card-inner);
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .safety-rules-banner {
+      background: rgba(255, 0, 127, 0.12);
+      border: 1px solid var(--accent-pink);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .safety-rules-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .safety-rules-text h4 {
+      margin: 0 0 4px;
+      color: var(--accent-pink);
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    .safety-rules-text p {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .comment-input-box {
+      background: rgba(10, 4, 22, 0.8);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .comment-input-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr auto;
+      gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .comment-input-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .comment-feed-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .single-comment {
+      background: rgba(8, 3, 16, 0.8);
+      border-left: 3px solid var(--accent-cyan);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+    }
+
+    /* Modal Overlays */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 2, 9, 0.88);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 2px solid var(--accent-pink);
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 35px rgba(255, 0, 127, 0.5);
+    }
+
+    .vip-modal-card { border-color: var(--accent-gold); box-shadow: 0 0 35px rgba(255, 209, 102, 0.5); }
+    .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.3rem; font-weight: 900; }
+    .modal-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
+    .modal-price-tag {
+      background: rgba(255, 209, 102, 0.18);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
+    .google-btn { background: #ffffff; color: #111; }
+    .stripe-btn { background: linear-gradient(135deg, var(--accent-pink), var(--accent-gold)); color: #000; }
+    .close-btn { background: transparent; color: var(--accent-pink); border: 1px solid var(--card-border); }
+
+    /* Keyframes */
     @keyframes hudPulse {
       0% { border-color: rgba(0, 240, 255, 0.35); box-shadow: 0 0 12px rgba(0, 240, 255, 0.15); }
       50% { border-color: rgba(0, 240, 255, 0.85); box-shadow: 0 0 25px rgba(0, 240, 255, 0.4); }
@@ -497,267 +715,671 @@
       94% { transform: translate(2px, -1px); }
       95% { transform: translate(0, 0); }
     }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-
-    @media (max-width: 768px) {
-      .episode-card {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .ep-play-btn {
-        width: 100%;
-        justify-content: center;
-      }
-    }
   </style>
 </head>
-<body>
+<body class="twilight-mode">
 
-  <!-- STREAMLINED TOP NAVIGATION BAR -->
-  <header class="podcast-navbar">
-    <div class="nav-inner">
-      <nav class="nav-portal-links">
-        <a href="index.html" class="nav-pill">🏠 Home</a>
-        <a href="echoheart.html" class="nav-pill">📚 Lore & Books</a>
-        <a href="neko-fm.html" class="nav-pill">📻 24/7 Neko FM</a>
-        <a href="bbs-forum.html" class="nav-pill">💬 Sakuraoka BBS</a>
-        <a href="chat.html" class="nav-pill">💬 Live Chat</a>
-        <a href="podcast.html" class="nav-pill active">🎙️ Podcast</a>
+  <audio id="audio-player" style="display: none;"></audio>
+
+  <!-- Universal Header Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      
+      <!-- Top Row: Mode Switcher (Left) & Centered Brand Logo -->
+      <div class="nav-top-row">
+        <!-- 3-Tier Access Mode Switcher on Left -->
+        <div class="mode-selector-wrapper">
+          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
+            <option value="twilight">🌸 Twilight (Public 13+)</option>
+            <option value="basement">⚡ Basement (17+ 🔒)</option>
+            <option value="backstage">👑 Backstage VIP Mode ✦</option>
+          </select>
+        </div>
+
+        <!-- Centered Brand Logo with Lightning Bolts -->
+        <div class="logo-container">
+          <a href="index.html" class="logo-link">
+            <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
+            <span class="logo-sub">✦ GIRLS DEAD PHANTOM ✦</span>
+          </a>
+        </div>
+
+        <!-- Mobile Hamburger Toggle Button -->
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+      </div>
+
+      <!-- Main Navigation Links Below -->
+      <nav class="nav-links" id="nav-menu">
+        <a href="index.html" class="nav-item">🏠 Home</a>
+        <a href="podcast.html" class="nav-item active">🎙️ Podcast</a>
+        <a href="bbs-forum.html" class="nav-item">💬 Sakuraoka BBS</a>
+        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+        <a href="chat.html" class="nav-item">💬 Live Chat</a>
+        <a href="echoheart.html" class="nav-item">🌌 Lore & Books</a>
+
+        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(255, 0, 127, 0.25); border: 1px solid var(--accent-pink); cursor: pointer;">
+          🔑 Login
+        </button>
       </nav>
 
-      <div class="podcast-status-indicator">
-        <span class="status-pulse"></span>
-        <span>Sub-Stage Studio: Active</span>
-      </div>
     </div>
   </header>
 
-  <div class="container">
+  <!-- STUDIO BROADCAST PLAYER -->
+  <main id="view-podcast-player" class="podcast-container">
+    <section class="wide-stage">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <h2 id="stage-main-title" style="font-weight: 900; letter-spacing: 1px; color: #ffffff;">🎙️ WHISPER RADIO STUDIO STAGE</h2>
+        <span id="stage-air-badge" class="on-air-badge">ON AIR</span>
+      </div>
 
-    <!-- PODCAST HERO -->
-    <header class="podcast-hero">
-      <h1 class="podcast-glitch-title">🎙️ OTAKU OVERLOAD PODCAST 🎙️</h1>
-      <p class="podcast-subtitle">Underground Audio • Girls of Phantom Broadcasts • Lore & Music Commentary</p>
-    </header>
-
-    <!-- FEATURED AUDIO PLAYER DECK -->
-    <div class="featured-player-card">
-      <span class="player-header-badge">✦ Active Broadcast Player</span>
-      <h2 class="now-playing-title" id="now-playing-title">Episode 12: EchoHeart Vol. 1 Deep-Dive & J-Rock Lore</h2>
-      <p class="now-playing-desc" id="now-playing-desc">
-        Join the crew for an in-depth breakdown of Girls of Phantom, character resonance systems, light novel writing tips, and upcoming underground music single releases.
-      </p>
-
-      <div class="audio-controls-row">
-        <button class="main-play-btn" id="featured-play-btn" onclick="togglePodcastAudio()">
-          <span id="play-btn-icon">▶</span>
-          <span id="play-btn-text">PLAY EPISODE</span>
-        </button>
-
-        <div class="progress-bar-container">
-          <span class="time-stamp" id="curr-time">0:00</span>
-          <input type="range" id="seek-slider" class="progress-slider" value="0" min="0" max="100" oninput="seekAudio(this.value)">
-          <span class="time-stamp" id="dur-time">45:20</span>
+      <div class="speaker-booth-wide">
+        <div id="spk-nekomi" class="speaker-avatar">
+          <div class="speaker-icon-box">
+            <img src="assets/nekomi.jpeg" alt="Nekomi">
+          </div>
+          <strong style="color: #ffffff;">Nekomi</strong>
         </div>
-
-        <div class="volume-box">
-          <span>🔊</span>
-          <input type="range" class="vol-slider" id="vol-control" min="0" max="1" step="0.05" value="0.8" oninput="setAudioVolume(this.value)">
+        <div id="spk-sera" class="speaker-avatar">
+          <div class="speaker-icon-box">
+            <img src="assets/sera.jpeg" alt="Sera">
+          </div>
+          <strong style="color: #ffffff;">Sera</strong>
+        </div>
+        <div id="spk-akari" class="speaker-avatar">
+          <div class="speaker-icon-box">
+            <img src="assets/akari.jpeg" alt="Akari Minase">
+          </div>
+          <strong style="color: #ffffff;">Akari Minase</strong>
+        </div>
+        <div id="spk-aoi" class="speaker-avatar">
+          <div class="speaker-icon-box">
+            <img src="assets/aoi.jpeg" alt="Aoi">
+          </div>
+          <strong style="color: #ffffff;">Aoi</strong>
         </div>
       </div>
 
-      <audio id="podcast-audio" src="https://stream.zeno.fm/f3wvbbqmdg8uv" preload="metadata"></audio>
+      <div class="script-transcript-box">
+        <div id="speaker-title-display" class="current-speaker-title">🎙️ READY TO BROADCAST</div>
+        <div id="dialogue-line-display" class="current-dialogue-line">"Select an episode from the archive drawer and tap start to listen!"</div>
+      </div>
+
+      <div class="time-display-bar">
+        <span id="ep-time-current">00:00</span>
+        <span id="ep-time-total" style="opacity: 0.7;">Total Length: 03:06</span>
+        <span id="ep-time-remaining">Remaining: -03:06</span>
+      </div>
+
+      <div class="progress-bar-container" id="progress-bar-track" onclick="seekPodcast(event)">
+        <div id="ep-progress-fill" class="progress-bar-fill"></div>
+      </div>
+
+      <button id="podcast-play-btn" class="action-btn" onclick="togglePodcastPlayback()">▶ Start Episode Broadcast</button>
+    </section>
+
+    <aside class="archive-drawer">
+      <h3 id="archive-drawer-heading" style="color: #ffffff; font-weight: 900; margin-bottom: 14px;">📻 Episode Archives</h3>
+      <div id="archive-episode-list"></div>
+    </aside>
+  </main>
+
+  <!-- ALWAYS-ON BOTTOM COMMUNITY COMMENT SECTION & SAFETY RULES -->
+  <section class="global-comments-wrapper">
+    <div class="comments-card-main">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+        <h3 style="margin: 0; color: #ffffff; font-size: 1.25rem; font-weight: 900;">💬 Listener Comments & Discussion</h3>
+        <span style="font-size: 0.8rem; color: var(--accent-cyan); font-weight: 800;">🟢 Live Safety Filtering Enabled</span>
+      </div>
+
+      <!-- SAFETY RULES BANNER -->
+      <div class="safety-rules-banner">
+        <div class="safety-rules-icon">🛡️</div>
+        <div class="safety-rules-text">
+          <h4>Otaku Lounge Community Safety Guidelines</h4>
+          <p>
+            Welcome to the EchoHeart Lounge! Keep discussion respectful, friendly, and anime-focused. 
+            <strong>No hate speech, harassment, explicit content, or unmasked lore spoilers.</strong> 
+            Automated safety filters monitor all comments. Repeated violations will mute your account.
+          </p>
+        </div>
+      </div>
+
+      <!-- COMMENT INPUT FORM -->
+      <div class="comment-input-box">
+        <div class="comment-input-row">
+          <input type="text" id="main-comment-handle" class="form-input-text" style="margin-bottom: 0;" placeholder="Handle (e.g. NekoFan_42)">
+          <input type="text" id="main-comment-text" class="form-input-text" style="margin-bottom: 0;" placeholder="Share your thoughts on the current podcast or theories...">
+          <button class="action-btn-small" onclick="postMainComment()" style="white-space: nowrap; height: 100%;">Post Comment</button>
+        </div>
+      </div>
+
+      <!-- LIVE COMMENTS FEED -->
+      <div id="main-comments-feed" class="comment-feed-list">
+        <div class="single-comment">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <strong style="color: var(--accent-pink); font-size: 0.88rem;">Akari_Overdrive <span class="npc-badge">LEAD GUITAR</span></strong>
+            <span style="font-size: 0.75rem; color: var(--accent-purple);">2 hours ago</span>
+          </div>
+          <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"Thanks for tuning in everyone! Leave your favorite episode moments down here!"</p>
+        </div>
+
+        <div class="single-comment">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <strong style="color: var(--text-main); font-size: 0.88rem;">Sakura_Rhythm <span class="user-badge">Listener</span></strong>
+            <span style="font-size: 0.75rem; color: var(--accent-purple);">45 mins ago</span>
+          </div>
+          <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"The audio quality on EP-1 sounds so much clearer now! The voice timing with the pictures is super smooth."</p>
+        </div>
+      </div>
     </div>
-
-    <!-- GIRLS OF PHANTOM HOSTS WINDOW -->
-    <h2 class="hosts-section-title">Girls of Phantom Podcast Hosts</h2>
-    <div class="girls-hosts-window">
-      <div class="hosts-grid">
-
-        <!-- NEKOMI -->
-        <div class="host-card">
-          <div class="host-avatar-box" style="background: linear-gradient(135deg, #8a2be2, #ff007f);">N</div>
-          <div class="host-details">
-            <span class="host-name">Nekomi Aoyama</span>
-            <span class="host-role-badge">Lead Host & Guitarist</span>
-            <span class="host-status"><span class="mini-dot"></span> In Mic Booth</span>
-          </div>
-        </div>
-
-        <!-- AKARI -->
-        <div class="host-card">
-          <div class="host-avatar-box" style="background: linear-gradient(135deg, #ff4500, #ff007f);">A</div>
-          <div class="host-details">
-            <span class="host-name">Akari Minase</span>
-            <span class="host-role-badge">Co-Host & Drummer</span>
-            <span class="host-status"><span class="mini-dot"></span> Live on Air</span>
-          </div>
-        </div>
-
-        <!-- SERA -->
-        <div class="host-card">
-          <div class="host-avatar-box" style="background: linear-gradient(135deg, #ffb7c5, #9d4edd);">S</div>
-          <div class="host-details">
-            <span class="host-name">Sera Hanibara</span>
-            <span class="host-role-badge">Synth & Guest Anchor</span>
-            <span class="host-status"><span class="mini-dot"></span> Sound Engineering</span>
-          </div>
-        </div>
-
-        <!-- AOI -->
-        <div class="host-card">
-          <div class="host-avatar-box" style="background: linear-gradient(135deg, #008080, #00f0ff);">A</div>
-          <div class="host-details">
-            <span class="host-name">Aoi Mizuhara</span>
-            <span class="host-role-badge">Bass & Producer</span>
-            <span class="host-status"><span class="mini-dot"></span> Studio Console</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- EPISODES ARCHIVES -->
-    <h2 class="hosts-section-title">Episode Archives</h2>
-    <div class="episodes-grid">
-
-      <!-- EPISODE 12 -->
-      <div class="episode-card">
-        <div class="ep-info-group">
-          <div class="ep-tag-row">
-            <span class="ep-badge">Ep 12</span>
-            <span class="ep-duration">45:20</span>
-          </div>
-          <h3 class="ep-title">EchoHeart Vol. 1 Deep-Dive & J-Rock Lore</h3>
-          <p class="ep-desc">A complete breakdown of the Core Four characters, Dissonance mechanics, and writing urban fantasy light novels.</p>
-        </div>
-        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 12: EchoHeart Vol. 1 Deep-Dive', 'A complete breakdown of the Core Four characters, Dissonance mechanics, and writing urban fantasy light novels.', '45:20')">
-          <span>▶ Play Episode</span>
-        </button>
-      </div>
-
-      <!-- EPISODE 11 -->
-      <div class="episode-card">
-        <div class="ep-info-group">
-          <div class="ep-tag-row">
-            <span class="ep-badge">Ep 11</span>
-            <span class="ep-duration">38:15</span>
-          </div>
-          <h3 class="ep-title">24/7 Neko FM Behind-The-Scenes</h3>
-          <p class="ep-desc">Exploring how we set up the 24/7 radio stream, 16-bit synth audio tracks, and live DJ commentary.</p>
-        </div>
-        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 11: 24/7 Neko FM Behind-The-Scenes', 'Exploring how we set up the 24/7 radio stream, 16-bit synth audio tracks, and live DJ commentary.', '38:15')">
-          <span>▶ Play Episode</span>
-        </button>
-      </div>
-
-      <!-- EPISODE 10 -->
-      <div class="episode-card">
-        <div class="ep-info-group">
-          <div class="ep-tag-row">
-            <span class="ep-badge">Ep 10</span>
-            <span class="ep-duration">52:00</span>
-          </div>
-          <h3 class="ep-title">Anime Season Preview & Underground Live Houses</h3>
-          <p class="ep-desc">Reviewing upcoming seasonal anime releases and discussing real-world Tokyo underground music venues.</p>
-        </div>
-        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 10: Anime Season Preview & Underground Live Houses', 'Reviewing upcoming seasonal anime releases and discussing real-world Tokyo underground music venues.', '52:00')">
-          <span>▶ Play Episode</span>
-        </button>
-      </div>
-
-      <!-- EPISODE 09 -->
-      <div class="episode-card">
-        <div class="ep-info-group">
-          <div class="ep-tag-row">
-            <span class="ep-badge">Ep 09</span>
-            <span class="ep-duration">41:10</span>
-          </div>
-          <h3 class="ep-title">Building RPG Maker & Roblox TD Systems</h3>
-          <p class="ep-desc">An inside look at custom pixel art tilesets, spawner scripts, and pathing logic for indie games.</p>
-        </div>
-        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 09: Building RPG Maker & Roblox TD Systems', 'An inside look at custom pixel art tilesets, spawner scripts, and pathing logic for indie games.', '41:10')">
-          <span>▶ Play Episode</span>
-        </button>
-      </div>
-
-    </div>
-
-    <footer>
-      <p>Otaku Overload Podcast • EchoHeart / Girls of Phantom • All Rights Reserved</p>
-    </footer>
-
-  </div>
+  </section>
 
   <script>
-    /* PODCAST AUDIO PLAYER LOGIC */
-    const audio = document.getElementById('podcast-audio');
+    let userState = {
+      isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
+      isVIP: localStorage.getItem('neko_is_vip') === 'true'
+    };
+
+    // PROHIBITED CONTENT FILTER LIST
+    const PROHIBITED_WORDS = ["hate", "slur", "spam", "abuse", "exploit", "nsfw"];
+
+    function checkContentSafety(text) {
+      if (!text) return true;
+      const lower = text.toLowerCase();
+      for (let word of PROHIBITED_WORDS) {
+        if (lower.includes(word)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function formatTime(sec) {
+      if (isNaN(sec) || sec < 0) return "00:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function parseRuntimeSeconds(str) {
+      if (!str) return 186;
+      const parts = str.split(':');
+      if (parts.length === 2) {
+        return parseInt(parts[0], 10) * 60 + parseFloat(parts[1]);
+      } else if (parts.length === 3) {
+        return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+      }
+      return 186;
+    }
+
+    // Accurate Spoken-Cadence Keyframes (Calibrated to Real Spoken Audio WPM)
+    const EPISODES_BY_MODE = {
+      twilight: [
+        {
+          title: "EchoHeart Whisper Podcast EP-1",
+          runtime: "03:06",
+          audioUrl: "assets/audio/EchoHeart Whisper Podcast EP-1.mp3",
+          tag: "Free",
+          script: [
+            { startTime: 0, endTime: 14, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome, welcome, everyone! You're tuned into the very first official broadcast of EchoHeart Whisper Radio! I'm your lead vocalist, and Guitarist, Nekomi!" },
+            { startTime: 14, endTime: 21, speaker: "akari", title: "Akari Minase (Drums)", text: "Yaho~! Akari Minase here, Drums overdrive ready to turn every quiet afternoon into a rock concert!" },
+            { startTime: 22, endTime: 28, speaker: "sera", title: "Sera (Keytar)", text: "Sera... keytarist and audio monitor. Frequency check looks clean." },
+            { startTime: 28, endTime: 40, speaker: "aoi", title: "Aoi (Bass)", text: "And I'm Aoi, I'm the bassist and I'm keeping our band on schedule. Whether you're listening between classes or after practice, thanks for dropping in for our 3-minute campus catch-up!" },
+            { startTime: 40, endTime: 52, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Okay, team, let's jump straight into today's big story! Did anyone else notice the utter chaos outside the main cafeteria at 12:15 PM today?" },
+            { startTime: 53, endTime: 64, speaker: "akari", title: "Akari Minase (Drums)", text: "Oh, I saw it! It was an absolute stampede! The line for the new limited-edition Strawberry Shortcake Parfait was longer than our festival queue!" },
+            { startTime: 64, endTime: 72, speaker: "sera", title: "Sera (Keytar)", text: "It sold out in exactly forty-two seconds... I was three people away from the counter. A tragedy." },
+            { startTime: 72, endTime: 83, speaker: "aoi", title: "Aoi (Bass)", text: "A tragedy might be an exaggeration, Sera, but the rumor is someone bought the last three parfaits all at once and sprinted out the side doors toward the music wing." },
+            { startTime: 83, endTime: 91, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Wait... toward our wing?! Are you saying the Parfait Bandit is a musician?" },
+            { startTime: 91, endTime: 104, speaker: "akari", title: "Akari Minase (Drums)", text: "Hey, don't look at me! I was stuck tuning my amp in the storage closet during lunch! Though... if whoever took them wants to trade one for a drum solo, my door is open!" },
+            { startTime: 104, endTime: 115, speaker: "sera", title: "Sera (Keytar)", text: "Actually... I checked the audio logs on my soundboard. I heard heavy footsteps in the hallway right around twelve-twenty... followed by the sound of plastic spoons." },
+            { startTime: 115, endTime: 124, speaker: "aoi", title: "Aoi (Bass)", text: "Alright, alright, let me clear the air before this turns into a full investigation. The three parfaits were purchased by me." },
+            { startTime: 124, endTime: 129, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "What?! Aoi, you're the Parfait Bandit?!" },
+            { startTime: 129, endTime: 139, speaker: "aoi", title: "Aoi (Bass)", text: "I am not a bandit! I bought them for all of us as a treat for locking down our rehearsal schedule this week! They're in the prep room mini-fridge right now." },
+            { startTime: 139, endTime: 146, speaker: "akari", title: "Akari Minase (Drums)", text: "Whaaat?! Aoi, you're an absolute legend! First dibs on the extra strawberries!" },
+            { startTime: 146, endTime: 155, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "And that's our very first piece of good news on Whisper Radio! Case closed, and dessert secured!" },
+            { startTime: 155, endTime: 166, speaker: "aoi", title: "Aoi (Bass)", text: "Remember to check back next week for more daily news around school. Now, let me make sure Akari doesn't eat all three parfaits before practice starts." },
+            { startTime: 166, endTime: 173, speaker: "sera", title: "Sera (Keytar)", text: "Save one for me... Goodbye, everyone. Keep your headphones warm." },
+            { startTime: 173, endTime: 180, speaker: "akari", title: "Akari Minase (Drums)", text: "Catch ya later, everyone! Don't forget to turn the volume all the way up next week! Bye-bye!" },
+            { startTime: 180, endTime: 186, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thanks for tuning in! See you next time, everyone! Bye-bye~!" }
+          ]
+        },
+        {
+          title: "Episode 2: After-School Sweets & Rehearsal Routines",
+          runtime: "03:30",
+          audioUrl: "",
+          tag: "Free",
+          script: [
+            { startTime: 0, endTime: 45, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Hey there, Whisper Radio listeners! Nekomi here on vocals!" },
+            { startTime: 45, endTime: 90, speaker: "sera", title: "Sera (Keytar)", text: "Greetings, everyone. Sera on keytar duty." },
+            { startTime: 90, endTime: 140, speaker: "akari", title: "Akari Minase (Drums)", text: "Akari Minase in the house! Drums tuned and ready!" },
+            { startTime: 140, endTime: 210, speaker: "aoi", title: "Aoi (Bass)", text: "And Aoi on bass! Welcome to Episode Two of our afternoon broadcast!" }
+          ]
+        },
+        {
+          title: "Episode 3: Sunset Rooftop Jam & Evening Walk",
+          runtime: "03:45",
+          audioUrl: "",
+          tag: "Free",
+          script: [
+            { startTime: 0, endTime: 50, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Good evening, Sakuraoka High! Nekomi greeting you as the sun sets!" },
+            { startTime: 50, endTime: 105, speaker: "sera", title: "Sera (Keytar)", text: "Hello everyone, Sera here as the evening dusk settles over campus." },
+            { startTime: 105, endTime: 160, speaker: "akari", title: "Akari Minase (Drums)", text: "Akari Minase here! Sunset is the coolest time for acoustic jam sessions!" },
+            { startTime: 160, endTime: 225, speaker: "aoi", title: "Aoi (Bass)", text: "And Aoi here to wrap up today's school hours with all of you." }
+          ]
+        }
+      ],
+      basement: [
+        {
+          title: "After Dark Ep 1: Whispering Hallways & Campus Rumors",
+          runtime: "10:00",
+          audioUrl: "",
+          tag: "⚡ AFTER DARK",
+          script: [
+            { startTime: 0, endTime: 300, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome to After Dark Basement Mode, listeners... Nekomi here in the dimly lit studio." },
+            { startTime: 300, endTime: 600, speaker: "sera", title: "Sera (Keytar)", text: "Hello... Sera reporting in from beneath Prep Room B after campus hours." }
+          ]
+        }
+      ],
+      backstage: [
+        {
+          title: "VIP Backstage Ep 1: The Eerie Phantom in Locker 102",
+          runtime: "15:00",
+          audioUrl: "",
+          tag: "🎟️ VIP Pass",
+          script: [
+            { startTime: 0, endTime: 900, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Greetings, VIP Backstage Pass members! Welcome to our exclusive paranormal investigation podcast!" }
+          ]
+        }
+      ]
+    };
+
+    let currentEpisodeIdx = 0;
     let isPlaying = false;
+    let clockTimer = null;
+    let syncInterval = null;
+    let elapsedSeconds = 0;
+    let totalSeconds = 186;
 
-    function togglePodcastAudio() {
-      const btn = document.getElementById('featured-play-btn');
-      const icon = document.getElementById('play-btn-icon');
-      const text = document.getElementById('play-btn-text');
+    const audioElement = document.getElementById('audio-player');
 
-      if (audio.paused) {
-        audio.play().then(() => {
-          isPlaying = true;
-          btn.classList.add('playing');
-          icon.textContent = '⏸';
-          text.textContent = 'PAUSE';
-        }).catch(err => {
-          console.error("Audio playback error:", err);
-        });
+    function postMainComment() {
+      const handleInput = document.getElementById('main-comment-handle');
+      const textInput = document.getElementById('main-comment-text');
+
+      const handle = handleInput.value.trim() || "Anon_Listener";
+      const text = textInput.value.trim();
+
+      if (!text) return;
+
+      // SAFETY FILTER CHECK
+      if (!checkContentSafety(text) || !checkContentSafety(handle)) {
+        showSafetyWarningModal("Comment Blocked by Community Safety Filter", "Your post contained terms that violate community rules. Please keep comments friendly, respectful, and spoiler-free.");
+        return;
+      }
+
+      const feed = document.getElementById('main-comments-feed');
+      const newCommentHTML = `
+        <div class="single-comment">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <strong style="color: var(--accent-cyan); font-size: 0.88rem;">${handle} <span class="user-badge">Listener</span></strong>
+            <span style="font-size: 0.75rem; color: var(--accent-purple);">Just now</span>
+          </div>
+          <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"${text}"</p>
+        </div>
+      `;
+
+      feed.insertAdjacentHTML('afterbegin', newCommentHTML);
+      textInput.value = "";
+    }
+
+    function showSafetyWarningModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card">
+            <h3>🛡️ ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-actions">
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Understood</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function handleModeChange(targetMode) {
+      const selector = document.getElementById('mode-selector');
+
+      if (targetMode === 'basement' && !userState.isLoggedIn) {
+        if (selector) selector.value = getCurrentMode();
+        showAuthModal('Google Login Required', 'Sign in with Google to access After-Hours Basement Podcast episodes and community profiles.');
+        return;
+      }
+
+      if (targetMode === 'backstage' && !userState.isVIP) {
+        if (selector) selector.value = getCurrentMode();
+        showVIPModal('Backstage Pass Required', 'Unlock VIP uncompressed studio stem downloads, binaural acoustic sessions, and live chat posting.');
+        return;
+      }
+
+      localStorage.setItem('neko_active_mode', targetMode);
+      applyThemeMode(targetMode);
+      loadTierEpisodes(targetMode);
+    }
+
+    function getCurrentMode() {
+      return localStorage.getItem('neko_active_mode') || 'twilight';
+    }
+
+    function applyThemeMode(mode) {
+      const body = document.body;
+      const selector = document.getElementById('mode-selector');
+
+      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
+      body.classList.add(`${mode}-mode`);
+
+      if (selector) selector.value = mode;
+
+      const stageTitle = document.getElementById('stage-main-title');
+      const airBadge = document.getElementById('stage-air-badge');
+      const drawerHeading = document.getElementById('archive-drawer-heading');
+
+      if (mode === 'basement') {
+        if (stageTitle) stageTitle.innerText = '⚡ AFTER DARK SESSIONS — BASEMENT STAGE';
+        if (airBadge) airBadge.innerText = '⚡ AFTER DARK ON AIR';
+        if (drawerHeading) drawerHeading.innerText = '⚡ AFTER DARK ARCHIVES';
+      } else if (mode === 'backstage') {
+        if (stageTitle) stageTitle.innerText = '🎟️ VIP BACKSTAGE STUDIO STAGE';
+        if (airBadge) airBadge.innerText = '🎟️ VIP LIVE';
+        if (drawerHeading) drawerHeading.innerText = '🎟️ VIP STEM ARCHIVES';
       } else {
-        audio.pause();
-        isPlaying = false;
-        btn.classList.remove('playing');
-        icon.textContent = '▶';
-        text.textContent = 'PLAY EPISODE';
+        if (stageTitle) stageTitle.innerText = '🎙️ WHISPER RADIO STUDIO STAGE';
+        if (airBadge) airBadge.innerText = 'ON AIR';
+        if (drawerHeading) drawerHeading.innerText = '📻 Episode Archives';
       }
     }
 
-    function loadAndPlayEp(title, desc, duration) {
-      document.getElementById('now-playing-title').textContent = title;
-      document.getElementById('now-playing-desc').textContent = desc;
-      document.getElementById('dur-time').textContent = duration;
+    function loadTierEpisodes(mode) {
+      stopPlayback();
+      const container = document.getElementById('archive-episode-list');
+      if (!container) return;
 
-      if (!audio.paused) {
-        audio.pause();
-      }
+      container.innerHTML = '';
+      const episodes = EPISODES_BY_MODE[mode] || EPISODES_BY_MODE.twilight;
 
-      audio.currentTime = 0;
-      togglePodcastAudio();
+      episodes.forEach((ep, index) => {
+        const tagColor = mode === 'basement' ? 'var(--accent-pink)' : (mode === 'backstage' ? 'var(--accent-gold)' : 'var(--accent-cyan)');
+        
+        const card = document.createElement('div');
+        card.id = `ep-${index}`;
+        card.className = `ep-card ${index === 0 ? 'active' : ''}`;
+        card.onclick = () => selectEpisode(index);
+        card.innerHTML = `
+          <strong style="color: #ffffff;">${ep.title}</strong>
+          <p style="font-size: 0.8rem; margin: 4px 0 0; color: ${tagColor}; font-weight: 700;">Runtime: ${ep.runtime} • ${ep.tag}</p>
+        `;
+        container.appendChild(card);
+      });
+
+      selectEpisode(0);
     }
 
-    function seekAudio(val) {
-      if (audio.duration) {
-        audio.currentTime = (val / 100) * audio.duration;
+    function selectEpisode(index) {
+      stopPlayback();
+      currentEpisodeIdx = index;
+      elapsedSeconds = 0;
+
+      const currentMode = getCurrentMode();
+      const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
+
+      document.querySelectorAll('.ep-card').forEach((card, idx) => {
+        if (idx === index) card.classList.add('active');
+        else card.classList.remove('active');
+      });
+
+      const ep = episodes[currentEpisodeIdx];
+      if (ep) {
+        totalSeconds = parseRuntimeSeconds(ep.runtime);
+        document.getElementById('speaker-title-display').innerText = `🎙️ ${ep.title.toUpperCase()}`;
+        document.getElementById('dialogue-line-display').innerText = `"Press start to listen to ${ep.title}!"`;
+        
+        updateTimeUI(0, totalSeconds);
+
+        if (ep.audioUrl && audioElement) {
+          audioElement.src = ep.audioUrl;
+          audioElement.load();
+        } else if (audioElement) {
+          audioElement.removeAttribute('src');
+        }
       }
     }
 
-    function setAudioVolume(val) {
-      if (audio) {
-        audio.volume = val;
+    function updateTimeUI(currentSec, maxSec) {
+      const remainingSec = Math.max(0, maxSec - currentSec);
+      document.getElementById('ep-time-current').innerText = formatTime(currentSec);
+      document.getElementById('ep-time-total').innerText = `Total Length: ${formatTime(maxSec)}`;
+      document.getElementById('ep-time-remaining').innerText = `Remaining: -${formatTime(remainingSec)}`;
+
+      const pct = maxSec > 0 ? (currentSec / maxSec) * 100 : 0;
+      document.getElementById('ep-progress-fill').style.width = `${Math.min(100, pct)}%`;
+    }
+
+    function togglePodcastPlayback() {
+      if (isPlaying) {
+        stopPlayback();
+      } else {
+        startPlayback();
       }
     }
 
-    /* UPDATE SEEK BAR DURING PLAYBACK */
-    audio.addEventListener('timeupdate', () => {
-      if (audio.duration) {
-        const slider = document.getElementById('seek-slider');
-        const currTime = document.getElementById('curr-time');
-        slider.value = (audio.currentTime / audio.duration) * 100;
+    function startPlayback() {
+      isPlaying = true;
+      document.getElementById('podcast-play-btn').innerText = '⏸ Pause Broadcast';
 
-        const mins = Math.floor(audio.currentTime / 60);
-        const secs = Math.floor(audio.currentTime % 60);
-        currTime.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      const currentMode = getCurrentMode();
+      const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
+      const ep = episodes[currentEpisodeIdx];
+
+      if (ep && ep.audioUrl && audioElement) {
+        audioElement.play().then(() => {
+          startHighFreqSync();
+        }).catch((err) => {
+          console.warn("Audio play error, falling back to timer:", err);
+          runSimulatedTimer();
+        });
+
+        audioElement.onended = () => {
+          stopPlayback();
+          updateTimeUI(totalSeconds, totalSeconds);
+          document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode from the archive."`;
+        };
+      } else {
+        runSimulatedTimer();
       }
-    });
+    }
+
+    function startHighFreqSync() {
+      if (syncInterval) clearInterval(syncInterval);
+
+      syncInterval = setInterval(() => {
+        if (!isPlaying || !audioElement) return;
+
+        elapsedSeconds = audioElement.currentTime;
+        totalSeconds = (audioElement.duration && !isNaN(audioElement.duration)) ? audioElement.duration : parseRuntimeSeconds(EPISODES_BY_MODE[getCurrentMode()][currentEpisodeIdx]?.runtime);
+
+        updateTimeUI(elapsedSeconds, totalSeconds);
+        syncSpeakerDialogue();
+      }, 100);
+    }
+
+    function runSimulatedTimer() {
+      if (clockTimer) clearInterval(clockTimer);
+      
+      syncSpeakerDialogue();
+      clockTimer = setInterval(() => {
+        if (!isPlaying) return;
+        elapsedSeconds++;
+        updateTimeUI(elapsedSeconds, totalSeconds);
+        syncSpeakerDialogue();
+
+        if (elapsedSeconds >= totalSeconds) {
+          stopPlayback();
+          updateTimeUI(totalSeconds, totalSeconds);
+          document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode from the archive."`;
+        }
+      }, 1000);
+    }
+
+    function syncSpeakerDialogue() {
+      const currentMode = getCurrentMode();
+      const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
+      const ep = episodes[currentEpisodeIdx];
+
+      if (!ep || !ep.script || ep.script.length === 0) return;
+
+      const currentTime = (audioElement && audioElement.src && !audioElement.paused && !isNaN(audioElement.currentTime))
+                          ? audioElement.currentTime
+                          : elapsedSeconds;
+
+      let activeLine = null;
+
+      for (let i = 0; i < ep.script.length; i++) {
+        const line = ep.script[i];
+        if (currentTime >= line.startTime && currentTime < line.endTime) {
+          activeLine = line;
+          break;
+        }
+      }
+
+      document.querySelectorAll('.speaker-avatar').forEach(a => a.classList.remove('speaking'));
+
+      if (activeLine) {
+        const activeAvatar = document.getElementById(`spk-${activeLine.speaker}`);
+        if (activeAvatar) activeAvatar.classList.add('speaking');
+
+        document.getElementById('speaker-title-display').innerText = `🎙️ ${activeLine.title}`;
+        document.getElementById('dialogue-line-display').innerText = `"${activeLine.text}"`;
+      }
+    }
+
+    function seekPodcast(event) {
+      const track = document.getElementById('progress-bar-track');
+      const rect = track.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, clickX / rect.width));
+
+      elapsedSeconds = pct * totalSeconds;
+      
+      const currentMode = getCurrentMode();
+      const ep = (EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight)[currentEpisodeIdx];
+
+      if (ep && ep.audioUrl && audioElement && audioElement.src) {
+        audioElement.currentTime = elapsedSeconds;
+      }
+
+      updateTimeUI(elapsedSeconds, totalSeconds);
+      syncSpeakerDialogue();
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      if (clockTimer) { clearInterval(clockTimer); clockTimer = null; }
+      if (syncInterval) { clearInterval(syncInterval); syncInterval = null; }
+      if (audioElement) { audioElement.pause(); }
+      
+      const playBtn = document.getElementById('podcast-play-btn');
+      if (playBtn) playBtn.innerText = '▶ Start Episode Broadcast';
+      
+      document.querySelectorAll('.speaker-avatar').forEach(avatar => avatar.classList.remove('speaking'));
+    }
+
+    function showAuthModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card">
+            <h3>🔑 ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-actions">
+              <button class="modal-btn google-btn" onclick="simulateGoogleLogin()">Sign In with Google</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function showVIPModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card vip-modal-card">
+            <h3>🎟️ ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-price-tag">$4.99 / month • Backstage Pass</div>
+            <div class="modal-actions">
+              <button class="modal-btn stripe-btn" onclick="simulateStripeCheckout()">Unlock Backstage Pass</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function removeExistingModals() {
+      const existing = document.getElementById('neko-gate-modal');
+      if (existing) existing.remove();
+    }
+
+    function simulateGoogleLogin() {
+      userState.isLoggedIn = true;
+      localStorage.setItem('neko_logged_in', 'true');
+      removeExistingModals();
+      handleModeChange('basement');
+    }
+
+    function simulateStripeCheckout() {
+      userState.isLoggedIn = true;
+      userState.isVIP = true;
+      localStorage.setItem('neko_logged_in', 'true');
+      localStorage.setItem('neko_is_vip', 'true');
+      removeExistingModals();
+      handleModeChange('backstage');
+    }
+
+    function toggleMobileMenu() {
+      const navMenu = document.getElementById('nav-menu');
+      if (navMenu) navMenu.classList.toggle('open');
+    }
+
+    function initPodcastStudio() {
+      const mode = getCurrentMode();
+      applyThemeMode(mode);
+      loadTierEpisodes(mode);
+
+      document.addEventListener('click', function(event) {
+        const navMenu = document.getElementById('nav-menu');
+        const isInsideNavbar = event.target.closest('.navbar');
+        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
+          navMenu.classList.remove('open');
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPodcastStudio);
+    } else {
+      initPodcastStudio();
+    }
   </script>
+  <script src="global-player.js"></script>
 </body>
 </html>
