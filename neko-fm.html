@@ -1,1991 +1,598 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neko FM — Girls Dead Phantom Radio Lounge & Discography Hub</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>24/7 Neko FM — Underground Radio Portal</title>
   <link rel="stylesheet" href="style.css">
-  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="firebase-config.js?v=2"></script>
+  <script type="module" src="age-gate.js"></script>
   <style>
     :root {
-      --nav-bg-twilight: rgba(10, 7, 20, 0.96);
-      --nav-bg-basement: rgba(8, 4, 15, 0.98);
-      --nav-bg-backstage: rgba(5, 2, 10, 0.99);
-      --nav-border-twilight: rgba(168, 139, 235, 0.25);
-      --nav-border-basement: rgba(255, 77, 109, 0.35);
-      --nav-border-backstage: rgba(255, 209, 102, 0.4);
-      --accent-pink: #f4b8c4;
-      --accent-purple: #a88beb;
-      --accent-red: #ff4d6d;
+      /* Deep Dark Cyberpunk Palette */
+      --bg-dark: #040209;
+      --card-bg: rgba(15, 7, 28, 0.94);
+      --card-inner: rgba(8, 3, 16, 0.94);
+      --nav-bg: rgba(9, 4, 18, 0.96);
+      --accent-purple: #9d4edd;
+      --accent-pink: #ff007f;
+      --accent-cyan: #00f0ff;
       --accent-gold: #ffd166;
-      --text-light: #e2daf8;
+      --accent-green: #00ffaa;
+      --accent-glow: rgba(255, 0, 127, 0.45);
+      --text-main: #e8dff5;
+      --text-light: #ffffff;
+      --text-muted: #b8a7d4;
+      --card-border: rgba(255, 0, 127, 0.35);
+      --border-cyan: rgba(0, 240, 255, 0.35);
     }
-    
-    body {
-      background: #070510;
-      color: var(--text-light);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      transition: background 0.4s ease, color 0.4s ease;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
     }
 
-    /* 3-Tier Mode Themes */
-    body.twilight-mode { background: #070510; color: #e2daf8; }
-    body.basement-mode { background: #05020a; color: #fce8ec; }
-    body.backstage-mode { background: #030106; color: #ffffff; }
-
-    body.basement-mode .navbar {
-      background: var(--nav-bg-basement);
-      border-bottom-color: var(--nav-border-basement);
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding-bottom: 60px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.12) 0%, transparent 50%);
     }
 
-    body.backstage-mode .navbar {
-      background: var(--nav-bg-backstage);
-      border-bottom: 2px solid var(--accent-gold);
-      box-shadow: 0 4px 20px rgba(255, 209, 102, 0.2);
+    /* BACKGROUND SCANLINE EFFECT */
+    body::before {
+      content: " ";
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+      background-size: 100% 4px;
+      z-index: 999;
+      pointer-events: none;
+      opacity: 0.5;
     }
 
-    /* Ultra-Slim & Dark Universal Header Navbar */
-    .navbar {
+    /* ============================================================ */
+    /* ⚡ STREAMLINED TOP NAVIGATION BAR                            */
+    /* ============================================================ */
+    .radio-navbar {
+      background: var(--nav-bg);
+      border-bottom: 1.5px solid var(--card-border);
+      padding: 10px 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(255, 0, 127, 0.2);
       position: sticky;
       top: 0;
       z-index: 1000;
-      width: 100%;
-      background: var(--nav-bg-twilight);
-      border-bottom: 1px solid var(--nav-border-twilight);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      transition: background 0.4s ease, border-color 0.4s ease;
-      box-sizing: border-box;
     }
 
-    .nav-container {
+    .nav-inner {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 4px 16px 6px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      position: relative;
-    }
-
-    /* Top Row Container for Mode Switcher & Title/Nav Balance */
-    .nav-top-row {
-      width: 100%;
-      display: flex;
       justify-content: space-between;
-      align-items: center;
-      position: relative;
+      gap: 16px;
     }
 
-    /* Left-aligned Mode Switcher */
-    .mode-selector-wrapper {
+    .nav-portal-links {
       display: flex;
       align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .logo-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 3px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .logo-link {
+    .nav-pill {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 8px;
       text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+      background: rgba(30, 15, 55, 0.6);
+      border: 1px solid rgba(157, 78, 221, 0.3);
+      transition: all 0.25s ease;
+      white-space: nowrap;
     }
 
-    .logo-main {
-      font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.12rem;
+    .nav-pill:hover, .nav-pill.active {
+      background: rgba(255, 0, 127, 0.25);
+      color: #ffffff;
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
+    }
+
+    .radio-status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--accent-cyan);
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .status-pulse {
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent-pink);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-pink);
+      animation: pulse 1.5s infinite;
+    }
+
+    /* ============================================================ */
+    /* ⚡ CONTAINER & HERO SECTION                                  */
+    /* ============================================================ */
+    .container {
+      max-width: 1250px;
+      margin: 30px auto 2rem;
+      padding: 0 1.2rem;
+    }
+
+    header.radio-hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.8rem;
+    }
+
+    .radio-glitch-title {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+      animation: textGlitch 4s infinite;
+      margin-bottom: 0.4rem;
+    }
+
+    .radio-subtitle {
+      font-size: 1.15rem;
+      color: var(--accent-pink);
       font-weight: 800;
       letter-spacing: 1.5px;
-      background: linear-gradient(135deg, #cbb8f6, #f4b8c4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      filter: drop-shadow(0 2px 6px rgba(168, 139, 235, 0.3));
+      text-shadow: 0 0 10px var(--accent-glow);
     }
 
-    body.basement-mode .logo-main {
-      background: linear-gradient(135deg, #ff4d6d, #cbb8f6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    body.backstage-mode .logo-main {
-      background: linear-gradient(135deg, var(--accent-gold), #ff007f);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .logo-sub {
-      font-size: 0.58rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: var(--accent-pink);
-      opacity: 0.85;
-      margin-top: -1px;
-    }
-
-    body.basement-mode .logo-sub { color: var(--accent-red); }
-    body.backstage-mode .logo-sub { color: var(--accent-gold); }
-
-    /* Compact Nav Links Row */
-    .nav-links { 
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      gap: 6px; 
-      flex-wrap: wrap;
-      margin-top: 2px;
-    }
-    
-    .nav-item {
-      color: #bfaee8;
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      background: rgba(14, 9, 28, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.15);
-    }
-
-    .nav-item:hover, .nav-item.active {
-      background: rgba(168, 139, 235, 0.2);
-      border-color: rgba(168, 139, 235, 0.4);
-      color: #ffffff;
-      box-shadow: 0 0 10px rgba(168, 139, 235, 0.15);
-    }
-
-    /* Glowing Dark Mode Select Dropdown Styling */
-    .mode-select-dropdown {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      padding: 5px 28px 5px 12px;
-      border-radius: 8px;
-      font-family: 'Segoe UI', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 800;
-      cursor: pointer;
-      outline: none;
-      transition: all 0.3s ease;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f4b8c4'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 8px center;
-      background-size: 12px;
-      background-color: rgba(18, 12, 36, 0.95);
-      border: 1px solid rgba(168, 139, 235, 0.45);
-      color: #e2daf8;
-      box-shadow: 0 0 12px rgba(168, 139, 235, 0.35);
-    }
-
-    .mode-select-dropdown:hover {
-      box-shadow: 0 0 16px rgba(168, 139, 235, 0.5);
-      border-color: var(--accent-purple);
-      color: #fff;
-    }
-
-    body.basement-mode .mode-select-dropdown {
-      background-color: rgba(15, 6, 24, 0.95);
-      border: 1px solid rgba(255, 77, 109, 0.6);
-      color: #ff4d6d;
-      box-shadow: 0 0 12px rgba(255, 77, 109, 0.4);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    }
-
-    body.backstage-mode .mode-select-dropdown {
-      background-color: rgba(18, 10, 30, 0.98);
-      border: 1px solid rgba(255, 209, 102, 0.7);
-      color: #ffd166;
-      box-shadow: 0 0 14px rgba(255, 209, 102, 0.45);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    }
-
-    .mode-select-dropdown option {
-      background-color: #0b0716;
-      color: #e2daf8;
-      padding: 8px;
-      font-weight: 700;
-    }
-
-    /* Mobile Hamburger Toggle Button */
-    .mobile-menu-btn {
-      display: none;
-      background: rgba(14, 9, 28, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.2);
-      border-radius: 6px;
-      padding: 4px 8px;
-      cursor: pointer;
-    }
-
-    .hamburger-bar {
-      width: 18px;
-      height: 2px;
-      background: var(--accent-pink);
-      border-radius: 2px;
-      margin: 3px 0;
-    }
-
-    @media (max-width: 992px) {
-      .logo-container { position: static; transform: none; }
-      .nav-top-row { justify-content: space-between; }
-      .mobile-menu-btn { display: flex; flex-direction: column; }
-      .nav-links {
-        display: none;
-        width: 100%;
-        background: rgba(8, 5, 18, 0.98);
-        border-top: 1px solid var(--nav-border-twilight);
-        flex-direction: column;
-        padding: 10px 0;
-        gap: 6px;
-        box-sizing: border-box;
-      }
-      .nav-links.open { display: flex; }
-      .nav-item, .mode-selector-wrapper { width: 100%; text-align: center; box-sizing: border-box; justify-content: center; }
-      .mode-select-dropdown { width: 100%; text-align: center; }
-    }
-
-    /* Studio Dashboard Container */
-    .studio-dashboard {
-      max-width: 1080px;
-      margin: 30px auto;
-      background: rgba(22, 15, 42, 0.92);
-      border: 2px solid rgba(168, 139, 235, 0.35);
-      border-radius: 20px;
-      padding: 28px;
-      backdrop-filter: blur(14px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-      transition: border-color 0.4s ease;
-    }
-
-    body.basement-mode .studio-dashboard {
-      border-color: rgba(255, 77, 109, 0.5);
-      box-shadow: 0 12px 40px rgba(255, 51, 85, 0.25);
-    }
-
-    body.backstage-mode .studio-dashboard {
-      border-color: #ffd166;
-      box-shadow: 0 12px 40px rgba(255, 209, 102, 0.25);
-    }
-
-    .dashboard-tabs {
+    /* ============================================================ */
+    /* 📻 MODE TABS SYSTEM (STREAM VS YOUTUBE)                      */
+    /* ============================================================ */
+    .radio-mode-tabs {
       display: flex;
       gap: 12px;
-      border-bottom: 2px solid rgba(168, 139, 235, 0.25);
-      padding-bottom: 14px;
-      margin-bottom: 24px;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--card-border);
+      padding-bottom: 10px;
       flex-wrap: wrap;
     }
 
-    .tab-btn {
-      background: rgba(35, 25, 65, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      color: #cbb8f6;
-      padding: 10px 20px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.88rem;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .tab-btn.active-tab {
-      background: linear-gradient(135deg, #a88beb, #f4b8c4);
-      color: #0d0b18;
-    }
-
-    body.basement-mode .tab-btn.active-tab {
-      background: linear-gradient(135deg, #ff4d6d, #a88beb);
-      color: #ffffff;
-    }
-
-    body.backstage-mode .tab-btn.active-tab {
-      background: linear-gradient(135deg, #ffd166, #ff007f);
-      color: #000000;
-    }
-
-    .tab-content { display: none; }
-    .tab-content.active-content { display: block; }
-
-    /* NEKO RADIO DECK STYLES */
-    .neko-radio-deck {
-      background: rgba(15, 10, 30, 0.85);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 18px;
-      padding: 20px;
-      max-width: 680px;
-      margin: 0 auto;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .preset-btn {
-      background: rgba(45, 34, 80, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.4);
-      color: #cbb8f6;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      text-align: left;
-    }
-
-    .preset-btn:hover, .preset-btn.active-preset, .preset-btn.active {
-      background: linear-gradient(135deg, #a88beb, #f4b8c4);
-      color: #0d0b18;
-      border-color: #f4b8c4;
-    }
-
-    body.basement-mode .preset-btn:hover, 
-    body.basement-mode .preset-btn.active-preset,
-    body.basement-mode .preset-btn.active {
-      background: linear-gradient(135deg, #ff4d6d, #a88beb);
-      color: #ffffff;
-      border-color: #ff4d6d;
-    }
-
-    body.backstage-mode .preset-btn:hover, 
-    body.backstage-mode .preset-btn.active-preset,
-    body.backstage-mode .preset-btn.active {
-      background: linear-gradient(135deg, #ffd166, #ff007f);
-      color: #000000;
-      border-color: #ffd166;
-    }
-
-    .action-btn, .power-btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #a88beb, #f4b8c4);
-      border: none;
-      border-radius: 12px;
-      color: #0d0b18;
+    .radio-tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 12px 24px;
+      border-radius: 12px 12px 0 0;
+      font-size: 0.95rem;
       font-weight: 800;
       cursor: pointer;
-      font-size: 1rem;
-      box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
-      transition: all 0.25s ease;
-    }
-
-    body.basement-mode .action-btn, body.basement-mode .power-btn {
-      background: linear-gradient(135deg, #ff4d6d, #a88beb);
-      color: #ffffff;
-      box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
-    }
-
-    body.backstage-mode .action-btn, body.backstage-mode .power-btn {
-      background: linear-gradient(135deg, #ffd166, #ff007f);
-      color: #000000;
-      box-shadow: 0 4px 15px rgba(255, 209, 102, 0.4);
-    }
-
-    /* NEKO-88 SYNTH DECK LCD CARD STYLES */
-    .yt-radio-card {
-      background: rgba(12, 8, 24, 0.9);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 16px;
-      padding: 20px;
-    }
-
-    .lcd-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: #a092c0;
-      margin-bottom: 8px;
-    }
-
-    .pulse-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background: #ff4d6d;
-      border-radius: 50%;
-      margin-right: 6px;
-      animation: blinkDot 1.4s infinite;
-    }
-
-    .lcd-screen {
-      background: #080410;
-      border: 1px solid rgba(244, 184, 196, 0.3);
-      border-radius: 12px;
-      padding: 16px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.8);
-    }
-
-    .lcd-station-name {
-      font-family: 'Courier New', monospace;
-      font-weight: 800;
-      color: #f4b8c4;
-      font-size: 1.05rem;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-
-    .lcd-status-msg {
-      font-size: 0.78rem;
-      color: #a88beb;
-    }
-
-    .lcd-eq-bars {
-      display: flex;
-      align-items: flex-end;
-      gap: 4px;
-      height: 26px;
-    }
-
-    .lcd-eq-bars span {
-      width: 4px;
-      height: 4px;
-      background: #ffd166;
-      border-radius: 2px;
-      transition: height 0.15s ease;
-    }
-
-    .lcd-eq-bars.playing span {
-      animation: eqBar 0.8s infinite alternate ease-in-out;
-    }
-    .lcd-eq-bars.playing span:nth-child(2) { animation-delay: 0.15s; }
-    .lcd-eq-bars.playing span:nth-child(3) { animation-delay: 0.3s; }
-    .lcd-eq-bars.playing span:nth-child(4) { animation-delay: 0.45s; }
-    .lcd-eq-bars.playing span:nth-child(5) { animation-delay: 0.6s; }
-
-    .station-presets {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .radio-deck-controls {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .volume-slider-group {
-      display: flex;
+      transition: all 0.3s ease;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(8, 5, 18, 0.6);
-      padding: 10px 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(168, 139, 235, 0.2);
     }
 
-    .volume-slider-group input {
-      accent-color: #f4b8c4;
-      width: 110px;
-      cursor: pointer;
-    }
-
-    @keyframes blinkDot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
-    }
-
-    @keyframes eqBar {
-      0% { height: 4px; }
-      100% { height: 26px; }
-    }
-
-    /* Setlist Poll & Countdown Header Styles */
-    .poll-header-banner {
-      background: rgba(15, 10, 30, 0.85);
-      border: 1px solid rgba(168, 139, 235, 0.35);
-      border-radius: 16px;
-      padding: 22px 26px;
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .poll-header-text h3 { margin: 0 0 6px; color: #ffffff; font-size: 1.25rem; }
-    .poll-header-text p { margin: 0; color: #cbb8f6; font-size: 0.88rem; line-height: 1.5; }
-
-    .countdown-timer-box {
-      background: rgba(30, 18, 52, 0.95);
-      border: 2px solid #f4b8c4;
-      border-radius: 14px;
-      padding: 12px 20px;
-      text-align: center;
-      box-shadow: 0 0 16px rgba(244, 184, 196, 0.3);
-      min-width: 220px;
-    }
-
-    body.basement-mode .countdown-timer-box {
-      border-color: #ff4d6d;
-      box-shadow: 0 0 16px rgba(255, 77, 109, 0.35);
-    }
-
-    body.backstage-mode .countdown-timer-box {
-      border-color: #ffd166;
-      box-shadow: 0 0 16px rgba(255, 209, 102, 0.35);
-    }
-
-    .countdown-label {
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: #f4b8c4;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 2px;
-    }
-
-    .countdown-digits {
-      font-family: 'Fredoka', cursive, monospace;
-      font-size: 1.55rem;
-      font-weight: 800;
+    .radio-tab-btn.active, .radio-tab-btn:hover {
+      background: var(--accent-pink);
       color: #ffffff;
-      letter-spacing: 2px;
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
     }
 
-    /* Premiere Showcase Card */
-    .premiere-showcase-card {
-      background: linear-gradient(135deg, rgba(35, 20, 60, 0.95), rgba(15, 8, 30, 0.95));
-      border: 2px solid #a88beb;
+    .radio-tab-content {
+      display: none;
+      animation: fadeInTab 0.35s ease-out forwards;
+    }
+
+    .radio-tab-content.active {
+      display: block;
+    }
+
+    /* ============================================================ */
+    /* 📻 MAIN DECK PLAYER CARDS (HUD STYLE)                        */
+    /* ============================================================ */
+    .player-deck-card {
+      background: var(--card-inner);
+      border: 1.5px solid var(--accent-cyan);
       border-radius: 16px;
-      padding: 20px 24px;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      box-shadow: 0 8px 25px rgba(168, 139, 235, 0.25);
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 240, 255, 0.2);
+      animation: hudPulse 4s infinite ease-in-out;
+      position: relative;
     }
 
-    .premiere-info-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
-      min-width: 260px;
-    }
-
-    .premiere-actions-side {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .premiere-10min-timer-badge {
-      background: rgba(255, 77, 109, 0.2);
-      border: 1px solid #ff4d6d;
-      color: #ff4d6d;
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-family: 'Fredoka', cursive, monospace;
-      font-weight: 800;
-      font-size: 0.95rem;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 0 12px rgba(255, 77, 109, 0.3);
-    }
-
-    .premiere-badge {
-      background: linear-gradient(135deg, #a88beb, #f4b8c4);
-      color: #0d0b18;
+    .deck-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      color: #ffffff;
       font-size: 0.72rem;
       font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 8px;
-      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      width: fit-content;
+      margin-bottom: 1rem;
     }
 
-    .premiere-title { font-size: 1.15rem; font-weight: 800; color: #ffffff; margin: 4px 0; }
-    .premiere-sub { font-size: 0.85rem; color: #cbb8f6; margin: 0; }
-
-    .poll-card {
-      background: rgba(20, 14, 38, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.25);
-      border-radius: 16px;
-      padding: 18px 22px;
-      margin-bottom: 16px;
-      transition: all 0.3s ease;
-    }
-
-    .poll-card.voted-card {
-      border-color: #f4b8c4;
-      background: rgba(30, 18, 52, 0.9);
-      box-shadow: 0 0 16px rgba(244, 184, 196, 0.25);
-    }
-
-    body.basement-mode .poll-card.voted-card {
-      border-color: #ff4d6d;
-      box-shadow: 0 0 16px rgba(255, 77, 109, 0.3);
-    }
-
-    body.backstage-mode .poll-card.voted-card {
-      border-color: #ffd166;
-      box-shadow: 0 0 16px rgba(255, 209, 102, 0.3);
-    }
-
-    .poll-info-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .poll-title {
-      font-weight: 800;
-      font-size: 1.02rem;
+    .now-playing-header {
+      font-size: 1.8rem;
       color: #ffffff;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+
+    .now-playing-sub {
+      font-size: 1rem;
+      color: var(--accent-cyan);
+      margin-bottom: 1.8rem;
+      font-weight: 700;
+    }
+
+    .deck-controls-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-    }
-
-    .poll-badge {
-      font-size: 0.72rem;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-weight: 800;
-      background: rgba(168, 139, 235, 0.2);
-      color: #f4b8c4;
-      border: 1px solid rgba(168, 139, 235, 0.3);
-    }
-
-    .poll-stats {
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: #f4b8c4;
-    }
-
-    .poll-progress-bg {
-      width: 100%;
-      height: 10px;
-      background: rgba(35, 25, 65, 0.8);
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 12px 0;
-      position: relative;
-    }
-
-    .poll-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #a88beb, #f4b8c4);
-      border-radius: 10px;
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    body.basement-mode .poll-progress-fill {
-      background: linear-gradient(90deg, #ff4d6d, #a88beb);
-    }
-
-    body.backstage-mode .poll-progress-fill {
-      background: linear-gradient(90deg, #ffd166, #ff007f);
-    }
-
-    .poll-actions-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-    }
-
-    .poll-performers {
-      font-size: 0.8rem;
-      color: #cbb8f6;
-      font-weight: 600;
-    }
-
-    .vote-btn {
-      background: rgba(168, 139, 235, 0.18);
-      border: 1px solid rgba(168, 139, 235, 0.4);
-      color: #ffffff;
-      padding: 6px 16px;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .vote-btn:hover {
-      background: linear-gradient(135deg, #a88beb, #f4b8c4);
-      color: #0d0b18;
-      border-color: #f4b8c4;
-    }
-
-    .vote-btn.voted-btn {
-      background: #f4b8c4;
-      color: #0d0b18;
-      border-color: #f4b8c4;
-      cursor: default;
-    }
-
-    /* GIRLS DEAD PHANTOM HUB STYLES */
-    .gdp-hero-banner {
-      background: linear-gradient(135deg, rgba(32, 18, 56, 0.95), rgba(12, 6, 24, 0.98));
-      border: 2px solid rgba(244, 184, 196, 0.45);
-      border-radius: 20px;
-      padding: 28px;
-      margin-bottom: 28px;
-      box-shadow: 0 12px 35px rgba(168, 139, 235, 0.25);
-      position: relative;
-      overflow: hidden;
-    }
-
-    body.basement-mode .gdp-hero-banner {
-      border-color: rgba(255, 77, 109, 0.6);
-      box-shadow: 0 12px 35px rgba(255, 77, 109, 0.3);
-    }
-
-    body.backstage-mode .gdp-hero-banner {
-      border-color: #ffd166;
-      box-shadow: 0 12px 35px rgba(255, 209, 102, 0.35);
-    }
-
-    .gdp-hero-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .gdp-hero-title {
-      font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.85rem;
-      font-weight: 800;
-      color: #ffffff;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      letter-spacing: 0.5px;
-    }
-
-    .gdp-roster-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .member-chip {
-      background: rgba(35, 25, 65, 0.9);
-      border: 1px solid rgba(168, 139, 235, 0.35);
-      color: #ffffff;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .member-role { color: #f4b8c4; font-weight: 700; opacity: 0.9; }
-
-    .gdp-spotlight-box {
-      background: linear-gradient(135deg, rgba(40, 20, 70, 0.98), rgba(18, 8, 36, 0.98));
-      border: 2px solid #f4b8c4;
-      border-radius: 18px;
-      padding: 24px;
-      margin-bottom: 28px;
-      box-shadow: 0 0 25px rgba(244, 184, 196, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       gap: 20px;
       flex-wrap: wrap;
-      position: relative;
+      margin-bottom: 1.5rem;
     }
 
-    body.basement-mode .gdp-spotlight-box {
-      border-color: #ff4d6d;
-      box-shadow: 0 0 25px rgba(255, 77, 109, 0.35);
-    }
-
-    body.backstage-mode .gdp-spotlight-box {
-      border-color: #ffd166;
-      box-shadow: 0 0 25px rgba(255, 209, 102, 0.4);
-    }
-
-    .soundwave-box {
-      display: flex;
-      align-items: flex-end;
-      gap: 4px;
-      height: 24px;
-      margin-bottom: 6px;
-    }
-
-    .soundwave-bar {
-      width: 4px;
-      background: #f4b8c4;
-      border-radius: 2px;
-      animation: soundwavePulse 1.2s infinite ease-in-out alternate;
-    }
-
-    body.basement-mode .soundwave-bar { background: #ff4d6d; }
-    body.backstage-mode .soundwave-bar { background: #ffd166; }
-
-    .soundwave-bar:nth-child(1) { height: 30%; animation-delay: 0.1s; }
-    .soundwave-bar:nth-child(2) { height: 90%; animation-delay: 0.3s; }
-    .soundwave-bar:nth-child(3) { height: 50%; animation-delay: 0.2s; }
-    .soundwave-bar:nth-child(4) { height: 100%; animation-delay: 0.4s; }
-    .soundwave-bar:nth-child(5) { height: 40%; animation-delay: 0.15s; }
-
-    @keyframes soundwavePulse {
-      0% { height: 20%; }
-      100% { height: 100%; }
-    }
-
-    .discography-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-      margin-top: 20px;
-    }
-
-    @media (max-width: 768px) {
-      .discography-grid { grid-template-columns: 1fr; }
-    }
-
-    .disco-track-card {
-      background: rgba(20, 12, 38, 0.9);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 16px;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .disco-track-card:hover {
-      border-color: #f4b8c4;
-      background: rgba(32, 20, 58, 0.98);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(168, 139, 235, 0.25);
-    }
-
-    body.basement-mode .disco-track-card:hover {
-      border-color: #ff4d6d;
-      box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
-    }
-
-    body.backstage-mode .disco-track-card:hover {
-      border-color: #ffd166;
-      box-shadow: 0 8px 20px rgba(255, 209, 102, 0.35);
-    }
-
-    .vinyl-icon-box {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #2a1b4e 30%, #100620 70%);
-      border: 2px solid rgba(168, 139, 235, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      color: #f4b8c4;
-      flex-shrink: 0;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
-
-    .disco-title { font-weight: 800; font-size: 1.02rem; color: #ffffff; margin-bottom: 4px; }
-    .disco-meta { font-size: 0.8rem; color: #cbb8f6; }
-
-    .disco-tier-badge {
-      font-size: 0.68rem;
-      font-weight: 900;
-      padding: 3px 8px;
-      border-radius: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .badge-twilight { background: rgba(168, 139, 235, 0.2); color: #f4b8c4; border: 1px solid rgba(168, 139, 235, 0.4); }
-    .badge-basement { background: rgba(255, 77, 109, 0.2); color: #ff4d6d; border: 1px solid rgba(255, 77, 109, 0.4); }
-    .badge-backstage { background: rgba(255, 209, 102, 0.2); color: #ffd166; border: 1px solid rgba(255, 209, 102, 0.4); }
-
-    .preview-active-pill {
-      background: linear-gradient(135deg, #ff4d6d, #f4b8c4);
-      color: #000;
-      font-size: 0.72rem;
-      font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 12px;
-      display: inline-block;
-      margin-top: 4px;
-    }
-
-    .suggestion-box-panel {
-      background: rgba(15, 10, 30, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 16px;
-      padding: 20px 24px;
-      margin-top: 28px;
-    }
-
-    .form-control-poll {
-      width: 100%;
-      padding: 10px 14px;
-      background: rgba(22, 15, 42, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 10px;
+    .deck-play-btn {
+      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
       color: #ffffff;
-      margin: 10px 0 14px;
-      box-sizing: border-box;
-      outline: none;
-      font-family: inherit;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 28px;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    /* Modal Overlay Styles */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(5, 2, 12, 0.85);
-      backdrop-filter: blur(10px);
-      z-index: 2000;
+    .deck-play-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 0, 127, 0.85);
+    }
+
+    .deck-play-btn.playing {
+      background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+      box-shadow: 0 0 24px rgba(0, 240, 255, 0.7);
+    }
+
+    .deck-volume-box {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-card {
-      background: rgba(22, 15, 42, 0.96);
-      border: 2px solid #a88beb;
+      gap: 10px;
+      background: rgba(10, 4, 22, 0.8);
+      border: 1px solid var(--card-border);
+      padding: 10px 18px;
       border-radius: 20px;
-      padding: 28px;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.8);
     }
 
-    .vip-modal-card { border-color: #ff007f; box-shadow: 0 0 30px rgba(255, 0, 127, 0.4); }
-    .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.3rem; }
-    .modal-card p { color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
-    .modal-price-tag {
-      background: rgba(255, 209, 102, 0.15);
-      border: 1px solid #ffd166;
-      color: #ffd166;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-      display: inline-block;
+    .deck-volume-slider {
+      width: 120px;
+      accent-color: var(--accent-pink);
+      cursor: pointer;
     }
-    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
-    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
-    .google-btn { background: #ffffff; color: #111; }
-    .stripe-btn { background: linear-gradient(135deg, #ff007f, #ffd166); color: #000; }
-    .close-btn { background: transparent; color: #a88beb; border: 1px solid rgba(168, 139, 235, 0.3); }
+
+    /* YOUTUBE EMBED CONTAINER */
+    .yt-embed-wrapper {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid var(--border-cyan);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+      background: #000;
+    }
+
+    .yt-embed-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* ============================================================ */
+    /* 🎸 TRACKS & RECENT BROADCASTS CARDS                           */
+    /* ============================================================ */
+    .section-title {
+      font-size: 1.8rem;
+      color: var(--text-light);
+      border-bottom: 2px solid var(--accent-pink);
+      display: inline-block;
+      padding-bottom: 0.3rem;
+      margin-bottom: 1.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .track-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .track-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .track-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 22px rgba(0, 240, 255, 0.35);
+    }
+
+    .track-badge {
+      align-self: flex-start;
+      background: rgba(255, 0, 127, 0.2);
+      border: 1px solid var(--accent-pink);
+      color: #ffffff;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .track-title {
+      font-size: 1.2rem;
+      color: var(--accent-cyan);
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+
+    .track-artist {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .track-btn {
+      background: rgba(157, 78, 221, 0.2);
+      border: 1px solid var(--accent-purple);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+    }
+
+    .track-btn:hover {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.5);
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 1.5rem;
+    }
+
+    /* KEYFRAMES */
+    @keyframes hudPulse {
+      0% { border-color: rgba(0, 240, 255, 0.35); box-shadow: 0 0 12px rgba(0, 240, 255, 0.15); }
+      50% { border-color: rgba(0, 240, 255, 0.85); box-shadow: 0 0 25px rgba(0, 240, 255, 0.4); }
+      100% { border-color: rgba(0, 240, 255, 0.35); box-shadow: 0 0 12px rgba(0, 240, 255, 0.15); }
+    }
+
+    @keyframes textGlitch {
+      0%, 92%, 100% { transform: translate(0, 0); }
+      93% { transform: translate(-2px, 1px); }
+      94% { transform: translate(2px, -1px); }
+      95% { transform: translate(0, 0); }
+    }
+
+    @keyframes fadeInTab {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
   </style>
 </head>
-<body class="twilight-mode">
+<body>
 
-  <!-- Universal Header Navigation Bar -->
-  <header class="navbar">
-    <div class="nav-container">
-      
-      <!-- Top Row: Mode Switcher (Left) & Centered Brand Logo -->
-      <div class="nav-top-row">
-        <!-- 3-Tier Access Mode Switcher on Left -->
-        <div class="mode-selector-wrapper">
-          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-            <option value="twilight">🌸 Twilight (Public 13+)</option>
-            <option value="basement">⚡ Basement (17+ 🔒)</option>
-            <option value="backstage">👑 Backstage VIP Mode ✦</option>
-          </select>
-        </div>
-
-        <!-- Centered Brand Logo with Lightning Bolts -->
-        <div class="logo-container">
-          <a href="index.html" class="logo-link">
-            <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
-            <span class="logo-sub">✦ GIRLS DEAD PHANTOM ✦</span>
-          </a>
-        </div>
-
-        <!-- Mobile Hamburger Toggle Button -->
-        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-        </button>
-      </div>
-
-      <!-- Main Navigation Links Below -->
-      <nav class="nav-links" id="nav-menu">
-        <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
-        <a href="bbs-forum.html" class="nav-item">💬 Sakuraoka BBS</a>
-        <a href="neko-fm.html" class="nav-item active">📻 24/7 Neko FM</a>
-        <a href="chat.html" class="nav-item">💬 Live Chat</a>
-        <a href="lore.html" class="nav-item">🌌 Lore & Books</a>
-       
-
-        <button id="nav-auth-btn" onclick="openAuthOrAccount()" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
-          🔑 Login
-        </button>
+  <!-- STREAMLINED TOP NAVIGATION BAR -->
+  <header class="radio-navbar">
+    <div class="nav-inner">
+      <nav class="nav-portal-links">
+        <a href="index.html" class="nav-pill">🏠 Home</a>
+        <a href="echoheart.html" class="nav-pill">📚 Lore & Books</a>
+        <a href="neko-fm.html" class="nav-pill active">📻 24/7 Neko FM</a>
+        <a href="bbs-forum.html" class="nav-pill">💬 Sakuraoka BBS</a>
+        <a href="chat.html" class="nav-pill">💬 Live Chat</a>
+        <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
       </nav>
 
+      <div class="radio-status-indicator">
+        <span class="status-pulse"></span>
+        <span>24/7 Radio Stream: Live</span>
+      </div>
     </div>
   </header>
 
-  <!-- HTML5 Audio Engines (Hidden) -->
-  <audio id="radio-audio-player" crossorigin="anonymous"></audio>
-  <audio id="synth-deck-audio" crossorigin="anonymous"></audio>
+  <div class="container">
 
-  <!-- Studio Dashboard Container -->
-  <main class="studio-dashboard">
-    <div class="dashboard-tabs">
-      <button class="tab-btn active-tab" onclick="switchTab('board-tab', this)">📋 Setlist Polls</button>
-      <button class="tab-btn" onclick="switchTab('youtube-tab', this)">🎛️ Neko Synth Deck</button>
-      <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 Girls Dead Phantom Hub</button>
+    <!-- RADIO HERO -->
+    <header class="radio-hero">
+      <h1 class="radio-glitch-title">📻 24/7 NEKO FM 📻</h1>
+      <p class="radio-subtitle">Girls of Phantom Underground Frequency • J-Rock & Synthwave</p>
+    </header>
+
+    <!-- MODE SWITCH TABS -->
+    <div class="radio-mode-tabs">
+      <button class="radio-tab-btn active" onclick="switchRadioTab('live-stream')">
+        <span>📻 Live Stream Audio</span>
+      </button>
+      <button class="radio-tab-btn" onclick="switchRadioTab('youtube-mode')">
+        <span>🎬 YouTube Video Stream</span>
+      </button>
     </div>
 
-    <!-- TAB 1: PREP ROOM BOARD & SETLIST POLLS -->
-    <section id="board-tab" class="tab-content active-content">
-      
-      <!-- Poll & Hourly Live Countdown Header Banner -->
-      <div class="poll-header-banner">
-        <div class="poll-header-text">
-          <h3>📋 Prep Room B — Hourly Setlist Voting</h3>
-          <p>Vote for the next broadcast song cover! The winning arrangement will be performed by <strong>Girls Dead Phantom</strong> in Prep Room B.</p>
-        </div>
+    <!-- TAB 1: LIVE STREAM AUDIO MODE -->
+    <div id="tab-live-stream" class="radio-tab-content active">
+      <div class="player-deck-card">
+        <span class="deck-badge">✦ Live Broadcast Audio</span>
+        <h2 class="now-playing-header">Neko FM 24/7 Underground Radio</h2>
+        <div class="now-playing-sub">Playing: Girls of Phantom - Dissonance Zero (180 BPM J-Rock Mix)</div>
 
-        <!-- Persistent Hourly Countdown Box -->
-        <div class="countdown-timer-box">
-          <div class="countdown-label" id="poll-timer-label">⚡ Voting Closes In</div>
-          <div class="countdown-digits" id="poll-countdown-digits">50:00</div>
-        </div>
-      </div>
-
-      <!-- Girls Dead Phantom Premiere Showcase Card -->
-      <div class="premiere-showcase-card">
-        <div class="premiere-info-group">
-          <span class="premiere-badge">🌟 Girls Dead Phantom Leader</span>
-          <h4 class="premiere-title" id="winning-track-name">"Subterranean Resonance (Official Studio Cut)"</h4>
-          <p class="premiere-sub">Akari Minase (Drums) • Nekomi (Vocals & Lead Guitar) • Sera (Keytar) • Aoi (Bass)</p>
-        </div>
-
-        <div class="premiere-actions-side">
-          <div class="premiere-10min-timer-badge" id="premier-soundcheck-box">
-            ⏱️ Premiere In: <span id="soundcheck-digits">10:00 (Waiting)</span>
-          </div>
-          <button class="vote-btn" id="play-premiere-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 18px; font-size: 0.88rem;">
-            ▶ Stream Premiere
+        <div class="deck-controls-row">
+          <button class="deck-play-btn" id="stream-main-play-btn" onclick="toggleStreamAudio()">
+            <span id="stream-btn-icon">▶</span>
+            <span id="stream-btn-text">LISTEN LIVE</span>
           </button>
-        </div>
-      </div>
 
-      <!-- Dynamic Poll List Container -->
-      <div id="poll-container">
-        <!-- Rendered via JavaScript -->
-      </div>
-
-      <!-- Fan Song Suggestion Drawer -->
-      <div class="suggestion-box-panel">
-        <h4 style="margin:0 0 6px; color:#ffffff;">💡 Suggest a Song for Girls Dead Phantom</h4>
-        <p style="font-size:0.82rem; color:#cbb8f6; margin:0;">Have a J-Rock, Vocaloid, or anime track you want Akari Minase, Nekomi, Sera, and Aoi to cover?</p>
-        <input type="text" id="song-suggestion-input" class="form-control-poll" placeholder="e.g. 'Subterranean Resonance (Keytar & Acoustic Duo)'">
-        <button class="vote-btn" onclick="submitSongSuggestion()">🌸 Submit Suggestion to Prep Room B</button>
-      </div>
-    </section>
-
-    <!-- TAB 2: NEKO SYNTH DECK (PURE NATIVE HTML5 DIRECT STREAMS) -->
-    <section id="youtube-tab" class="tab-content">
-      <div class="neko-radio-deck">
-        <div class="yt-radio-card">
-          <!-- Player LCD Display Header -->
-          <div class="lcd-header">
-            <span class="live-indicator"><span class="pulse-dot"></span> LIVE BROADCAST</span>
-            <span class="deck-model">NEKO-88 DIRECT SYNTH DECK</span>
-          </div>
-
-          <!-- Main LCD Screen -->
-          <div class="lcd-screen">
-            <div class="lcd-meta">
-              <div class="lcd-station-name" id="yt-channel-title">J-Pop Powerplay Kawaii 🌸</div>
-              <div class="lcd-status-msg" id="yt-status-text">SYSTEM READY • PURE DIRECT STREAM</div>
-            </div>
-            <div class="lcd-eq-bars" id="yt-eq-visualizer">
-              <span></span><span></span><span></span><span></span><span></span><span></span>
-            </div>
-          </div>
-
-          <!-- Station Preset Selector Buttons -->
-          <div class="station-presets">
-            <button class="preset-btn active" onclick="selectSynthPreset(0)">🌸 J-Pop Kawaii</button>
-            <button class="preset-btn" onclick="selectSynthPreset(1)">⚡ J-Rock Powerplay</button>
-            <button class="preset-btn" onclick="selectSynthPreset(2)">🎤 J-Club Hip Hop</button>
-            <button class="preset-btn" onclick="selectSynthPreset(3)">🎙️ Japan Hits</button>
-          </div>
-
-          <!-- Controls & Volume -->
-          <div class="radio-deck-controls">
-            <button id="yt-power-btn" class="power-btn" onclick="toggleSynthPower()">
-              ▶ PLAY
-            </button>
-            
-
-            <div class="volume-slider-group">
-              <span class="vol-icon">🔊</span>
-              <input type="range" id="yt-vol-slider" min="0" max="100" value="70" oninput="changeSynthVolume(this.value)">
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: DISCOGRAPHY & PREVIEW HUB -->
-    <section id="discography-tab" class="tab-content">
-      
-      <!-- Fancy Hero Band Header & Roster Banner -->
-      <div class="gdp-hero-banner">
-        <div class="gdp-hero-top">
-          <div>
-            <h2 class="gdp-hero-title">🎸 GIRLS DEAD PHANTOM</h2>
-            <p style="margin: 6px 0 0; color: #cbb8f6; font-size: 0.9rem;">
-              Prep Room B Sound Engineers • Sakuraoka High Underground Ensemble
-            </p>
-          </div>
-          <div style="text-align: right;">
-            <span class="premiere-badge" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000;">
-              ✨ 10 OFFICIAL RELEASES
-            </span>
-
+          <div class="deck-volume-box">
+            <span>🔊</span>
+            <input type="range" class="deck-volume-slider" id="stream-volume" min="0" max="1" step="0.05" value="0.8" oninput="changeStreamVolume(this.value)">
           </div>
         </div>
 
-        <p style="color: #e2daf8; font-size: 0.88rem; line-height: 1.5; margin: 0 0 12px;">
-          Welcome to the official <strong>Girls Dead Phantom</strong> audio lounge! Formed inside Sakuraoka High's Prep Room B by Drums <strong>Akari Minase</strong>. Explore all 10 official studio releases, subterranean B-Sides, and preview 20-second teasers directly in your browser!
-        </p>
+        <audio id="neko-radio-stream" src="https://stream.zeno.fm/f3wvbbqmdg8uv" preload="none"></audio>
+      </div>
+    </div>
 
-        <!-- Band Member Roster Chips -->
-        <div class="gdp-roster-chips">
-          <div class="member-chip">🥁 Akari Minase <span class="member-role">(Drums)</span></div>
-          <div class="member-chip">🎙️ Nekomi <span class="member-role">(Vocals & Guitar)</span></div>
-          <div class="member-chip">🎹 Sera <span class="member-role">(Keytar & Vocals)</span></div>
-          <div class="member-chip">🎸 Aoi <span class="member-role">(Bass)</span></div>
+    <!-- TAB 2: YOUTUBE VIDEO STREAM MODE -->
+    <div id="tab-youtube-mode" class="radio-tab-content">
+      <div class="player-deck-card">
+        <span class="deck-badge">✦ YouTube Visual Deck</span>
+        <h2 class="now-playing-header">Girls of Phantom Visual Radio</h2>
+        <div class="now-playing-sub">Lo-Fi & Cyberpunk J-Rock Animation Stream</div>
+
+        <div class="yt-embed-wrapper">
+          <iframe id="yt-player-frame" src="https://www.youtube.com/embed/jfKfPfyJRdk?enablejsapi=1&autoplay=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
+    </div>
 
-      <!-- Main Concert Spotlight Card -->
-      <div class="gdp-spotlight-box">
-        <div class="premiere-info-group">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <div class="soundwave-box">
-              <span class="soundwave-bar"></span>
-              <span class="soundwave-bar"></span>
-              <span class="soundwave-bar"></span>
-              <span class="soundwave-bar"></span>
-              <span class="soundwave-bar"></span>
-            </div>
-            <span class="premiere-badge">⚡ QUEUED PREMIERE WINNER</span>
-          </div>
-          
-          <h3 class="premiere-title" id="disco-deck-track-name" style="font-size: 1.25rem;">"Subterranean Resonance (Official Studio Cut)"</h3>
-          <p class="premiere-sub">Synchronized with Girls Dead Phantom Poll Leader • Auto-plays when soundcheck finishes</p>
+    <!-- FEATURED TRACK ARCHIVES -->
+    <h2 class="section-title">Sub-Stage Station Playlist</h2>
+    <div class="track-grid">
+
+      <div class="track-card">
+        <div>
+          <span class="track-badge">J-Rock Lead Single</span>
+          <h3 class="track-title">Dissonance Zero</h3>
+          <div class="track-artist">Girls of Phantom (Akari & Nekomi)</div>
         </div>
+        <button class="track-btn" onclick="switchRadioTab('live-stream')">⚡ Play on Radio Deck</button>
+      </div>
 
-        <div class="premiere-actions-side">
-          <div class="premiere-10min-timer-badge">
-            ⏱️ Premiere In: <span id="hub-soundcheck-digits">10:00 (Waiting)</span>
-          </div>
-          <button class="vote-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 20px; font-size: 0.9rem;">
-            ▶ Stream On-Deck Track
-          </button>
+      <div class="track-card">
+        <div>
+          <span class="track-badge">Synthwave Duet</span>
+          <h3 class="track-title">Phantom Frequency</h3>
+          <div class="track-artist">Sera & Nekomi</div>
         </div>
+        <button class="track-btn" onclick="switchRadioTab('live-stream')">⚡ Play on Radio Deck</button>
       </div>
 
-      <!-- Discography Section Header -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
-          CD Official Studio Tracklist <span style="font-size: 0.8rem; color: #f4b8c4; font-weight: 600;">(20s Preview Teasers & Stem Downloads)</span>
-        </h3>
-        <span style="font-size: 0.8rem; color: #cbb8f6;">Showing 10 Tracks</span>
+      <div class="track-card">
+        <div>
+          <span class="track-badge">Power Ballad</span>
+          <h3 class="track-title">Rose Gold Sunlight</h3>
+          <div class="track-artist">Girls of Phantom Acoustic</div>
+        </div>
+        <button class="track-btn" onclick="switchRadioTab('live-stream')">⚡ Play on Radio Deck</button>
       </div>
 
-      <!-- Discography Grid Container -->
-      <div class="discography-grid" id="discography-container">
-        <!-- Rendered dynamically by JavaScript -->
-      </div>
-    </section>
-  </main>
+    </div>
 
-  <script src="global-player.js"></script>
+    <footer>
+      <p>24/7 Neko FM • EchoHeart / Girls of Phantom • All Rights Reserved</p>
+    </footer>
+
+  </div>
+
   <script>
-    // Master Radio Stations Repository
-    const RADIO_STATIONS = {
-      twilight: [
-        { freq: "98.4 FM", name: "LISTEN.moe (24/7 Anime & Vocaloid)", genre: "Anime & Vocaloid Stream", url: "http://kathy.torontocast.com:3350/stream" },
-        { freq: "91.5 FM", name: "Gensokyo Radio (J-Rock & Arrangements)", genre: "Doujin Rock & Arrangements", url: "https://kathy.torontocast.com:3060/stream" },
-        { freq: "95.2 FM", name: "R/a/dio (24/7 Anime & J-Pop)", genre: "Anime & J-Pop Broadcast", url: "https://relay0.r-a-d.io/main.mp3" },
-        { freq: "106.8 FM", name: "Radio Animu J-Pop Stream", genre: "Kawaii Beats & Anison Pop", url: "https://kathy.torontocast.com/jrock" }
-      ],
-      basement: [
-        { freq: "88.0 FM", name: "J-Rock Powerplay Underground", genre: "Heavy Rock & Guitar Riffs", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
-        { freq: "108.5 FM", name: "Vocaloid Radio 24/7", genre: "180 BPM High-Energy Vocaloid", url: "https://vocaloid.radioca.st/stream" },
-        { freq: "95.7 FM", name: "Japan-a-Radio Vocaloid Set", genre: "Underground Vocaloid Mixes", url: "https://audio.misproductions.com/japan48k" },
-        { freq: "104.1 FM", name: "R/a/dio Underground Stream", genre: "Non-stop High-Quality Anime Beats", url: "https://relay0.r-a-d.io/main.mp3" }
-      ],
-      backstage: [
-        { freq: "101.1 FM", name: "🎸 Nightwave Plaza VIP Stream", genre: "80s City Pop & Vaporwave Hits", url: "https://plaza.one/stream" },
-        { freq: "102.5 FM", name: "⚡ Gensokyo Radio HQ Backstage", genre: "Heavy Guitars & Underground Riffs", url: "https://stream.gensokyoradio.net/1" },
-        { freq: "104.3 FM", name: "🌸 LISTEN.moe High-Bitrate HQ", genre: "Underground Anime & Vocaloid Mixes", url: "https://listen.moe/fallback" },
-        { freq: "107.9 FM", name: "🎹 Japan-a-Radio HD Stream", genre: "Non-stop High-Quality J-Pop & Rock", url: "https://audio.misproductions.com/japan48k" }
-      ]
-    };
+    /* RADIO STREAM AUDIO FUNCTIONALITY (UNTOUCHED LOGIC) */
+    function toggleStreamAudio() {
+      const audio = document.getElementById('neko-radio-stream');
+      const btn = document.getElementById('stream-main-play-btn');
+      const icon = document.getElementById('stream-btn-icon');
+      const text = document.getElementById('stream-btn-text');
 
-    // 10 Official Songs for Girls Dead Phantom Discography
-    const DISCOGRAPHY_CATALOG = [
-      { id: 'gdp-1', trackNo: '01', title: 'Subterranean Resonance', type: 'Debut Single (2026)', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/fallback' },
-      { id: 'gdp-2', trackNo: '02', title: 'Keytar Midnight Run', type: '180 BPM Synth Remix', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.gensokyoradio.net/1' },
-      { id: 'gdp-3', trackNo: '03', title: 'Sakuraoka Dusk Echoes', type: 'Live Acoustic Session', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://relay0.r-a-d.io/main.mp3' },
-      { id: 'gdp-4', trackNo: '04', title: 'Cavern Reverb Overdrive', type: 'Subterranean B-Side', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://plaza.one/stream' },
-      { id: 'gdp-5', trackNo: '05', title: 'Phantom Echoes in Prep Room B', type: 'Studio Cut', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/fallback' },
-      { id: 'gdp-6', trackNo: '06', title: '180 BPM Velocity', type: 'Fast Tempo Rock', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.gensokyoradio.net/1' },
-      { id: 'gdp-7', trackNo: '07', title: 'Dusk Over Sakuraoka', type: 'Melodic Punk', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://relay0.r-a-d.io/main.mp3' },
-      { id: 'gdp-8', trackNo: '08', title: 'Locker 102 Whispers', type: 'Dark Pop Underground', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://plaza.one/stream' },
-      { id: 'gdp-9', trackNo: '09', title: 'Akari\'s Crimson Riff', type: 'Guitar Instrumental', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.gensokyoradio.net/1' },
-      { id: 'gdp-10', trackNo: '10', title: 'After Dark Distortion', type: 'Uncompressed Master Stem', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://listen.moe/fallback' }
-    ];
-
-    // ==========================================
-    // NEKO SYNTH DECK ENGINE STATE & CONTROLLER
-    // ==========================================
-    const synthPresets = [
-      { name: "J-Pop Powerplay Kawaii 🌸", url: "https://kathy.torontocast.com:3060/stream", desc: "Asia DREAM Radio • Kawaii J-Pop" },
-      { name: "J-Rock Powerplay ⚡", url: "https://kathy.torontocast.com:3340/stream", desc: "Asia DREAM Radio • High-Energy J-Rock" },
-      { name: "J-Club Hip Hop 🎤", url: "https://kathy.torontocast.com:3350/stream", desc: "Asia DREAM Radio • J-Club & Urban" },
-      { name: "Japan Hits 🎙️", url: "https://quincy.torontocast.com:2020/stream", desc: "Asia DREAM Radio • Top Japanese Hits" }
-    ];
-
-    let currentSynthPresetIdx = 0;
-    let isSynthPlaying = false;
-    let trackRefreshTimer = null;
-    const synthAudioPlayer = document.getElementById('synth-deck-audio');
-
-    // Starts or resets the 15-second background refresh loop
-    function startTrackRefreshTimer() {
-      stopTrackRefreshTimer();
-      triggerShazamFingerprint();
-
-      trackRefreshTimer = setInterval(() => {
-        if (isSynthPlaying && synthAudioPlayer && !synthAudioPlayer.paused) {
-          triggerShazamFingerprint();
-        }
-      }, 15000);
-    }
-
-    // Stops background track metadata refresh timer
-    function stopTrackRefreshTimer() {
-      if (trackRefreshTimer) {
-        clearInterval(trackRefreshTimer);
-        trackRefreshTimer = null;
-      }
-    }
-
-    function syncRadioState(isPlaying, url, title, speaker) {
-      localStorage.setItem('neko_radio_playing', isPlaying ? 'true' : 'false');
-      if (url) localStorage.setItem('neko_radio_url', url);
-      if (title) localStorage.setItem('neko_radio_title', title);
-      if (speaker) localStorage.setItem('neko_radio_speaker', speaker);
-    }
-
-    function toggleSynthPower() {
-      stopActivePreview();
-
-      const statusMsg = document.getElementById('yt-status-text');
-      const powerBtn = document.getElementById('yt-power-btn');
-      const eqVisualizer = document.getElementById('yt-eq-visualizer');
-
-      if (isSynthPlaying) {
-        synthAudioPlayer.pause();
-        isSynthPlaying = false;
-        stopTrackRefreshTimer();
-        syncRadioState(false);
-        if (statusMsg) statusMsg.innerText = "STANDBY • PRESS PLAY";
-        if (powerBtn) powerBtn.innerText = "▶ PLAY";
-        if (eqVisualizer) eqVisualizer.classList.remove('playing');
-      } else {
-        const preset = synthPresets[currentSynthPresetIdx];
-        if (synthAudioPlayer.src !== preset.url) {
-          synthAudioPlayer.src = preset.url;
-        }
-
-        synthAudioPlayer.play().then(() => {
-          isSynthPlaying = true;
-          syncRadioState(true, preset.url, preset.name, preset.desc);
-          if (statusMsg) statusMsg.innerText = "STREAMING • " + preset.desc;
-          if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
-          if (eqVisualizer) eqVisualizer.classList.add('playing');
-          startTrackRefreshTimer();
+      if (audio.paused) {
+        audio.play().then(() => {
+          btn.classList.add('playing');
+          icon.textContent = '⏸';
+          text.textContent = 'PAUSE STREAM';
         }).catch(err => {
-          console.error("Playback error:", err);
-          alert("Click PLAY again to allow browser audio playback!");
-        });
-      }
-    }
-
-    function selectSynthPreset(presetIndex) {
-      currentSynthPresetIdx = presetIndex;
-      const selected = synthPresets[presetIndex];
-
-      const btns = document.querySelectorAll('#youtube-tab .station-presets .preset-btn');
-      btns.forEach((b, idx) => b.classList.toggle('active', idx === presetIndex));
-
-      const titleEl = document.getElementById('yt-channel-title');
-      if (titleEl) titleEl.innerText = selected.name;
-
-      if (isSynthPlaying) {
-        synthAudioPlayer.src = selected.url;
-        synthAudioPlayer.play().then(() => {
-          syncRadioState(true, selected.url, selected.name, selected.desc);
-          const statusMsg = document.getElementById('yt-status-text');
-          if (statusMsg) statusMsg.innerText = "STREAMING • " + selected.desc;
-          startTrackRefreshTimer();
-        }).catch(err => console.error(err));
-      } else {
-        triggerShazamFingerprint();
-        const statusMsg = document.getElementById('yt-status-text');
-        if (statusMsg) statusMsg.innerText = "READY • " + selected.desc;
-      }
-    }
-
-    function changeSynthVolume(val) {
-      if (synthAudioPlayer) {
-        synthAudioPlayer.volume = val / 100;
-      }
-    }
-
-    /**
-     * Fetches live artist and song title from AWS Lambda ICY extractor
-     */
-    async function triggerShazamFingerprint() {
-      const statusMsgEl = document.getElementById('yt-status-text');
-      const titleEl = document.getElementById('yt-channel-title');
-
-      const currentPreset = synthPresets[currentSynthPresetIdx];
-      
-      // 🔗 AWS Lambda Function URL
-      const lambdaUrl = "https://5x4kcoismesnfh7b5rcqllrcau0pxdbt.lambda-url.us-east-2.on.aws/";
-      const endpoint = `${lambdaUrl}?url=${encodeURIComponent(currentPreset.url)}`;
-
-      try {
-        const res = await fetch(endpoint);
-        const data = await res.json();
-
-        if (data.success && (data.title || data.raw)) {
-          // 1. Smart Split handling all dash variants (hyphen, en-dash, em-dash, full-width)
-          const rawString = data.raw || `${data.artist} - ${data.title}`;
-          const parts = rawString.split(/\s*[-–—－]\s*/);
-
-          let artistName = data.artist;
-          let trackTitle = data.title;
-
-          if (parts.length >= 2) {
-            artistName = parts[0].trim();
-            trackTitle = parts.slice(1).join(' - ').trim();
-          } else {
-            trackTitle = rawString.trim();
-            artistName = currentPreset.name;
-          }
-
-          // 2. Display track title on top line and artist on status line
-          if (titleEl) titleEl.innerText = `🎵 ${trackTitle}`;
-          if (statusMsgEl) statusMsgEl.innerText = `🎤 ${artistName} • ${currentPreset.name}`;
-
-        } else {
-          if (titleEl) titleEl.innerText = currentPreset.name;
-          if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
-        }
-      } catch (err) {
-        console.error("Metadata fetch error:", err);
-        if (titleEl) titleEl.innerText = currentPreset.name;
-        if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
-      }
-    }
-
-    // Helper: Generate 4 random songs from the catalog for the hourly poll
-    function generateRandomPollItems() {
-      const performerOptions = [
-        'Akari Minase (Drums) & Nekomi (Vocals)',
-        'Sera (Keytar) & Aoi (Bass)',
-        'Girls Dead Phantom Ensemble',
-        'Akari Minase (Drums) & Aoi (Bass)'
-      ];
-
-      const shuffled = [...DISCOGRAPHY_CATALOG].sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, 4);
-
-      return selected.map((track, idx) => ({
-        id: idx,
-        title: `"${track.title}"`,
-        badge: track.type,
-        performers: performerOptions[idx % performerOptions.length],
-        streamUrl: track.url,
-        votes: 0
-      }));
-    }
-
-    let currentMode = 'twilight';
-    let masterTimerInterval = null;
-    let previewTimerInterval = null;
-    let previewTimeRemaining = 0;
-    let activePreviewTrackId = null;
-    let lastProcessedHour = localStorage.getItem('gdp_last_processed_hour');
-
-    const audioPlayer = document.getElementById('radio-audio-player');
-
-    let userState = {
-      isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
-      isVIP: localStorage.getItem('neko_is_vip') === 'true'
-    };
-
-    function getStoredPollData() {
-      try {
-        const stored = localStorage.getItem('gdp_poll_votes_data');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-        }
-      } catch (e) { console.error("Error reading stored poll data:", e); }
-      return generateRandomPollItems();
-    }
-
-    function saveStoredPollData(data) {
-      try {
-        localStorage.setItem('gdp_poll_votes_data', JSON.stringify(data));
-      } catch (e) { console.error("Error saving poll data:", e); }
-    }
-
-    let pollData = getStoredPollData();
-
-    function handleModeChange(targetMode) {
-      const selector = document.getElementById('mode-selector');
-
-      if (targetMode === 'twilight') {
-        applyThemeMode('twilight');
-        currentMode = 'twilight';
-        localStorage.setItem('neko_active_mode', 'twilight');
-        renderDiscography();
-        return;
-      }
-
-      if (targetMode === 'basement') {
-        if (!userState.isLoggedIn) {
-          if (selector) selector.value = getCurrentMode();
-          showAuthModal('Sign-In Required', 'Sign in with Google to access After-Hours Basement streams.');
-          return;
-        }
-
-        if (window.userData && window.userData.ageVerified17) {
-          applyThemeMode('basement');
-          currentMode = 'basement';
-          localStorage.setItem('neko_active_mode', 'basement');
-          renderDiscography();
-          return;
-        }
-
-        if (typeof window.handleContentAccess === "function") {
-          window.handleContentAccess('basement').then(allowed => {
-            if (allowed) {
-              applyThemeMode('basement');
-              currentMode = 'basement';
-              localStorage.setItem('neko_active_mode', 'basement');
-              renderDiscography();
-            } else if (selector) {
-              selector.value = getCurrentMode();
-            }
-          });
-        } else {
-          if (selector) selector.value = getCurrentMode();
-          alert("The Basement Channel requires 17+ age verification.");
-        }
-        return;
-      }
-
-      if (targetMode === 'backstage') {
-        if (!userState.isLoggedIn) {
-          if (selector) selector.value = getCurrentMode();
-          showAuthModal('Sign-In Required', 'Sign in with Google to check your VIP Backstage status.');
-          return;
-        }
-
-        if (window.userData && window.userData.isVIP) {
-          applyThemeMode('backstage');
-          currentMode = 'backstage';
-          localStorage.setItem('neko_active_mode', 'backstage');
-          renderDiscography();
-        } else {
-          if (selector) selector.value = getCurrentMode();
-          showVIPPromoModal();
-        }
-      }
-    }
-
-    function getCurrentMode() {
-      return localStorage.getItem('neko_active_mode') || 'twilight';
-    }
-
-    function applyThemeMode(mode) {
-      const body = document.body;
-      const selector = document.getElementById('mode-selector');
-      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
-      body.classList.add(`${mode}-mode`);
-      if (selector) selector.value = mode;
-    }
-
-    function initMasterTimers() {
-      updateTimersLoop();
-      if (masterTimerInterval) clearInterval(masterTimerInterval);
-      masterTimerInterval = setInterval(updateTimersLoop, 1000);
-    }
-
-    function updateTimersLoop() {
-      const pollTimerDigits = document.getElementById('poll-countdown-digits');
-      const pollTimerLabel = document.getElementById('poll-timer-label');
-      const soundcheckDigits = document.getElementById('soundcheck-digits');
-      const hubSoundcheckDigits = document.getElementById('hub-soundcheck-digits');
-
-      const now = Date.now();
-      const hourMs = 60 * 60 * 1000;
-      const currentHourIndex = Math.floor(now / hourMs);
-      const currentMsInHour = now % hourMs;
-      const votingDurationMs = 50 * 60 * 1000;
-
-      if (lastProcessedHour !== null && parseInt(lastProcessedHour, 10) !== currentHourIndex) {
-        pollData = generateRandomPollItems();
-        localStorage.removeItem('neko_voted_poll_id');
-        saveStoredPollData(pollData);
-        renderSetlistPolls();
-      }
-      lastProcessedHour = currentHourIndex.toString();
-      localStorage.setItem('gdp_last_processed_hour', lastProcessedHour);
-
-      if (currentMsInHour < votingDurationMs) {
-        const diff = votingDurationMs - currentMsInHour;
-        const m = Math.floor(diff / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-        const timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-
-        if (pollTimerDigits) pollTimerDigits.innerText = timeStr;
-        if (pollTimerLabel) pollTimerLabel.innerText = "⚡ Voting Closes In";
-
-        if (soundcheckDigits) soundcheckDigits.innerText = "10:00 (Waiting)";
-        if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = "10:00 (Waiting)";
-      } else {
-        const diff = hourMs - currentMsInHour;
-        const scM = Math.floor(diff / (1000 * 60));
-        const scS = Math.floor((diff % (1000 * 60)) / 1000);
-        const scTimeStr = `${scM.toString().padStart(2, '0')}:${scS.toString().padStart(2, '0')}`;
-
-        if (pollTimerDigits) pollTimerDigits.innerText = "LOCKED";
-        if (pollTimerLabel) pollTimerLabel.innerText = "🔒 Voting Closed";
-
-        if (soundcheckDigits) soundcheckDigits.innerText = scTimeStr;
-        if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = scTimeStr;
-      }
-    }
-
-    function getWinningTrack() {
-      if (!pollData || pollData.length === 0) return { title: "Subterranean Resonance", badge: "Studio Cut", streamUrl: "https://listen.moe/fallback", performers: "Girls Dead Phantom" };
-      let highest = pollData[0];
-      pollData.forEach(item => { if (item.votes > highest.votes) highest = item; });
-      return highest;
-    }
-
-    function playOfficialSongPremiere() {
-      const winner = getWinningTrack();
-      const btn = document.getElementById('play-premiere-btn');
-
-      stopActivePreview();
-
-      if (isSynthPlaying) {
-        toggleSynthPower();
-      }
-
-      if (audioPlayer.src !== winner.streamUrl || audioPlayer.paused) {
-        audioPlayer.src = winner.streamUrl;
-        audioPlayer.play().then(() => {
-          syncRadioState(true, winner.streamUrl, winner.title, winner.performers);
-          if (btn) btn.innerText = "⏸ Pause Premiere";
-        }).catch(err => {
-          console.log("Audio play error:", err);
-          alert(`🌸 Now Premiering: ${winner.title}! Click again if blocked by browser audio settings.`);
+          console.error("Audio playback error:", err);
         });
       } else {
-        audioPlayer.pause();
-        syncRadioState(false);
-        if (btn) btn.innerText = "▶ Stream Premiere";
+        audio.pause();
+        btn.classList.remove('playing');
+        icon.textContent = '▶';
+        text.textContent = 'LISTEN LIVE';
       }
     }
 
-    function play20sTrackPreview(trackId, url, trackTitle) {
-      if (activePreviewTrackId === trackId && !audioPlayer.paused) {
-        stopActivePreview();
-        return;
+    function changeStreamVolume(val) {
+      const audio = document.getElementById('neko-radio-stream');
+      if (audio) {
+        audio.volume = val;
       }
+    }
 
-      stopActivePreview();
+    /* RADIO TAB SWITCHING LOGIC */
+    function switchRadioTab(tabName) {
+      document.querySelectorAll('.radio-tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.radio-tab-btn').forEach(btn => btn.classList.remove('active'));
 
-      if (isSynthPlaying) {
-        toggleSynthPower();
+      const targetTab = document.getElementById(`tab-${tabName}`);
+      if (targetTab) targetTab.classList.add('active');
+
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
       }
-
-      audioPlayer.src = url;
-      audioPlayer.play().then(() => {
-        activePreviewTrackId = trackId;
-        syncRadioState(true, url, trackTitle, userState.isVIP ? 'Girls Dead Phantom VIP Lossless Audio' : 'Girls Dead Phantom Teaser');
-        
-        if (userState.isVIP) {
-          renderDiscography();
-          return;
-        }
-
-        previewTimeRemaining = 20;
-        renderDiscography();
-
-        if (previewTimerInterval) clearInterval(previewTimerInterval);
-        previewTimerInterval = setInterval(() => {
-          previewTimeRemaining--;
-          const timerEl = document.getElementById(`preview-timer-${trackId}`);
-          if (timerEl) timerEl.innerText = `${previewTimeRemaining}s`;
-
-          if (previewTimeRemaining <= 0) {
-            stopActivePreview();
-          }
-        }, 1000);
-      }).catch(err => {
-        console.log("Playback error:", err);
-        alert(`Click again to start playback for "${trackTitle}"`);
-      });
     }
-
-    function downloadVIPStems(trackTitle) {
-      if (!userState.isVIP) {
-        showVIPModal('Backstage Pass Required', 'Unlock VIP Lossless Master Stem downloads for Girls Dead Phantom!');
-        return;
-      }
-      alert(`💎 VIP Stem Package for "${trackTitle}" (Drums, Keytar, Lead Guitar & Bass Stems) is preparing for download!`);
-    }
-
-    function stopActivePreview() {
-      if (previewTimerInterval) clearInterval(previewTimerInterval);
-      audioPlayer.pause();
-      if (synthAudioPlayer) synthAudioPlayer.pause();
-      isSynthPlaying = false;
-      stopTrackRefreshTimer();
-      syncRadioState(false);
-      activePreviewTrackId = null;
-      previewTimeRemaining = 0;
-      
-      const statusMsg = document.getElementById('yt-status-text');
-      const powerBtn = document.getElementById('yt-power-btn');
-      const eqVisualizer = document.getElementById('yt-eq-visualizer');
-      if (statusMsg) statusMsg.innerText = "STANDBY • PRESS PLAY";
-      if (powerBtn) powerBtn.innerText = "▶ PLAY";
-      if (eqVisualizer) eqVisualizer.classList.remove('playing');
-
-      renderDiscography();
-    }
-
-    function renderSetlistPolls() {
-      const container = document.getElementById('poll-container');
-      if (!container) return;
-
-      container.innerHTML = '';
-
-      const totalVotes = pollData.reduce((sum, item) => sum + item.votes, 0);
-      const votedSongId = localStorage.getItem('neko_voted_poll_id');
-
-      const winner = getWinningTrack();
-      const trackTitleEl = document.getElementById('winning-track-name');
-      const discoDeckEl = document.getElementById('disco-deck-track-name');
-
-      if (trackTitleEl) trackTitleEl.innerText = `${winner.title} (${winner.badge})`;
-      if (discoDeckEl) discoDeckEl.innerText = `${winner.title} (${winner.badge})`;
-
-      pollData.forEach(item => {
-        const percent = totalVotes > 0 ? Math.round((item.votes / totalVotes) * 100) : 0;
-        const isVoted = votedSongId !== null && parseInt(votedSongId) === item.id;
-
-        const card = document.createElement('div');
-        card.className = `poll-card ${isVoted ? 'voted-card' : ''}`;
-        
-        let voteBtnText = '⚡ Vote Song';
-        if (isVoted) {
-          voteBtnText = '✓ Voted';
-        } else if (userState.isVIP) {
-          voteBtnText = '💎 2x VIP Vote';
-        }
-
-        let buttonHTML = `<button class="vote-btn ${isVoted ? 'voted-btn' : ''}" onclick="castSongVote(${item.id})">
-                          ${voteBtnText}
-                         </button>`;
-
-        if (!userState.isLoggedIn) {
-          buttonHTML = `<button class="vote-btn" onclick="showAuthModal('Google Login Required', 'Sign in with Google to cast your vote for Girls Dead Phantom\'s next broadcast setlist!')">
-                        🔒 Sign in to Vote
-                      </button>`;
-        }
-
-        card.innerHTML = `
-          <div class="poll-info-top">
-            <span class="poll-title">${item.title} <span class="poll-badge">${item.badge}</span></span>
-            <span class="poll-stats">${item.votes} Votes (${percent}%)</span>
-          </div>
-          <div class="poll-progress-bg">
-            <div class="poll-progress-fill" style="width: ${percent}%;"></div>
-          </div>
-          <div class="poll-actions-bottom">
-            <span class="poll-performers">👥 ${item.performers}</span>
-            ${buttonHTML}
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function castSongVote(id) {
-      if (!userState.isLoggedIn) {
-        showAuthModal('Google Login Required', 'Sign in with Google to cast your vote for Girls Dead Phantom\'s next broadcast setlist!');
-        return;
-      }
-
-      const existingVote = localStorage.getItem('neko_voted_poll_id');
-      const voteWeight = userState.isVIP ? 2 : 1;
-
-      if (existingVote !== null) {
-        if (parseInt(existingVote) === id) {
-          alert("🌸 You've already voted for this track!");
-          return;
-        } else {
-          const prevItem = pollData.find(item => item.id === parseInt(existingVote));
-          if (prevItem && prevItem.votes > 0) {
-            prevItem.votes = Math.max(0, prevItem.votes - voteWeight);
-          }
-        }
-      }
-
-      const currentItem = pollData.find(item => item.id === id);
-      if (currentItem) currentItem.votes += voteWeight;
-
-      localStorage.setItem('neko_voted_poll_id', id);
-      saveStoredPollData(pollData);
-      renderSetlistPolls();
-    }
-
-    function renderDiscography() {
-      const container = document.getElementById('discography-container');
-      if (!container) return;
-
-      container.innerHTML = '';
-
-      DISCOGRAPHY_CATALOG.forEach(track => {
-        let actionHTML = '';
-        const isPreviewingThis = activePreviewTrackId === track.id;
-
-        if (track.tierReq === 'basement' && !userState.isLoggedIn) {
-          actionHTML = `<button class="vote-btn" onclick="showAuthModal('Google Login Required', 'Sign in to unlock Basement B-Side previews!')">🔒 Unlock</button>`;
-        } else if (track.tierReq === 'backstage' && !userState.isVIP) {
-          actionHTML = `<button class="vote-btn" onclick="showVIPModal('Backstage Pass Required', 'Unlock VIP Lossless Master Stem previews!')">💎 VIP Pass</button>`;
-        } else {
-          if (userState.isVIP) {
-            actionHTML = `
-              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                ${isPreviewingThis ? 
-                  `<button class="vote-btn" style="background:#ff4d6d; color:#fff;" onclick="stopActivePreview()">⏸ Stop</button>` :
-                  `<button class="vote-btn" onclick="play20sTrackPreview('${track.id}', '${track.url}', '${track.title}')">▶ Full Stream</button>`
-                }
-                <button class="vote-btn" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000;" onclick="downloadVIPStems('${track.title}')">📥 Stems</button>
-              </div>
-            `;
-          } else {
-            if (isPreviewingThis) {
-              actionHTML = `<button class="vote-btn" style="background:#ff4d6d; color:#fff;" onclick="stopActivePreview()">
-                            ⏸ Stop (<span id="preview-timer-${track.id}">${previewTimeRemaining}s</span>)
-                          </button>`;
-            } else {
-              actionHTML = `<button class="vote-btn" onclick="play20sTrackPreview('${track.id}', '${track.url}', '${track.title}')">
-                            ▶ 20s Preview
-                          </button>`;
-            }
-          }
-        }
-
-        const card = document.createElement('div');
-        card.className = 'disco-track-card';
-        card.innerHTML = `
-          <div class="vinyl-icon-box">💿</div>
-          <div style="flex: 1;">
-            <div class="disco-title">${track.trackNo}. ${track.title}</div>
-            <div class="disco-meta">${track.type} • <span class="disco-tier-badge ${track.badgeClass}">${track.tierLabel}</span></div>
-            ${isPreviewingThis ? `<span class="preview-active-pill">🎵 ${userState.isVIP ? 'VIP Full Stream' : 'Previewing Live'}</span>` : ''}
-          </div>
-          ${actionHTML}
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function submitSongSuggestion() {
-      const input = document.getElementById('song-suggestion-input');
-      const text = input ? input.value.trim() : '';
-      if (!text) return;
-
-      if (userState.isVIP) {
-        alert(`🔥 VIP Priority Request received: "${text}" has been tagged with Priority Status for Akari Minase & Nekomi in Prep Room B!`);
-      } else if (userState.isLoggedIn) {
-        alert(`🌸 Suggestion received: "${text}" has been submitted to Prep Room B!`);
-      } else {
-        showAuthModal('Google Login Required', 'Sign in to submit song cover suggestions to Girls Dead Phantom!');
-        return;
-      }
-      if (input) input.value = '';
-    }
-
-    function switchTab(tabId, btnEl) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-content'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active-tab'));
-      document.getElementById(tabId).classList.add('active-content');
-      btnEl.classList.add('active-tab');
-    }
-
-    function toggleMobileMenu() {
-      const navMenu = document.getElementById('nav-menu');
-      if (navMenu) navMenu.classList.toggle('open');
-    }
-
-    function showAuthModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3>🔑 ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-actions">
-              <button class="modal-btn google-btn" onclick="simulateGoogleLogin()">Sign In with Google</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function showVIPModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card vip-modal-card">
-            <h3>🎟️ ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-price-tag">$4.99 / month • Backstage Pass</div>
-            <div class="modal-actions">
-              <button class="modal-btn stripe-btn" onclick="simulateStripeCheckout()">Unlock Backstage Pass</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function showVIPPromoModal() {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card" style="border-color: #ffd166;">
-            <span style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; font-weight: 900; font-size: 0.72rem; padding: 4px 12px; border-radius: 20px; text-transform: uppercase;">Backstage Pass Locked</span>
-            <h3 style="margin: 14px 0 8px; color: #ffd166;">👑 VIP Backstage Access</h3>
-            <p style="color: #cbb8f6; font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px;">
-              Get access to exclusive stem mixers, gold name glows, custom avatar frames, and private band lounge chats!
-            </p>
-            <div class="modal-actions">
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Close</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function removeExistingModals() {
-      const existing = document.getElementById('neko-gate-modal');
-      if (existing) existing.remove();
-    }
-
-    function simulateGoogleLogin() {
-      userState.isLoggedIn = true;
-      localStorage.setItem('neko_logged_in', 'true');
-      removeExistingModals();
-      handleModeChange('basement');
-    }
-
-    function simulateStripeCheckout() {
-      userState.isLoggedIn = true;
-      userState.isVIP = true;
-      localStorage.setItem('neko_logged_in', 'true');
-      localStorage.setItem('neko_is_vip', 'true');
-      removeExistingModals();
-      handleModeChange('backstage');
-    }
-
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      currentMode = getCurrentMode();
-      applyThemeMode(currentMode);
-      renderSetlistPolls();
-      renderDiscography();
-      initMasterTimers();
-
-      document.addEventListener('click', function(event) {
-        const navMenu = document.getElementById('nav-menu');
-        const isInsideNavbar = event.target.closest('.navbar');
-        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
-          navMenu.classList.remove('open');
-        }
-      });
-    });
   </script>
 </body>
 </html>
