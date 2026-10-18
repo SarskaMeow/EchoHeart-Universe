@@ -19,12 +19,15 @@
       --accent-cyan: #00f0ff;
       --accent-gold: #ffd166;
       --accent-green: #00ffaa;
-      --accent-glow: rgba(255, 0, 127, 0.45);
+      --accent-amber: #ffd166;
+      --accent-red: #ff0055;
+      --accent-glow: rgba(255, 0, 127, 0.55);
+      --cyan-glow: rgba(0, 240, 255, 0.55);
       --text-main: #e8dff5;
       --text-light: #ffffff;
       --text-muted: #b8a7d4;
-      --card-border: rgba(255, 0, 127, 0.35);
-      --border-cyan: rgba(0, 240, 255, 0.35);
+      --card-border: rgba(255, 0, 127, 0.45);
+      --border-cyan: rgba(0, 240, 255, 0.45);
     }
 
     * {
@@ -41,20 +44,23 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
+      padding-bottom: 90px;
       background-image: 
-        radial-gradient(circle at 20% 20%, rgba(157, 78, 221, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.12) 0%, transparent 50%);
+        radial-gradient(circle at 20% 20%, rgba(157, 78, 221, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.22) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12) 0%, transparent 60%);
     }
 
     /* ============================================================ */
-    /* ⚡ STREAMLINED TOP NAVIGATION BAR                            */
+    /* ⚡ STREAMLINED TOP NAVIGATION BAR WITH ENHANCED GLOW         */
     /* ============================================================ */
     .chat-navbar {
       background: var(--nav-bg);
-      border-bottom: 1.5px solid var(--card-border);
+      border-bottom: 1.5px solid var(--border-cyan);
       padding: 10px 24px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 4px 20px rgba(255, 0, 127, 0.2);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.25), 0 0 15px rgba(255, 0, 127, 0.15);
       z-index: 100;
     }
 
@@ -77,12 +83,12 @@
     .nav-pill {
       color: var(--text-muted);
       font-size: 0.82rem;
-      font-weight: 700;
+      font-weight: 800;
       padding: 6px 14px;
-      border-radius: 8px;
+      border-radius: 12px;
       text-decoration: none;
-      background: rgba(30, 15, 55, 0.6);
-      border: 1px solid rgba(157, 78, 221, 0.3);
+      background: rgba(22, 10, 36, 0.85);
+      border: 1px solid rgba(157, 78, 221, 0.35);
       transition: all 0.25s ease;
       white-space: nowrap;
     }
@@ -91,7 +97,8 @@
       background: rgba(255, 0, 127, 0.25);
       color: #ffffff;
       border-color: var(--accent-pink);
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 18px var(--accent-glow), inset 0 0 8px rgba(255, 0, 127, 0.4);
+      animation: navPulseGlow 2.5s infinite alternate;
     }
 
     .chat-status-indicator {
@@ -103,6 +110,12 @@
       font-weight: 800;
       letter-spacing: 1px;
       text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      padding: 5px 12px;
+      border-radius: 20px;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
     }
 
     .status-pulse {
@@ -111,7 +124,7 @@
       background-color: var(--accent-green);
       border-radius: 50%;
       box-shadow: 0 0 10px var(--accent-green);
-      animation: pulse 1.8s infinite;
+      animation: statusBlink 1.2s infinite;
     }
 
     /* ============================================================ */
@@ -123,9 +136,9 @@
       margin: 20px auto;
       padding: 0 1rem;
       display: grid;
-      grid-template-columns: 260px 1fr 280px;
+      grid-template-columns: 260px 1fr 300px;
       gap: 16px;
-      height: calc(100vh - 120px);
+      height: calc(100vh - 130px);
       flex: 1;
     }
 
@@ -133,11 +146,11 @@
     .sidebar-panel {
       background: var(--card-bg);
       border: 1.5px solid var(--card-border);
-      border-radius: 14px;
+      border-radius: 18px;
       padding: 1.2rem 1rem;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85), 0 0 20px rgba(255, 0, 127, 0.2);
     }
 
     .panel-title {
@@ -149,23 +162,24 @@
       margin-bottom: 1rem;
       padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--card-border);
-      animation: textGlitch 5s infinite;
+      text-shadow: 0 0 10px rgba(255, 0, 127, 0.6);
+      animation: textGlitchRGB 3s infinite alternate;
     }
 
     .channel-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
 
     .channel-btn {
-      background: rgba(10, 4, 22, 0.8);
-      border: 1px solid rgba(157, 78, 221, 0.25);
+      background: rgba(10, 4, 22, 0.85);
+      border: 1px solid rgba(157, 78, 221, 0.35);
       color: var(--text-muted);
       padding: 10px 14px;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 0.88rem;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       text-align: left;
       transition: all 0.25s ease;
@@ -175,22 +189,23 @@
     }
 
     .channel-btn:hover, .channel-btn.active {
-      background: rgba(255, 0, 127, 0.2);
+      background: linear-gradient(135deg, rgba(255, 0, 127, 0.25), rgba(157, 78, 221, 0.25));
       border-color: var(--accent-pink);
       color: #ffffff;
-      box-shadow: 0 0 14px rgba(255, 0, 127, 0.35);
+      box-shadow: 0 0 18px rgba(255, 0, 127, 0.45);
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
     }
 
     /* CENTER CONTAINER: EXPANDED MAIN CHAT FEED */
     .chat-main-window {
       background: var(--card-inner);
       border: 1.5px solid var(--border-cyan);
-      border-radius: 14px;
+      border-radius: 18px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 240, 255, 0.15);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0, 240, 255, 0.3);
       overflow: hidden;
-      animation: hudPulse 4s infinite ease-in-out;
+      animation: neonHudPulse 3.5s infinite ease-in-out;
     }
 
     .chat-window-header {
@@ -200,6 +215,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.15);
     }
 
     .active-room-name {
@@ -208,7 +224,8 @@
       color: var(--accent-cyan);
       letter-spacing: 1px;
       text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.85);
+      animation: textGlitchRGB 3.5s infinite alternate;
     }
 
     .chat-messages-area {
@@ -244,39 +261,39 @@
     .msg-author {
       font-weight: 800;
       color: var(--accent-cyan);
+      text-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
     }
 
     .msg-author.npc {
       color: var(--accent-pink);
-      text-shadow: 0 0 8px var(--accent-pink);
+      text-shadow: 0 0 10px var(--accent-pink);
     }
 
-    .msg-time {
-      opacity: 0.6;
-    }
+    .msg-time { opacity: 0.6; }
 
     .msg-bubble {
       padding: 10px 16px;
-      border-radius: 12px;
+      border-radius: 14px;
       font-size: 0.95rem;
       line-height: 1.5;
       word-break: break-word;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
     }
 
     .incoming .msg-bubble {
-      background: rgba(20, 10, 38, 0.9);
+      background: rgba(20, 10, 38, 0.95);
       border: 1px solid var(--card-border);
       color: var(--text-main);
       border-top-left-radius: 2px;
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.2);
     }
 
     .outgoing .msg-bubble {
-      background: linear-gradient(135deg, rgba(255, 0, 127, 0.3) 0%, rgba(157, 78, 221, 0.3) 100%);
+      background: linear-gradient(135deg, rgba(255, 0, 127, 0.35) 0%, rgba(157, 78, 221, 0.35) 100%);
       border: 1px solid var(--accent-pink);
       color: #ffffff;
       border-top-right-radius: 2px;
-      box-shadow: 0 0 14px rgba(255, 0, 127, 0.3);
+      box-shadow: 0 0 18px rgba(255, 0, 127, 0.45);
     }
 
     /* INPUT CONTROL BAR */
@@ -293,7 +310,7 @@
       flex: 1;
       background: #030108;
       border: 1.5px solid var(--card-border);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 12px 16px;
       color: #ffffff;
       font-size: 0.95rem;
@@ -303,7 +320,7 @@
 
     .chat-input-field:focus {
       border-color: var(--accent-cyan);
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
     }
 
     .send-msg-btn {
@@ -311,29 +328,30 @@
       border: none;
       color: #ffffff;
       padding: 12px 24px;
-      border-radius: 10px;
-      font-weight: 800;
+      border-radius: 12px;
+      font-weight: 900;
       font-size: 0.9rem;
       cursor: pointer;
-      box-shadow: 0 0 16px rgba(255, 0, 127, 0.4);
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
       transition: all 0.25s ease;
       white-space: nowrap;
+      text-shadow: 0 0 6px #fff;
     }
 
     .send-msg-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 24px rgba(255, 0, 127, 0.7);
+      box-shadow: 0 0 28px rgba(255, 0, 127, 0.85), 0 0 12px var(--accent-cyan);
     }
 
-    /* RIGHT SIDEBAR: LIVE CHATTERS & NPCS */
+    /* RIGHT SIDEBAR: LIVE CHATTERS & PERSONAL STATUS SPACE */
     .chatters-panel {
       background: var(--card-bg);
       border: 1.5px solid var(--card-border);
-      border-radius: 14px;
+      border-radius: 18px;
       padding: 1.2rem 1rem;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85), 0 0 20px rgba(255, 0, 127, 0.2);
       overflow-y: auto;
     }
 
@@ -344,6 +362,7 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       margin: 0.8rem 0 0.4rem;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
     }
 
     .chatter-card {
@@ -351,21 +370,63 @@
       align-items: center;
       gap: 10px;
       padding: 8px 10px;
-      border-radius: 8px;
-      background: rgba(10, 4, 22, 0.7);
-      border: 1px solid rgba(157, 78, 221, 0.2);
+      border-radius: 12px;
+      background: rgba(10, 4, 22, 0.85);
+      border: 1px solid rgba(157, 78, 221, 0.25);
       margin-bottom: 6px;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
     }
 
     .chatter-card:hover {
       border-color: var(--accent-pink);
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.3);
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.35);
+    }
+
+    .chatter-card.personal-space-card {
+      background: rgba(22, 10, 42, 0.95);
+      border: 1.5px solid var(--accent-cyan);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .personal-space-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-selector-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #030108;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 4px 8px;
+      margin-top: 2px;
+    }
+
+    .status-select-dropdown {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 0.75rem;
+      font-weight: 800;
+      outline: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .status-select-dropdown option {
+      background: #080310;
+      color: #ffffff;
     }
 
     .chatter-avatar {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
       display: flex;
@@ -374,13 +435,15 @@
       font-size: 0.8rem;
       font-weight: 900;
       color: #ffffff;
-      box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+      flex-shrink: 0;
     }
 
     .chatter-info {
       display: flex;
       flex-direction: column;
-      line-height: 1.2;
+      line-height: 1.25;
+      flex: 1;
     }
 
     .chatter-name {
@@ -394,13 +457,128 @@
       color: var(--text-muted);
     }
 
-    .online-dot {
-      width: 7px;
-      height: 7px;
+    /* REAL PERSON STATUS LIGHT DOTS */
+    .status-dot-indicator {
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
-      background-color: var(--accent-green);
-      box-shadow: 0 0 6px var(--accent-green);
       margin-left: auto;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .status-dot-indicator.active {
+      background-color: var(--accent-green);
+      box-shadow: 0 0 10px var(--accent-green);
+    }
+
+    .status-dot-indicator.away {
+      background-color: var(--accent-amber);
+      box-shadow: 0 0 10px var(--accent-amber);
+    }
+
+    .status-dot-indicator.busy {
+      background-color: var(--accent-red);
+      box-shadow: 0 0 10px var(--accent-red);
+    }
+
+    /* DOCKED MUSIC PLAYER - FIXED TO BOTTOM LEFT */
+    .docked-music-player {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      z-index: 1000;
+      width: 240px;
+      background: rgba(8, 3, 16, 0.96);
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 14px;
+      padding: 10px 12px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 18px rgba(0, 240, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .docked-player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .docked-player-title {
+      font-size: 0.65rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+    }
+
+    .docked-minimize-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 0 2px;
+    }
+
+    .docked-track-info {
+      background: #030108;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      margin-bottom: 8px;
+    }
+
+    .docked-song-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .docked-artist-sub {
+      font-size: 0.65rem;
+      color: var(--accent-pink);
+      font-weight: 700;
+    }
+
+    .docked-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .docked-play-btn {
+      flex: 1;
+      padding: 6px 10px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      border: none;
+      border-radius: 6px;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.75rem;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+    }
+
+    .docked-vol-slider {
+      width: 60px;
+      accent-color: var(--accent-pink);
+      cursor: pointer;
+    }
+
+    .docked-music-player.collapsed .docked-track-info,
+    .docked-music-player.collapsed .docked-controls-row {
+      display: none;
     }
 
     /* MEDIA QUERIES FOR RESPONSIVENESS */
@@ -418,20 +596,24 @@
       }
       .sidebar-panel { display: none; }
       .chat-main-window { height: 650px; }
+      .docked-music-player { left: 8px; bottom: 8px; width: 200px; }
     }
 
     /* KEYFRAMES */
-    @keyframes hudPulse {
-      0% { border-color: rgba(0, 240, 255, 0.35); box-shadow: 0 0 12px rgba(0, 240, 255, 0.15); }
-      50% { border-color: rgba(0, 240, 255, 0.85); box-shadow: 0 0 25px rgba(0, 240, 255, 0.4); }
-      100% { border-color: rgba(0, 240, 255, 0.35); box-shadow: 0 0 12px rgba(0, 240, 255, 0.15); }
+    @keyframes neonHudPulse {
+      0% { border-color: rgba(0, 240, 255, 0.45); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
+      50% { border-color: rgba(0, 240, 255, 0.95); box-shadow: 0 0 35px rgba(0, 240, 255, 0.5), 0 0 15px rgba(255, 0, 127, 0.3); }
+      100% { border-color: rgba(0, 240, 255, 0.45); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
     }
 
-    @keyframes textGlitch {
-      0%, 92%, 100% { transform: translate(0, 0); }
-      93% { transform: translate(-2px, 1px); }
-      94% { transform: translate(2px, -1px); }
-      95% { transform: translate(0, 0); }
+    @keyframes textGlitchRGB {
+      0%, 100% { text-shadow: 2px 0 var(--accent-pink), -2px 0 var(--accent-cyan); }
+      50% { text-shadow: -2px 0 var(--accent-pink), 2px 0 var(--accent-cyan); }
+    }
+
+    @keyframes statusBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
     }
 
     @keyframes fadeInMsg {
@@ -439,13 +621,16 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+    @keyframes navPulseGlow {
+      from { box-shadow: 0 0 10px rgba(255, 0, 127, 0.4); }
+      to { box-shadow: 0 0 22px rgba(255, 0, 127, 0.85); }
     }
   </style>
 </head>
 <body>
+
+  <!-- Audio Element for Docked Music Player -->
+  <audio id="docked-radio-audio" crossorigin="anonymous" style="display: none;"></audio>
 
   <!-- STREAMLINED TOP NAVIGATION BAR -->
   <header class="chat-navbar">
@@ -535,9 +720,30 @@
       </div>
     </main>
 
-    <!-- RIGHT SIDEBAR: LIVE CHATTERS & NPCS -->
+    <!-- RIGHT SIDEBAR: LIVE CHATTERS & PERSONAL STATUS SPACE -->
     <aside class="chatters-panel">
-      <div class="panel-title">// Active Chatters</div>
+      
+      <!-- PERSONAL CHAT SPACE WITH REAL-TIME STATUS SELECTOR -->
+      <div class="panel-title">// Personal Chat Space</div>
+      <div class="chatter-card personal-space-card" id="user-chatter-card">
+        <div class="personal-space-top">
+          <div class="chatter-avatar" style="background: linear-gradient(135deg, #00f0ff, #9d4edd);">U</div>
+          <div class="chatter-info">
+            <span class="chatter-name" id="user-display-name">You (Logged In)</span>
+            <span class="chatter-role">Portal Member</span>
+          </div>
+          <span class="status-dot-indicator active" id="user-status-dot" title="Active"></span>
+        </div>
+
+        <div class="status-selector-row">
+          <span style="font-size:0.7rem; color:var(--accent-cyan); font-weight:800;">STATUS:</span>
+          <select id="user-status-select" class="status-select-dropdown" onchange="changeUserStatus(this.value)">
+            <option value="active">🟢 Active</option>
+            <option value="away">🟡 Away (Auto: 5m)</option>
+            <option value="busy">🔴 Busy</option>
+          </select>
+        </div>
+      </div>
 
       <div class="chatter-group-header">✦ Core Four (NPCs)</div>
       
@@ -547,7 +753,7 @@
           <span class="chatter-name">Nekomi Aoyama</span>
           <span class="chatter-role">The Moon Voice • Guitar</span>
         </div>
-        <span class="online-dot"></span>
+        <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
       <div class="chatter-card">
@@ -556,7 +762,7 @@
           <span class="chatter-name">Akari Minase</span>
           <span class="chatter-role">The Flame Pulse • Drums</span>
         </div>
-        <span class="online-dot"></span>
+        <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
       <div class="chatter-card">
@@ -565,7 +771,7 @@
           <span class="chatter-name">Sera Hanibara</span>
           <span class="chatter-role">The Sun Voice • Synth</span>
         </div>
-        <span class="online-dot"></span>
+        <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
       <div class="chatter-card">
@@ -574,19 +780,10 @@
           <span class="chatter-name">Aoi Mizuhara</span>
           <span class="chatter-role">The Grounding • Bass</span>
         </div>
-        <span class="online-dot"></span>
+        <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
-      <div class="chatter-group-header">✦ Online Members & Guests</div>
-
-      <div class="chatter-card" id="user-chatter-card">
-        <div class="chatter-avatar" style="background: linear-gradient(135deg, #00f0ff, #9d4edd);">U</div>
-        <div class="chatter-info">
-          <span class="chatter-name" id="user-display-name">You (Logged In)</span>
-          <span class="chatter-role">Portal Member</span>
-        </div>
-        <span class="online-dot"></span>
-      </div>
+      <div class="chatter-group-header">✦ Real People & Members</div>
 
       <div class="chatter-card">
         <div class="chatter-avatar" style="background: #332050;">G</div>
@@ -594,19 +791,133 @@
           <span class="chatter-name">Guest_Otaku99</span>
           <span class="chatter-role">Anonymous Listener</span>
         </div>
-        <span class="online-dot"></span>
+        <span class="status-dot-indicator away" title="Away"></span>
+      </div>
+
+      <div class="chatter-card">
+        <div class="chatter-avatar" style="background: linear-gradient(135deg, #9d4edd, #ff007f);">K</div>
+        <div class="chatter-info">
+          <span class="chatter-name">Kuro_Rhythm</span>
+          <span class="chatter-role">Synth Enthusiast</span>
+        </div>
+        <span class="status-dot-indicator busy" title="Busy"></span>
       </div>
 
     </aside>
 
   </div>
 
+  <!-- DOCKED MUSIC PLAYER - MOVED TO BOTTOM LEFT -->
+  <div class="docked-music-player" id="docked-player">
+    <div class="docked-player-header">
+      <div class="docked-player-title">
+        <span style="display:inline-block; width:6px; height:6px; background:var(--accent-pink); border-radius:50%; box-shadow:0 0 6px var(--accent-pink);"></span>
+        NEKO FM DECK
+      </div>
+      <button class="docked-minimize-btn" onclick="toggleDockedCollapse()">➖</button>
+    </div>
+
+    <div class="docked-track-info">
+      <div class="docked-song-title" id="docked-song-title">J-Pop Powerplay Kawaii 🌸</div>
+      <div class="docked-artist-sub" id="docked-artist-sub">24/7 Music Stream</div>
+    </div>
+
+    <div class="docked-controls-row">
+      <button class="docked-play-btn" id="docked-play-btn" onclick="toggleDockedMusic()">
+        ▶ PLAY MUSIC
+      </button>
+      <input type="range" class="docked-vol-slider" min="0" max="100" value="70" oninput="setDockedVolume(this.value)">
+    </div>
+  </div>
+
   <script>
+    /* REAL-TIME USER STATUS MANAGEMENT & 5-MINUTE AUTO-AWAY TIMER */
+    let currentUserStatus = 'active'; // 'active', 'away', or 'busy'
+    let lastActivityTimestamp = Date.now();
+    let isAutoAway = false;
+    const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+
+    function changeUserStatus(newStatus, isAutomatic = false) {
+      currentUserStatus = newStatus;
+      if (!isAutomatic) isAutoAway = false;
+
+      const dot = document.getElementById('user-status-dot');
+      const select = document.getElementById('user-status-select');
+
+      if (dot) {
+        dot.className = `status-dot-indicator ${newStatus}`;
+        dot.title = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+      }
+
+      if (select && select.value !== newStatus) {
+        select.value = newStatus;
+      }
+
+      // Sync status to localStorage for session persistence & chat.js binding
+      localStorage.setItem('neko_user_status', newStatus);
+
+      // Dispatch custom status event for chat.js / Firebase sync
+      window.dispatchEvent(new CustomEvent('userStatusChanged', { detail: { status: newStatus } }));
+    }
+
+    function recordUserActivity() {
+      lastActivityTimestamp = Date.now();
+      // If automatically set to away by inactivity timer, restore to active upon user action
+      if (isAutoAway && currentUserStatus === 'away') {
+        isAutoAway = false;
+        changeUserStatus('active');
+      }
+    }
+
+    // Register user activity listeners for auto-away timer
+    ['mousemove', 'keydown', 'click', 'touchstart'].forEach(evt => {
+      window.addEventListener(evt, recordUserActivity, { passive: true });
+    });
+
+    // Check inactivity every 10 seconds
+    setInterval(() => {
+      const now = Date.now();
+      if (now - lastActivityTimestamp >= INACTIVITY_TIMEOUT_MS && currentUserStatus === 'active') {
+        isAutoAway = true;
+        changeUserStatus('away', true);
+      }
+    }, 10000);
+
+    /* DOCKED MUSIC PLAYER CONTROLS */
+    const dockedAudio = document.getElementById('docked-radio-audio');
+    let isDockedMusicPlaying = false;
+    const defaultStreamUrl = "https://kathy.torontocast.com:3060/stream";
+
+    function toggleDockedMusic() {
+      const playBtn = document.getElementById('docked-play-btn');
+      if (isDockedMusicPlaying) {
+        dockedAudio.pause();
+        isDockedMusicPlaying = false;
+        playBtn.innerText = "▶ PLAY MUSIC";
+      } else {
+        if (!dockedAudio.src) dockedAudio.src = defaultStreamUrl;
+        dockedAudio.play().then(() => {
+          isDockedMusicPlaying = true;
+          playBtn.innerText = "⏸ PAUSE MUSIC";
+        }).catch(err => console.error("Playback error:", err));
+      }
+    }
+
+    function setDockedVolume(val) {
+      if (dockedAudio) dockedAudio.volume = val / 100;
+    }
+
+    function toggleDockedCollapse() {
+      document.getElementById('docked-player').classList.toggle('collapsed');
+    }
+
     /* CHAT TRANSMISSION LOGIC */
     function sendChatMessage() {
       const input = document.getElementById('user-input-msg');
       const text = input.value.trim();
       if (!text) return;
+
+      recordUserActivity(); // Reset inactivity timer on transmit
 
       const chatFeed = document.getElementById('chat-feed');
       const now = new Date();
@@ -644,7 +955,13 @@
     function escapeHtml(str) {
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
+
+    // Initialize initial status on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedStatus = localStorage.getItem('neko_user_status') || 'active';
+      changeUserStatus(savedStatus);
+    });
   </script>
-   <script src="music-player.js"></script>
+  <script src="music-player.js"></script>
 </body>
 </html>
