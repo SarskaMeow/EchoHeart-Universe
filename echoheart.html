@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Girls of Phantom — EchoHeart Lore & Master Dossier</title>
+  <title>Girls of Phantom — EchoHeart Lore Codex</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="firebase-config.js?v=2"></script>
   <script type="module" src="age-gate.js"></script>
@@ -130,7 +130,7 @@
       letter-spacing: 2.5px;
       color: var(--accent-pink);
       text-transform: uppercase;
-      opacity: 0.9;
+      opacity: 0.95;
     }
 
     .nav-links-row {
@@ -233,9 +233,6 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
     }
-
-    /* Mobile Hamburger */
-    .mobile-menu-btn { display: none; }
 
     @media (max-width: 992px) {
       .nav-container-single { flex-wrap: wrap; }
@@ -353,9 +350,9 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       color: var(--text-muted);
-      padding: 10px 18px;
+      padding: 10px 20px;
       border-radius: 10px 10px 0 0;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 800;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -518,50 +515,91 @@
       margin-bottom: 0.4rem;
     }
 
-    /* ROADMAP & TIMELINE */
-    .timeline-container {
+    /* BUY & RELEASES CARD STYLES */
+    .store-card {
+      background: linear-gradient(135deg, rgba(20, 10, 38, 0.95) 0%, rgba(38, 12, 50, 0.95) 100%);
+      border: 1.5px solid var(--accent-pink);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 0, 127, 0.3);
       display: flex;
       flex-direction: column;
       gap: 1.2rem;
+      margin-bottom: 2rem;
     }
 
-    .timeline-node {
-      background: var(--card-bg);
-      border-left: 4px solid var(--accent-pink);
-      border-top: 1px solid var(--card-border);
-      border-right: 1px solid var(--card-border);
-      border-bottom: 1px solid var(--card-border);
-      padding: 1.2rem 1.5rem;
-      border-radius: 8px;
-    }
-
-    .timeline-act {
-      color: var(--accent-gold);
-      font-size: 0.8rem;
+    .store-badge {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #ff007f, #9d4edd);
+      color: #ffffff;
+      font-size: 0.75rem;
       font-weight: 900;
+      padding: 5px 14px;
+      border-radius: 20px;
       text-transform: uppercase;
       letter-spacing: 1.5px;
     }
 
-    .timeline-title {
-      color: var(--accent-cyan);
-      font-size: 1.15rem;
-      font-weight: 800;
-      margin: 4px 0 8px;
+    .store-title {
+      font-size: 1.8rem;
+      color: #ffffff;
+      font-weight: 900;
+      margin: 0;
     }
 
-    /* CODE & FORMATTING EXAMPLES */
-    pre.code-preview {
-      background: #030108;
-      border: 1px solid var(--accent-purple);
+    .store-desc {
+      font-size: 1rem;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    .store-btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .amazon-btn {
+      background: linear-gradient(135deg, #ff9900 0%, #ff6600 100%);
+      color: #000000;
+      font-weight: 900;
+      font-size: 0.95rem;
+      padding: 12px 24px;
       border-radius: 10px;
-      padding: 1rem;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.85rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 18px rgba(255, 153, 0, 0.4);
+      transition: all 0.25s ease;
+    }
+
+    .amazon-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 26px rgba(255, 153, 0, 0.65);
+      color: #000000;
+    }
+
+    .kdp-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--accent-cyan);
       color: var(--accent-cyan);
-      overflow-x: auto;
-      margin-top: 0.8rem;
-      white-space: pre-wrap;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 12px 24px;
+      border-radius: 10px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .kdp-btn:hover {
+      background: rgba(0, 240, 255, 0.2);
+      color: #ffffff;
+      box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
     }
 
     /* FOOTER */
@@ -628,7 +666,7 @@
       <div class="nav-center-group">
         <a href="index.html" class="logo-link">
           <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
-          <span class="logo-sub">✦ GIRLS DEAD PHANTOM ✦</span>
+          <span class="logo-sub">✦ GIRLS OF PHANTOM ✦</span>
         </a>
 
         <nav class="nav-links-row">
@@ -664,7 +702,7 @@
     <!-- LORE HEADER -->
     <header class="lore-header">
       <h1>Girls of Phantom</h1>
-      <p>EchoHeart Vol. 1 • Master Lore Codex & Operational Dossier</p>
+      <p>Underground Sound • Phantom Frequencies • Real-World Dissonance</p>
     </header>
 
     <!-- LIVE HUD STATUS WIDGET -->
@@ -683,51 +721,50 @@
       <button class="lore-tab-btn active" onclick="switchLoreSubtab('dossier')">📖 World & Band Lore</button>
       <button class="lore-tab-btn" onclick="switchLoreSubtab('characters')">🎸 Core Four & Familiars</button>
       <button class="lore-tab-btn" onclick="switchLoreSubtab('mechanics')">⚡ System Mechanics</button>
-      <button class="lore-tab-btn" onclick="switchLoreSubtab('roadmap')">🗺️ Vol. 1 Roadmap</button>
-      <button class="lore-tab-btn" onclick="switchLoreSubtab('guidelines')">✍️ Prose & Quality Control</button>
+      <button class="lore-tab-btn" onclick="switchLoreSubtab('future')">🛒 Books & Future Releases</button>
     </div>
 
     <!-- SUB-TAB 1: WORLD & BAND LORE -->
     <div id="tab-dossier" class="tab-content active">
       <section>
-        <h2>Project Metadata & World Lore</h2>
+        <h2>Project Overview & World Lore</h2>
         
         <div class="dossier-card">
-          <span class="badge-pill">Project Metadata</span>
-          <p><strong>Series Title:</strong> EchoHeart (Volume 1)</p>
-          <p><strong>Genre:</strong> Light Novel / Magical Girl / Music & Performance / Urban Fantasy / Sapphic (GL) Slow-Burn Romance / High School Slice-of-Life Drama</p>
-          <p><strong>Setting:</strong> EchoHeart Senior Academy / Sakuraoka High School (Elite Class 3-A, Music Division), Tokyo, Japan. Homeroom Teacher: Harusawa-sensei.</p>
+          <span class="badge-pill">Overview</span>
+          <p><strong>Series Title:</strong> EchoHeart (Girls of Phantom Series)</p>
+          <p><strong>Genre:</strong> Light Novel / Urban Fantasy / Magical Girl / Music Performance / Sapphic (GL) Romance / Academy Life Drama</p>
+          <p><strong>Setting:</strong> EchoHeart Senior Academy / Sakuraoka High School (Class 3-A, Music Division), Tokyo, Japan.</p>
         </div>
 
         <div class="dossier-card">
-          <span class="badge-pill">Primary Bases of Operation</span>
-          <p><strong>1. Music Prep Room B ("The Sanctuary"):</strong> Abandoned West Wing room used for club registration, evidence board tracking, and quiet rehearsals.</p>
-          <p><strong>2. The Sub-Stage ("The Underground Arena"):</strong> A sprawling, secret subterranean concrete amphitheater forty feet beneath the West Wing. Features vaulted stone arches, acoustic walls, amber fairy lights, and vintage stage lighting.</p>
+          <span class="badge-pill">Bases of Operation</span>
+          <p><strong>1. Music Prep Room B ("The Sanctuary"):</strong> Abandoned West Wing room used for official club registration, evidence board tracking, and confidential acoustic rehearsals.</p>
+          <p><strong>2. The Sub-Stage ("The Underground Arena"):</strong> A secret subterranean concrete amphitheater forty feet beneath the West Wing. Features vaulted stone arches, acoustic damping walls, amber fairy lights, and vintage stage lighting.</p>
         </div>
 
         <div class="dossier-card">
           <span class="badge-pill">Dual Persona System</span>
-          <p><strong>The "Official" Persona (Light Music Research Group):</strong> Polite, tamed, low-volume acoustic pop or soft instrumental arrangements to keep conservative faculty members satisfied and avoid club suspension.</p>
-          <p><strong>The "Underground" Persona (The Phantom Club / Girls of Phantom):</strong> High-decibel, heavily distorted 180 BPM driving J-Rock, J-Pop, and K-Pop hybrid tracks played exclusively in the Sub-Stage or during secret guerrilla performances.</p>
+          <p><strong>The "Official" Persona (Light Music Research Group):</strong> Polite, low-volume acoustic pop and soft instrumental arrangements to keep faculty members satisfied and avoid club suspension.</p>
+          <p><strong>The "Underground" Persona (Girls of Phantom / Phantom Club):</strong> High-decibel, heavily distorted 180 BPM driving J-Rock and K-Pop hybrid tracks played exclusively in the Sub-Stage or during secret guerrilla performances.</p>
         </div>
 
         <div class="dossier-card">
-          <span class="badge-pill">Detective Division Workflow</span>
+          <span class="badge-pill">Investigation & Live Performance Workflow</span>
           <div class="codex-list" style="margin-top: 0.8rem;">
             <div class="codex-item">
-              <div class="codex-title">1. Dissonance Radar (Sera)</div>
-              <div class="codex-desc">Detects atmospheric temperature drops and localizes students drowning in emotional static.</div>
+              <div class="codex-title">1. Dissonance Radar</div>
+              <div class="codex-desc">Detects sudden atmospheric temperature drops and localizes students drowning in emotional static.</div>
             </div>
             <div class="codex-item">
-              <div class="codex-title">2. Tactical & Blueprints (Aoi)</div>
-              <div class="codex-desc">Maps target schedules, secures acoustic containment permits, and builds chalkboard evidence profiles.</div>
+              <div class="codex-title">2. Tactical Containment</div>
+              <div class="codex-desc">Maps target schedules, secures acoustic permits, and builds green chalkboard profiles.</div>
             </div>
             <div class="codex-item">
-              <div class="codex-title">3. Delivery & Guest List (Akari & Aoi)</div>
-              <div class="codex-desc">Slips cardstock tickets into shoe lockers or directs paralyzed students down to the Sub-Stage live house.</div>
+              <div class="codex-title">3. Delivery & Tickets</div>
+              <div class="codex-desc">Intercepts targets or slips cardstock tickets into shoe lockers to bring listeners to the Sub-Stage.</div>
             </div>
             <div class="codex-item">
-              <div class="codex-title">4. Anchor & Frontline (Nekomi)</div>
+              <div class="codex-title">4. Frontline Performance</div>
               <div class="codex-desc">Leads the musical attack, shreds high-gain J-Rock solos, and shatters Dissonance cores.</div>
             </div>
           </div>
@@ -750,7 +787,7 @@
             <p class="char-desc"><strong>Title:</strong> The Blushing Sunlight / Light Harmony | Class 3-A</p>
             <p class="char-desc"><strong>Aura:</strong> Shimmering rose-gold morning light (#FFB7C5).</p>
             <p class="char-desc"><strong>Visuals:</strong> Short pastel-pink hair with white tips, warm pink eyes, expressive cat ears.</p>
-            <p class="char-desc"><strong>Personality:</strong> Gentle, empathetic, polite, sweet, and easily flustered. Prone to blushing to the tips of her cat ears near Nekomi.</p>
+            <p class="char-desc"><strong>Personality:</strong> Gentle, empathetic, polite, sweet, and easily flustered near Nekomi.</p>
           </div>
 
           <!-- NEKOMI -->
@@ -761,18 +798,18 @@
             <p class="char-desc"><strong>Title:</strong> The Moonlit Echo / Emotional Anchor | Class 3-A</p>
             <p class="char-desc"><strong>Aura:</strong> Deep, reflective violet moonlight (#8A2BE2).</p>
             <p class="char-desc"><strong>Visuals:</strong> Long flowing lavender hair, blue-tipped bangs, dark purple eyes, cool rockstar aesthetic.</p>
-            <p class="char-desc"><strong>Personality:</strong> Projects a cool, aloof rockstar persona, but her internal monologue is a frantic Internal Gremlin Panic near Sera.</p>
+            <p class="char-desc"><strong>Personality:</strong> Projects a cool, aloof rockstar persona, but harbors a frantic internal panic when Sera gets close.</p>
           </div>
 
           <!-- AKARI -->
           <div class="char-card">
             <div class="char-name">Akari Minase (水瀬 あかり)</div>
-            <div class="char-role">The Flame Pulse • Drums & Hype Manager</div>
+            <div class="char-role">The Flame Pulse • Vocal Anchor & Drums</div>
             <div class="familiar-tag">✦ Familiar: Kagerou (Ember Marten)</div>
             <p class="char-desc"><strong>Title:</strong> The Scarlet Tempest / Tempo Ignition | Class 3-A</p>
             <p class="char-desc"><strong>Aura:</strong> Roaring crimson and orange fire (#FF4500).</p>
             <p class="char-desc"><strong>Visuals:</strong> Messy red ponytail, red eyes, red cardigan slipping off one shoulder.</p>
-            <p class="char-desc"><strong>Personality:</strong> Explosive, hyperactive, chaotic, highly competitive. Treats every rehearsal like a stadium concert.</p>
+            <p class="char-desc"><strong>Personality:</strong> Explosive, hyperactive, chaotic, highly competitive, treats every rehearsal like a stadium concert.</p>
           </div>
 
           <!-- AOI -->
@@ -783,7 +820,7 @@
             <p class="char-desc"><strong>Title:</strong> The Celestial Grounding / Earth Heart | Class 3-A</p>
             <p class="char-desc"><strong>Aura:</strong> Deep mossy teal and indigo field (#008080).</p>
             <p class="char-desc"><strong>Visuals:</strong> Neat hair with star clips, wire-rimmed glasses, crisp uniform.</p>
-            <p class="char-desc"><strong>Personality:</strong> Unflappable, polite, calm, highly organized, parental. Manages blueprints and legal loopholes with precision.</p>
+            <p class="char-desc"><strong>Personality:</strong> Unflappable, polite, calm, highly organized, parental manager who builds blueprints and maps logistics.</p>
           </div>
 
         </div>
@@ -798,116 +835,66 @@
         <div class="codex-list">
           <div class="codex-item">
             <div class="codex-title">Dissonance (Emotional Static)</div>
-            <div class="codex-desc">Accumulated human grief, chronic stress, severe imposter syndrome, athletic/creative burnout, and unspoken loneliness. Appears as freezing drafts, static shockwaves, suffocating atmospheric pressure, gray smog, or frozen chains.</div>
+            <div class="codex-desc">Accumulated human grief, stress, imposter syndrome, and loneliness. Manifests as freezing drafts, static shockwaves, atmospheric pressure, gray smog, or frozen chains.</div>
           </div>
 
           <div class="codex-item">
             <div class="codex-title">Resonance (Musical Frequency)</div>
-            <div class="codex-desc">Pure emotional energy generated when playing weaponized instruments with genuine intent. Forms a color-coded 4-element barrier (Sanctuary Domain) that insulates targets, blocks faculty interference, and shatters Dissonance.</div>
+            <div class="codex-desc">Pure emotional energy generated when playing weaponized instruments with genuine intent. Forms a color-coded 4-element barrier (Sanctuary Domain) that insulates targets and shatters Dissonance.</div>
           </div>
 
           <div class="codex-item">
             <div class="codex-title">Heart Sync</div>
-            <div class="codex-desc">Tracks emotional and musical alignment among the core members (Low → Building → Resonant → Harmonized → Overdrive).</div>
+            <div class="codex-desc">Tracks emotional and musical alignment among the four members (Low → Building → Resonant → Harmonized → Overdrive).</div>
           </div>
 
           <div class="codex-item">
             <div class="codex-title">Magical Pressure & Familiar Awareness</div>
-            <div class="codex-desc">Monitors entity presence and surrounding atmospheric strain (Calm → Detected → Surging → Dissonant Breach).</div>
+            <div class="codex-desc">Monitors spirit entity presence and surrounding atmospheric strain (Calm → Detected → Surging → Dissonant Breach).</div>
           </div>
         </div>
 
-        <h3 class="sub-heading">Inline SFX Toolkit</h3>
+        <h3 class="sub-heading">Sound & Atmospheric Textures</h3>
         <div class="dossier-card">
-          <p><code>heartbeat ♡</code> or <code>flutter ♡</code> — Internal emotional flutter or pulse.</p>
-          <p><code>twinkle ✧</code> or <code>shimmer ✧</code> — Magical spark or light glow.</p>
-          <p><code>flutter ❀</code> or <code>bloom ❀</code> — Gentle emotional swell or ear/hair movement.</p>
-          <p><code>static ⚡</code> or <code>chill ⚡</code> — Dissonance detection or atmospheric temperature drop.</p>
-          <p><code>wuuuuumph ✧</code> or <code>resonance ✧</code> — Burst of magical domain deployment.</p>
-          <p><code>KRAAAANG! / CLACK! / BOOM!</code> — Heavy guitar chord, drum hit, or acoustic strike.</p>
+          <p><strong>Heart Sync Pulses:</strong> Internal emotional flutters and resonance surges felt by the band during high-tension performances.</p>
+          <p><strong>Resonance Barriers:</strong> Multi-color acoustic fields (Violet, Rose-Gold, Crimson, Teal) that insulate students from emotional static corruption.</p>
+          <p><strong>Underground Acoustics:</strong> High-decibel distortion, sub-bass thumps, and sparkling synth notes echoing through the Sub-Stage amphitheater.</p>
         </div>
       </section>
     </div>
 
-    <!-- SUB-TAB 4: VOLUME 1 ROADMAP -->
-    <div id="tab-roadmap" class="tab-content">
+    <!-- SUB-TAB 4: BOOKS & FUTURE RELEASES -->
+    <div id="tab-future" class="tab-content">
       <section>
-        <h2>Volume 1 Narrative Roadmap (Chapters 1–26)</h2>
+        <h2>Books, Media & Future Releases</h2>
         
-        <div class="timeline-container">
-          
-          <div class="timeline-node">
-            <div class="timeline-act">Act I • Chapters 1–6</div>
-            <div class="timeline-title">The Awakening & The Sanctuary</div>
-            <p>Concert spark, meeting familiars, unlocking Music Prep Room B, and establishing the two-color musical resonance circuit.</p>
+        <div class="store-card">
+          <span class="store-badge">Now Available / KDP & Paperback</span>
+          <h3 class="store-title">EchoHeart Volume 1: Girls of Phantom</h3>
+          <p class="store-desc">
+            Enter the hidden underground music scene of EchoHeart Senior Academy. Follow Akari, Nekomi, Sera, and Aoi as they battle emotional static, restore lost frequencies, and balance high school drama with high-decibel J-Rock performances!
+          </p>
+          <div class="store-btn-group">
+            <a href="https://www.amazon.com" target="_blank" rel="noopener noreferrer" class="amazon-btn">
+              🛒 Get Volume 1 on Amazon Kindle
+            </a>
+            <a href="https://author.amazon.com" target="_blank" rel="noopener noreferrer" class="kdp-btn">
+              📖 KDP Print Edition
+            </a>
           </div>
-
-          <div class="timeline-node">
-            <div class="timeline-act">Act II • Chapters 7–22</div>
-            <div class="timeline-title">The Phantom Club & Underground Cases</div>
-            <p><strong>Case 1 (Ch. 14–16):</strong> Yumi Takahashi (Fine Arts / Creative Burnout) — Solved in the Sub-Basement!</p>
-            <p><strong>Case 2 (Ch. 17–18):</strong> Ren Takahashi (Track Sprinter / Injury Trauma) — Solved at the Athletic Stadium!</p>
-            <p><strong>Case 3 (Ch. 19–20):</strong> Maya Chiba (Student Council President / Bureaucratic Freeze) — Courtyard Guerrilla Show!</p>
-            <p><strong>Case 4 (Ch. 21–22):</strong> Sera's Overload & 100% Heart Sync — Unlocking the self-titled anthem "EchoHeart" in the Sub-Stage.</p>
-          </div>
-
-          <div class="timeline-node">
-            <div class="timeline-act">Act III • Chapters 23–26</div>
-            <div class="timeline-title">The June Cultural Festival Climax (Bunkasai)</div>
-            <p><strong>Chapter 23:</strong> Festival Eve, main stage setup, tracking the gathering campus-wide Dissonance storm.</p>
-            <p><strong>Chapter 24:</strong> Main Stage Takeover — Dropping the polite act and unleashing forbidden J-Rock in front of the whole school.</p>
-            <p><strong>Chapter 25:</strong> The 4-Color Anthem Victory — 100% Heart Sync shatters the campus static, earning a standing ovation.</p>
-            <p><strong>Chapter 26:</strong> Epilogue — Sunset rooftop hand-holding milestone between Nekomi and Sera, with Volume 2 city teaser.</p>
-          </div>
-
-        </div>
-      </section>
-    </div>
-
-    <!-- SUB-TAB 5: PROSE & QUALITY CONTROL -->
-    <div id="tab-guidelines" class="tab-content">
-      <section>
-        <h2>Strict Prose, Typography & Quality Control Engine</h2>
-        
-        <div class="dossier-card">
-          <span class="badge-pill">Typography & Font Sizing Restrictions</span>
-          <p>1. <strong>Regular Story Prose:</strong> MUST ALWAYS be standard, unbolded plain text (no bolding) and normal base font size. NEVER use Markdown headings or inline bolding for standard story sentences or dialogue.</p>
-          <p>2. <strong>Section & Scene Titles:</strong> MUST ALWAYS be sized up (using Markdown headings) and bolded with decorative symbols (❀, ⚡, ♪, ♡, ✦).</p>
         </div>
 
         <div class="dossier-card">
-          <span class="badge-pill">The Single-Line Formatting Rule</span>
-          <p>1. <strong>Line-by-Line Separation:</strong> Every single sentence or short dialogue phrase MUST be separated by a full empty line break (double return).</p>
-          <p>2. <strong>No Paragraph Clumping:</strong> Never group 3 or 4 sentences into a standard block paragraph. Keep prose formatted as clean, distinct single lines.</p>
-          <p>3. <strong>Double Space Around Headers & SFX:</strong> Always place an empty line before AND after section headings, scene titles, and sound effect markers.</p>
+          <span class="badge-pill">Upcoming Releases</span>
+          <p><strong>Volume 2 (In Development):</strong> Expanding beyond Sakuraoka Academy into the broader Shibuya underground live house district.</p>
+          <p><strong>Official Original Soundtrack:</strong> 16-bit synth remixes and full J-Rock character singles featured on 24/7 Neko FM.</p>
+          <p><strong>Side Stories & Audio Dramas:</strong> Exclusive bonus chapters dropping right here in the Otaku Overload portal.</p>
         </div>
-
-        <div class="dossier-card">
-          <span class="badge-pill">Quality Control Engine (AI-Tell Filters)</span>
-          <p>❌ NO Explanatory Repetition (e.g., do not re-explain established lore every chapter).</p>
-          <p>❌ NO Structural Melodrama ("It was not a X, but a Y"). State sensory impact directly.</p>
-          <p>❌ NO Repetitive Sentence Openers (vary sentence rhythm naturally).</p>
-          <p>❌ NO Generic Emotion Labels ("felt sad", "was flustered"). Show physical reactions.</p>
-          <p>❌ NO Em Dashes (—). Replace with commas, ellipses, or new single lines.</p>
-          <p>❌ NO Clinical Jargon or Hyper-Technical Terms.</p>
-        </div>
-
-        <h3 class="sub-heading">End-of-Chapter Status Card Format</h3>
-        <pre class="code-preview">✦ CHARACTER STATUS CARDS ✦
-
-┌──────────────────────────────────────────┐
-│ ✦ [Character Name] — Chapter [X] Status ✦ │
-├──────────────────────────────────────────┤
-│ • Mood: [Current Mood]                   │
-│ • Internal State: [Gremlin/Focus Level]  │
-│ • GL Heart Sync: ♡ [Status]              │
-│ • Primary Weapon: [Instrument]           │
-└──────────────────────────────────────────┘</pre>
       </section>
     </div>
 
     <footer>
-      <p>EchoHeart / Girls of Phantom Master Lore Codex • All Rights Reserved</p>
+      <p>EchoHeart / Girls of Phantom Lore Codex • All Rights Reserved</p>
     </footer>
 
   </div>
@@ -951,6 +938,6 @@
     });
   </script>
 
-  
+  <script src="global-player.js"></script>
 </body>
 </html>
