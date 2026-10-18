@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Otaku Overload Podcast — Sub-Stage Audio</title>
+  <title>Otaku Overload Podcast — Sub-Stage Audio Studio</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="firebase-config.js?v=2"></script>
   <script type="module" src="age-gate.js"></script>
@@ -42,8 +42,8 @@
       padding-bottom: 80px;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.12) 0%, transparent 50%);
+        radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.18) 0%, transparent 50%),
+        radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.14) 0%, transparent 50%);
     }
 
     /* BACKGROUND SCANLINE EFFECT */
@@ -132,7 +132,7 @@
     /* ⚡ CONTAINER & HERO SECTION                                  */
     /* ============================================================ */
     .container {
-      max-width: 1250px;
+      max-width: 1350px;
       margin: 30px auto 2rem;
       padding: 0 1.2rem;
     }
@@ -164,18 +164,17 @@
     }
 
     /* ============================================================ */
-    /* 🎙️ FEATURED PLAYER WIDGET (HUD STYLE)                         */
+    /* 🎙️ FEATURED PODCAST PLAYER DECK                               */
     /* ============================================================ */
     .featured-player-card {
       background: var(--card-inner);
       border: 1.5px solid var(--accent-cyan);
       border-radius: 16px;
-      padding: 1.8rem;
+      padding: 2rem;
       margin-bottom: 3rem;
       box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 240, 255, 0.2);
       animation: hudPulse 4s infinite ease-in-out;
       position: relative;
-      overflow: hidden;
     }
 
     .player-header-badge {
@@ -192,7 +191,7 @@
     }
 
     .now-playing-title {
-      font-size: 1.6rem;
+      font-size: 1.75rem;
       color: #ffffff;
       font-weight: 900;
       margin-bottom: 0.4rem;
@@ -201,7 +200,7 @@
     .now-playing-desc {
       font-size: 0.98rem;
       color: var(--text-muted);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.8rem;
       line-height: 1.6;
     }
 
@@ -240,15 +239,19 @@
 
     .progress-bar-container {
       flex: 1;
-      min-width: 200px;
+      min-width: 220px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      background: rgba(10, 4, 22, 0.8);
+      border: 1px solid var(--card-border);
+      padding: 8px 16px;
+      border-radius: 12px;
     }
 
     .time-stamp {
       font-family: 'Courier New', Courier, monospace;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--accent-cyan);
       font-weight: bold;
     }
@@ -260,10 +263,27 @@
       cursor: pointer;
     }
 
+    .volume-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(10, 4, 22, 0.8);
+      border: 1px solid var(--card-border);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+    }
+
+    .vol-slider {
+      width: 80px;
+      accent-color: var(--accent-pink);
+      cursor: pointer;
+    }
+
     /* ============================================================ */
-    /* 📻 EPISODES LIST & CARDS                                      */
+    /* 👯 GIRLS OF PHANTOM HOSTS WINDOW (HOST DISPLAY CARDS)        */
     /* ============================================================ */
-    .section-title {
+    .hosts-section-title {
       font-size: 1.8rem;
       color: var(--text-light);
       border-bottom: 2px solid var(--accent-pink);
@@ -275,6 +295,97 @@
       text-shadow: 0 0 12px var(--accent-glow);
     }
 
+    .girls-hosts-window {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.8rem;
+      margin-bottom: 3.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .hosts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .host-card {
+      background: rgba(8, 3, 16, 0.92);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .host-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 22px rgba(0, 240, 255, 0.35);
+    }
+
+    .host-avatar-box {
+      width: 72px;
+      height: 72px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #ffffff;
+      box-shadow: 0 0 16px rgba(255, 0, 127, 0.5);
+      flex-shrink: 0;
+      border: 1.5px solid var(--accent-cyan);
+    }
+
+    .host-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .host-name {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .host-role-badge {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .host-status {
+      font-size: 0.75rem;
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 700;
+    }
+
+    .mini-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent-green);
+      box-shadow: 0 0 6px var(--accent-green);
+    }
+
+    /* ============================================================ */
+    /* 📻 FULL EPISODE ARCHIVES GRID                                */
+    /* ============================================================ */
     .episodes-grid {
       display: flex;
       flex-direction: column;
@@ -345,7 +456,7 @@
       background: rgba(10, 4, 22, 0.9);
       border: 1.5px solid var(--accent-pink);
       color: var(--accent-pink);
-      padding: 10px 20px;
+      padding: 10px 22px;
       border-radius: 12px;
       font-weight: 800;
       font-size: 0.88rem;
@@ -420,7 +531,7 @@
 
       <div class="podcast-status-indicator">
         <span class="status-pulse"></span>
-        <span>Sub-Stage Broadcast: Live</span>
+        <span>Sub-Stage Studio: Active</span>
       </div>
     </div>
   </header>
@@ -430,19 +541,19 @@
     <!-- PODCAST HERO -->
     <header class="podcast-hero">
       <h1 class="podcast-glitch-title">🎙️ OTAKU OVERLOAD PODCAST 🎙️</h1>
-      <p class="podcast-subtitle">Underground Frequency • Deep Dives • Anime & Lore Commentary</p>
+      <p class="podcast-subtitle">Underground Audio • Girls of Phantom Broadcasts • Lore & Music Commentary</p>
     </header>
 
-    <!-- FEATURED / NOW PLAYING PLAYER -->
+    <!-- FEATURED AUDIO PLAYER DECK -->
     <div class="featured-player-card">
-      <span class="player-header-badge">✦ Featured Episode Broadcast</span>
+      <span class="player-header-badge">✦ Active Broadcast Player</span>
       <h2 class="now-playing-title" id="now-playing-title">Episode 12: EchoHeart Vol. 1 Deep-Dive & J-Rock Lore</h2>
       <p class="now-playing-desc" id="now-playing-desc">
         Join the crew for an in-depth breakdown of Girls of Phantom, character resonance systems, light novel writing tips, and upcoming underground music single releases.
       </p>
 
       <div class="audio-controls-row">
-        <button class="main-play-btn" id="featured-play-btn" onclick="toggleFeaturedPodcast()">
+        <button class="main-play-btn" id="featured-play-btn" onclick="togglePodcastAudio()">
           <span id="play-btn-icon">▶</span>
           <span id="play-btn-text">PLAY EPISODE</span>
         </button>
@@ -452,16 +563,69 @@
           <input type="range" id="seek-slider" class="progress-slider" value="0" min="0" max="100" oninput="seekAudio(this.value)">
           <span class="time-stamp" id="dur-time">45:20</span>
         </div>
+
+        <div class="volume-box">
+          <span>🔊</span>
+          <input type="range" class="vol-slider" id="vol-control" min="0" max="1" step="0.05" value="0.8" oninput="setAudioVolume(this.value)">
+        </div>
       </div>
 
-      <audio id="podcast-audio" src="" preload="metadata"></audio>
+      <audio id="podcast-audio" src="https://stream.zeno.fm/f3wvbbqmdg8uv" preload="metadata"></audio>
     </div>
 
-    <!-- EPISODES LIST -->
-    <h2 class="section-title">Episode Archives</h2>
+    <!-- GIRLS OF PHANTOM HOSTS WINDOW -->
+    <h2 class="hosts-section-title">Girls of Phantom Podcast Hosts</h2>
+    <div class="girls-hosts-window">
+      <div class="hosts-grid">
+
+        <!-- NEKOMI -->
+        <div class="host-card">
+          <div class="host-avatar-box" style="background: linear-gradient(135deg, #8a2be2, #ff007f);">N</div>
+          <div class="host-details">
+            <span class="host-name">Nekomi Aoyama</span>
+            <span class="host-role-badge">Lead Host & Guitarist</span>
+            <span class="host-status"><span class="mini-dot"></span> In Mic Booth</span>
+          </div>
+        </div>
+
+        <!-- AKARI -->
+        <div class="host-card">
+          <div class="host-avatar-box" style="background: linear-gradient(135deg, #ff4500, #ff007f);">A</div>
+          <div class="host-details">
+            <span class="host-name">Akari Minase</span>
+            <span class="host-role-badge">Co-Host & Drummer</span>
+            <span class="host-status"><span class="mini-dot"></span> Live on Air</span>
+          </div>
+        </div>
+
+        <!-- SERA -->
+        <div class="host-card">
+          <div class="host-avatar-box" style="background: linear-gradient(135deg, #ffb7c5, #9d4edd);">S</div>
+          <div class="host-details">
+            <span class="host-name">Sera Hanibara</span>
+            <span class="host-role-badge">Synth & Guest Anchor</span>
+            <span class="host-status"><span class="mini-dot"></span> Sound Engineering</span>
+          </div>
+        </div>
+
+        <!-- AOI -->
+        <div class="host-card">
+          <div class="host-avatar-box" style="background: linear-gradient(135deg, #008080, #00f0ff);">A</div>
+          <div class="host-details">
+            <span class="host-name">Aoi Mizuhara</span>
+            <span class="host-role-badge">Bass & Producer</span>
+            <span class="host-status"><span class="mini-dot"></span> Studio Console</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EPISODES ARCHIVES -->
+    <h2 class="hosts-section-title">Episode Archives</h2>
     <div class="episodes-grid">
 
-      <!-- EPISODE 1 -->
+      <!-- EPISODE 12 -->
       <div class="episode-card">
         <div class="ep-info-group">
           <div class="ep-tag-row">
@@ -471,12 +635,12 @@
           <h3 class="ep-title">EchoHeart Vol. 1 Deep-Dive & J-Rock Lore</h3>
           <p class="ep-desc">A complete breakdown of the Core Four characters, Dissonance mechanics, and writing urban fantasy light novels.</p>
         </div>
-        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 12: EchoHeart Vol. 1 Deep-Dive', 'A complete breakdown of the Core Four characters and lore.', '45:20')">
-          <span>▶ Stream</span>
+        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 12: EchoHeart Vol. 1 Deep-Dive', 'A complete breakdown of the Core Four characters, Dissonance mechanics, and writing urban fantasy light novels.', '45:20')">
+          <span>▶ Play Episode</span>
         </button>
       </div>
 
-      <!-- EPISODE 2 -->
+      <!-- EPISODE 11 -->
       <div class="episode-card">
         <div class="ep-info-group">
           <div class="ep-tag-row">
@@ -486,12 +650,12 @@
           <h3 class="ep-title">24/7 Neko FM Behind-The-Scenes</h3>
           <p class="ep-desc">Exploring how we set up the 24/7 radio stream, 16-bit synth audio tracks, and live DJ commentary.</p>
         </div>
-        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 11: 24/7 Neko FM Behind-The-Scenes', 'Exploring how we set up the 24/7 radio stream and synth tracks.', '38:15')">
-          <span>▶ Stream</span>
+        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 11: 24/7 Neko FM Behind-The-Scenes', 'Exploring how we set up the 24/7 radio stream, 16-bit synth audio tracks, and live DJ commentary.', '38:15')">
+          <span>▶ Play Episode</span>
         </button>
       </div>
 
-      <!-- EPISODE 3 -->
+      <!-- EPISODE 10 -->
       <div class="episode-card">
         <div class="ep-info-group">
           <div class="ep-tag-row">
@@ -501,8 +665,23 @@
           <h3 class="ep-title">Anime Season Preview & Underground Live Houses</h3>
           <p class="ep-desc">Reviewing upcoming seasonal anime releases and discussing real-world Tokyo underground music venues.</p>
         </div>
-        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 10: Anime Season Preview', 'Reviewing upcoming anime releases and Tokyo venues.', '52:00')">
-          <span>▶ Stream</span>
+        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 10: Anime Season Preview & Underground Live Houses', 'Reviewing upcoming seasonal anime releases and discussing real-world Tokyo underground music venues.', '52:00')">
+          <span>▶ Play Episode</span>
+        </button>
+      </div>
+
+      <!-- EPISODE 09 -->
+      <div class="episode-card">
+        <div class="ep-info-group">
+          <div class="ep-tag-row">
+            <span class="ep-badge">Ep 09</span>
+            <span class="ep-duration">41:10</span>
+          </div>
+          <h3 class="ep-title">Building RPG Maker & Roblox TD Systems</h3>
+          <p class="ep-desc">An inside look at custom pixel art tilesets, spawner scripts, and pathing logic for indie games.</p>
+        </div>
+        <button class="ep-play-btn" onclick="loadAndPlayEp('Ep 09: Building RPG Maker & Roblox TD Systems', 'An inside look at custom pixel art tilesets, spawner scripts, and pathing logic for indie games.', '41:10')">
+          <span>▶ Play Episode</span>
         </button>
       </div>
 
@@ -516,20 +695,26 @@
 
   <script>
     /* PODCAST AUDIO PLAYER LOGIC */
+    const audio = document.getElementById('podcast-audio');
     let isPlaying = false;
 
-    function toggleFeaturedPodcast() {
+    function togglePodcastAudio() {
       const btn = document.getElementById('featured-play-btn');
       const icon = document.getElementById('play-btn-icon');
       const text = document.getElementById('play-btn-text');
 
-      isPlaying = !isPlaying;
-
-      if (isPlaying) {
-        btn.classList.add('playing');
-        icon.textContent = '⏸';
-        text.textContent = 'PAUSE';
+      if (audio.paused) {
+        audio.play().then(() => {
+          isPlaying = true;
+          btn.classList.add('playing');
+          icon.textContent = '⏸';
+          text.textContent = 'PAUSE';
+        }).catch(err => {
+          console.error("Audio playback error:", err);
+        });
       } else {
+        audio.pause();
+        isPlaying = false;
         btn.classList.remove('playing');
         icon.textContent = '▶';
         text.textContent = 'PLAY EPISODE';
@@ -541,17 +726,38 @@
       document.getElementById('now-playing-desc').textContent = desc;
       document.getElementById('dur-time').textContent = duration;
 
-      isPlaying = false;
-      toggleFeaturedPodcast();
+      if (!audio.paused) {
+        audio.pause();
+      }
+
+      audio.currentTime = 0;
+      togglePodcastAudio();
     }
 
     function seekAudio(val) {
-      const currTime = document.getElementById('curr-time');
-      const totalSec = Math.floor((val / 100) * 2720);
-      const mins = Math.floor(totalSec / 60);
-      const secs = totalSec % 60;
-      currTime.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      if (audio.duration) {
+        audio.currentTime = (val / 100) * audio.duration;
+      }
     }
+
+    function setAudioVolume(val) {
+      if (audio) {
+        audio.volume = val;
+      }
+    }
+
+    /* UPDATE SEEK BAR DURING PLAYBACK */
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        const slider = document.getElementById('seek-slider');
+        const currTime = document.getElementById('curr-time');
+        slider.value = (audio.currentTime / audio.duration) * 100;
+
+        const mins = Math.floor(audio.currentTime / 60);
+        const secs = Math.floor(audio.currentTime % 60);
+        currTime.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+    });
   </script>
 </body>
 </html>
