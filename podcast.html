@@ -8,7 +8,7 @@
   <script type="module" src="firebase-config.js"></script>
   <style>
     :root {
-      /* Cyberpunk Neon Palette from Neko FM */
+      /* Cyberpunk Neon Palette */
       --bg-dark: #040209;
       --card-bg: rgba(15, 7, 28, 0.94);
       --card-inner: rgba(8, 3, 16, 0.94);
@@ -25,7 +25,7 @@
       --card-border: rgba(255, 0, 127, 0.35);
       --border-cyan: rgba(0, 240, 255, 0.35);
 
-      /* Tier Navigation Border Tokens */
+      /* Tier Navigation Tokens */
       --nav-bg-twilight: rgba(9, 4, 18, 0.96);
       --nav-bg-basement: rgba(18, 4, 25, 0.98);
       --nav-bg-backstage: rgba(25, 12, 5, 0.99);
@@ -46,24 +46,12 @@
       color: var(--text-main);
       min-height: 100vh;
       line-height: 1.6;
-      padding-bottom: 60px;
+      padding-bottom: 120px; /* Space for bottom-left docked player */
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.18) 0%, transparent 50%),
-        radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.14) 0%, transparent 50%);
+        radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.22) 0%, transparent 50%),
+        radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.18) 0%, transparent 50%);
       transition: background 0.4s ease, color 0.4s ease;
-    }
-
-    /* BACKGROUND SCANLINE EFFECT */
-    body::before {
-      content: " ";
-      position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
-      background-size: 100% 4px;
-      z-index: 999;
-      pointer-events: none;
-      opacity: 0.5;
     }
 
     /* 3-Tier Mode Themes */
@@ -71,19 +59,7 @@
     body.basement-mode { background: #08020e; color: #fce8ec; }
     body.backstage-mode { background: #0a0502; color: #ffffff; }
 
-    body.basement-mode .navbar {
-      background: var(--nav-bg-basement);
-      border-bottom-color: var(--nav-border-basement);
-      box-shadow: 0 4px 20px rgba(255, 0, 127, 0.3);
-    }
-
-    body.backstage-mode .navbar {
-      background: var(--nav-bg-backstage);
-      border-bottom: 2px solid var(--accent-gold);
-      box-shadow: 0 4px 20px rgba(255, 209, 102, 0.3);
-    }
-
-    /* Universal Header Navbar */
+    /* Universal Header Navbar (Capsule Pill Layout matching screenshot) */
     .navbar {
       position: sticky;
       top: 0;
@@ -94,122 +70,113 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       transition: background 0.4s ease, border-color 0.4s ease;
-      box-sizing: border-box;
       box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2);
     }
 
     .nav-container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 8px 20px 10px;
+      padding: 10px 20px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      position: relative;
-    }
-
-    .nav-top-row {
-      width: 100%;
-      display: flex;
       justify-content: space-between;
-      align-items: center;
-      position: relative;
+      gap: 16px;
+      flex-wrap: wrap;
     }
 
-    .mode-selector-wrapper {
+    .nav-left-group {
       display: flex;
       align-items: center;
-    }
-
-    .logo-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 3px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
+      gap: 12px;
     }
 
     .logo-link {
       text-decoration: none;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
     }
 
     .logo-main {
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 900;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       color: var(--accent-cyan);
       display: flex;
       align-items: center;
       gap: 6px;
-      text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
-      animation: textGlitch 4s infinite;
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
+      animation: cyberGlitch 3.5s infinite;
     }
 
-    body.basement-mode .logo-main {
-      color: var(--accent-pink);
-      text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
-    }
-
-    body.backstage-mode .logo-main {
-      color: var(--accent-gold);
-      text-shadow: 0 0 15px rgba(255, 209, 102, 0.8);
-    }
-
-    .logo-sub {
-      font-size: 0.65rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: var(--accent-pink);
-      opacity: 0.9;
-      margin-top: -1px;
-      text-shadow: 0 0 8px var(--accent-glow);
-    }
-
-    body.basement-mode .logo-sub { color: var(--accent-pink); }
-    body.backstage-mode .logo-sub { color: var(--accent-gold); }
-
-    .nav-links { 
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      gap: 8px; 
+    /* Screenshot Pill Navigation Links Bar */
+    .nav-pills-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-top: 6px;
     }
-    
-    .nav-item {
+
+    .nav-item-pill {
       color: var(--text-muted);
-      font-size: 0.82rem;
-      font-weight: 700;
-      padding: 6px 14px;
-      border-radius: 8px;
+      font-size: 0.83rem;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 12px;
       text-decoration: none;
       transition: all 0.25s ease;
       white-space: nowrap;
-      background: rgba(30, 15, 55, 0.6);
-      border: 1px solid rgba(157, 78, 221, 0.3);
+      background: rgba(22, 10, 36, 0.85);
+      border: 1px solid rgba(157, 78, 221, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .nav-item:hover, .nav-item.active {
-      background: rgba(255, 0, 127, 0.25);
+    .nav-item-pill:hover {
+      background: rgba(157, 78, 221, 0.25);
+      color: #ffffff;
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 12px rgba(157, 78, 221, 0.4);
+    }
+
+    .nav-item-pill.active {
+      background: rgba(255, 0, 127, 0.2);
       color: #ffffff;
       border-color: var(--accent-pink);
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 16px var(--accent-glow), inset 0 0 8px rgba(255, 0, 127, 0.3);
+      animation: pulseGlow 2.5s infinite alternate;
     }
 
-    /* Glowing Mode Select Dropdown */
+    /* Right-side Live Status Badge */
+    .nav-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: statusBlink 1.2s infinite;
+    }
+
     .mode-select-dropdown {
       appearance: none;
-      -webkit-appearance: none;
-      padding: 6px 28px 6px 14px;
+      padding: 6px 28px 6px 12px;
       border-radius: 10px;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 800;
       cursor: pointer;
       outline: none;
@@ -217,41 +184,14 @@
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f0ff'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
       background-repeat: no-repeat;
       background-position: right 8px center;
-      background-size: 14px;
+      background-size: 12px;
       background-color: rgba(10, 4, 22, 0.95);
-      border: 1.5px solid var(--accent-cyan);
+      border: 1px solid var(--accent-cyan);
       color: var(--accent-cyan);
-      box-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
     }
 
-    .mode-select-dropdown:hover {
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
-      border-color: #70f8ff;
-      color: #fff;
-    }
-
-    body.basement-mode .mode-select-dropdown {
-      border-color: var(--accent-pink);
-      color: var(--accent-pink);
-      box-shadow: 0 0 14px rgba(255, 0, 127, 0.4);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff007f'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    }
-
-    body.backstage-mode .mode-select-dropdown {
-      border-color: var(--accent-gold);
-      color: var(--accent-gold);
-      box-shadow: 0 0 14px rgba(255, 209, 102, 0.4);
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd166'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-    }
-
-    .mode-select-dropdown option {
-      background-color: #0b0716;
-      color: #e2daf8;
-      padding: 8px;
-      font-weight: 700;
-    }
-
-    /* Mobile Hamburger Toggle Button */
+    /* Mobile Menu Toggle */
     .mobile-menu-btn {
       display: none;
       background: rgba(14, 9, 28, 0.8);
@@ -270,27 +210,22 @@
     }
 
     @media (max-width: 992px) {
-      .logo-container { position: static; transform: none; }
-      .nav-top-row { justify-content: space-between; }
       .mobile-menu-btn { display: flex; flex-direction: column; }
-      .nav-links {
+      .nav-pills-row {
         display: none;
         width: 100%;
-        background: rgba(8, 5, 18, 0.98);
-        border-top: 1px solid var(--card-border);
         flex-direction: column;
-        padding: 12px 0;
+        padding-top: 10px;
         gap: 8px;
       }
-      .nav-links.open { display: flex; }
-      .nav-item, .mode-selector-wrapper { width: 100%; text-align: center; justify-content: center; }
-      .mode-select-dropdown { width: 100%; text-align: center; }
+      .nav-pills-row.open { display: flex; }
+      .nav-item-pill { width: 100%; justify-content: center; }
     }
 
     /* Podcast Layout Styles */
     .podcast-container {
       max-width: 1300px;
-      margin: 30px auto;
+      margin: 28px auto;
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 24px;
@@ -304,19 +239,17 @@
       border: 1.5px solid var(--accent-cyan);
       border-radius: 20px;
       padding: 28px;
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 240, 255, 0.2);
-      animation: hudPulse 4s infinite ease-in-out;
-      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(0, 240, 255, 0.25);
+      animation: stagePulse 4s infinite ease-in-out;
+      position: relative;
     }
 
-    body.basement-mode .wide-stage {
-      border-color: var(--accent-pink);
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(255, 0, 127, 0.3);
-    }
-
-    body.backstage-mode .wide-stage {
-      border-color: var(--accent-gold);
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.8), 0 0 22px rgba(255, 209, 102, 0.3);
+    .stage-glitch-header {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #ffffff;
+      animation: textGlitchRGB 3s infinite alternate;
     }
 
     .on-air-badge {
@@ -327,16 +260,7 @@
       font-size: 0.78rem;
       font-weight: 900;
       letter-spacing: 1.5px;
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
-    }
-
-    body.basement-mode .on-air-badge {
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-    }
-
-    body.backstage-mode .on-air-badge {
-      background: linear-gradient(135deg, var(--accent-gold), var(--accent-pink));
-      color: #000;
+      box-shadow: 0 0 14px rgba(255, 0, 127, 0.6);
     }
 
     .speaker-booth-wide {
@@ -392,16 +316,6 @@
       box-shadow: 0 0 20px var(--accent-pink);
     }
 
-    body.basement-mode .speaker-avatar.speaking .speaker-icon-box {
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 20px var(--accent-pink);
-    }
-
-    body.backstage-mode .speaker-avatar.speaking .speaker-icon-box {
-      border-color: var(--accent-gold);
-      box-shadow: 0 0 20px var(--accent-gold);
-    }
-
     .script-transcript-box {
       background: #030108;
       border: 1px solid var(--accent-pink);
@@ -413,9 +327,6 @@
       box-shadow: inset 0 0 16px rgba(255, 0, 127, 0.2);
     }
 
-    body.basement-mode .script-transcript-box { border-left-color: var(--accent-pink); }
-    body.backstage-mode .script-transcript-box { border-left-color: var(--accent-gold); }
-
     .current-speaker-title {
       color: var(--accent-cyan);
       font-weight: 800;
@@ -424,9 +335,6 @@
       margin-bottom: 6px;
       letter-spacing: 0.5px;
     }
-
-    body.basement-mode .current-speaker-title { color: var(--accent-pink); }
-    body.backstage-mode .current-speaker-title { color: var(--accent-gold); }
 
     .current-dialogue-line {
       font-size: 1.05rem;
@@ -464,9 +372,6 @@
       transition: width 0.1s linear;
     }
 
-    body.basement-mode .progress-bar-fill { background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink)); }
-    body.backstage-mode .progress-bar-fill { background: linear-gradient(90deg, var(--accent-gold), var(--accent-pink)); }
-
     .action-btn {
       width: 100%;
       padding: 14px;
@@ -486,9 +391,6 @@
       box-shadow: 0 0 28px rgba(255, 0, 127, 0.8);
     }
 
-    body.basement-mode .action-btn { background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); color: #ffffff; }
-    body.backstage-mode .action-btn { background: linear-gradient(135deg, var(--accent-gold), var(--accent-pink)); color: #000000; }
-
     .archive-drawer {
       background: rgba(10, 4, 22, 0.9);
       border: 1.5px solid var(--border-cyan);
@@ -496,9 +398,6 @@
       padding: 22px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
     }
-
-    body.basement-mode .archive-drawer { border-color: var(--accent-pink); }
-    body.backstage-mode .archive-drawer { border-color: var(--accent-gold); }
 
     .ep-card {
       background: var(--card-bg);
@@ -513,74 +412,10 @@
     .ep-card:hover, .ep-card.active {
       border-color: var(--accent-cyan);
       background: rgba(20, 10, 40, 0.95);
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
     }
 
-    body.basement-mode .ep-card:hover, body.basement-mode .ep-card.active {
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 16px rgba(255, 0, 127, 0.4);
-    }
-
-    body.backstage-mode .ep-card:hover, body.backstage-mode .ep-card.active {
-      border-color: var(--accent-gold);
-      box-shadow: 0 0 16px rgba(255, 209, 102, 0.4);
-    }
-
-    .npc-badge {
-      background: var(--accent-gold);
-      color: #000;
-      font-size: 0.68rem;
-      font-weight: 900;
-      padding: 2px 6px;
-      border-radius: 6px;
-      margin-left: 6px;
-    }
-
-    .user-badge {
-      background: rgba(0, 240, 255, 0.2);
-      color: var(--accent-cyan);
-      border: 1px solid var(--accent-cyan);
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 6px;
-      margin-left: 6px;
-    }
-
-    .action-btn-small {
-      padding: 10px 18px;
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      border: none;
-      border-radius: 10px;
-      color: #ffffff;
-      font-weight: 800;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.25s ease;
-    }
-
-    .action-btn-small:hover {
-      box-shadow: 0 0 16px rgba(255, 0, 127, 0.6);
-    }
-
-    .form-input-text {
-      width: 100%;
-      padding: 12px 16px;
-      background: #030108;
-      border: 1.5px solid var(--card-border);
-      border-radius: 10px;
-      color: #ffffff;
-      box-sizing: border-box;
-      margin-bottom: 12px;
-      outline: none;
-    }
-
-    .form-input-text:focus {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
-    }
-
-    /* ALWAYS-ON BOTTOM COMMUNITY COMMENTS SECTION & SAFETY RULES */
+    /* ALWAYS-ON COMMUNITY COMMENTS SECTION */
     .global-comments-wrapper {
       max-width: 1300px;
       margin: 10px auto 50px;
@@ -606,25 +441,6 @@
       gap: 14px;
     }
 
-    .safety-rules-icon {
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-
-    .safety-rules-text h4 {
-      margin: 0 0 4px;
-      color: var(--accent-pink);
-      font-size: 0.95rem;
-      letter-spacing: 0.5px;
-    }
-
-    .safety-rules-text p {
-      margin: 0;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
     .comment-input-box {
       background: rgba(10, 4, 22, 0.8);
       border: 1px solid var(--card-border);
@@ -639,10 +455,26 @@
       gap: 12px;
     }
 
-    @media (max-width: 768px) {
-      .comment-input-row {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 768px) { .comment-input-row { grid-template-columns: 1fr; } }
+
+    .form-input-text {
+      width: 100%;
+      padding: 12px 16px;
+      background: #030108;
+      border: 1.5px solid var(--card-border);
+      border-radius: 10px;
+      color: #ffffff;
+      outline: none;
+    }
+
+    .action-btn-small {
+      padding: 10px 18px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     .comment-feed-list {
@@ -658,113 +490,179 @@
       padding: 14px 18px;
     }
 
-    /* Modal Overlays */
-    .modal-overlay {
+    /* ====================================================== */
+    /* DOCKED BOTTOM-LEFT MUSIC PLAYER WIDGET                 */
+    /* ====================================================== */
+    .docked-music-player {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(4, 2, 9, 0.88);
-      backdrop-filter: blur(10px);
-      z-index: 2000;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+      width: 320px;
+      background: rgba(8, 3, 16, 0.96);
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 16px;
+      padding: 14px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 240, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .docked-player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .docked-player-title {
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+      text-transform: uppercase;
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
+      gap: 6px;
     }
 
-    .modal-card {
-      background: var(--card-bg);
-      border: 2px solid var(--accent-pink);
-      border-radius: 20px;
-      padding: 28px;
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 0 35px rgba(255, 0, 127, 0.5);
-    }
-
-    .vip-modal-card { border-color: var(--accent-gold); box-shadow: 0 0 35px rgba(255, 209, 102, 0.5); }
-    .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.3rem; font-weight: 900; }
-    .modal-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
-    .modal-price-tag {
-      background: rgba(255, 209, 102, 0.18);
-      border: 1px solid var(--accent-gold);
-      color: var(--accent-gold);
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-weight: 900;
+    .docked-minimize-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
       font-size: 0.9rem;
-      margin-bottom: 20px;
-      display: inline-block;
+      cursor: pointer;
+      padding: 0 4px;
     }
-    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
-    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
-    .google-btn { background: #ffffff; color: #111; }
-    .stripe-btn { background: linear-gradient(135deg, var(--accent-pink), var(--accent-gold)); color: #000; }
-    .close-btn { background: transparent; color: var(--accent-pink); border: 1px solid var(--card-border); }
 
-    /* Keyframes */
-    @keyframes hudPulse {
+    .docked-track-info {
+      background: #030108;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+
+    .docked-song-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .docked-artist-sub {
+      font-size: 0.72rem;
+      color: var(--accent-pink);
+      font-weight: 700;
+    }
+
+    .docked-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .docked-play-btn {
+      flex: 1;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
+    }
+
+    .docked-vol-slider {
+      width: 80px;
+      accent-color: var(--accent-pink);
+      cursor: pointer;
+    }
+
+    .docked-music-player.collapsed .docked-track-info,
+    .docked-music-player.collapsed .docked-controls-row {
+      display: none;
+    }
+
+    /* GLITCH & PULSE ANIMATIONS */
+    @keyframes cyberGlitch {
+      0%, 90%, 100% { transform: translate(0, 0); }
+      91% { transform: translate(-2px, 1px); filter: drop-shadow(0 0 8px var(--accent-pink)); }
+      93% { transform: translate(2px, -1px); filter: drop-shadow(0 0 12px var(--accent-cyan)); }
+      95% { transform: translate(0, 0); }
+    }
+
+    @keyframes textGlitchRGB {
+      0%, 100% { text-shadow: 2px 0 var(--accent-pink), -2px 0 var(--accent-cyan); }
+      50% { text-shadow: -2px 0 var(--accent-pink), 2px 0 var(--accent-cyan); }
+    }
+
+    @keyframes statusBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 10px rgba(255, 0, 127, 0.4); }
+      to { box-shadow: 0 0 20px rgba(255, 0, 127, 0.8); }
+    }
+
+    @keyframes stagePulse {
       0% { border-color: rgba(0, 240, 255, 0.35); box-shadow: 0 0 12px rgba(0, 240, 255, 0.15); }
       50% { border-color: rgba(0, 240, 255, 0.85); box-shadow: 0 0 25px rgba(0, 240, 255, 0.4); }
       100% { border-color: rgba(0, 240, 255, 0.35); box-shadow: 0 0 12px rgba(0, 240, 255, 0.15); }
-    }
-
-    @keyframes textGlitch {
-      0%, 92%, 100% { transform: translate(0, 0); }
-      93% { transform: translate(-2px, 1px); }
-      94% { transform: translate(2px, -1px); }
-      95% { transform: translate(0, 0); }
     }
   </style>
 </head>
 <body class="twilight-mode">
 
+  <!-- Audio Elements for Podcast & Docked Music -->
   <audio id="audio-player" style="display: none;"></audio>
+  <audio id="docked-radio-audio" crossorigin="anonymous" style="display: none;"></audio>
 
-  <!-- Universal Header Navigation Bar -->
+  <!-- Screenshot-Matched Navigation Bar -->
   <header class="navbar">
     <div class="nav-container">
       
-      <!-- Top Row: Mode Switcher (Left) & Centered Brand Logo -->
-      <div class="nav-top-row">
-        <!-- 3-Tier Access Mode Switcher on Left -->
-        <div class="mode-selector-wrapper">
-          <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
-            <option value="twilight">🌸 Twilight (Public 13+)</option>
-            <option value="basement">⚡ Basement (17+ 🔒)</option>
-            <option value="backstage">👑 Backstage VIP Mode ✦</option>
-          </select>
-        </div>
+      <div class="nav-left-group">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">⚡ OTAKU OVERLOAD</span>
+        </a>
 
-        <!-- Centered Brand Logo with Lightning Bolts -->
-        <div class="logo-container">
-          <a href="index.html" class="logo-link">
-            <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
-            <span class="logo-sub">✦ GIRLS DEAD PHANTOM ✦</span>
-          </a>
-        </div>
-
-        <!-- Mobile Hamburger Toggle Button -->
-        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-        </button>
+        <select id="mode-selector" class="mode-select-dropdown" onchange="handleModeChange(this.value)">
+          <option value="twilight">🌸 Twilight (13+)</option>
+          <option value="basement">⚡ Basement (17+)</option>
+          <option value="backstage">👑 VIP Mode</option>
+        </select>
       </div>
 
-      <!-- Main Navigation Links Below -->
-      <nav class="nav-links" id="nav-menu">
-        <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="podcast.html" class="nav-item active">🎙️ Podcast</a>
-        <a href="bbs-forum.html" class="nav-item">💬 Sakuraoka BBS</a>
-        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-        <a href="chat.html" class="nav-item">💬 Live Chat</a>
-        <a href="echoheart.html" class="nav-item">🌌 Lore & Books</a>
-
-        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(255, 0, 127, 0.25); border: 1px solid var(--accent-pink); cursor: pointer;">
-          🔑 Login
-        </button>
+      <!-- Screenshot Nav Pill Row -->
+      <nav class="nav-pills-row" id="nav-menu">
+        <a href="index.html" class="nav-item-pill">🏠 Home</a>
+        <a href="echoheart.html" class="nav-item-pill">📚 Lore & Books</a>
+        <a href="neko-fm.html" class="nav-item-pill">📻 24/7 Neko FM</a>
+        <a href="bbs-forum.html" class="nav-item-pill">💬 Sakuraoka BBS</a>
+        <a href="chat.html" class="nav-item-pill">💬 Live Chat</a>
+        <a href="podcast.html" class="nav-item-pill active">🎙️ Podcast</a>
       </nav>
+
+      <!-- Right Status Relay Badge -->
+      <div class="nav-status-badge">
+        <span class="status-dot"></span>
+        SUB-STAGE RELAY: ACTIVE
+      </div>
+
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
 
     </div>
   </header>
@@ -773,7 +671,7 @@
   <main id="view-podcast-player" class="podcast-container">
     <section class="wide-stage">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-        <h2 id="stage-main-title" style="font-weight: 900; letter-spacing: 1px; color: #ffffff;">🎙️ WHISPER RADIO STUDIO STAGE</h2>
+        <h2 id="stage-main-title" class="stage-glitch-header">🎙️ WHISPER RADIO STUDIO STAGE</h2>
         <span id="stage-air-badge" class="on-air-badge">ON AIR</span>
       </div>
 
@@ -828,7 +726,7 @@
     </aside>
   </main>
 
-  <!-- ALWAYS-ON BOTTOM COMMUNITY COMMENT SECTION & SAFETY RULES -->
+  <!-- ALWAYS-ON COMMUNITY COMMENT SECTION -->
   <section class="global-comments-wrapper">
     <div class="comments-card-main">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
@@ -836,88 +734,73 @@
         <span style="font-size: 0.8rem; color: var(--accent-cyan); font-weight: 800;">🟢 Live Safety Filtering Enabled</span>
       </div>
 
-      <!-- SAFETY RULES BANNER -->
       <div class="safety-rules-banner">
-        <div class="safety-rules-icon">🛡️</div>
-        <div class="safety-rules-text">
-          <h4>Otaku Lounge Community Safety Guidelines</h4>
-          <p>
+        <div style="font-size: 1.5rem;">🛡️</div>
+        <div>
+          <h4 style="margin: 0 0 4px; color: var(--accent-pink); font-size: 0.95rem;">Otaku Lounge Community Safety Guidelines</h4>
+          <p style="margin: 0; font-size: 0.82rem; color: var(--text-muted);">
             Welcome to the EchoHeart Lounge! Keep discussion respectful, friendly, and anime-focused. 
-            <strong>No hate speech, harassment, explicit content, or unmasked lore spoilers.</strong> 
-            Automated safety filters monitor all comments. Repeated violations will mute your account.
+            <strong>No hate speech, harassment, explicit content, or unmasked lore spoilers.</strong>
           </p>
         </div>
       </div>
 
-      <!-- COMMENT INPUT FORM -->
       <div class="comment-input-box">
         <div class="comment-input-row">
-          <input type="text" id="main-comment-handle" class="form-input-text" style="margin-bottom: 0;" placeholder="Handle (e.g. NekoFan_42)">
-          <input type="text" id="main-comment-text" class="form-input-text" style="margin-bottom: 0;" placeholder="Share your thoughts on the current podcast or theories...">
-          <button class="action-btn-small" onclick="postMainComment()" style="white-space: nowrap; height: 100%;">Post Comment</button>
+          <input type="text" id="main-comment-handle" class="form-input-text" placeholder="Handle (e.g. NekoFan_42)">
+          <input type="text" id="main-comment-text" class="form-input-text" placeholder="Share your thoughts on the podcast...">
+          <button class="action-btn-small" onclick="postMainComment()">Post Comment</button>
         </div>
       </div>
 
-      <!-- LIVE COMMENTS FEED -->
       <div id="main-comments-feed" class="comment-feed-list">
         <div class="single-comment">
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <strong style="color: var(--accent-pink); font-size: 0.88rem;">Akari_Overdrive <span class="npc-badge">LEAD GUITAR</span></strong>
+            <strong style="color: var(--accent-pink); font-size: 0.88rem;">Akari_Overdrive</strong>
             <span style="font-size: 0.75rem; color: var(--accent-purple);">2 hours ago</span>
           </div>
           <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"Thanks for tuning in everyone! Leave your favorite episode moments down here!"</p>
-        </div>
-
-        <div class="single-comment">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <strong style="color: var(--text-main); font-size: 0.88rem;">Sakura_Rhythm <span class="user-badge">Listener</span></strong>
-            <span style="font-size: 0.75rem; color: var(--accent-purple);">45 mins ago</span>
-          </div>
-          <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"The audio quality on EP-1 sounds so much clearer now! The voice timing with the pictures is super smooth."</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- FLOATING BOTTOM-LEFT DOCKED MUSIC PLAYER WIDGET -->
+  <div class="docked-music-player" id="docked-player">
+    <div class="docked-player-header">
+      <div class="docked-player-title">
+        <span style="display:inline-block; width:8px; height:8px; background:var(--accent-pink); border-radius:50%; box-shadow:0 0 8px var(--accent-pink);"></span>
+        NEKO FM STREAM DECK
+      </div>
+      <button class="docked-minimize-btn" onclick="toggleDockedCollapse()">➖</button>
+    </div>
+
+    <div class="docked-track-info">
+      <div class="docked-song-title" id="docked-song-title">J-Pop Powerplay Kawaii 🌸</div>
+      <div class="docked-artist-sub" id="docked-artist-sub">24/7 Background Music Stream</div>
+    </div>
+
+    <div class="docked-controls-row">
+      <button class="docked-play-btn" id="docked-play-btn" onclick="toggleDockedMusic()">
+        ▶ PLAY MUSIC
+      </button>
+      <input type="range" class="docked-vol-slider" min="0" max="100" value="70" oninput="setDockedVolume(this.value)">
+    </div>
+  </div>
+
   <script>
-    let userState = {
-      isLoggedIn: localStorage.getItem('neko_logged_in') === 'true',
-      isVIP: localStorage.getItem('neko_is_vip') === 'true'
-    };
+    const audioElement = document.getElementById('audio-player');
+    const dockedAudio = document.getElementById('docked-radio-audio');
 
-    // PROHIBITED CONTENT FILTER LIST
-    const PROHIBITED_WORDS = ["hate", "slur", "spam", "abuse", "exploit", "nsfw"];
+    let isPodcastPlaying = false;
+    let isDockedMusicPlaying = false;
+    let clockTimer = null;
+    let syncInterval = null;
+    let elapsedSeconds = 0;
+    let totalSeconds = 186;
 
-    function checkContentSafety(text) {
-      if (!text) return true;
-      const lower = text.toLowerCase();
-      for (let word of PROHIBITED_WORDS) {
-        if (lower.includes(word)) {
-          return false;
-        }
-      }
-      return true;
-    }
+    const defaultStreamUrl = "https://kathy.torontocast.com:3060/stream";
 
-    function formatTime(sec) {
-      if (isNaN(sec) || sec < 0) return "00:00";
-      const m = Math.floor(sec / 60);
-      const s = Math.floor(sec % 60);
-      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
-    }
-
-    function parseRuntimeSeconds(str) {
-      if (!str) return 186;
-      const parts = str.split(':');
-      if (parts.length === 2) {
-        return parseInt(parts[0], 10) * 60 + parseFloat(parts[1]);
-      } else if (parts.length === 3) {
-        return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
-      }
-      return 186;
-    }
-
-    // Accurate Spoken-Cadence Keyframes (Calibrated to Real Spoken Audio WPM)
     const EPISODES_BY_MODE = {
       twilight: [
         {
@@ -947,272 +830,94 @@
             { startTime: 173, endTime: 180, speaker: "akari", title: "Akari Minase (Drums)", text: "Catch ya later, everyone! Don't forget to turn the volume all the way up next week! Bye-bye!" },
             { startTime: 180, endTime: 186, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Thanks for tuning in! See you next time, everyone! Bye-bye~!" }
           ]
-        },
-        {
-          title: "Episode 2: After-School Sweets & Rehearsal Routines",
-          runtime: "03:30",
-          audioUrl: "",
-          tag: "Free",
-          script: [
-            { startTime: 0, endTime: 45, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Hey there, Whisper Radio listeners! Nekomi here on vocals!" },
-            { startTime: 45, endTime: 90, speaker: "sera", title: "Sera (Keytar)", text: "Greetings, everyone. Sera on keytar duty." },
-            { startTime: 90, endTime: 140, speaker: "akari", title: "Akari Minase (Drums)", text: "Akari Minase in the house! Drums tuned and ready!" },
-            { startTime: 140, endTime: 210, speaker: "aoi", title: "Aoi (Bass)", text: "And Aoi on bass! Welcome to Episode Two of our afternoon broadcast!" }
-          ]
-        },
-        {
-          title: "Episode 3: Sunset Rooftop Jam & Evening Walk",
-          runtime: "03:45",
-          audioUrl: "",
-          tag: "Free",
-          script: [
-            { startTime: 0, endTime: 50, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Good evening, Sakuraoka High! Nekomi greeting you as the sun sets!" },
-            { startTime: 50, endTime: 105, speaker: "sera", title: "Sera (Keytar)", text: "Hello everyone, Sera here as the evening dusk settles over campus." },
-            { startTime: 105, endTime: 160, speaker: "akari", title: "Akari Minase (Drums)", text: "Akari Minase here! Sunset is the coolest time for acoustic jam sessions!" },
-            { startTime: 160, endTime: 225, speaker: "aoi", title: "Aoi (Bass)", text: "And Aoi here to wrap up today's school hours with all of you." }
-          ]
-        }
-      ],
-      basement: [
-        {
-          title: "After Dark Ep 1: Whispering Hallways & Campus Rumors",
-          runtime: "10:00",
-          audioUrl: "",
-          tag: "⚡ AFTER DARK",
-          script: [
-            { startTime: 0, endTime: 300, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Welcome to After Dark Basement Mode, listeners... Nekomi here in the dimly lit studio." },
-            { startTime: 300, endTime: 600, speaker: "sera", title: "Sera (Keytar)", text: "Hello... Sera reporting in from beneath Prep Room B after campus hours." }
-          ]
-        }
-      ],
-      backstage: [
-        {
-          title: "VIP Backstage Ep 1: The Eerie Phantom in Locker 102",
-          runtime: "15:00",
-          audioUrl: "",
-          tag: "🎟️ VIP Pass",
-          script: [
-            { startTime: 0, endTime: 900, speaker: "nekomi", title: "Nekomi (Guitar & Vocals)", text: "Greetings, VIP Backstage Pass members! Welcome to our exclusive paranormal investigation podcast!" }
-          ]
         }
       ]
     };
 
     let currentEpisodeIdx = 0;
-    let isPlaying = false;
-    let clockTimer = null;
-    let syncInterval = null;
-    let elapsedSeconds = 0;
-    let totalSeconds = 186;
 
-    const audioElement = document.getElementById('audio-player');
+    /* DOCKED MUSIC PLAYER LOGIC */
+    function toggleDockedMusic() {
+      const playBtn = document.getElementById('docked-play-btn');
 
-    function postMainComment() {
-      const handleInput = document.getElementById('main-comment-handle');
-      const textInput = document.getElementById('main-comment-text');
-
-      const handle = handleInput.value.trim() || "Anon_Listener";
-      const text = textInput.value.trim();
-
-      if (!text) return;
-
-      // SAFETY FILTER CHECK
-      if (!checkContentSafety(text) || !checkContentSafety(handle)) {
-        showSafetyWarningModal("Comment Blocked by Community Safety Filter", "Your post contained terms that violate community rules. Please keep comments friendly, respectful, and spoiler-free.");
-        return;
-      }
-
-      const feed = document.getElementById('main-comments-feed');
-      const newCommentHTML = `
-        <div class="single-comment">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <strong style="color: var(--accent-cyan); font-size: 0.88rem;">${handle} <span class="user-badge">Listener</span></strong>
-            <span style="font-size: 0.75rem; color: var(--accent-purple);">Just now</span>
-          </div>
-          <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"${text}"</p>
-        </div>
-      `;
-
-      feed.insertAdjacentHTML('afterbegin', newCommentHTML);
-      textInput.value = "";
-    }
-
-    function showSafetyWarningModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3>🛡️ ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-actions">
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Understood</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function handleModeChange(targetMode) {
-      const selector = document.getElementById('mode-selector');
-
-      if (targetMode === 'basement' && !userState.isLoggedIn) {
-        if (selector) selector.value = getCurrentMode();
-        showAuthModal('Google Login Required', 'Sign in with Google to access After-Hours Basement Podcast episodes and community profiles.');
-        return;
-      }
-
-      if (targetMode === 'backstage' && !userState.isVIP) {
-        if (selector) selector.value = getCurrentMode();
-        showVIPModal('Backstage Pass Required', 'Unlock VIP uncompressed studio stem downloads, binaural acoustic sessions, and live chat posting.');
-        return;
-      }
-
-      localStorage.setItem('neko_active_mode', targetMode);
-      applyThemeMode(targetMode);
-      loadTierEpisodes(targetMode);
-    }
-
-    function getCurrentMode() {
-      return localStorage.getItem('neko_active_mode') || 'twilight';
-    }
-
-    function applyThemeMode(mode) {
-      const body = document.body;
-      const selector = document.getElementById('mode-selector');
-
-      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
-      body.classList.add(`${mode}-mode`);
-
-      if (selector) selector.value = mode;
-
-      const stageTitle = document.getElementById('stage-main-title');
-      const airBadge = document.getElementById('stage-air-badge');
-      const drawerHeading = document.getElementById('archive-drawer-heading');
-
-      if (mode === 'basement') {
-        if (stageTitle) stageTitle.innerText = '⚡ AFTER DARK SESSIONS — BASEMENT STAGE';
-        if (airBadge) airBadge.innerText = '⚡ AFTER DARK ON AIR';
-        if (drawerHeading) drawerHeading.innerText = '⚡ AFTER DARK ARCHIVES';
-      } else if (mode === 'backstage') {
-        if (stageTitle) stageTitle.innerText = '🎟️ VIP BACKSTAGE STUDIO STAGE';
-        if (airBadge) airBadge.innerText = '🎟️ VIP LIVE';
-        if (drawerHeading) drawerHeading.innerText = '🎟️ VIP STEM ARCHIVES';
+      if (isDockedMusicPlaying) {
+        dockedAudio.pause();
+        isDockedMusicPlaying = false;
+        playBtn.innerText = "▶ PLAY MUSIC";
       } else {
-        if (stageTitle) stageTitle.innerText = '🎙️ WHISPER RADIO STUDIO STAGE';
-        if (airBadge) airBadge.innerText = 'ON AIR';
-        if (drawerHeading) drawerHeading.innerText = '📻 Episode Archives';
-      }
-    }
-
-    function loadTierEpisodes(mode) {
-      stopPlayback();
-      const container = document.getElementById('archive-episode-list');
-      if (!container) return;
-
-      container.innerHTML = '';
-      const episodes = EPISODES_BY_MODE[mode] || EPISODES_BY_MODE.twilight;
-
-      episodes.forEach((ep, index) => {
-        const tagColor = mode === 'basement' ? 'var(--accent-pink)' : (mode === 'backstage' ? 'var(--accent-gold)' : 'var(--accent-cyan)');
-        
-        const card = document.createElement('div');
-        card.id = `ep-${index}`;
-        card.className = `ep-card ${index === 0 ? 'active' : ''}`;
-        card.onclick = () => selectEpisode(index);
-        card.innerHTML = `
-          <strong style="color: #ffffff;">${ep.title}</strong>
-          <p style="font-size: 0.8rem; margin: 4px 0 0; color: ${tagColor}; font-weight: 700;">Runtime: ${ep.runtime} • ${ep.tag}</p>
-        `;
-        container.appendChild(card);
-      });
-
-      selectEpisode(0);
-    }
-
-    function selectEpisode(index) {
-      stopPlayback();
-      currentEpisodeIdx = index;
-      elapsedSeconds = 0;
-
-      const currentMode = getCurrentMode();
-      const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
-
-      document.querySelectorAll('.ep-card').forEach((card, idx) => {
-        if (idx === index) card.classList.add('active');
-        else card.classList.remove('active');
-      });
-
-      const ep = episodes[currentEpisodeIdx];
-      if (ep) {
-        totalSeconds = parseRuntimeSeconds(ep.runtime);
-        document.getElementById('speaker-title-display').innerText = `🎙️ ${ep.title.toUpperCase()}`;
-        document.getElementById('dialogue-line-display').innerText = `"Press start to listen to ${ep.title}!"`;
-        
-        updateTimeUI(0, totalSeconds);
-
-        if (ep.audioUrl && audioElement) {
-          audioElement.src = ep.audioUrl;
-          audioElement.load();
-        } else if (audioElement) {
-          audioElement.removeAttribute('src');
+        // OVERRIDE: Stop podcast if currently playing
+        if (isPodcastPlaying) {
+          stopPodcastPlayback();
         }
+
+        if (!dockedAudio.src) dockedAudio.src = defaultStreamUrl;
+        dockedAudio.play().then(() => {
+          isDockedMusicPlaying = true;
+          playBtn.innerText = "⏸ PAUSE MUSIC";
+        }).catch(err => console.error("Playback blocked:", err));
       }
     }
 
-    function updateTimeUI(currentSec, maxSec) {
-      const remainingSec = Math.max(0, maxSec - currentSec);
-      document.getElementById('ep-time-current').innerText = formatTime(currentSec);
-      document.getElementById('ep-time-total').innerText = `Total Length: ${formatTime(maxSec)}`;
-      document.getElementById('ep-time-remaining').innerText = `Remaining: -${formatTime(remainingSec)}`;
-
-      const pct = maxSec > 0 ? (currentSec / maxSec) * 100 : 0;
-      document.getElementById('ep-progress-fill').style.width = `${Math.min(100, pct)}%`;
+    function setDockedVolume(val) {
+      if (dockedAudio) dockedAudio.volume = val / 100;
     }
 
+    function toggleDockedCollapse() {
+      document.getElementById('docked-player').classList.toggle('collapsed');
+    }
+
+    /* PODCAST PLAYBACK & OVERRIDE LOGIC */
     function togglePodcastPlayback() {
-      if (isPlaying) {
-        stopPlayback();
+      if (isPodcastPlaying) {
+        stopPodcastPlayback();
       } else {
-        startPlayback();
+        startPodcastPlayback();
       }
     }
 
-    function startPlayback() {
-      isPlaying = true;
+    function startPodcastPlayback() {
+      // OVERRIDE: Pause bottom-left docked music player
+      if (isDockedMusicPlaying) {
+        dockedAudio.pause();
+        isDockedMusicPlaying = false;
+        document.getElementById('docked-play-btn').innerText = "▶ PLAY MUSIC";
+      }
+
+      isPodcastPlaying = true;
       document.getElementById('podcast-play-btn').innerText = '⏸ Pause Broadcast';
 
-      const currentMode = getCurrentMode();
-      const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
-      const ep = episodes[currentEpisodeIdx];
+      const ep = EPISODES_BY_MODE.twilight[currentEpisodeIdx];
 
       if (ep && ep.audioUrl && audioElement) {
         audioElement.play().then(() => {
           startHighFreqSync();
-        }).catch((err) => {
-          console.warn("Audio play error, falling back to timer:", err);
-          runSimulatedTimer();
-        });
+        }).catch(() => runSimulatedTimer());
 
         audioElement.onended = () => {
-          stopPlayback();
-          updateTimeUI(totalSeconds, totalSeconds);
-          document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode from the archive."`;
+          stopPodcastPlayback();
+          document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode."`;
         };
       } else {
         runSimulatedTimer();
       }
     }
 
+    function stopPodcastPlayback() {
+      isPodcastPlaying = false;
+      if (clockTimer) { clearInterval(clockTimer); clockTimer = null; }
+      if (syncInterval) { clearInterval(syncInterval); syncInterval = null; }
+      if (audioElement) { audioElement.pause(); }
+
+      document.getElementById('podcast-play-btn').innerText = '▶ Start Episode Broadcast';
+      document.querySelectorAll('.speaker-avatar').forEach(a => a.classList.remove('speaking'));
+    }
+
     function startHighFreqSync() {
       if (syncInterval) clearInterval(syncInterval);
-
       syncInterval = setInterval(() => {
-        if (!isPlaying || !audioElement) return;
-
+        if (!isPodcastPlaying || !audioElement) return;
         elapsedSeconds = audioElement.currentTime;
-        totalSeconds = (audioElement.duration && !isNaN(audioElement.duration)) ? audioElement.duration : parseRuntimeSeconds(EPISODES_BY_MODE[getCurrentMode()][currentEpisodeIdx]?.runtime);
-
+        totalSeconds = (audioElement.duration && !isNaN(audioElement.duration)) ? audioElement.duration : 186;
         updateTimeUI(elapsedSeconds, totalSeconds);
         syncSpeakerDialogue();
       }, 100);
@@ -1220,165 +925,85 @@
 
     function runSimulatedTimer() {
       if (clockTimer) clearInterval(clockTimer);
-      
-      syncSpeakerDialogue();
       clockTimer = setInterval(() => {
-        if (!isPlaying) return;
+        if (!isPodcastPlaying) return;
         elapsedSeconds++;
         updateTimeUI(elapsedSeconds, totalSeconds);
         syncSpeakerDialogue();
-
-        if (elapsedSeconds >= totalSeconds) {
-          stopPlayback();
-          updateTimeUI(totalSeconds, totalSeconds);
-          document.getElementById('dialogue-line-display').innerText = `"Broadcast complete! Select another episode from the archive."`;
-        }
+        if (elapsedSeconds >= totalSeconds) stopPodcastPlayback();
       }, 1000);
     }
 
     function syncSpeakerDialogue() {
-      const currentMode = getCurrentMode();
-      const episodes = EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight;
-      const ep = episodes[currentEpisodeIdx];
+      const ep = EPISODES_BY_MODE.twilight[currentEpisodeIdx];
+      if (!ep || !ep.script) return;
 
-      if (!ep || !ep.script || ep.script.length === 0) return;
-
-      const currentTime = (audioElement && audioElement.src && !audioElement.paused && !isNaN(audioElement.currentTime))
-                          ? audioElement.currentTime
-                          : elapsedSeconds;
-
-      let activeLine = null;
-
-      for (let i = 0; i < ep.script.length; i++) {
-        const line = ep.script[i];
-        if (currentTime >= line.startTime && currentTime < line.endTime) {
-          activeLine = line;
-          break;
-        }
-      }
+      const currentTime = (audioElement && audioElement.src && !audioElement.paused) ? audioElement.currentTime : elapsedSeconds;
+      let activeLine = ep.script.find(line => currentTime >= line.startTime && currentTime < line.endTime);
 
       document.querySelectorAll('.speaker-avatar').forEach(a => a.classList.remove('speaking'));
 
       if (activeLine) {
-        const activeAvatar = document.getElementById(`spk-${activeLine.speaker}`);
-        if (activeAvatar) activeAvatar.classList.add('speaking');
-
+        const avatar = document.getElementById(`spk-${activeLine.speaker}`);
+        if (avatar) avatar.classList.add('speaking');
         document.getElementById('speaker-title-display').innerText = `🎙️ ${activeLine.title}`;
         document.getElementById('dialogue-line-display').innerText = `"${activeLine.text}"`;
       }
     }
 
-    function seekPodcast(event) {
-      const track = document.getElementById('progress-bar-track');
-      const rect = track.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const pct = Math.max(0, Math.min(1, clickX / rect.width));
-
-      elapsedSeconds = pct * totalSeconds;
-      
-      const currentMode = getCurrentMode();
-      const ep = (EPISODES_BY_MODE[currentMode] || EPISODES_BY_MODE.twilight)[currentEpisodeIdx];
-
-      if (ep && ep.audioUrl && audioElement && audioElement.src) {
-        audioElement.currentTime = elapsedSeconds;
-      }
-
-      updateTimeUI(elapsedSeconds, totalSeconds);
-      syncSpeakerDialogue();
+    function updateTimeUI(currentSec, maxSec) {
+      document.getElementById('ep-time-current').innerText = formatTime(currentSec);
+      document.getElementById('ep-progress-fill').style.width = `${Math.min(100, (currentSec / maxSec) * 100)}%`;
     }
 
-    function stopPlayback() {
-      isPlaying = false;
-      if (clockTimer) { clearInterval(clockTimer); clockTimer = null; }
-      if (syncInterval) { clearInterval(syncInterval); syncInterval = null; }
-      if (audioElement) { audioElement.pause(); }
-      
-      const playBtn = document.getElementById('podcast-play-btn');
-      if (playBtn) playBtn.innerText = '▶ Start Episode Broadcast';
-      
-      document.querySelectorAll('.speaker-avatar').forEach(avatar => avatar.classList.remove('speaking'));
+    function formatTime(sec) {
+      if (isNaN(sec) || sec < 0) return "00:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    function showAuthModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card">
-            <h3>🔑 ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-actions">
-              <button class="modal-btn google-btn" onclick="simulateGoogleLogin()">Sign In with Google</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
+    function postMainComment() {
+      const handle = document.getElementById('main-comment-handle').value.trim() || "Anon_Listener";
+      const text = document.getElementById('main-comment-text').value.trim();
+      if (!text) return;
+
+      const feed = document.getElementById('main-comments-feed');
+      feed.insertAdjacentHTML('afterbegin', `
+        <div class="single-comment">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <strong style="color: var(--accent-cyan); font-size: 0.88rem;">${handle}</strong>
+            <span style="font-size: 0.75rem; color: var(--accent-purple);">Just now</span>
           </div>
+          <p style="margin: 0; font-size: 0.92rem; color: #e2daf8;">"${text}"</p>
         </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
+      `);
+      document.getElementById('main-comment-text').value = '';
     }
 
-    function showVIPModal(title, message) {
-      removeExistingModals();
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card vip-modal-card">
-            <h3>🎟️ ${title}</h3>
-            <p>${message}</p>
-            <div class="modal-price-tag">$4.99 / month • Backstage Pass</div>
-            <div class="modal-actions">
-              <button class="modal-btn stripe-btn" onclick="simulateStripeCheckout()">Unlock Backstage Pass</button>
-              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
-            </div>
-          </div>
-        </div>
-      `;
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function removeExistingModals() {
-      const existing = document.getElementById('neko-gate-modal');
-      if (existing) existing.remove();
-    }
-
-    function simulateGoogleLogin() {
-      userState.isLoggedIn = true;
-      localStorage.setItem('neko_logged_in', 'true');
-      removeExistingModals();
-      handleModeChange('basement');
-    }
-
-    function simulateStripeCheckout() {
-      userState.isLoggedIn = true;
-      userState.isVIP = true;
-      localStorage.setItem('neko_logged_in', 'true');
-      localStorage.setItem('neko_is_vip', 'true');
-      removeExistingModals();
-      handleModeChange('backstage');
+    function handleModeChange(mode) {
+      document.body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
+      document.body.classList.add(`${mode}-mode`);
+      localStorage.setItem('neko_active_mode', mode);
     }
 
     function toggleMobileMenu() {
-      const navMenu = document.getElementById('nav-menu');
-      if (navMenu) navMenu.classList.toggle('open');
+      document.getElementById('nav-menu').classList.toggle('open');
     }
 
-    function initPodcastStudio() {
-      const mode = getCurrentMode();
-      applyThemeMode(mode);
-      loadTierEpisodes(mode);
-
-      document.addEventListener('click', function(event) {
-        const navMenu = document.getElementById('nav-menu');
-        const isInsideNavbar = event.target.closest('.navbar');
-        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
-          navMenu.classList.remove('open');
-        }
-      });
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initPodcastStudio);
-    } else {
-      initPodcastStudio();
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const list = document.getElementById('archive-episode-list');
+      if (list) {
+        EPISODES_BY_MODE.twilight.forEach((ep, idx) => {
+          list.innerHTML += `
+            <div class="ep-card ${idx === 0 ? 'active' : ''}">
+              <strong style="color:#fff;">${ep.title}</strong>
+              <p style="font-size:0.8rem; color:var(--accent-cyan); margin:4px 0 0;">Runtime: ${ep.runtime} • ${ep.tag}</p>
+            </div>
+          `;
+        });
+      }
+    });
   </script>
   <script src="global-player.js"></script>
 </body>
