@@ -348,6 +348,12 @@
       letter-spacing: 0.5px;
     }
 
+    .msg-author.bot {
+      color: var(--accent-gold);
+      font-weight: 900;
+      text-shadow: 0 0 12px var(--accent-gold);
+    }
+
     .msg-time { opacity: 0.6; }
 
     .delete-msg-btn {
@@ -399,6 +405,13 @@
     .mod-msg .msg-bubble {
       border-color: #ff007f;
       box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+    }
+
+    .bot-msg .msg-bubble {
+      background: rgba(30, 20, 10, 0.9);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      box-shadow: 0 0 15px rgba(255, 209, 102, 0.3);
     }
 
     /* INPUT CONTROL BAR */
@@ -821,6 +834,16 @@
 
       <div class="chat-messages-area" id="chat-feed">
         <!-- Default Welcome & Interactive Messages -->
+        <div class="msg-row incoming bot-msg" data-msg-id="neko-bot-welcome">
+          <div class="msg-meta">
+            <span class="msg-author bot">🛡️ NekoBot (Mod)</span>
+            <span class="msg-time">Just now</span>
+          </div>
+          <div class="msg-bubble">
+            🤖 [System Notice]: Welcome to Otaku Overload! Keep the vibes cyberpunk, stay respectful, and enjoy the 24/7 Neko FM stream 🌸
+          </div>
+        </div>
+
         <div class="msg-row incoming" data-msg-id="welcome-1">
           <div class="msg-meta">
             <span class="msg-author npc">Nekomi Aoyama [NPC]</span>
@@ -1091,11 +1114,40 @@
       document.getElementById('docked-player').classList.toggle('collapsed');
     }
 
+    /* 🛡️ CONTENT RESTRICTIONS & SAFETY FILTERS */
+    const PROFANITY_BLOCKLIST = ['badword1', 'badword2', 'slur1', 'toxicword'];
+    const CRISIS_KEYWORDS = [
+      'suicide', 'kill myself', 'want to die', 'end my life', 
+      'self harm', 'cutting myself', 'hopeless and want to end it'
+    ];
+
+    function containsProfanity(text) {
+      const lower = text.toLowerCase();
+      return PROFANITY_BLOCKLIST.some(word => lower.includes(word));
+    }
+
+    function checkCrisisIntervention(text) {
+      const lower = text.toLowerCase();
+      return CRISIS_KEYWORDS.some(phrase => lower.includes(phrase));
+    }
+
     /* CHAT TRANSMISSION LOGIC & MODERATION */
     function sendChatMessage() {
       const input = document.getElementById('user-input-msg');
       const text = input.value.trim();
       if (!text) return;
+
+      // Check restrictions & safety filters
+      if (containsProfanity(text)) {
+        alert("🛡️ [Auto-Mod]: Please keep our community lounge clean and avoid prohibited language.");
+        return;
+      }
+
+      if (checkCrisisIntervention(text)) {
+        alert("❤️ [Support Notice]: It sounds like you might be going through a difficult time. Please remember that support is available 24/7. You can connect with compassionate professionals by calling or texting 988 (Suicide & Crisis Lifeline). You are not alone.");
+        input.value = '';
+        return;
+      }
 
       recordUserActivity();
 
