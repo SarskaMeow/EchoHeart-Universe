@@ -224,6 +224,14 @@
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0, 240, 255, 0.3);
       overflow: hidden;
       animation: neonHudPulse 3.5s infinite ease-in-out;
+      transition: all 0.4s ease;
+    }
+
+    /* VIP CHAT WINDOW INTENSIFIED GLITCH & GOLD GLOW STATE */
+    .chat-main-window.vip-window-active {
+      border: 2px solid var(--accent-gold);
+      box-shadow: 0 0 50px rgba(255, 209, 102, 0.6), 0 0 90px rgba(255, 0, 127, 0.4), inset 0 0 25px rgba(255, 209, 102, 0.3);
+      animation: vipWindowHyperGlitch 1.2s infinite ease-in-out alternate;
     }
 
     .chat-window-header {
@@ -236,6 +244,11 @@
       box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.15);
     }
 
+    .chat-window-header.vip-header {
+      border-bottom-color: var(--accent-gold);
+      box-shadow: inset 0 0 20px rgba(255, 209, 102, 0.35);
+    }
+
     .active-room-name {
       font-size: 1.15rem;
       font-weight: 900;
@@ -244,6 +257,12 @@
       text-transform: uppercase;
       text-shadow: 0 0 12px rgba(0, 240, 255, 0.85);
       animation: textGlitchRGB 3.5s infinite alternate;
+    }
+
+    .active-room-name.vip-title {
+      color: var(--accent-gold);
+      text-shadow: 0 0 15px var(--accent-gold), 0 0 25px var(--accent-amber);
+      animation: vipTitleGlitch 0.8s infinite alternate;
     }
 
     /* ADMIN / MODERATOR OVERWATCH BAR */
@@ -692,12 +711,26 @@
       100% { border-color: rgba(0, 240, 255, 0.45); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
     }
 
+    @keyframes vipWindowHyperGlitch {
+      0% { border-color: rgba(255, 209, 102, 0.7); box-shadow: 0 0 30px rgba(255, 209, 102, 0.4), inset 0 0 15px rgba(255, 209, 102, 0.2); transform: translate(0, 0); }
+      20% { border-color: rgba(255, 0, 127, 0.95); box-shadow: 0 0 60px rgba(255, 0, 127, 0.7), inset 0 0 25px rgba(255, 0, 127, 0.4); transform: translate(-1px, 1px); }
+      40% { border-color: rgba(0, 240, 255, 0.9); box-shadow: 0 0 50px rgba(0, 240, 255, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.3); transform: translate(1px, -1px); }
+      60% { border-color: rgba(255, 209, 102, 1); box-shadow: 0 0 75px rgba(255, 209, 102, 0.9), 0 0 30px rgba(255, 0, 127, 0.5), inset 0 0 30px rgba(255, 209, 102, 0.5); transform: translate(0, 0); }
+      80% { border-color: rgba(255, 0, 85, 0.9); box-shadow: 0 0 55px rgba(255, 0, 85, 0.7); transform: translate(-1px, -1px); }
+      100% { border-color: rgba(255, 209, 102, 0.7); box-shadow: 0 0 30px rgba(255, 209, 102, 0.4), inset 0 0 15px rgba(255, 209, 102, 0.2); transform: translate(0, 0); }
+    }
+
     @keyframes vipGlitchPulse {
       0% { border-color: rgba(255, 209, 102, 0.45); box-shadow: 0 0 10px rgba(255, 170, 0, 0.2); transform: scale(1); }
       25% { border-color: rgba(255, 0, 127, 0.85); box-shadow: 0 0 25px rgba(255, 0, 127, 0.6); transform: translateX(1px); }
       50% { border-color: rgba(255, 209, 102, 0.95); box-shadow: 0 0 35px rgba(255, 209, 102, 0.8), inset 0 0 10px rgba(255, 209, 102, 0.4); transform: scale(1.01); }
       75% { border-color: rgba(0, 240, 255, 0.7); box-shadow: 0 0 20px rgba(0, 240, 255, 0.5); transform: translateX(-1px); }
       100% { border-color: rgba(255, 209, 102, 0.45); box-shadow: 0 0 10px rgba(255, 170, 0, 0.2); transform: scale(1); }
+    }
+
+    @keyframes vipTitleGlitch {
+      0%, 100% { text-shadow: 2px 0 var(--accent-pink), -2px 0 var(--accent-gold); }
+      50% { text-shadow: -2px 0 var(--accent-gold), 2px 0 var(--accent-cyan); }
     }
 
     @keyframes textGlitchRGB {
@@ -774,10 +807,10 @@
     </aside>
 
     <!-- CENTER EXPANDED CHAT FEED -->
-    <main class="chat-main-window">
-      <div class="chat-window-header">
+    <main class="chat-main-window" id="main-chat-window-box">
+      <div class="chat-window-header" id="chat-window-hdr">
         <span class="active-room-name" id="current-room-title">⚡ GENERAL-LOUNGE</span>
-        <span style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold;">SUB-STAGE ENCRYPTION ACTIVE</span>
+        <span style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold;" id="chat-sub-status">SUB-STAGE ENCRYPTION ACTIVE</span>
       </div>
 
       <!-- MODERATOR OVERWATCH BANNER -->
@@ -1116,11 +1149,23 @@
     }
 
     function switchChannel(channelKey, channelTitle) {
+      // Remove VIP window styling when switching to regular rooms
+      const mainWindow = document.getElementById('main-chat-window-box');
+      const headerBox = document.getElementById('chat-window-hdr');
+      const titleSpan = document.getElementById('current-room-title');
+      const subStatus = document.getElementById('chat-sub-status');
+
+      mainWindow.classList.remove('vip-window-active');
+      headerBox.classList.remove('vip-header');
+      titleSpan.classList.remove('vip-title');
+      subStatus.style.color = 'var(--accent-pink)';
+      subStatus.innerText = 'SUB-STAGE ENCRYPTION ACTIVE';
+
       document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
       if (event && event.currentTarget) {
         event.currentTarget.classList.add('active');
       }
-      document.getElementById('current-room-title').textContent = channelTitle.toUpperCase();
+      titleSpan.textContent = channelTitle.toUpperCase();
     }
 
     function switchVIPChannel() {
@@ -1134,7 +1179,19 @@
       if (event && event.currentTarget) {
         event.currentTarget.classList.add('active');
       }
-      document.getElementById('current-room-title').textContent = "⚡ #BACKSTAGE-VIP LOUNGE";
+
+      // Trigger intense VIP hyper-glitch and gold glow exclusively on the active chat window!
+      const mainWindow = document.getElementById('main-chat-window-box');
+      const headerBox = document.getElementById('chat-window-hdr');
+      const titleSpan = document.getElementById('current-room-title');
+      const subStatus = document.getElementById('chat-sub-status');
+
+      mainWindow.classList.add('vip-window-active');
+      headerBox.classList.add('vip-header');
+      titleSpan.classList.add('vip-title');
+      titleSpan.textContent = "⚡ #BACKSTAGE-VIP LOUNGE";
+      subStatus.style.color = 'var(--accent-gold)';
+      subStatus.innerText = '🔒 ENCRYPTED BACKSTAGE RELAY // VIP ACTIVE';
     }
 
     function escapeHtml(str) {
