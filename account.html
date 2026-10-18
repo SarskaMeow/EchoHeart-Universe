@@ -16,6 +16,8 @@
       --accent-purple: #a88beb;
       --accent-gold: #ffd166;
       --accent-red: #ff4d6d;
+      --accent-cyan: #00f0ff;
+      --accent-neon-pink: #ff007f;
       --text-light: #e2daf8;
       --text-muted: #a092c0;
     }
@@ -439,6 +441,125 @@
       padding: 40px 20px;
       color: var(--text-muted);
     }
+
+    /* ============================================================ */
+    /* 👑 VIP PAYMENT MODAL STYLES                                   */
+    /* ============================================================ */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(5, 3, 12, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: rgba(22, 12, 38, 0.98);
+      border: 1.5px solid var(--accent-neon-pink);
+      box-shadow: 0 0 30px rgba(255, 0, 127, 0.4), inset 0 0 15px rgba(255, 0, 127, 0.2);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 480px;
+      padding: 24px;
+      position: relative;
+      animation: modalSlideUp 0.3s ease-out;
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 0, 127, 0.3);
+      padding-bottom: 12px;
+    }
+
+    .modal-header h3 {
+      color: #ffffff;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 10px rgba(255, 0, 127, 0.6);
+    }
+
+    .close-modal-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .close-modal-btn:hover {
+      color: var(--accent-neon-pink);
+    }
+
+    .payment-options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .payment-option-item {
+      background: rgba(12, 6, 24, 0.8);
+      border: 1px solid rgba(168, 139, 235, 0.3);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .payment-option-item:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+      transform: translateX(4px);
+    }
+
+    .payment-icon {
+      font-size: 1.5rem;
+    }
+
+    .payment-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+    }
+
+    .payment-info strong {
+      color: #ffffff;
+      font-size: 0.95rem;
+    }
+
+    .coming-soon-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      background: rgba(255, 209, 102, 0.15);
+      border: 1px solid rgba(255, 209, 102, 0.4);
+      padding: 2px 6px;
+      border-radius: 6px;
+      width: fit-content;
+      margin-top: 2px;
+    }
   </style>
 </head>
 <body>
@@ -455,18 +576,10 @@
 
       <nav class="nav-links">
         <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
-        <a href="bbs-forum.html" class="nav-item">💬 Sakuraoka BBS</a>
+        <a href="echoheart.html" class="nav-item">📚 Lore & Books</a>
         <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-        <a href="lore.html" class="nav-item active">📚 Lore & Books</a>
         <a href="chat.html" class="nav-item">💬 Live Chat</a>
-       
-      </nav>
-    </div>
-  </header>
-
-
-        <button id="nav-auth-btn" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
+        <button id="nav-auth-btn" class="nav-item active" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
           👤 Account
         </button>
       </nav>
@@ -638,7 +751,7 @@
               <li>Exclusive Gold Avatar Borders & Name Glows</li>
               <li>Slow-Mode Bypass in Live Chat</li>
             </ul>
-            <button id="toggle-vip-btn" onclick="window.toggleVIPStatus()" class="btn-action" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; width: 100%;">
+            <button id="toggle-vip-btn" onclick="window.openPaymentModal()" class="btn-action" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; width: 100%;">
               Unlock Backstage Pass VIP
             </button>
           </div>
@@ -704,6 +817,53 @@
     </main>
   </div>
 
+  <!-- VIP PAYMENT OPTIONS MODAL -->
+  <div id="payment-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>👑 Select VIP Payment Method</h3>
+        <button class="close-modal-btn" onclick="window.closePaymentModal()">✕</button>
+      </div>
+
+      <div class="payment-options-grid">
+        <!-- Stripe Credit / Debit Card -->
+        <div class="payment-option-item" onclick="window.showPaymentNotice('Stripe Credit / Debit Card')">
+          <div class="payment-icon">💳</div>
+          <div class="payment-info">
+            <strong>Credit / Debit Card</strong>
+            <span class="coming-soon-tag">COMING SOON</span>
+          </div>
+        </div>
+
+        <!-- PayPal / Venmo -->
+        <div class="payment-option-item" onclick="window.showPaymentNotice('PayPal / Venmo')">
+          <div class="payment-icon">🅿️</div>
+          <div class="payment-info">
+            <strong>PayPal / Venmo</strong>
+            <span class="coming-soon-tag">COMING SOON</span>
+          </div>
+        </div>
+
+        <!-- Apple Pay / Google Pay -->
+        <div class="payment-option-item" onclick="window.showPaymentNotice('Apple Pay & Google Pay')">
+          <div class="payment-icon">🍎</div>
+          <div class="payment-info">
+            <strong>Apple Pay / Google Pay</strong>
+            <span class="coming-soon-tag">COMING SOON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dev / Testing Mode Unlock -->
+      <div class="admin-dev-bypass" style="margin-top: 18px; padding-top: 14px; border-top: 1px dashed rgba(255,0,127,0.3); text-align: center;">
+        <p style="font-size: 0.75rem; color: #a092c0; margin-bottom: 8px;">Dev / Testing Mode Override:</p>
+        <button class="dev-unlock-btn" onclick="window.simulateVIPUnlock()" style="background: rgba(255,0,127,0.2); border: 1px solid #ff007f; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 800;">
+          ⚡ Instantly Unlock VIP (Test Mode)
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Single Unified Script for Account Page -->
   <script type="module">
     import { auth, db } from './firebase-config.js?v=3';
@@ -739,6 +899,46 @@
         window.location.href = "index.html";
       }
     });
+
+    // Modal Helpers
+    window.openPaymentModal = function() {
+      if (!window.currentUser) {
+        alert("Please sign in to manage your VIP subscription.");
+        return;
+      }
+      document.getElementById('payment-modal').style.display = 'flex';
+    };
+
+    window.closePaymentModal = function() {
+      document.getElementById('payment-modal').style.display = 'none';
+    };
+
+    window.showPaymentNotice = function(gateway) {
+      alert(`⚡ ${gateway} payments are currently under development!\n\nUse the Dev Override button below to test VIP features on your portal.`);
+    };
+
+    window.simulateVIPUnlock = async function() {
+      if (!window.currentUser) return;
+
+      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
+      const newStatus = !isVIP;
+
+      try {
+        const userRef = doc(db, "users", window.currentUser.uid);
+        await updateDoc(userRef, { isVIP: newStatus });
+        
+        localStorage.setItem('neko_is_vip', newStatus ? 'true' : 'false');
+        alert(newStatus ? "🎟️ Backstage Pass VIP Unlocked via Test Override!" : "Backstage Pass cancelled. Reverted to Twilight Member.");
+        
+        window.closePaymentModal();
+        window.updatePageUI();
+      } catch (err) {
+        console.error("Failed to update VIP status:", err);
+        localStorage.setItem('neko_is_vip', newStatus ? 'true' : 'false');
+        window.closePaymentModal();
+        window.updatePageUI();
+      }
+    };
 
     // Tab Switcher Function
     window.switchDashboardTab = function(tabName) {
@@ -859,19 +1059,6 @@
       } catch (err) {
         console.error("Failed to update equipment:", err);
       }
-    };
-
-    // Toggle VIP Status Simulator
-    window.toggleVIPStatus = function() {
-      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
-      if (isVIP) {
-        localStorage.setItem('neko_is_vip', 'false');
-        alert("Backstage Pass cancelled. Reverted to Public Twilight Tier.");
-      } else {
-        localStorage.setItem('neko_is_vip', 'true');
-        alert("🎟️ Backstage Pass Unlocked! You now have 2x Weighted Votes and VIP Cosmetic Flair.");
-      }
-      window.updatePageUI();
     };
 
     // Save App Preference
