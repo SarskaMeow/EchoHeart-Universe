@@ -1,15 +1,46 @@
-// chat.js — Live Firestore Chat Feed, 3-Tier Access, Admin Overdrive & Auto NPC Engine
+// chat.js — Live Firestore Chat Feed, 3-Tier Access, Admin Overdrive, Auto NPC Engine & Real-Time Presence Sync
 import { db } from './firebase-config.js';
 import { 
   collection, 
   addDoc, 
   query, 
   limit, 
-  onSnapshot 
+  onSnapshot,
+  doc,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 let chatUnsubscribe = null;
 let isSeeding = false;
+
+// ==========================================================================
+// ⚡ REAL-TIME USER PRESENCE & STATUS SYNC ENGINE
+// ==========================================================================
+
+// Sync user status to Firestore
+export async function updateUserPresenceStatus(status) {
+  const userStatus = status || localStorage.getItem('neko_user_status') || 'active';
+  
+  if (!window.currentUser) return;
+
+  try {
+    const userRef = doc(db, 'users', window.currentUser.uid);
+    await setDoc(userRef, {
+      uid: window.currentUser.uid,
+      displayName: window.userData?.displayName || window.currentUser.displayName || 'Portal Member',
+      status: userStatus,
+      lastActive: Date.now()
+    }, { merge: true });
+  } catch (err) {
+    console.warn("User presence status sync warning:", err);
+  }
+}
+
+// Listen for custom status changes dispatched from chat.html or auto-away timer
+window.addEventListener('userStatusChanged', (e) => {
+  const newStatus = e.detail?.status || 'active';
+  updateUserPresenceStatus(newStatus);
+});
 
 // Helper to check if current user has Admin Overdrive privileges
 function isUserAdmin() {
@@ -28,12 +59,12 @@ function getActiveCollectionName() {
 // Helper to safely convert any timestamp format to numeric milliseconds
 function parseTimestampToMillis(rawTimestamp) {
   if (!rawTimestamp) return Date.now();
-   
+    
   // Firestore Timestamp object (.toDate())
   if (typeof rawTimestamp.toDate === 'function') {
     return rawTimestamp.toDate().getTime();
   }
-   
+    
   // Already a numeric timestamp
   if (typeof rawTimestamp === 'number') {
     return rawTimestamp;
@@ -53,7 +84,7 @@ export function initChatFeed() {
 
   const collectionName = getActiveCollectionName();
   const chatRef = collection(db, collectionName);
-   
+    
   // Fetch up to 75 latest messages without strict database-side data-type indexing
   const q = query(chatRef, limit(75));
 
@@ -61,7 +92,7 @@ export function initChatFeed() {
 
   chatUnsubscribe = onSnapshot(q, async (snapshot) => {
     if (!messagesDisplay) return;
-     
+      
     const messages = [];
     snapshot.forEach((doc) => {
       const data = doc.data();
@@ -86,7 +117,7 @@ export function initChatFeed() {
 
     if (messages.length > 0) {
       messagesDisplay.innerHTML = messages.map(msg => renderMessageHTML(msg)).join('');
-       
+        
       // Auto-scroll to the bottom of the feed for live chat behavior
       setTimeout(() => {
         messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
@@ -225,8 +256,8 @@ function revertModeSelectorUI() {
 
 // 3. User Message Sender & Secret Commands
 window.handleSendChatMessage = async function(event) {
-  event.preventDefault();
-  const input = document.getElementById('chat-input');
+  if (event) event.preventDefault();
+  const input = document.getElementById('chat-input') || document.getElementById('user-input-msg');
   if (!input || !input.value.trim()) return;
 
   const text = input.value.trim();
@@ -261,6 +292,7 @@ window.handleSendChatMessage = async function(event) {
   try {
     const collectionName = getActiveCollectionName();
     const isAdmin = isUserAdmin();
+    const userStatus = localStorage.getItem('neko_user_status') || 'active';
 
     await addDoc(collection(db, collectionName), {
       senderName: window.userData?.displayName || window.currentUser?.displayName || (isAdmin ? 'Dev / Admin' : 'Classmate'),
@@ -270,8 +302,12 @@ window.handleSendChatMessage = async function(event) {
       isVIP: !!window.userData?.isVIP || isAdmin,
       isAdmin: isAdmin,
       isNPC: false,
+      senderStatus: userStatus,
       timestamp: Date.now()
     });
+
+    // Also update presence heartbeat on message post
+    updateUserPresenceStatus(userStatus);
 
     input.value = '';
   } catch (err) {
@@ -281,7 +317,7 @@ window.handleSendChatMessage = async function(event) {
 };
 
 window.insertEmoteCode = function(emote) {
-  const input = document.getElementById('chat-input');
+  const input = document.getElementById('chat-input') || document.getElementById('user-input-msg');
   if (input) {
     input.value += ` ${emote} `;
     input.focus();
@@ -443,4 +479,9 @@ setInterval(() => {
 
 document.addEventListener('DOMContentLoaded', () => {
   initChatFeed();
+  
+  // Sync user presence on initial load if logged in
+  if (window.currentUser) {
+    updateUserPresenceStatus();
+  }
 });
