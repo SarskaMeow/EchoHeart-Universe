@@ -19,10 +19,11 @@
       --accent-cyan: #00f0ff;
       --accent-gold: #ffd166;
       --accent-green: #00ffaa;
-      --accent-amber: #ffd166;
+      --accent-amber: #ffaa00;
       --accent-red: #ff0055;
       --accent-glow: rgba(255, 0, 127, 0.55);
       --cyan-glow: rgba(0, 240, 255, 0.55);
+      --gold-glow: rgba(255, 209, 102, 0.75);
       --text-main: #e8dff5;
       --text-light: #ffffff;
       --text-muted: #b8a7d4;
@@ -194,6 +195,23 @@
       color: #ffffff;
       box-shadow: 0 0 18px rgba(255, 0, 127, 0.45);
       text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+    }
+
+    /* HIGH-GLITCH VIP BACKSTAGE CHANNEL BUTTON */
+    .channel-btn.vip-channel {
+      background: linear-gradient(135deg, rgba(30, 20, 5, 0.9), rgba(15, 8, 2, 0.95));
+      border: 1.5px solid var(--accent-gold);
+      color: var(--accent-gold);
+      box-shadow: 0 0 12px rgba(255, 209, 102, 0.3);
+      animation: vipGlitchPulse 1.8s infinite alternate ease-in-out;
+    }
+
+    .channel-btn.vip-channel:hover, .channel-btn.vip-channel.active {
+      background: linear-gradient(135deg, rgba(255, 209, 102, 0.35), rgba(255, 170, 0, 0.25));
+      border-color: #ffffff;
+      color: #ffffff;
+      box-shadow: 0 0 28px var(--gold-glow), inset 0 0 12px rgba(255, 209, 102, 0.6);
+      text-shadow: 0 0 10px var(--accent-gold), 0 0 20px var(--accent-amber);
     }
 
     /* CENTER CONTAINER: EXPANDED MAIN CHAT FEED */
@@ -674,6 +692,14 @@
       100% { border-color: rgba(0, 240, 255, 0.45); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
     }
 
+    @keyframes vipGlitchPulse {
+      0% { border-color: rgba(255, 209, 102, 0.45); box-shadow: 0 0 10px rgba(255, 170, 0, 0.2); transform: scale(1); }
+      25% { border-color: rgba(255, 0, 127, 0.85); box-shadow: 0 0 25px rgba(255, 0, 127, 0.6); transform: translateX(1px); }
+      50% { border-color: rgba(255, 209, 102, 0.95); box-shadow: 0 0 35px rgba(255, 209, 102, 0.8), inset 0 0 10px rgba(255, 209, 102, 0.4); transform: scale(1.01); }
+      75% { border-color: rgba(0, 240, 255, 0.7); box-shadow: 0 0 20px rgba(0, 240, 255, 0.5); transform: translateX(-1px); }
+      100% { border-color: rgba(255, 209, 102, 0.45); box-shadow: 0 0 10px rgba(255, 170, 0, 0.2); transform: scale(1); }
+    }
+
     @keyframes textGlitchRGB {
       0%, 100% { text-shadow: 2px 0 var(--accent-pink), -2px 0 var(--accent-cyan); }
       50% { text-shadow: -2px 0 var(--accent-pink), 2px 0 var(--accent-cyan); }
@@ -705,11 +731,10 @@
     <div class="nav-inner">
       <nav class="nav-portal-links">
         <a href="index.html" class="nav-pill">🏠 Home</a>
-        
+        <a href="echoheart.html" class="nav-pill">📚 Lore & Books</a>
         <a href="neko-fm.html" class="nav-pill">📻 24/7 Neko FM</a>
-        
-        <a href="podcast.html" class="nav-item-pill">🎙️ Podcast</a>
-        
+        <a href="chat.html" class="nav-pill active">💬 Live Chat</a>
+        <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
         <a href="profile.html" class="nav-pill">👤 Account</a>
       </nav>
 
@@ -723,7 +748,7 @@
   <!-- EXPANDED CHAT CONTAINER -->
   <div class="chat-container">
 
-    <!-- LEFT SIDEBAR: CHANNELS (NO VIP, NO AGE RESTRICTIONS) -->
+    <!-- LEFT SIDEBAR: CHANNELS (INCLUDING BACKSTAGE VIP) -->
     <aside class="sidebar-panel">
       <div class="panel-title">// Chat Channels</div>
       <div class="channel-list">
@@ -739,6 +764,11 @@
         </button>
         <button class="channel-btn" onclick="switchChannel('bots', '🤖 bot-commands')">
           <span># bot-commands</span>
+        </button>
+        <!-- BACKSTAGE VIP CHANNEL (RESTRICTED TO VIP & MODS) -->
+        <button class="channel-btn vip-channel" onclick="switchVIPChannel()">
+          <span>🔒 #backstage-vip</span>
+          <span style="font-size: 0.7rem; font-weight: 900; color: var(--accent-gold);">VIP ⚡</span>
         </button>
       </div>
     </aside>
@@ -915,8 +945,9 @@
 
     window.currentUser = null;
     window.isUserAdmin = false;
+    window.isUserVIP = false;
 
-    // Listen for Auth changes and verify Admin / Moderator roles
+    // Listen for Auth changes and verify Admin / Moderator / VIP roles
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         window.currentUser = user;
@@ -926,6 +957,7 @@
           if (snap.exists()) {
             const data = snap.data();
             window.isUserAdmin = data.role === 'admin' || data.role === 'moderator' || data.isAdmin === true;
+            window.isUserVIP = data.isVIP === true || window.isUserAdmin;
             
             const nameEl = document.getElementById('user-display-name');
             const roleEl = document.getElementById('user-role-display');
@@ -941,11 +973,11 @@
               if (modBanner) modBanner.classList.add('active');
             } else {
               if (nameEl) nameEl.innerText = data.displayName || "Lounge Member";
-              if (roleEl) roleEl.innerText = data.isVIP ? "Backstage VIP" : "Portal Member";
+              if (roleEl) roleEl.innerText = window.isUserVIP ? "Backstage VIP ⚡" : "Portal Member";
             }
           }
         } catch (e) {
-          console.error("Firestore admin check error:", e);
+          console.error("Firestore permission check error:", e);
         }
       }
     });
@@ -1091,6 +1123,20 @@
       document.getElementById('current-room-title').textContent = channelTitle.toUpperCase();
     }
 
+    function switchVIPChannel() {
+      if (!window.isUserVIP && !window.isUserAdmin) {
+        alert("🔒 Access Denied: The #backstage-vip channel is reserved for Backstage VIP members and System Moderators. Upgrade your account on the Account page!");
+        window.location.href = "profile.html";
+        return;
+      }
+      
+      document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+      }
+      document.getElementById('current-room-title').textContent = "⚡ #BACKSTAGE-VIP LOUNGE";
+    }
+
     function escapeHtml(str) {
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
@@ -1100,6 +1146,5 @@
       changeUserStatus(savedStatus);
     });
   </script>
- 
 </body>
 </html>
