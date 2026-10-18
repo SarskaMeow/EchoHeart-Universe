@@ -14,6 +14,73 @@ let chatUnsubscribe = null;
 let isSeeding = false;
 
 // ==========================================================================
+// 🛡️ SAFETY RESTRICTIONS & BOT MODERATOR ENGINE
+// ==========================================================================
+
+const PROFANITY_BLOCKLIST = ['badword1', 'badword2', 'slur1', 'toxicword']; // Add custom blocklist terms as needed
+
+const CRISIS_KEYWORDS = [
+  'suicide', 'kill myself', 'want to die', 'end my life', 
+  'self harm', 'cutting myself', 'hopeless and want to end it'
+];
+
+function containsProfanity(text) {
+  const lower = text.toLowerCase();
+  return PROFANITY_BLOCKLIST.some(word => lower.includes(word));
+}
+
+function checkCrisisIntervention(text) {
+  const lower = text.toLowerCase();
+  return CRISIS_KEYWORDS.some(phrase => lower.includes(phrase));
+}
+
+// Quiet Automated Moderator Bot (`NekoBot 🛡️`) Configuration
+const MOD_BOT_NAME = "🛡️ NekoBot (Mod)";
+const BOT_MESSAGES = [
+  "🤖 [System Notice]: Welcome to Otaku Overload! Keep the vibes cyberpunk, stay respectful, and enjoy the 24/7 Neko FM stream 🌸",
+  "⚡ [Reminder]: Need lore updates or character codices? Check out the EchoHeart and Girls of Phantom tabs above!",
+  "🛡️ [Auto-Mod]: Friendly reminder to keep chats positive and welcoming for everyone in the lounge. Have fun!"
+];
+
+let botMessageIndex = 0;
+
+function triggerBotBroadcast(customText = null) {
+  const messagesDisplay = document.getElementById('messages-display') || document.getElementById('chat-feed');
+  if (!messagesDisplay) return;
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+  const textToPost = customText || BOT_MESSAGES[botMessageIndex];
+  if (!customText) {
+    botMessageIndex = (botMessageIndex + 1) % BOT_MESSAGES.length;
+  }
+
+  const botDiv = document.createElement('div');
+  botDiv.className = 'chat-msg-item bot-msg-item';
+  botDiv.style.cssText = "background: rgba(30, 20, 10, 0.85); padding: 12px 16px; border-radius: 12px; border-left: 4px solid #ffd166; margin-bottom: 8px;";
+  botDiv.innerHTML = `
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+      <span style="font-weight: 900; color: #ffd166; font-size: 0.9rem;">
+        ${MOD_BOT_NAME} <span style="background:rgba(255,209,102,0.2); border:1px solid #ffd166; color:#ffd166; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">BOT</span>
+      </span>
+      <span style="font-size: 0.72rem; color: #a092c0;">${timeStr}</span>
+    </div>
+    <div style="color: #e2daf8; font-size: 0.92rem; line-height: 1.4; word-break: break-word;">
+      ${escapeHTML(textToPost)}
+    </div>
+  `;
+
+  messagesDisplay.appendChild(botDiv);
+  messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
+}
+
+// Schedule regular broadcasts every 5 minutes
+setInterval(() => {
+  triggerBotBroadcast();
+}, 5 * 60 * 1000);
+
+// ==========================================================================
 // ⚡ REAL-TIME USER PRESENCE & STATUS SYNC ENGINE
 // ==========================================================================
 
@@ -45,10 +112,10 @@ window.addEventListener('userStatusChanged', (e) => {
 // Helper to check if current user has Admin Overdrive privileges
 function isUserAdmin() {
   if (localStorage.getItem('neko_admin_override') === 'true') return true;
-  return !!(window.userData && (window.userData.isAdmin || window.userData.role === 'admin'));
+  return !!(window.userData && (window.userData.isAdmin || window.userData.role === 'admin' || window.userData.role === 'moderator'));
 }
 
-// Determine active channel collection across all 3 modes
+// Determine active channel collection across all modes including backstage VIP
 function getActiveCollectionName() {
   const mode = localStorage.getItem('neko_active_mode') || 'twilight';
   if (mode === 'backstage') return 'backstage_chat_messages';
@@ -88,7 +155,7 @@ export function initChatFeed() {
   // Fetch up to 75 latest messages without strict database-side data-type indexing
   const q = query(chatRef, limit(75));
 
-  const messagesDisplay = document.getElementById('messages-display');
+  const messagesDisplay = document.getElementById('messages-display') || document.getElementById('chat-feed');
 
   chatUnsubscribe = onSnapshot(q, async (snapshot) => {
     if (!messagesDisplay) return;
@@ -137,7 +204,7 @@ function renderMessageHTML(msg) {
   if (isCore4) {
     badge = `<span style="background:rgba(244,184,196,0.2); border:1px solid #f4b8c4; color:#f4b8c4; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">BAND</span>`;
   } else if (isAdminMsg) {
-    badge = `<span style="background:rgba(255,77,109,0.25); border:1px solid #ff4d6d; color:#ff4d6d; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">ADMIN</span>`;
+    badge = `<span style="background:rgba(255,77,109,0.25); border:1px solid #ff4d6d; color:#ff4d6d; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">MOD</span>`;
   } else if (isVIPMsg) {
     badge = `<span class="vip-badge" style="margin-left:6px;">👑 VIP</span>`;
   }
@@ -175,7 +242,7 @@ function escapeHTML(str) {
 
 // 2. Global Channel Switcher
 window.switchChatChannel = async function(mode) {
-  if (mode === 'twilight') {
+  if (mode === 'twilight' || mode === 'general') {
     setModeState('twilight');
     return;
   }
@@ -211,7 +278,7 @@ window.switchChatChannel = async function(mode) {
     return;
   }
 
-  if (mode === 'backstage') {
+  if (mode === 'backstage' || mode === 'vip') {
     if (!window.currentUser) {
       alert("Sign in with Google to view VIP Backstage status.");
       revertModeSelectorUI();
@@ -254,7 +321,7 @@ function revertModeSelectorUI() {
   if (selector) selector.value = current;
 }
 
-// 3. User Message Sender & Secret Commands
+// 3. User Message Sender with Profanity & Crisis Filtering + Secret Commands
 window.handleSendChatMessage = async function(event) {
   if (event) event.preventDefault();
   const input = document.getElementById('chat-input') || document.getElementById('user-input-msg');
@@ -267,6 +334,18 @@ window.handleSendChatMessage = async function(event) {
     const current = localStorage.getItem('neko_admin_override') === 'true';
     localStorage.setItem('neko_admin_override', (!current).toString());
     alert(current ? "🔴 Admin Overdrive Disabled" : "⚡ Secret Admin Overdrive Activated! Unlocked all channels & posting permissions.");
+    input.value = '';
+    return;
+  }
+
+  // 🛡️ Content Restriction & Safety Enforcement
+  if (containsProfanity(text)) {
+    alert("🛡️ [Auto-Mod]: Please keep our community lounge clean and avoid prohibited language.");
+    return;
+  }
+
+  if (checkCrisisIntervention(text)) {
+    alert("❤️ [Support Notice]: It sounds like you might be going through a difficult time. Please remember that support is available 24/7. You can connect with compassionate professionals by calling or texting 988 (Suicide & Crisis Lifeline). You are not alone.");
     input.value = '';
     return;
   }
@@ -294,10 +373,14 @@ window.handleSendChatMessage = async function(event) {
     const isAdmin = isUserAdmin();
     const userStatus = localStorage.getItem('neko_user_status') || 'active';
 
+    const senderDisplayName = isAdmin 
+      ? '🛡️ MODERATOR' 
+      : (window.userData?.displayName || window.currentUser?.displayName || 'Classmate');
+
     await addDoc(collection(db, collectionName), {
-      senderName: window.userData?.displayName || window.currentUser?.displayName || (isAdmin ? 'Dev / Admin' : 'Classmate'),
+      senderName: senderDisplayName,
       text: text,
-      color: isAdmin ? '#ff4d6d' : (window.userData?.nameColor || (window.userData?.isVIP ? '#ffd166' : '#a88beb')),
+      color: isAdmin ? '#ff007f' : (window.userData?.nameColor || (window.userData?.isVIP ? '#ffd166' : '#a88beb')),
       nameGlow: isAdmin ? 'glow-pink_glow' : (window.userData?.nameGlow || (window.userData?.isVIP ? 'glow-gold_glow' : '')),
       isVIP: !!window.userData?.isVIP || isAdmin,
       isAdmin: isAdmin,
@@ -484,4 +567,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.currentUser) {
     updateUserPresenceStatus();
   }
+
+  // Trigger bot welcome broadcast after 2 seconds
+  setTimeout(() => {
+    triggerBotBroadcast("⚡ [NekoBot]: A new operative has entered the Sub-Stage relay. Welcome aboard!");
+  }, 2000);
 });
