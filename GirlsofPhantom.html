@@ -4,8 +4,69 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Girls of Phantom — Lore & Universe</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="firebase-config.js?v=2"></script>
+  <script type="module" src="age-gate.js"></script>
   <style>
-    /* RESET & GLOBALS */
+    :root {
+      /* Twilight Mode Palette matched to main site */
+      --bg-dark: #0b0818;
+      --card-bg: rgba(22, 15, 42, 0.88);
+      --card-inner: rgba(14, 11, 26, 0.85);
+      --nav-bg: rgba(18, 12, 36, 0.94);
+      --nav-border: rgba(168, 139, 235, 0.35);
+      --accent-purple: #a88beb;
+      --accent-pink: #f4b8c4;
+      --accent-cyan: #00F0FF;
+      --accent-gold: #FFD166;
+      --accent-glow: rgba(168, 139, 235, 0.35);
+      --text-main: #e2daf8;
+      --text-light: #F4EFFD;
+      --text-muted: #cbb8f6;
+      --btn-grad: linear-gradient(135deg, #a88beb 0%, #f4b8c4 100%);
+      --btn-text: #0b0818;
+      --card-border: rgba(168, 139, 235, 0.3);
+      --border-subtle: rgba(168, 139, 235, 0.3);
+      --card-hover-border: #f4b8c4;
+      --card-hover-shadow: rgba(244, 184, 196, 0.25);
+    }
+
+    /* Basement Mode Overrides */
+    body.basement-mode {
+      --bg-dark: #05020c;
+      --card-bg: rgba(18, 7, 28, 0.92);
+      --nav-bg: rgba(14, 5, 20, 0.96);
+      --nav-border: rgba(255, 77, 109, 0.5);
+      --accent-purple: #ff4d6d;
+      --accent-pink: #ff007f;
+      --accent-glow: rgba(255, 77, 109, 0.45);
+      --text-main: #fce8ec;
+      --text-muted: #e0b0bb;
+      --btn-grad: linear-gradient(135deg, #ff4d6d 0%, #7209b7 100%);
+      --btn-text: #ffffff;
+      --card-border: rgba(255, 77, 109, 0.4);
+      --card-hover-border: #ff007f;
+      --card-hover-shadow: rgba(255, 0, 127, 0.35);
+    }
+
+    /* Backstage VIP Mode Overrides */
+    body.backstage-mode {
+      --bg-dark: #05020a;
+      --card-bg: rgba(22, 12, 38, 0.92);
+      --nav-bg: rgba(14, 6, 22, 0.98);
+      --nav-border: rgba(255, 209, 102, 0.5);
+      --accent-purple: #ffd166;
+      --accent-pink: #ff007f;
+      --accent-glow: rgba(255, 209, 102, 0.45);
+      --text-main: #ffffff;
+      --text-muted: #e2daf8;
+      --btn-grad: linear-gradient(135deg, #ffd166 0%, #ff007f 100%);
+      --btn-text: #000000;
+      --card-border: rgba(255, 209, 102, 0.4);
+      --card-hover-border: #ffd166;
+      --card-hover-shadow: rgba(255, 209, 102, 0.35);
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -14,99 +75,326 @@
     }
 
     body {
-      background-color: #0b0c10;
-      color: #c5c6c7;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
       line-height: 1.6;
-      padding: 2rem 1rem;
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
 
+    /* Universal Stacked Navbar Styling */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: var(--nav-bg);
+      border-bottom: 2px solid var(--nav-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 14px 20px 12px;
+      box-sizing: border-box;
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    body.basement-mode .navbar { box-shadow: 0 4px 20px rgba(255, 77, 109, 0.18); }
+    body.backstage-mode .navbar { box-shadow: 0 4px 20px rgba(255, 209, 102, 0.25); }
+
+    .nav-header-stacked {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    .brand-centered { text-align: center; }
+
+    .logo-link {
+      text-decoration: none;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo-main {
+      font-family: 'Fredoka', 'Segoe UI', cursive, sans-serif;
+      font-size: 1.85rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 50%, var(--accent-pink) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 12px var(--accent-glow));
+      transition: all 0.4s ease;
+    }
+
+    .logo-link:hover .logo-main {
+      transform: scale(1.02);
+      filter: drop-shadow(0 0 18px var(--accent-pink));
+    }
+
+    .logo-sub {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: var(--accent-pink);
+      text-transform: uppercase;
+      opacity: 0.95;
+      margin-top: 1px;
+      transition: color 0.4s ease;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      width: 100%;
+    }
+
+    .nav-item {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      background: rgba(168, 139, 235, 0.08);
+      border: 1px solid rgba(168, 139, 235, 0.2);
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(168, 139, 235, 0.22);
+      color: #ffffff;
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .tier-switcher-pill {
+      display: inline-flex;
+      background: rgba(10, 5, 22, 0.7);
+      border: 1px solid var(--nav-border);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .tier-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 16px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .tier-btn.active, .tier-btn:hover {
+      background: rgba(168, 139, 235, 0.25);
+      color: #ffffff;
+    }
+
+    .mobile-menu-btn { display: none; }
+
+    @media (max-width: 992px) {
+      .nav-header-stacked { flex-direction: row; justify-content: space-between; }
+      .mobile-menu-btn {
+        display: flex !important;
+        background: rgba(168, 139, 235, 0.15);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        padding: 8px;
+        flex-direction: column;
+        gap: 4px;
+        cursor: pointer;
+      }
+      .hamburger-bar { width: 22px; height: 2.5px; background: var(--accent-pink); border-radius: 2px; }
+      .nav-links {
+        display: none !important;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: var(--nav-bg);
+        border-bottom: 2px solid var(--nav-border);
+        flex-direction: column;
+        padding: 16px; gap: 10px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85);
+      }
+      .nav-links.open { display: flex !important; }
+      .nav-item, .tier-switcher-pill { width: 100%; box-sizing: border-box; justify-content: center; }
+    }
+
+    /* LORE CONTAINER & GLOW EFFECTS */
     .container {
       max-width: 1100px;
-      margin: 0 auto;
+      margin: 40px auto 2rem;
+      padding: 0 1rem;
     }
 
     /* HEADER SECTION */
-    header {
+    header.lore-header {
       text-align: center;
-      margin-bottom: 2.5rem;
-      border-bottom: 1px solid #1f2833;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--card-border);
       padding-bottom: 1.5rem;
     }
 
-    header h1 {
-      font-size: 2.5rem;
-      color: #66fcf1;
+    header.lore-header h1 {
+      font-size: 2.8rem;
+      color: var(--accent-cyan);
       letter-spacing: 3px;
       text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(102, 252, 241, 0.4);
+      text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+      font-weight: 900;
     }
 
-    header p {
-      font-size: 1.1rem;
-      color: #45a29e;
+    header.lore-header p {
+      font-size: 1.15rem;
+      color: var(--accent-pink);
       margin-top: 0.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
 
-    /* HUD STATUS BANNER WIDGET */
+    /* ANIMATED HUD STATUS BANNER WIDGET */
     .hud-banner {
-      background: #1f2833;
-      border: 1px solid #66fcf1;
-      border-radius: 6px;
+      background: var(--card-inner);
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 12px;
       padding: 1.2rem;
-      margin-bottom: 3rem;
-      box-shadow: 0 0 15px rgba(102, 252, 241, 0.15);
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      animation: hudPulse 3s infinite ease-in-out;
       font-family: 'Courier New', Courier, monospace;
+    }
+
+    .hud-banner::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+      background-size: 100% 4px;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.6;
     }
 
     .hud-header {
       font-size: 0.85rem;
-      color: #ff007f;
+      color: var(--accent-pink);
       text-transform: uppercase;
       letter-spacing: 2px;
       margin-bottom: 0.8rem;
       font-weight: bold;
+      position: relative;
+      z-index: 2;
+      animation: textGlitch 4s infinite;
     }
 
     .hud-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 0.8rem;
+      position: relative;
+      z-index: 2;
     }
 
     .hud-metric {
-      background: #0b0c10;
-      padding: 0.6rem 1rem;
-      border-left: 3px solid #66fcf1;
+      background: #05040a;
+      padding: 0.61rem 1rem;
+      border-left: 3.5px solid var(--accent-cyan);
       font-size: 0.95rem;
       color: #fff;
+      border-radius: 4px;
+      box-shadow: inset 0 0 8px rgba(0, 240, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .hud-metric:hover {
+      border-left-color: var(--accent-pink);
+      box-shadow: 0 0 12px rgba(244, 184, 196, 0.3);
+    }
+
+    /* INTERNAL LORE TABS SYSTEM */
+    .lore-subtabs-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--card-border);
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .lore-tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 10px 20px;
+      border-radius: 10px 10px 0 0;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .lore-tab-btn.active, .lore-tab-btn:hover {
+      background: var(--accent-purple);
+      color: #0b0818;
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 18px var(--accent-glow);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeInTab 0.35s ease-out forwards;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeInTab {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* SECTIONS & HEADINGS */
-    section {
-      margin-bottom: 3rem;
-    }
-
     h2 {
       font-size: 1.8rem;
-      color: #ffffff;
-      border-bottom: 2px solid #ff007f;
+      color: var(--text-light);
+      border-bottom: 2px solid var(--accent-pink);
       display: inline-block;
       padding-bottom: 0.3rem;
       margin-bottom: 1.5rem;
       text-transform: uppercase;
       letter-spacing: 1px;
+      text-shadow: 0 0 10px var(--accent-glow);
     }
 
     /* BAND DOSSIER */
     .dossier-card {
-      background: #1f2833;
-      padding: 1.5rem;
-      border-radius: 6px;
-      border-left: 4px solid #ff007f;
+      background: var(--card-bg);
+      padding: 1.8rem;
+      border-radius: 12px;
+      border-left: 5px solid var(--accent-pink);
+      border-top: 1px solid var(--card-border);
+      border-right: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 15px var(--accent-glow);
     }
 
     .dossier-card p {
       margin-bottom: 0.8rem;
+      font-size: 1.02rem;
     }
 
     /* CHARACTER CARDS GRID */
@@ -117,27 +405,29 @@
     }
 
     .char-card {
-      background: #1f2833;
-      border: 1px solid #2c3e50;
-      border-radius: 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
       padding: 1.5rem;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .char-card:hover {
-      transform: translateY(-4px);
-      border-color: #66fcf1;
+      transform: translateY(-6px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
     }
 
     .char-name {
-      font-size: 1.3rem;
-      color: #66fcf1;
+      font-size: 1.35rem;
+      color: var(--accent-cyan);
       margin-bottom: 0.2rem;
+      font-weight: 800;
     }
 
     .char-role {
       font-size: 0.85rem;
-      color: #ff007f;
+      color: var(--accent-pink);
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 1rem;
@@ -146,7 +436,7 @@
 
     .char-desc {
       font-size: 0.95rem;
-      color: #c5c6c7;
+      color: var(--text-main);
     }
 
     /* SYSTEM MECHANICS (CODEX) */
@@ -157,34 +447,151 @@
     }
 
     .codex-item {
-      background: #1f2833;
-      padding: 1.2rem;
-      border-radius: 6px;
+      background: var(--card-bg);
+      padding: 1.4rem;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      transition: all 0.25s ease;
+    }
+
+    .codex-item:hover {
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 15px var(--accent-glow);
     }
 
     .codex-title {
-      color: #66fcf1;
-      font-weight: bold;
+      color: var(--accent-cyan);
+      font-weight: 800;
+      font-size: 1.1rem;
       margin-bottom: 0.4rem;
     }
+
+    /* MODAL OVERLAYS */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(5, 2, 12, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 2px solid var(--accent-purple);
+      border-radius: 22px;
+      padding: 30px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 25px var(--accent-glow);
+    }
+
+    .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.35rem; font-weight: 800; }
+    .modal-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; margin-bottom: 22px; }
+    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
+    .google-btn { background: #ffffff; color: #111; }
+    .close-btn { background: transparent; color: var(--accent-purple); border: 1px solid var(--card-border); }
 
     /* FOOTER */
     footer {
       text-align: center;
       font-size: 0.85rem;
-      color: #5d6d7e;
+      color: var(--text-muted);
       margin-top: 4rem;
-      border-top: 1px solid #1f2833;
+      border-top: 1px solid var(--card-border);
       padding-top: 1.5rem;
+    }
+
+    /* KEYFRAMES */
+    @keyframes hudPulse {
+      0% {
+        box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+        border-color: rgba(0, 240, 255, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 24px rgba(0, 240, 255, 0.6);
+        border-color: rgba(0, 240, 255, 1);
+      }
+      100% {
+        box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+        border-color: rgba(0, 240, 255, 0.5);
+      }
+    }
+
+    @keyframes textGlitch {
+      0%, 92%, 100% {
+        transform: translate(0, 0);
+        text-shadow: none;
+      }
+      93% {
+        transform: translate(-2px, 1px);
+        text-shadow: -2px 0 var(--accent-cyan), 2px 0 var(--accent-pink);
+      }
+      94% {
+        transform: translate(2px, -1px);
+        text-shadow: 2px 0 var(--accent-cyan), -2px 0 var(--accent-pink);
+      }
+      95% {
+        transform: translate(0, 0);
+        text-shadow: none;
+      }
     }
   </style>
 </head>
-<body>
+<body class="twilight-mode">
+
+  <!-- Universal Header Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-header-stacked">
+      
+      <!-- Centered Logo Branding -->
+      <div class="brand-centered">
+        <a href="index.html" class="logo-link">
+          <span class="logo-main">⚡ OTAKU OVERLOAD ⚡</span>
+          <span class="logo-sub">✦ GIRLS DEAD PHANTOM ✦</span>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+
+      <!-- Main Destinations & Tier Switcher -->
+      <nav class="nav-links" id="nav-menu">
+        <a href="index.html" class="nav-item">🏠 Home</a>
+        <a href="podcast.html" class="nav-item">🎙️ Podcast</a>
+        <a href="bbs-forum.html" class="nav-item">💬 Sakuraoka BBS</a>
+        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
+        <a href="anime.html" class="nav-item">📺 Otaku Hub</a>
+        <a href="chat.html" class="nav-item">💬 Live Chat</a>
+        <a href="hub.html" class="nav-item active">🌌 Universe Hub</a>
+
+        <button id="nav-auth-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }" class="nav-item" style="background: rgba(168, 139, 235, 0.25); border: 1px solid var(--accent-purple); cursor: pointer;">
+          🔑 Login
+        </button>
+
+        <div class="tier-switcher-pill">
+          <button type="button" class="tier-btn" data-mode="twilight" onclick="handleModeChange('twilight')">🌸 Twilight</button>
+          <button type="button" class="tier-btn" data-mode="basement" onclick="handleModeChange('basement')">⚡ Basement 🔒</button>
+          <button type="button" class="tier-btn vip" data-mode="backstage" onclick="handleModeChange('backstage')">👑 VIP ✦</button>
+        </div>
+      </nav>
+
+    </div>
+  </header>
 
   <div class="container">
 
-    <!-- HEADER -->
-    <header>
+    <!-- LORE HEADER -->
+    <header class="lore-header">
       <h1>Girls of Phantom</h1>
       <p>Underground Sound • Phantom Frequencies • Real-World Dissonance</p>
     </header>
@@ -200,74 +607,87 @@
       </div>
     </div>
 
-    <!-- BAND DOSSIER -->
-    <section>
-      <h2>Band Dossier</h2>
-      <div class="dossier-card">
-        <p>Beyond the surface-level indie music scene lies a hidden frequency layer. <strong>Girls of Phantom</strong> (GoP / GoPhantom) is an underground unit bridging the gap between raw J-Rock energy and spatial distortion.</p>
-        <p>Their music isn't just performed—it stabilizes ambient Dissonance leaking into reality. When environmental resonance spikes, their sound acts as the counterweight holding the boundary together.</p>
-      </div>
-    </section>
+    <!-- INTERNAL SUB-TABS NAVIGATION -->
+    <div class="lore-subtabs-nav">
+      <button class="lore-tab-btn active" onclick="switchLoreSubtab('dossier')">📖 Band Dossier</button>
+      <button class="lore-tab-btn" onclick="switchLoreSubtab('characters')">🎸 The Core Four</button>
+      <button class="lore-tab-btn" onclick="switchLoreSubtab('mechanics')">⚡ System Mechanics</button>
+    </div>
 
-    <!-- CORE FOUR PROFILES -->
-    <section>
-      <h2>The Core Four</h2>
-      <div class="character-grid">
-        
-        <div class="char-card">
-          <div class="char-name">Akari Minase</div>
-          <div class="char-role">Lead Vocalist & Dissonance Anchor</div>
-          <div class="char-desc">The emotional center of the band. Her vocals drive the group’s Heart Sync, allowing them to channel high-pressure audio signals during live underground sets.</div>
+    <!-- SUB-TAB 1: BAND DOSSIER -->
+    <div id="tab-dossier" class="tab-content active">
+      <section>
+        <h2>Band Dossier</h2>
+        <div class="dossier-card">
+          <p>Beyond the surface-level indie music scene lies a hidden frequency layer. <strong>Girls of Phantom</strong> (GoP / GoPhantom) is an underground unit bridging the gap between raw J-Rock energy and spatial distortion.</p>
+          <p>Their music isn't just performed—it stabilizes ambient Dissonance leaking into reality. When environmental resonance spikes, their sound acts as the counterweight holding the boundary together.</p>
         </div>
+      </section>
+    </div>
 
-        <div class="char-card">
-          <div class="char-name">Nekomi</div>
-          <div class="char-role">Keyboards / Synth & Frequency Mapper</div>
-          <div class="char-desc">The architect behind their 16-bit cat/synth motifs and electronic soundscapes. Tracks atmospheric shifts and converts raw data into melody.</div>
+    <!-- SUB-TAB 2: CORE FOUR PROFILES -->
+    <div id="tab-characters" class="tab-content">
+      <section>
+        <h2>The Core Four</h2>
+        <div class="character-grid">
+          
+          <div class="char-card">
+            <div class="char-name">Akari Minase</div>
+            <div class="char-role">Lead Vocalist & Dissonance Anchor</div>
+            <div class="char-desc">The emotional center of the band. Her vocals drive the group’s Heart Sync, allowing them to channel high-pressure audio signals during live underground sets.</div>
+          </div>
+
+          <div class="char-card">
+            <div class="char-name">Nekomi</div>
+            <div class="char-role">Keyboards / Synth & Frequency Mapper</div>
+            <div class="char-desc">The architect behind their 16-bit cat/synth motifs and electronic soundscapes. Tracks atmospheric shifts and converts raw data into melody.</div>
+          </div>
+
+          <div class="char-card">
+            <div class="char-name">Sera</div>
+            <div class="char-role">Drums & High-Energy Counterweight</div>
+            <div class="char-desc">Provides the explosive pulse that maintains the band's rhythm under heavy Magical Pressure. Direct, high-energy, and unstoppable on stage.</div>
+          </div>
+
+          <div class="char-card">
+            <div class="char-name">Aoi</div>
+            <div class="char-role">Bassist & Harmonic Grounding</div>
+            <div class="char-desc">Completes the primary lineup. Her low-end basslines ground the group's resonance, keeping the stage from collapsing into full Dissonance breaches.</div>
+          </div>
+
         </div>
+      </section>
+    </div>
 
-        <div class="char-card">
-          <div class="char-name">Sera</div>
-          <div class="char-role">Drums & High-Energy Counterweight</div>
-          <div class="char-desc">Provides the explosive pulse that maintains the band's rhythm under heavy Magical Pressure. Direct, high-energy, and unstoppable on stage.</div>
+    <!-- SUB-TAB 3: SYSTEM MECHANICS -->
+    <div id="tab-mechanics" class="tab-content">
+      <section>
+        <h2>System & World Mechanics</h2>
+        <div class="codex-list">
+          
+          <div class="codex-item">
+            <div class="codex-title">Dissonance Layer</div>
+            <div class="codex-desc">Corrupted environmental frequencies that distort audio signals, glitch equipment, and warp spatial reality during high-tension events.</div>
+          </div>
+
+          <div class="codex-item">
+            <div class="codex-title">Echo Resonance (0% to 100%)</div>
+            <div class="codex-desc">Measures environmental Dissonance levels. Higher percentages signal imminent atmospheric disruption and magical interference.</div>
+          </div>
+
+          <div class="codex-item">
+            <div class="codex-title">Heart Sync</div>
+            <div class="codex-desc">Tracks emotional and musical alignment among the four members (Low → Building → Resonant → Harmonized → Overdrive).</div>
+          </div>
+
+          <div class="codex-item">
+            <div class="codex-title">Familiar Awareness & Magical Pressure</div>
+            <div class="codex-desc">Monitors entity presence and surrounding atmospheric strain (Calm → Detected → Surging → Dissonant Breach).</div>
+          </div>
+
         </div>
-
-        <div class="char-card">
-          <div class="char-name">Aoi</div>
-          <div class="char-role">Bassist & Harmonic Grounding</div>
-          <div class="char-desc">Completes the primary lineup. Her low-end basslines ground the group's resonance, keeping the stage from collapsing into full Dissonance breaches.</div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SYSTEM MECHANICS -->
-    <section>
-      <h2>System & World Mechanics</h2>
-      <div class="codex-list">
-        
-        <div class="codex-item">
-          <div class="codex-title">Dissonance Layer</div>
-          <div class="codex-desc">Corrupted environmental frequencies that distort audio signals, glitch equipment, and warp spatial reality during high-tension events.</div>
-        </div>
-
-        <div class="codex-item">
-          <div class="codex-title">Echo Resonance (0% to 100%)</div>
-          <div class="codex-desc">Measures environmental Dissonance levels. Higher percentages signal imminent atmospheric disruption and magical interference.</div>
-        </div>
-
-        <div class="codex-item">
-          <div class="codex-title">Heart Sync</div>
-          <div class="codex-desc">Tracks emotional and musical alignment among the four members (Low → Building → Resonant → Harmonized → Overdrive).</div>
-        </div>
-
-        <div class="codex-item">
-          <div class="codex-title">Familiar Awareness & Magical Pressure</div>
-          <div class="codex-desc">Monitors entity presence and surrounding atmospheric strain (Calm → Detected → Surging → Dissonant Breach).</div>
-        </div>
-
-      </div>
-    </section>
+      </section>
+    </div>
 
     <footer>
       <p>EchoHeart / Girls of Phantom Lore Codex • All Rights Reserved</p>
@@ -275,5 +695,135 @@
 
   </div>
 
+  <script>
+    /* SUB-TAB SWITCHING LOGIC */
+    function switchLoreSubtab(subtabName) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.lore-tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      const targetTab = document.getElementById(`tab-${subtabName}`);
+      if (targetTab) targetTab.classList.add('active');
+
+      event.currentTarget.classList.add('active');
+    }
+
+    /* GLOBAL SITE TIER & MOBILE NAV SCRIPT */
+    async function handleModeChange(targetMode) {
+      if (targetMode === 'twilight') {
+        applyThemeMode('twilight');
+        return;
+      }
+
+      if (targetMode === 'basement') {
+        if (!window.currentUser) {
+          showAuthModal('Sign-In Required', 'Sign in with Google to access After-Hours Basement streams.');
+          return;
+        }
+
+        if (window.userData && window.userData.ageVerified17) {
+          applyThemeMode('basement');
+          return;
+        }
+
+        if (typeof window.handleContentAccess === "function") {
+          const allowed = await window.handleContentAccess('basement');
+          if (allowed) applyThemeMode('basement');
+        } else {
+          alert("The Basement Channel requires 17+ age verification.");
+        }
+        return;
+      }
+
+      if (targetMode === 'backstage') {
+        if (!window.currentUser) {
+          showAuthModal('Sign-In Required', 'Sign in with Google to check your VIP Backstage Pass status.');
+          return;
+        }
+
+        if (window.userData && window.userData.isVIP) {
+          applyThemeMode('backstage');
+        } else {
+          showVIPPromoModal();
+        }
+      }
+    }
+
+    function getCurrentMode() {
+      return localStorage.getItem('neko_active_mode') || 'twilight';
+    }
+
+    function applyThemeMode(mode) {
+      localStorage.setItem('neko_active_mode', mode);
+      const body = document.body;
+
+      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
+      body.classList.add(`${mode}-mode`);
+
+      document.querySelectorAll('.tier-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+      });
+    }
+
+    function showVIPPromoModal() {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card" style="border-color: #ffd166;">
+            <span style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; font-weight: 900; font-size: 0.72rem; padding: 4px 12px; border-radius: 20px; text-transform: uppercase;">Backstage Pass Locked</span>
+            <h3 style="margin: 14px 0 8px; color: #ffd166;">👑 VIP Backstage Access</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px;">
+              Get access to exclusive stem mixers, gold name glows, custom avatar frames, and private band lounge chats!
+            </p>
+            <div class="modal-actions">
+              <a href="neko-fm.html" class="modal-btn" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; text-decoration: none; display: block; box-sizing: border-box;">📊 Vote in Polls & Earn VIP</a>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Close</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function showAuthModal(title, message) {
+      removeExistingModals();
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card">
+            <h3>🔑 ${title}</h3>
+            <p>${message}</p>
+            <div class="modal-actions">
+              <button class="modal-btn google-btn" onclick="if (window.loginWithGoogle) { window.loginWithGoogle(); }">Sign In with Google</button>
+              <button class="modal-btn close-btn" onclick="removeExistingModals()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function removeExistingModals() {
+      const existing = document.getElementById('neko-gate-modal');
+      if (existing) existing.remove();
+    }
+
+    function toggleMobileMenu() {
+      const navMenu = document.getElementById('nav-menu');
+      if (navMenu) navMenu.classList.toggle('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyThemeMode(getCurrentMode());
+
+      document.addEventListener('click', function(event) {
+        const navMenu = document.getElementById('nav-menu');
+        const isInsideNavbar = event.target.closest('.navbar');
+        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
+          navMenu.classList.remove('open');
+        }
+      });
+    });
+  </script>
+
+  <script src="global-player.js"></script>
 </body>
 </html>
