@@ -469,7 +469,7 @@
       position: absolute;
       bottom: 70px;
       left: 1.2rem;
-      width: 320px;
+      width: 360px;
       background: var(--card-bg);
       border: 1.5px solid var(--accent-cyan);
       border-radius: 14px;
@@ -521,7 +521,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      max-height: 180px;
+      max-height: 220px;
       overflow-y: auto;
     }
 
@@ -529,17 +529,35 @@
       background: rgba(5,4,10,0.6);
       border: 1px dashed rgba(0,240,255,0.3);
       border-radius: 8px;
-      padding: 8px;
+      padding: 6px;
       text-align: center;
       cursor: pointer;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
     }
 
     .tray-item-btn:hover {
       background: rgba(0,240,255,0.15);
       border-color: var(--accent-cyan);
       transform: scale(1.05);
+    }
+
+    .chat-sticker-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    .msg-bubble .chat-sticker-img {
+      width: 48px;
+      height: 48px;
+      vertical-align: middle;
+      margin: 2px;
     }
 
     .chat-tool-btn {
@@ -1164,6 +1182,197 @@
   </script>
 
   <script>
+    /* MASTER EMOTE & KAOMOJI CATALOG (IMAGE STICKERS + UNICODE KAOMOJIS) */
+    const MASTER_EMOTE_CATALOG = [
+      // --- 1. CUSTOM IMAGE STICKERS (ALL UPLOADED EXPRESSIONS) ---
+      { 
+        id: 'sticker_giga_smirk', 
+        symbol: '<img src="assets/emotes/giga_smirk.jpg" alt="Giga Smirk" class="chat-sticker-img">', 
+        name: 'Giga Smirk', 
+        pack: 'pack_glitch' 
+      },
+      { 
+        id: 'sticker_bye_bye', 
+        symbol: '<img src="assets/emotes/bye_bye.jpg" alt="Bye Bye!" class="chat-sticker-img">', 
+        name: 'Bye Bye Carriage', 
+        pack: 'pack_chibi' 
+      },
+      { 
+        id: 'sticker_omg_shock', 
+        symbol: '<img src="assets/emotes/omg_shock.jpg" alt="OMG!" class="chat-sticker-img">', 
+        name: 'OMG Shock', 
+        pack: 'free' 
+      },
+      { 
+        id: 'sticker_starry_cheer', 
+        symbol: '<img src="assets/emotes/starry_cheer.jpg" alt="Hyped!" class="chat-sticker-img">', 
+        name: 'Starry Cheer', 
+        pack: 'free' 
+      },
+      { 
+        id: 'sticker_what_shock', 
+        symbol: '<img src="assets/emotes/what_shock.jpg" alt="WHAT?!" class="chat-sticker-img">', 
+        name: 'WHAT?! Shock', 
+        pack: 'pack_glitch' 
+      },
+      { 
+        id: 'sticker_lore_thinking', 
+        symbol: '<img src="assets/emotes/lore_thinking.jpg" alt="Lore Thinking" class="chat-sticker-img">', 
+        name: 'Lore Thinking', 
+        pack: 'pack_chibi' 
+      },
+      { 
+        id: 'sticker_grimoire_codex', 
+        symbol: '<img src="assets/emotes/grimoire_codex.jpg" alt="Grimoire" class="chat-sticker-img">', 
+        name: 'Grimoire Codex', 
+        pack: 'pack_chibi' 
+      },
+      { 
+        id: 'sticker_omg_yay', 
+        symbol: '<img src="assets/emotes/omg_yay.jpg" alt="OMG YAY!" class="chat-sticker-img">', 
+        name: 'OMG YAY Celebration', 
+        pack: 'free' 
+      },
+      { 
+        id: 'sticker_love_yall', 
+        symbol: '<img src="assets/emotes/love_yall.jpg" alt="LOVE YALL" class="chat-sticker-img">', 
+        name: 'Love Yall Heart Hands', 
+        pack: 'pack_chibi' 
+      },
+      { 
+        id: 'sticker_please_begging', 
+        symbol: '<img src="assets/emotes/please_begging.jpg" alt="PLEASE" class="chat-sticker-img">', 
+        name: 'Pleading Please', 
+        pack: 'free' 
+      },
+      { 
+        id: 'sticker_no_way', 
+        symbol: '<img src="assets/emotes/no_way.jpg" alt="NO WAY" class="chat-sticker-img">', 
+        name: 'NO WAY Defense', 
+        pack: 'pack_glitch' 
+      },
+      { 
+        id: 'sticker_uh_oh_panic', 
+        symbol: '<img src="assets/emotes/uh_oh_panic.jpg" alt="UH OH" class="chat-sticker-img">', 
+        name: 'UH OH Panic', 
+        pack: 'pack_glitch' 
+      },
+      { 
+        id: 'sticker_thumbs_down', 
+        symbol: '<img src="assets/emotes/thumbs_down.jpg" alt="Thumbs Down" class="chat-sticker-img">', 
+        name: 'Dislike Thumbs Down', 
+        pack: 'free' 
+      },
+      { 
+        id: 'sticker_rage_scream', 
+        symbol: '<img src="assets/emotes/rage_scream.jpg" alt="Rage" class="chat-sticker-img">', 
+        name: 'Rage Scream', 
+        pack: 'pack_glitch' 
+      },
+      { 
+        id: 'sticker_aww_hearts', 
+        symbol: '<img src="assets/emotes/aww_hearts.jpg" alt="AWW" class="chat-sticker-img">', 
+        name: 'AWW Heart Eyes', 
+        pack: 'free' 
+      },
+      { 
+        id: 'sticker_sigh_facepalm', 
+        symbol: '<img src="assets/emotes/sigh_facepalm.jpg" alt="Sigh" class="chat-sticker-img">', 
+        name: 'Facepalm Sigh', 
+        pack: 'pack_chibi' 
+      },
+      { 
+        id: 'sticker_big_brain', 
+        symbol: '<img src="assets/emotes/big_brain.jpg" alt="BIG BRAIN" class="chat-sticker-img">', 
+        name: 'Big Brain Idea', 
+        pack: 'pack_glitch' 
+      },
+      { 
+        id: 'sticker_sad_sigh', 
+        symbol: '<img src="assets/emotes/sad_sigh.jpg" alt="Sad Sigh" class="chat-sticker-img">', 
+        name: 'Sad Sigh', 
+        pack: 'free' 
+      },
+      { 
+        id: 'sticker_blushing_reader', 
+        symbol: '<img src="assets/emotes/blushing_reader.jpg" alt="Shy Reader" class="chat-sticker-img">', 
+        name: 'Blushing Reader', 
+        pack: 'pack_chibi' 
+      },
+      { 
+        id: 'sticker_ez_smirk', 
+        symbol: '<img src="assets/emotes/ez_smirk.jpg" alt="EZ" class="chat-sticker-img">', 
+        name: 'EZ Victory Sign', 
+        pack: 'pack_vip' 
+      },
+      { 
+        id: 'sticker_friendly_wave', 
+        symbol: '<img src="assets/emotes/friendly_wave.jpg" alt="Wave" class="chat-sticker-img">', 
+        name: 'Friendly Wave', 
+        pack: 'free' 
+      },
+      { 
+        id: 'sticker_terrified_blanket', 
+        symbol: '<img src="assets/emotes/terrified_blanket.jpg" alt="Terrified" class="chat-sticker-img">', 
+        name: 'Terrified Shiver', 
+        pack: 'pack_glitch' 
+      },
+      { 
+        id: 'sticker_im_out_portal', 
+        symbol: '<img src="assets/emotes/im_out_portal.jpg" alt="IM OUT" class="chat-sticker-img">', 
+        name: 'IM OUT Portal Vanish', 
+        pack: 'pack_vip' 
+      },
+      { 
+        id: 'sticker_hmm_detective', 
+        symbol: '<img src="assets/emotes/hmm_detective.jpg" alt="HMM" class="chat-sticker-img">', 
+        name: 'HMM Magnifying Glass', 
+        pack: 'pack_chibi' 
+      },
+      { 
+        id: 'sticker_strike_bat', 
+        symbol: '<img src="assets/emotes/strike_bat.jpg" alt="STRIKE" class="chat-sticker-img">', 
+        name: 'STRIKE Bat Swing', 
+        pack: 'pack_vip' 
+      },
+
+      // --- 2. SUPER MEGA EXTENDED KAOMOJI & UNICODE TEXT EMOJI LIBRARY ---
+      { id: 'kao_1', symbol: ' (๑•̀ㅂ•́)و ', name: 'Determined', pack: 'free' },
+      { id: 'kao_2', symbol: ' (╯°□°)╯︵ ┻━┻ ', name: 'Table Flip', pack: 'free' },
+      { id: 'kao_3', symbol: ' ┬─┬ノ( º _ ºノ) ', name: 'Table Respect', pack: 'free' },
+      { id: 'kao_4', symbol: ' (◕‿◕✿) ', name: 'Kawaii Smile', pack: 'free' },
+      { id: 'kao_5', symbol: ' (╥﹏╥) ', name: 'Tears', pack: 'free' },
+      { id: 'kao_6', symbol: ' ( ° ͜ʖ °) ', name: 'Lenny Smirk', pack: 'free' },
+      { id: 'kao_7', symbol: ' ヽ(´▽`)/ ', name: 'Joy Hurrah', pack: 'free' },
+      { id: 'kao_8', symbol: ' (⁠ ⁠•⁠_⁠•⁠)⁠; ', name: 'Sweat Drop', pack: 'free' },
+      { id: 'kao_9', symbol: ' (⁠≧⁠▽⁠≦⁠) ', name: 'Excited Laugh', pack: 'free' },
+      { id: 'kao_10', symbol: ' ¯\\_(ツ)_/¯ ', name: 'Shrug', pack: 'free' },
+      { id: 'kao_11', symbol: ' ( ͡° ͜ʖ ͡°) ', name: 'Classic Lenny', pack: 'free' },
+      { id: 'kao_12', symbol: ' (ಠ_ಠ) ', name: 'Disapproval', pack: 'free' },
+      { id: 'kao_13', symbol: ' (ง\'̀-\'́)ง ', name: 'Fight Me', pack: 'free' },
+      { id: 'kao_14', symbol: ' ʕ•ᴥ•ʔ ', name: 'Bear Hug', pack: 'free' },
+      { id: 'kao_15', symbol: ' (•_•) ( •_•)>⌐■-■ (⌐■_■) ', name: 'Deal With It', pack: 'free' },
+      { id: 'kao_16', symbol: ' (x_x) ', name: 'K.O.', pack: 'free' },
+      { id: 'kao_17', symbol: ' (づ｡◕‿‿◕｡)づ ', name: 'Gimme Hug', pack: 'free' },
+      { id: 'kao_18', symbol: ' (ಥ﹏ಥ) ', name: 'Crying Tears of Joy', pack: 'free' },
+      { id: 'kao_19', symbol: ' (☉_☉) ', name: 'Shocked Eyes', pack: 'free' },
+      { id: 'kao_20', symbol: ' (⠂⠁⠁⠂) ', name: 'Blink', pack: 'free' },
+
+      // --- 3. STANDARD SYMBOLS & CYBER EMOJIS ---
+      { id: 'emo_1', symbol: '⚡', name: 'Glitch Bolt', pack: 'free' },
+      { id: 'emo_2', symbol: '🌀', name: 'Vortex', pack: 'free' },
+      { id: 'emo_3', symbol: '🖥️', name: 'HUD Display', pack: 'free' },
+      { id: 'emo_4', symbol: '🎸', name: 'Guitar', pack: 'free' },
+      { id: 'emo_5', symbol: '🎤', name: 'Mic', pack: 'free' },
+      { id: 'emo_6', symbol: '✨', name: 'Sparkles', pack: 'free' },
+      { id: 'emo_7', symbol: '🐾', name: 'Paws', pack: 'free' },
+      { id: 'emo_8', symbol: '👑', name: 'Crown', pack: 'pack_vip' },
+      { id: 'emo_9', symbol: '🔥', name: 'Overdrive Fire', pack: 'pack_vip' },
+      { id: 'emo_10', symbol: '🔮', name: 'Orb', pack: 'free' },
+      { id: 'emo_11', symbol: '🎧', name: 'Headphones', pack: 'free' },
+      { id: 'emo_12', symbol: '🌸', name: 'Sakura Blossom', pack: 'free' }
+    ];
+
     /* REAL-TIME USER STATUS MANAGEMENT & 5-MINUTE AUTO-AWAY TIMER */
     let currentUserStatus = 'active'; // 'active', 'away', or 'busy'
     let lastActivityTimestamp = Date.now();
@@ -1396,20 +1605,24 @@
       let html = '';
 
       if (category === 'emojis') {
-        const availableEmojis = [
-          { symbol: '🎸', name: 'Chibi Idol' },
-          { symbol: '⚡', name: 'Glitch Spark' },
-          { symbol: '🐾', name: 'Nekomi Paws' },
-          { symbol: '👑', name: 'VIP Crown' },
-          { symbol: '🎤', name: 'Microphone' },
-          { symbol: '💖', name: 'Heart' },
-          { symbol: '🌀', name: 'Vortex' },
-          { symbol: '🖥️', name: 'HUD Display' }
-        ];
+        const unlockedPacks = window.userData?.unlocked_items || [];
+        const isModOrAdmin = window.isUserAdmin || window.isUserVIP;
 
-        availableEmojis.forEach(item => {
-          html += `<button type="button" class="tray-item-btn" title="${item.name}" onclick="insertIntoChatInput('${item.symbol}')">${item.symbol}</button>`;
+        // Filter emotes: Show if free, if user unlocked the pack, OR if user is Mod/VIP
+        const usableEmotes = MASTER_EMOTE_CATALOG.filter(emote => {
+          if (isModOrAdmin) return true; // Mods & VIPs get ALL emotes and stickers
+          if (emote.pack === 'free') return true;
+          return unlockedPacks.includes(emote.pack);
         });
+
+        usableEmotes.forEach(item => {
+          const safeSymbol = item.symbol.replace(/"/g, '&quot;');
+          html += `<button type="button" class="tray-item-btn" title="${item.name}" onclick="insertIntoChatInput('${safeSymbol}')">${item.symbol}</button>`;
+        });
+
+        if (usableEmotes.length === 0) {
+          html = `<div style="grid-column: span 4; font-size:0.75rem; color:var(--text-muted); text-align:center; padding: 10px;">No emotes unlocked yet! Visit the Orb Store to get packs.</div>`;
+        }
       } else if (category === 'colors') {
         html = `
           <div style="grid-column: span 4; font-size:0.75rem; color:var(--text-muted); text-align:center; padding: 10px;">
