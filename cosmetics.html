@@ -1,208 +1,465 @@
-<script>
-    /* INTERACTIVE HUD CYCLING LOGIC FOR LANDING PAGE */
-    const gateStates = [
-      { text: "[Sub-Stage Gate: Online]", mode: "" },
-      { text: "[Sub-Stage Gate: Overclocked]", mode: "warn" },
-      { text: "[Sub-Stage Gate: Critical Strain!]", mode: "alert" }
-    ];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cosmetics & Orb Store — Otaku Overload</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="firebase-config.js?v=3"></script>
+  <script type="module" src="age-gate.js"></script>
+  <style>
+    :root {
+      --bg-dark: #040209;
+      --card-bg: rgba(15, 7, 28, 0.94);
+      --card-inner: rgba(8, 3, 16, 0.94);
+      --nav-bg: rgba(9, 4, 18, 0.96);
+      --accent-purple: #9d4edd;
+      --accent-pink: #ff007f;
+      --accent-cyan: #00f0ff;
+      --accent-gold: #ffd166;
+      --accent-glow: rgba(255, 0, 127, 0.55);
+      --cyan-glow: rgba(0, 240, 255, 0.55);
+      --text-main: #e8dff5;
+      --text-light: #ffffff;
+      --text-muted: #b8a7d4;
+      --card-border: rgba(255, 0, 127, 0.45);
+      --border-cyan: rgba(0, 240, 255, 0.45);
+      --btn-grad: linear-gradient(135deg, #9d4edd 0%, #ff007f 100%);
+    }
 
-    const nodeStates = [
-      { text: "[Node Frequency: 108.0 MHz]", mode: "" },
-      { text: "[Node Frequency: Boosted]", mode: "warn" },
-      { text: "[Node Frequency: Resonant Surge]", mode: "alert" }
-    ];
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
 
-    const dissonanceStates = [
-      { text: "[Dissonance Static: Low]", mode: "" },
-      { text: "[Dissonance Static: Spiking]", mode: "warn" },
-      { text: "[Dissonance Static: BREACH!]", mode: "alert" }
-    ];
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(157, 78, 221, 0.18) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.12) 0%, transparent 50%);
+    }
 
-    const syncStates = [
-      { text: "[Heart Sync Circuit: Building]", mode: "" },
-      { text: "[Heart Sync Circuit: Resonant]", mode: "" },
-      { text: "[Heart Sync Circuit: 100% OVERDRIVE]", mode: "alert" }
-    ];
+    /* TOP NAVIGATION */
+    .chat-navbar {
+      background: var(--nav-bg);
+      border-bottom: 1.5px solid var(--border-cyan);
+      padding: 10px 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.25);
+      z-index: 100;
+    }
 
-    let idxGate = 0;
-    let idxNode = 0;
-    let idxDissonance = 0;
-    let idxSync = 1;
+    .nav-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
 
-    function updateHudBtn(btnId, textId, stateArr, currentIdx) {
-      const btn = document.getElementById(btnId);
-      const textSpan = document.getElementById(textId);
-      const state = stateArr[currentIdx];
+    .nav-portal-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-      textSpan.textContent = state.text;
-      btn.classList.remove('warn', 'alert');
-      if (state.mode) {
-        btn.classList.add(state.mode);
+    .nav-pill {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      background: rgba(22, 10, 36, 0.85);
+      border: 1px solid rgba(157, 78, 221, 0.35);
+      transition: all 0.25s ease;
+    }
+
+    .nav-pill:hover, .nav-pill.active {
+      background: rgba(255, 0, 127, 0.25);
+      color: #ffffff;
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 18px var(--accent-glow);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 1.5rem;
+      width: 100%;
+    }
+
+    .page-title {
+      font-size: 2.2rem;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+    }
+
+    .page-subtitle {
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    /* EQUIPMENT DASHBOARD */
+    .equipped-banner {
+      background: var(--card-bg);
+      border: 1.5px solid var(--accent-pink);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .profile-preview-box {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .preview-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border: 2px solid var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+
+    .preview-username {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    .orb-balance-pill {
+      background: rgba(0, 240, 255, 0.12);
+      border: 1.5px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 8px 18px;
+      border-radius: 20px;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+    }
+
+    /* STORE CONTAINER */
+    .store-container {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
+    }
+
+    .store-tabs-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .store-tab-btn {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .store-tab-btn.active, .store-tab-btn:hover {
+      background: rgba(157, 78, 221, 0.3);
+      color: #fff;
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .store-item-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .store-item-card {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+
+    .store-item-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 240, 255, 0.25);
+    }
+
+    .store-item-preview {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin: 16px 0;
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(5, 4, 10, 0.6);
+      border: 1px dashed var(--border-cyan);
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .buy-orb-btn {
+      background: var(--btn-grad);
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .buy-orb-btn:hover {
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .buy-orb-btn:disabled {
+      background: rgba(160, 155, 185, 0.15);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION -->
+  <header class="chat-navbar">
+    <div class="nav-inner">
+      <nav class="nav-portal-links">
+        <a href="index.html" class="nav-pill">🏠 Home</a>
+        <a href="echoheart.html" class="nav-pill">📚 Girls of Phantom</a>
+        <a href="neko-fm.html" class="nav-pill">📻 24/7 Neko FM</a>
+        <a href="chat.html" class="nav-pill">💬 Live Chat</a>
+        <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
+        <a href="cosmetics.html" class="nav-pill active">🔮 Orb Store</a>
+        <a href="profile.html" class="nav-pill">👤 Account</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1 class="page-title">🔮 Cosmetic Orb Store</h1>
+    <p class="page-subtitle">Customize your chat presence with unlocked colors, borders, and emoji packs.</p>
+
+    <!-- EQUIPPED PROFILE PREVIEW -->
+    <div class="equipped-banner">
+      <div class="profile-preview-box">
+        <div class="preview-avatar" id="equipped-avatar-frame">👤</div>
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 800;">CURRENT PROFILE PREVIEW</div>
+          <div class="preview-username" id="equipped-name-preview">Member</div>
+        </div>
+      </div>
+      <div class="orb-balance-pill" id="user-orb-display">
+        Your Balance: 🔮 0 Orbs
+      </div>
+    </div>
+
+    <!-- MAIN STORE GRID & TABS -->
+    <div class="store-container">
+      <div class="store-tabs-nav">
+        <button class="store-tab-btn active" id="tab-colors" onclick="switchTab('colors')">🎨 Name Colors</button>
+        <button class="store-tab-btn" id="tab-frames" onclick="switchTab('frames')">🖼️ Avatar Borders</button>
+        <button class="store-tab-btn" id="tab-emojis" onclick="switchTab('emojis')">💬 Emoji Packs</button>
+      </div>
+
+      <div class="store-item-grid" id="store-grid-content">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './firebase-config.js?v=3';
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { doc, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    window.userData = null;
+    let currentCategory = 'colors';
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const snap = await getDoc(userRef);
+          if (snap.exists()) {
+            window.userData = snap.data();
+            updateUI();
+          }
+        } catch (e) {
+          console.error("Error loading user profile:", e);
+        }
+      } else {
+        updateUI();
       }
+    });
+
+    function updateUI() {
+      const orbs = window.userData?.orb_balance || 0;
+      document.getElementById('user-orb-display').innerText = `Your Balance: 🔮 ${orbs.toLocaleString()} Orbs`;
+      renderGrid(currentCategory);
     }
 
-    function cycleGateStatus() {
-      idxGate = (idxGate + 1) % gateStates.length;
-      updateHudBtn('btn-gate', 'text-gate', gateStates, idxGate);
-    }
+    window.switchTab = function(category) {
+      currentCategory = category;
+      document.querySelectorAll('.store-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`tab-${category}`).classList.add('active');
+      renderGrid(category);
+    };
 
-    function cycleNodeStatus() {
-      idxNode = (idxNode + 1) % nodeStates.length;
-      updateHudBtn('btn-node', 'text-node', nodeStates, idxNode);
-    }
-
-    function cycleDissonanceLayer() {
-      idxDissonance = (idxDissonance + 1) % dissonanceStates.length;
-      updateHudBtn('btn-dissonance', 'text-dissonance', dissonanceStates, idxDissonance);
-    }
-
-    function cycleSyncStatus() {
-      idxSync = (idxSync + 1) % syncStates.length;
-      updateHudBtn('btn-sync', 'text-sync', syncStates, idxSync);
-    }
-
-    /* EXPANDED ORB STORE MODAL & TAB-SWITCHING LOGIC */
-    function openOrbStoreModal() {
-      removeExistingModals();
-      renderStoreTab('colors');
-    }
-
-    function renderStoreTab(category) {
-      const existingModal = document.getElementById('neko-gate-modal');
-      if (existingModal) existingModal.remove();
-
+    function renderGrid(category) {
+      const grid = document.getElementById('store-grid-content');
       const userOrbs = window.userData?.orb_balance || 0;
-
-      // Define items per category
-      let itemsHTML = '';
+      const unlocked = window.userData?.unlocked_items || [];
+      let html = '';
 
       if (category === 'colors') {
-        itemsHTML = `
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Neon Cyan Glow</div>
-              <div class="store-item-preview" style="color: #00F0FF; text-shadow: 0 0 8px #00F0FF;">[Preview] Member</div>
+        const colors = [
+          { id: 'color_cyan', name: 'Neon Cyan Glow', cost: 150, style: 'color: #00F0FF; text-shadow: 0 0 8px #00F0FF;' },
+          { id: 'color_gold', name: 'Golden Radiance', cost: 300, style: 'color: #FFD166; text-shadow: 0 0 10px #FFD166;' },
+          { id: 'color_pink', name: 'Sakura Pink Sparkle', cost: 150, style: 'color: #ff007f; text-shadow: 0 0 8px #ff007f;' },
+          { id: 'color_purple', name: 'Void Purple Shade', cost: 200, style: 'color: #9d4edd; text-shadow: 0 0 8px #9d4edd;' }
+        ];
+
+        colors.forEach(item => {
+          const owned = unlocked.includes(item.id);
+          html += `
+            <div class="store-item-card">
+              <div>
+                <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
+                <div class="store-item-preview" style="${item.style}">[Preview] Member</div>
+              </div>
+              <button class="buy-orb-btn" ${owned || userOrbs < item.cost ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.cost})">
+                ${owned ? 'Unlocked ✔' : (userOrbs < item.cost ? `Needs ${item.cost} Orbs` : `Buy for 🔮 ${item.cost}`)}
+              </button>
             </div>
-            <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Golden Radiance</div>
-              <div class="store-item-preview" style="color: #FFD166; text-shadow: 0 0 10px #FFD166;">[Preview] Member</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 300 ? 'disabled' : ''}>${userOrbs < 300 ? 'Needs 300 Orbs' : 'Buy for 🔮 300'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Sakura Pink Sparkle</div>
-              <div class="store-item-preview" style="color: #ff007f; text-shadow: 0 0 8px #ff007f;">[Preview] Member</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Void Purple Shade</div>
-              <div class="store-item-preview" style="color: #9d4edd; text-shadow: 0 0 8px #9d4edd;">[Preview] Member</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 200 ? 'disabled' : ''}>${userOrbs < 200 ? 'Needs 200 Orbs' : 'Buy for 🔮 200'}</button>
-          </div>
-        `;
+          `;
+        });
       } else if (category === 'frames') {
-        itemsHTML = `
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Cyberpunk Neon Border</div>
-              <div class="store-item-preview" style="border: 2px solid #00F0FF; box-shadow: 0 0 10px #00F0FF; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">👤</div>
+        const frames = [
+          { id: 'frame_cyan', name: 'Cyberpunk Neon Border', cost: 400, style: 'border: 2px solid #00F0FF; box-shadow: 0 0 10px #00F0FF;' },
+          { id: 'frame_gold', name: 'Royal Gold Crest Frame', cost: 600, style: 'border: 2px solid #FFD166; box-shadow: 0 0 10px #FFD166;' },
+          { id: 'frame_plasma', name: 'Phantom Plasma Frame', cost: 500, style: 'border: 2px solid #ff007f; box-shadow: 0 0 10px #ff007f;' },
+          { id: 'frame_amethyst', name: 'Amethyst Crystal Ring', cost: 450, style: 'border: 2px solid #9d4edd; box-shadow: 0 0 10px #9d4edd;' }
+        ];
+
+        frames.forEach(item => {
+          const owned = unlocked.includes(item.id);
+          html += `
+            <div class="store-item-card">
+              <div>
+                <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
+                <div class="store-item-preview">
+                  <div style="${item.style} padding: 8px; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">👤</div>
+                </div>
+              </div>
+              <button class="buy-orb-btn" ${owned || userOrbs < item.cost ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.cost})">
+                ${owned ? 'Unlocked ✔' : (userOrbs < item.cost ? `Needs ${item.cost} Orbs` : `Buy for 🔮 ${item.cost}`)}
+              </button>
             </div>
-            <button class="buy-orb-btn" ${userOrbs < 400 ? 'disabled' : ''}>${userOrbs < 400 ? 'Needs 400 Orbs' : 'Buy for 🔮 400'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Royal Gold Crest Frame</div>
-              <div class="store-item-preview" style="border: 2px solid #FFD166; box-shadow: 0 0 10px #FFD166; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">👑</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 600 ? 'disabled' : ''}>${userOrbs < 600 ? 'Needs 600 Orbs' : 'Buy for 🔮 600'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Phantom Plasma Frame</div>
-              <div class="store-item-preview" style="border: 2px solid #ff007f; box-shadow: 0 0 10px #ff007f; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">⚡</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 500 ? 'disabled' : ''}>${userOrbs < 500 ? 'Needs 500 Orbs' : 'Buy for 🔮 500'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Amethyst Crystal Ring</div>
-              <div class="store-item-preview" style="border: 2px solid #9d4edd; box-shadow: 0 0 10px #9d4edd; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">🔮</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 450 ? 'disabled' : ''}>${userOrbs < 450 ? 'Needs 450 Orbs' : 'Buy for 🔮 450'}</button>
-          </div>
-        `;
+          `;
+        });
       } else if (category === 'emojis') {
-        itemsHTML = `
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Chibi Idol Emote Pack</div>
-              <div class="store-item-preview">🎸 🎤 ✨ 💖</div>
+        const packs = [
+          { id: 'pack_chibi', name: 'Chibi Idol Emote Pack', cost: 250, preview: '🎸 🎤 ✨ 💖' },
+          { id: 'pack_glitch', name: 'Sub-Stage Glitch Pack', cost: 250, preview: '⚡ 🌀 🖥️ ⚠️' },
+          { id: 'pack_nekomi', name: 'Nekomi Cat Reaction Pack', cost: 300, preview: '🐾 😺 🐟 💤' },
+          { id: 'pack_vip', name: 'VIP Backstage Reactions', cost: 500, preview: '👑 💎 🎧 🔥' }
+        ];
+
+        packs.forEach(item => {
+          const owned = unlocked.includes(item.id);
+          html += `
+            <div class="store-item-card">
+              <div>
+                <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
+                <div class="store-item-preview">${item.preview}</div>
+              </div>
+              <button class="buy-orb-btn" ${owned || userOrbs < item.cost ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.cost})">
+                ${owned ? 'Unlocked ✔' : (userOrbs < item.cost ? `Needs ${item.cost} Orbs` : `Buy for 🔮 ${item.cost}`)}
+              </button>
             </div>
-            <button class="buy-orb-btn" ${userOrbs < 250 ? 'disabled' : ''}>${userOrbs < 250 ? 'Needs 250 Orbs' : 'Buy for 🔮 250'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Sub-Stage Glitch Pack</div>
-              <div class="store-item-preview">⚡ 🌀 🖥️ ⚠️</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 250 ? 'disabled' : ''}>${userOrbs < 250 ? 'Needs 250 Orbs' : 'Buy for 🔮 250'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Nekomi Cat Reaction Pack</div>
-              <div class="store-item-preview">🐾 😺 🐟 💤</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 300 ? 'disabled' : ''}>${userOrbs < 300 ? 'Needs 300 Orbs' : 'Buy for 🔮 300'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">VIP Backstage Reactions</div>
-              <div class="store-item-preview">👑 💎 🎧 🔥</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 500 ? 'disabled' : ''}>${userOrbs < 500 ? 'Needs 500 Orbs' : 'Buy for 🔮 500'}</button>
-          </div>
-        `;
+          `;
+        });
       }
 
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card store-modal-card" style="max-width: 760px;">
-            
-            <div class="store-header-row">
-              <h3 style="margin: 0; color: #ffffff; font-size: 1.4rem;">🔮 Cosmetic Orb Store</h3>
-              <span class="store-orb-balance-pill">Your Orbs: 🔮 ${userOrbs.toLocaleString()}</span>
-            </div>
-
-            <div class="store-tabs-nav">
-              <button class="store-tab-btn ${category === 'colors' ? 'active' : ''}" onclick="renderStoreTab('colors')">🎨 Name Colors</button>
-              <button class="store-tab-btn ${category === 'frames' ? 'active' : ''}" onclick="renderStoreTab('frames')">🖼️ Avatar Borders</button>
-              <button class="store-tab-btn ${category === 'emojis' ? 'active' : ''}" onclick="renderStoreTab('emojis')">💬 Emoji Packs</button>
-            </div>
-
-            <div class="store-item-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
-              ${itemsHTML}
-            </div>
-
-            <div style="margin-top: 24px; text-align: right;">
-              <button class="close-btn" onclick="removeExistingModals()">Close Store</button>
-            </div>
-
-          </div>
-        </div>
-      `;
-
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
+      grid.innerHTML = html;
     }
 
-    function removeExistingModals() {
-      const existing = document.getElementById('neko-gate-modal');
-      if (existing) existing.remove();
-    }
+    window.buyItem = async function(itemId, cost) {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("🔑 Please log in first to purchase items!");
+        return;
+      }
+
+      const userRef = doc(db, "users", user.uid);
+
+      try {
+        await runTransaction(db, async (transaction) => {
+          const sfDoc = await transaction.get(userRef);
+          if (!sfDoc.exists()) throw new Error("User profile not found!");
+
+          const data = sfDoc.data();
+          const currentOrbs = data.orb_balance || 0;
+          const unlocked = data.unlocked_items || [];
+
+          if (currentOrbs < cost) throw new Error("Insufficient Orbs!");
+
+          transaction.update(userRef, {
+            orb_balance: currentOrbs - cost,
+            unlocked_items: [...unlocked, itemId]
+          });
+        });
+
+        alert("✨ Cosmetic unlocked!");
+        const updatedSnap = await getDoc(userRef);
+        window.userData = updatedSnap.data();
+        updateUI();
+
+      } catch (e) {
+        alert(`⚠️ ${e.message}`);
+      }
+    };
   </script>
+</body>
+</html>
