@@ -1,501 +1,208 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orb Shop & Wardrobe - Otaku Overload</title>
-  <style>
-    :root {
-      --bg: #0d0b18;
-      --card-bg: #160f2a;
-      --card-border: rgba(168, 139, 235, 0.2);
-      --accent-purple: #a88beb;
-      --accent-gold: #ffd166;
-      --accent-pink: #ff4d6d;
-      --text: #e2d9f3;
-      --text-muted: #a092c0;
-    }
+<script>
+    /* INTERACTIVE HUD CYCLING LOGIC FOR LANDING PAGE */
+    const gateStates = [
+      { text: "[Sub-Stage Gate: Online]", mode: "" },
+      { text: "[Sub-Stage Gate: Overclocked]", mode: "warn" },
+      { text: "[Sub-Stage Gate: Critical Strain!]", mode: "alert" }
+    ];
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    const nodeStates = [
+      { text: "[Node Frequency: 108.0 MHz]", mode: "" },
+      { text: "[Node Frequency: Boosted]", mode: "warn" },
+      { text: "[Node Frequency: Resonant Surge]", mode: "alert" }
+    ];
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    const dissonanceStates = [
+      { text: "[Dissonance Static: Low]", mode: "" },
+      { text: "[Dissonance Static: Spiking]", mode: "warn" },
+      { text: "[Dissonance Static: BREACH!]", mode: "alert" }
+    ];
 
-    /* Navbar */
-    .navbar {
-      background: rgba(22, 15, 42, 0.9);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--card-border);
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+    const syncStates = [
+      { text: "[Heart Sync Circuit: Building]", mode: "" },
+      { text: "[Heart Sync Circuit: Resonant]", mode: "" },
+      { text: "[Heart Sync Circuit: 100% OVERDRIVE]", mode: "alert" }
+    ];
 
-    .nav-brand {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--accent-purple);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    let idxGate = 0;
+    let idxNode = 0;
+    let idxDissonance = 0;
+    let idxSync = 1;
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+    function updateHudBtn(btnId, textId, stateArr, currentIdx) {
+      const btn = document.getElementById(btnId);
+      const textSpan = document.getElementById(textId);
+      const state = stateArr[currentIdx];
 
-    .orb-badge {
-      background: rgba(255, 209, 102, 0.15);
-      border: 1px solid var(--accent-gold);
-      color: var(--accent-gold);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-weight: 800;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 0 12px rgba(255, 209, 102, 0.2);
-    }
-
-    .btn-back {
-      background: transparent;
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      padding: 8px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-
-    .btn-back:hover {
-      color: #fff;
-      border-color: var(--accent-purple);
-    }
-
-    /* Container */
-    .shop-container {
-      max-width: 1100px;
-      width: 100%;
-      margin: 30px auto;
-      padding: 0 20px;
-      flex: 1;
-    }
-
-    .shop-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .shop-header h1 {
-      font-size: 2.2rem;
-      color: #fff;
-      margin-bottom: 8px;
-      text-shadow: 0 0 15px rgba(168, 139, 235, 0.4);
-    }
-
-    .shop-header p {
-      color: var(--text-muted);
-      font-size: 1rem;
-    }
-
-    /* Category Tabs */
-    .category-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .tab-btn:hover {
-      color: #fff;
-      border-color: var(--accent-purple);
-    }
-
-    .tab-btn.active {
-      background: linear-gradient(135deg, var(--accent-purple), #8a64d6);
-      color: #000;
-      border-color: transparent;
-      box-shadow: 0 4px 15px rgba(168, 139, 235, 0.3);
-    }
-
-    /* Items Grid */
-    .items-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 20px;
-    }
-
-    .item-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      position: relative;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .item-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent-purple);
-    }
-
-    .item-card.equipped-card {
-      border: 2px solid var(--accent-gold);
-      box-shadow: 0 0 15px rgba(255, 209, 102, 0.15);
-    }
-
-    .equipped-tag {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: var(--accent-gold);
-      color: #000;
-      font-size: 0.7rem;
-      font-weight: 900;
-      padding: 3px 8px;
-      border-radius: 6px;
-      text-transform: uppercase;
-    }
-
-    .item-preview {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.3);
-      border: 2px solid var(--card-border);
-      overflow: hidden;
-    }
-
-    .item-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .color-preview-circle {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      box-shadow: 0 0 15px currentColor;
-    }
-
-    .emote-preview-text {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: var(--accent-purple);
-    }
-
-    .item-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-
-    .item-cost {
-      font-size: 0.9rem;
-      color: var(--accent-gold);
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .action-btn {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      font-weight: 800;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s ease;
-      margin-top: auto;
-    }
-
-    .btn-buy {
-      background: linear-gradient(135deg, var(--accent-purple), #f4b8c4);
-      color: #000;
-    }
-
-    .btn-buy:hover {
-      opacity: 0.9;
-      box-shadow: 0 0 12px rgba(168, 139, 235, 0.4);
-    }
-
-    .btn-equip {
-      background: rgba(168, 139, 235, 0.15);
-      color: var(--accent-purple);
-      border: 1px solid var(--accent-purple);
-    }
-
-    .btn-equip:hover {
-      background: var(--accent-purple);
-      color: #000;
-    }
-
-    .btn-active {
-      background: rgba(255, 209, 102, 0.2);
-      color: var(--accent-gold);
-      border: 1px solid var(--accent-gold);
-      cursor: default;
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      border-top: 1px solid var(--card-border);
-      margin-top: 40px;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Navbar -->
-  <header class="navbar">
-    <a href="index.html" class="nav-brand">🔮 Otaku Overload</a>
-    <div class="nav-right">
-      <div class="orb-badge">
-        <span>🔮</span>
-        <span id="nav-orb-count">0</span> Orbs
-      </div>
-      <a href="index.html" class="btn-back">⬅ Return to Lounge</a>
-    </div>
-  </header>
-
-  <!-- Main Shop Interface -->
-  <main class="shop-container">
-    <div class="shop-header">
-      <h1>Cosmetic Emporium & Wardrobe</h1>
-      <p>Spend your Orbs to unlock avatars, chat name colors, and custom emotes!</p>
-    </div>
-
-    <!-- Category Filter Tabs -->
-    <div class="category-tabs">
-      <button class="tab-btn active" onclick="switchCategory('avatars')">👤 Avatars</button>
-      <button class="tab-btn" onclick="switchCategory('colors')">🎨 Name Colors</button>
-      <button class="tab-btn" onclick="switchCategory('emotes')">💬 Emotes</button>
-    </div>
-
-    <!-- Dynamic Items Grid -->
-    <div id="items-grid" class="items-grid">
-      <!-- Generated via JavaScript -->
-    </div>
-  </main>
-
-  <footer>
-    &copy; 2026 Otaku Overload. All rights reserved.
-  </footer>
-
-  <!-- Firebase & Shop Engine Script -->
-  <script type="module">
-    import { auth, db } from './firebase-config.js';
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { doc, getDoc, updateDoc, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // Item Catalog Definition
-    const CATALOG = {
-      avatars: [
-        { id: 'avatar_default', name: 'Starter Neko', cost: 0, url: 'https://api.dicebear.com/7.x/bottts/svg?seed=NekoDefault' },
-        { id: 'avatar_cyber', name: 'Cyber Neko', cost: 250, url: 'https://api.dicebear.com/7.x/bottts/svg?seed=CyberNeko' },
-        { id: 'avatar_twilight', name: 'Twilight Mage', cost: 450, url: 'https://api.dicebear.com/7.x/bottts/svg?seed=TwilightMage' },
-        { id: 'avatar_crimson', name: 'Basement Demon', cost: 600, url: 'https://api.dicebear.com/7.x/bottts/svg?seed=BasementDemon' }
-      ],
-      colors: [
-        { id: 'color_default', name: 'Standard Purple', cost: 0, hex: '#a88beb' },
-        { id: 'color_gold', name: 'Gold Sparkle', cost: 300, hex: '#ffd166' },
-        { id: 'color_crimson', name: 'Basement Crimson', cost: 500, hex: '#ff4d6d' },
-        { id: 'color_neon', name: 'Neon Cyber', cost: 500, hex: '#00f5d4' }
-      ],
-      emotes: [
-        { id: 'emote_wave', code: ':neko_wave:', name: 'Neko Wave', cost: 150 },
-        { id: 'emote_pog', code: ':cat_pog:', name: 'Cat Pog', cost: 250 },
-        { id: 'emote_hype', code: ':orb_hype:', name: 'Orb Hype', cost: 350 }
-      ]
-    };
-
-    let activeCategory = 'avatars';
-    let currentUser = null;
-    let userData = null;
-
-    // Track Auth State & Load Profile
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        currentUser = user;
-        await refreshUserData();
-      } else {
-        alert("Please log in to access the Orb Shop!");
-        window.location.href = "index.html";
-      }
-    });
-
-    async function refreshUserData() {
-      try {
-        const userRef = doc(db, "users", currentUser.uid);
-        const docSnap = await getDoc(userRef);
-
-        if (docSnap.exists()) {
-          userData = docSnap.data();
-          document.getElementById('nav-orb-count').textContent = userData.orbs || 0;
-          renderGrid();
-        }
-      } catch (err) {
-        console.error("Error fetching shop profile:", err);
+      textSpan.textContent = state.text;
+      btn.classList.remove('warn', 'alert');
+      if (state.mode) {
+        btn.classList.add(state.mode);
       }
     }
 
-    // Category Switching
-    window.switchCategory = function(category) {
-      activeCategory = category;
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      renderGrid();
-    };
+    function cycleGateStatus() {
+      idxGate = (idxGate + 1) % gateStates.length;
+      updateHudBtn('btn-gate', 'text-gate', gateStates, idxGate);
+    }
 
-    // Render Store Grid
-    function renderGrid() {
-      const grid = document.getElementById('items-grid');
-      grid.innerHTML = '';
+    function cycleNodeStatus() {
+      idxNode = (idxNode + 1) % nodeStates.length;
+      updateHudBtn('btn-node', 'text-node', nodeStates, idxNode);
+    }
 
-      if (!userData) return;
+    function cycleDissonanceLayer() {
+      idxDissonance = (idxDissonance + 1) % dissonanceStates.length;
+      updateHudBtn('btn-dissonance', 'text-dissonance', dissonanceStates, idxDissonance);
+    }
 
-      const ownedItems = userData.inventory || ['avatar_default', 'color_default'];
-      const items = CATALOG[activeCategory] || [];
+    function cycleSyncStatus() {
+      idxSync = (idxSync + 1) % syncStates.length;
+      updateHudBtn('btn-sync', 'text-sync', syncStates, idxSync);
+    }
 
-      items.forEach(item => {
-        const isOwned = ownedItems.includes(item.id) || item.cost === 0;
-        let isEquipped = false;
+    /* EXPANDED ORB STORE MODAL & TAB-SWITCHING LOGIC */
+    function openOrbStoreModal() {
+      removeExistingModals();
+      renderStoreTab('colors');
+    }
 
-        if (activeCategory === 'avatars') {
-          isEquipped = (userData.equippedAvatar === item.url) || (!userData.equippedAvatar && item.id === 'avatar_default');
-        } else if (activeCategory === 'colors') {
-          isEquipped = (userData.equippedColor === item.hex) || (!userData.equippedColor && item.id === 'color_default');
-        }
+    function renderStoreTab(category) {
+      const existingModal = document.getElementById('neko-gate-modal');
+      if (existingModal) existingModal.remove();
 
-        const card = document.createElement('div');
-        card.className = `item-card ${isEquipped ? 'equipped-card' : ''}`;
+      const userOrbs = window.userData?.orb_balance || 0;
 
-        let previewHTML = '';
-        if (activeCategory === 'avatars') {
-          previewHTML = `<div class="item-preview"><img src="${item.url}" alt="${item.name}"></div>`;
-        } else if (activeCategory === 'colors') {
-          previewHTML = `<div class="item-preview"><div class="color-preview-circle" style="background:${item.hex}; color:${item.hex};"></div></div>`;
-        } else if (activeCategory === 'emotes') {
-          previewHTML = `<div class="item-preview"><span class="emote-preview-text">${item.code}</span></div>`;
-        }
+      // Define items per category
+      let itemsHTML = '';
 
-        let buttonHTML = '';
-        if (isEquipped) {
-          buttonHTML = `<button class="action-btn btn-active" disabled>EQUIPPED</button>`;
-        } else if (isOwned) {
-          buttonHTML = `<button class="action-btn btn-equip" onclick="equipItem('${item.id}', '${activeCategory}')">EQUIP</button>`;
-        } else {
-          buttonHTML = `<button class="action-btn btn-buy" onclick="buyItem('${item.id}', ${item.cost})">BUY (🔮 ${item.cost})</button>`;
-        }
-
-        card.innerHTML = `
-          ${isEquipped ? '<span class="equipped-tag">Active</span>' : ''}
-          ${previewHTML}
-          <div class="item-title">${item.name}</div>
-          <div class="item-cost">${isOwned ? 'OWNED' : '🔮 ' + item.cost + ' Orbs'}</div>
-          ${buttonHTML}
+      if (category === 'colors') {
+        itemsHTML = `
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Neon Cyan Glow</div>
+              <div class="store-item-preview" style="color: #00F0FF; text-shadow: 0 0 8px #00F0FF;">[Preview] Member</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Golden Radiance</div>
+              <div class="store-item-preview" style="color: #FFD166; text-shadow: 0 0 10px #FFD166;">[Preview] Member</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 300 ? 'disabled' : ''}>${userOrbs < 300 ? 'Needs 300 Orbs' : 'Buy for 🔮 300'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Sakura Pink Sparkle</div>
+              <div class="store-item-preview" style="color: #ff007f; text-shadow: 0 0 8px #ff007f;">[Preview] Member</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Void Purple Shade</div>
+              <div class="store-item-preview" style="color: #9d4edd; text-shadow: 0 0 8px #9d4edd;">[Preview] Member</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 200 ? 'disabled' : ''}>${userOrbs < 200 ? 'Needs 200 Orbs' : 'Buy for 🔮 200'}</button>
+          </div>
         `;
+      } else if (category === 'frames') {
+        itemsHTML = `
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Cyberpunk Neon Border</div>
+              <div class="store-item-preview" style="border: 2px solid #00F0FF; box-shadow: 0 0 10px #00F0FF; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">👤</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 400 ? 'disabled' : ''}>${userOrbs < 400 ? 'Needs 400 Orbs' : 'Buy for 🔮 400'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Royal Gold Crest Frame</div>
+              <div class="store-item-preview" style="border: 2px solid #FFD166; box-shadow: 0 0 10px #FFD166; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">👑</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 600 ? 'disabled' : ''}>${userOrbs < 600 ? 'Needs 600 Orbs' : 'Buy for 🔮 600'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Phantom Plasma Frame</div>
+              <div class="store-item-preview" style="border: 2px solid #ff007f; box-shadow: 0 0 10px #ff007f; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">⚡</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 500 ? 'disabled' : ''}>${userOrbs < 500 ? 'Needs 500 Orbs' : 'Buy for 🔮 500'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Amethyst Crystal Ring</div>
+              <div class="store-item-preview" style="border: 2px solid #9d4edd; box-shadow: 0 0 10px #9d4edd; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">🔮</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 450 ? 'disabled' : ''}>${userOrbs < 450 ? 'Needs 450 Orbs' : 'Buy for 🔮 450'}</button>
+          </div>
+        `;
+      } else if (category === 'emojis') {
+        itemsHTML = `
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Chibi Idol Emote Pack</div>
+              <div class="store-item-preview">🎸 🎤 ✨ 💖</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 250 ? 'disabled' : ''}>${userOrbs < 250 ? 'Needs 250 Orbs' : 'Buy for 🔮 250'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Sub-Stage Glitch Pack</div>
+              <div class="store-item-preview">⚡ 🌀 🖥️ ⚠️</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 250 ? 'disabled' : ''}>${userOrbs < 250 ? 'Needs 250 Orbs' : 'Buy for 🔮 250'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Nekomi Cat Reaction Pack</div>
+              <div class="store-item-preview">🐾 😺 🐟 💤</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 300 ? 'disabled' : ''}>${userOrbs < 300 ? 'Needs 300 Orbs' : 'Buy for 🔮 300'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">VIP Backstage Reactions</div>
+              <div class="store-item-preview">👑 💎 🎧 🔥</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 500 ? 'disabled' : ''}>${userOrbs < 500 ? 'Needs 500 Orbs' : 'Buy for 🔮 500'}</button>
+          </div>
+        `;
+      }
 
-        grid.appendChild(card);
-      });
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card store-modal-card" style="max-width: 760px;">
+            
+            <div class="store-header-row">
+              <h3 style="margin: 0; color: #ffffff; font-size: 1.4rem;">🔮 Cosmetic Orb Store</h3>
+              <span class="store-orb-balance-pill">Your Orbs: 🔮 ${userOrbs.toLocaleString()}</span>
+            </div>
+
+            <div class="store-tabs-nav">
+              <button class="store-tab-btn ${category === 'colors' ? 'active' : ''}" onclick="renderStoreTab('colors')">🎨 Name Colors</button>
+              <button class="store-tab-btn ${category === 'frames' ? 'active' : ''}" onclick="renderStoreTab('frames')">🖼️ Avatar Borders</button>
+              <button class="store-tab-btn ${category === 'emojis' ? 'active' : ''}" onclick="renderStoreTab('emojis')">💬 Emoji Packs</button>
+            </div>
+
+            <div class="store-item-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+              ${itemsHTML}
+            </div>
+
+            <div style="margin-top: 24px; text-align: right;">
+              <button class="close-btn" onclick="removeExistingModals()">Close Store</button>
+            </div>
+
+          </div>
+        </div>
+      `;
+
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
 
-    // Purchase Logic
-    window.buyItem = async function(itemId, cost) {
-      if (!currentUser || !userData) return;
-
-      if ((userData.orbs || 0) < cost) {
-        alert(`You don't have enough Orbs! You need ${cost} Orbs to purchase this item.`);
-        return;
-      }
-
-      if (!confirm(`Are you sure you want to spend ${cost} Orbs on this cosmetic?`)) return;
-
-      try {
-        const userRef = doc(db, "users", currentUser.uid);
-        await updateDoc(userRef, {
-          orbs: increment(-cost),
-          inventory: arrayUnion(itemId)
-        });
-
-        alert("Purchase successful!");
-        await refreshUserData();
-      } catch (err) {
-        console.error("Purchase failed:", err);
-        alert("Transaction failed. Please try again.");
-      }
-    };
-
-    // Equip Logic
-    window.equipItem = async function(itemId, category) {
-      if (!currentUser || !userData) return;
-
-      const item = CATALOG[category].find(i => i.id === itemId);
-      if (!item) return;
-
-      try {
-        const userRef = doc(db, "users", currentUser.uid);
-        let updateData = {};
-
-        if (category === 'avatars') {
-          updateData.equippedAvatar = item.url;
-        } else if (category === 'colors') {
-          updateData.equippedColor = item.hex;
-        }
-
-        await updateDoc(userRef, updateData);
-        await refreshUserData();
-      } catch (err) {
-        console.error("Failed to equip item:", err);
-      }
-    };
+    function removeExistingModals() {
+      const existing = document.getElementById('neko-gate-modal');
+      if (existing) existing.remove();
+    }
   </script>
-</body>
-</html>
