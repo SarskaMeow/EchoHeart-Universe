@@ -51,7 +51,7 @@
     /* 🔮 COSMETIC ORB STORE MODAL STYLES                           */
     /* ============================================================ */
     .store-modal-card {
-      max-width: 680px;
+      max-width: 760px;
       width: 90%;
       max-height: 85vh;
       overflow-y: auto;
@@ -109,7 +109,7 @@
 
     .store-item-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 14px;
     }
 
@@ -562,7 +562,7 @@
             Join fan theories, episode breakdowns, music production debates, and lore discussions with fellow Otaku Overload readers.
           </p>
         </div>
-              coming soon!
+        <div style="font-size: 0.9rem; color: var(--accent-gold); font-weight: 700;">✦ Coming Soon!</div>
       </div>
 
       <!-- CARD 4: LIVE CHAT -->
@@ -597,8 +597,12 @@
           <p class="card-desc">
             Spend your daily Orbs to unlock custom name colors, glowing cyberpunk frames, and rare profile title badges for chat rooms.
           </p>
+        </div>
+        <button class="card-link-btn" style="border-color: var(--accent-cyan); background: rgba(0, 240, 255, 0.15);" onclick="openOrbStoreModal()">
+          Open Orb Store Modal 🔮 →
+        </button>
       </div>
-      <a href="cosmetics.html" class="card-link-btn">Listen to Podcast →</a>
+
     </div>
 
     <footer>
@@ -670,57 +674,131 @@
       updateHudBtn('btn-sync', 'text-sync', syncStates, idxSync);
     }
 
-    /* ORB STORE MODAL LOGIC */
+    /* EXPANDED ORB STORE MODAL & TAB-SWITCHING LOGIC */
     function openOrbStoreModal() {
       removeExistingModals();
+      renderStoreTab('colors');
+    }
+
+    function renderStoreTab(category) {
+      const existingModal = document.getElementById('neko-gate-modal');
+      if (existingModal) existingModal.remove();
 
       const userOrbs = window.userData?.orb_balance || 0;
+      let itemsHTML = '';
+
+      if (category === 'colors') {
+        itemsHTML = `
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Neon Cyan Glow</div>
+              <div class="store-item-preview" style="color: #00F0FF; text-shadow: 0 0 8px #00F0FF;">[Preview] Member</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Golden Radiance</div>
+              <div class="store-item-preview" style="color: #FFD166; text-shadow: 0 0 10px #FFD166;">[Preview] Member</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 300 ? 'disabled' : ''}>${userOrbs < 300 ? 'Needs 300 Orbs' : 'Buy for 🔮 300'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Sakura Pink Sparkle</div>
+              <div class="store-item-preview" style="color: #ff007f; text-shadow: 0 0 8px #ff007f;">[Preview] Member</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Void Purple Shade</div>
+              <div class="store-item-preview" style="color: #9d4edd; text-shadow: 0 0 8px #9d4edd;">[Preview] Member</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 200 ? 'disabled' : ''}>${userOrbs < 200 ? 'Needs 200 Orbs' : 'Buy for 🔮 200'}</button>
+          </div>
+        `;
+      } else if (category === 'frames') {
+        itemsHTML = `
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Cyberpunk Neon Border</div>
+              <div class="store-item-preview" style="border: 2px solid #00F0FF; box-shadow: 0 0 10px #00F0FF; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">👤</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 400 ? 'disabled' : ''}>${userOrbs < 400 ? 'Needs 400 Orbs' : 'Buy for 🔮 400'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Royal Gold Crest Frame</div>
+              <div class="store-item-preview" style="border: 2px solid #FFD166; box-shadow: 0 0 10px #FFD166; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">👑</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 600 ? 'disabled' : ''}>${userOrbs < 600 ? 'Needs 600 Orbs' : 'Buy for 🔮 600'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Phantom Plasma Frame</div>
+              <div class="store-item-preview" style="border: 2px solid #ff007f; box-shadow: 0 0 10px #ff007f; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">⚡</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 500 ? 'disabled' : ''}>${userOrbs < 500 ? 'Needs 500 Orbs' : 'Buy for 🔮 500'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Amethyst Crystal Ring</div>
+              <div class="store-item-preview" style="border: 2px solid #9d4edd; box-shadow: 0 0 10px #9d4edd; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">🔮</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 450 ? 'disabled' : ''}>${userOrbs < 450 ? 'Needs 450 Orbs' : 'Buy for 🔮 450'}</button>
+          </div>
+        `;
+      } else if (category === 'emojis') {
+        itemsHTML = `
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Chibi Idol Emote Pack</div>
+              <div class="store-item-preview">🎸 🎤 ✨ 💖</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 250 ? 'disabled' : ''}>${userOrbs < 250 ? 'Needs 250 Orbs' : 'Buy for 🔮 250'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Sub-Stage Glitch Pack</div>
+              <div class="store-item-preview">⚡ 🌀 🖥️ ⚠️</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 250 ? 'disabled' : ''}>${userOrbs < 250 ? 'Needs 250 Orbs' : 'Buy for 🔮 250'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">Nekomi Cat Reaction Pack</div>
+              <div class="store-item-preview">🐾 😺 🐟 💤</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 300 ? 'disabled' : ''}>${userOrbs < 300 ? 'Needs 300 Orbs' : 'Buy for 🔮 300'}</button>
+          </div>
+          <div class="store-item-card">
+            <div>
+              <div style="font-weight: 800; color: var(--text-light);">VIP Backstage Reactions</div>
+              <div class="store-item-preview">👑 💎 🎧 🔥</div>
+            </div>
+            <button class="buy-orb-btn" ${userOrbs < 500 ? 'disabled' : ''}>${userOrbs < 500 ? 'Needs 500 Orbs' : 'Buy for 🔮 500'}</button>
+          </div>
+        `;
+      }
 
       const modalHTML = `
         <div id="neko-gate-modal" class="modal-overlay">
           <div class="modal-card store-modal-card">
             
             <div class="store-header-row">
-              <h3 style="margin: 0; color: #ffffff;">🔮 Cosmetic Orb Store</h3>
+              <h3 style="margin: 0; color: #ffffff; font-size: 1.4rem;">🔮 Cosmetic Orb Store</h3>
               <span class="store-orb-balance-pill">Your Orbs: 🔮 ${userOrbs.toLocaleString()}</span>
             </div>
 
             <div class="store-tabs-nav">
-              <button class="store-tab-btn active">🎨 Name Colors</button>
-              <button class="store-tab-btn">🖼️ Avatar Frames</button>
-              <button class="store-tab-btn">🏷️ Titles</button>
+              <button class="store-tab-btn ${category === 'colors' ? 'active' : ''}" onclick="renderStoreTab('colors')">🎨 Name Colors</button>
+              <button class="store-tab-btn ${category === 'frames' ? 'active' : ''}" onclick="renderStoreTab('frames')">🖼️ Avatar Borders</button>
+              <button class="store-tab-btn ${category === 'emojis' ? 'active' : ''}" onclick="renderStoreTab('emojis')">💬 Emoji Packs</button>
             </div>
 
             <div class="store-item-grid">
-              <div class="store-item-card">
-                <div>
-                  <div style="font-weight: 800; color: var(--text-light);">Neon Cyan Glow</div>
-                  <div class="store-item-preview" style="color: #00F0FF; text-shadow: 0 0 8px #00F0FF;">[Preview] Member</div>
-                </div>
-                <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>
-                  ${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}
-                </button>
-              </div>
-
-              <div class="store-item-card">
-                <div>
-                  <div style="font-weight: 800; color: var(--text-light);">Golden Radiance</div>
-                  <div class="store-item-preview" style="color: #FFD166; text-shadow: 0 0 10px #FFD166;">[Preview] Member</div>
-                </div>
-                <button class="buy-orb-btn" ${userOrbs < 300 ? 'disabled' : ''}>
-                  ${userOrbs < 300 ? 'Needs 300 Orbs' : 'Buy for 🔮 300'}
-                </button>
-              </div>
-
-              <div class="store-item-card">
-                <div>
-                  <div style="font-weight: 800; color: var(--text-light);">Sakura Pink Sparkle</div>
-                  <div class="store-item-preview" style="color: #ff007f; text-shadow: 0 0 8px #ff007f;">[Preview] Member</div>
-                </div>
-                <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>
-                  ${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}
-                </button>
-              </div>
+              ${itemsHTML}
             </div>
 
             <div style="margin-top: 24px; text-align: right;">
