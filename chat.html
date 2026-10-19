@@ -422,6 +422,7 @@
       display: flex;
       gap: 10px;
       align-items: center;
+      position: relative;
     }
 
     .chat-input-field {
@@ -459,6 +460,104 @@
     .send-msg-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 0 28px rgba(255, 0, 127, 0.85), 0 0 12px var(--accent-cyan);
+    }
+
+    /* ============================================================ */
+    /* 💬 CHAT EMOTE & COSMETIC PICKER STYLES                       */
+    /* ============================================================ */
+    .emote-tray-popup {
+      position: absolute;
+      bottom: 70px;
+      left: 1.2rem;
+      width: 320px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.85), 0 0 20px rgba(0, 240, 255, 0.3);
+      z-index: 1500;
+      padding: 12px;
+      display: none;
+    }
+
+    .emote-tray-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(157,78,221,0.3);
+      padding-bottom: 6px;
+    }
+
+    .emote-tray-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .tray-tab {
+      background: rgba(8,3,16,0.9);
+      border: 1px solid rgba(255,0,127,0.3);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 1;
+      text-align: center;
+    }
+
+    .tray-tab.active {
+      background: rgba(157,78,221,0.3);
+      color: #fff;
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    .emote-tray-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .tray-item-btn {
+      background: rgba(5,4,10,0.6);
+      border: 1px dashed rgba(0,240,255,0.3);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s ease;
+    }
+
+    .tray-item-btn:hover {
+      background: rgba(0,240,255,0.15);
+      border-color: var(--accent-cyan);
+      transform: scale(1.05);
+    }
+
+    .chat-tool-btn {
+      background: linear-gradient(135deg, rgba(157,78,221,0.2), rgba(255,0,127,0.2));
+      border: 1px solid var(--accent-pink);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .chat-tool-btn:hover {
+      background: var(--accent-pink);
+      box-shadow: 0 0 12px var(--accent-glow);
     }
 
     /* RIGHT SIDEBAR: LIVE CHATTERS & PERSONAL STATUS SPACE */
@@ -879,6 +978,30 @@
       </div>
 
       <div class="chat-input-bar">
+        <!-- Emote & Cosmetic Picker Trigger Button -->
+        <button type="button" id="emote-picker-btn" onclick="toggleEmotePicker()" class="chat-tool-btn" title="Open Unlocked Emotes & Cosmetics">
+          💬 Emotes
+        </button>
+
+        <!-- Popup Picker Tray -->
+        <div id="emote-picker-tray" class="emote-tray-popup">
+          <div class="emote-tray-header">
+            <span>✨ Unlocked Inventory</span>
+            <button type="button" onclick="toggleEmotePicker()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:bold;">✕</button>
+          </div>
+          
+          <div class="emote-tray-tabs">
+            <button type="button" class="tray-tab active" onclick="switchEmoteTab(event, 'emojis')">Emotes</button>
+            <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'colors')">Colors</button>
+            <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'frames')">Frames</button>
+          </div>
+
+          <!-- Content Area -->
+          <div id="emote-tray-content" class="emote-tray-grid">
+            <!-- Populated via JavaScript -->
+          </div>
+        </div>
+
         <input type="text" id="user-input-msg" class="chat-input-field" placeholder="Transmit message to Sub-Stage channel..." onkeydown="handleKeyPress(event)">
         <button class="send-msg-btn" onclick="sendChatMessage()">TRANSMIT ⚡</button>
       </div>
@@ -1012,6 +1135,7 @@
           const snap = await getDoc(userRef);
           if (snap.exists()) {
             const data = snap.data();
+            window.userData = data; // Store user data globally for inventory access
             window.isUserAdmin = data.role === 'admin' || data.role === 'moderator' || data.isAdmin === true;
             window.isUserVIP = data.isVIP === true || window.isUserAdmin;
             
@@ -1248,6 +1372,66 @@
 
     function escapeHtml(str) {
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    /* 💬 EMOTE & COSMETIC PICKER LOGIC */
+    function toggleEmotePicker() {
+      const tray = document.getElementById('emote-picker-tray');
+      if (tray.style.display === 'block') {
+        tray.style.display = 'none';
+      } else {
+        tray.style.display = 'block';
+        loadTrayTab('emojis');
+      }
+    }
+
+    function switchEmoteTab(event, tabName) {
+      document.querySelectorAll('.tray-tab').forEach(t => t.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      loadTrayTab(tabName);
+    }
+
+    function loadTrayTab(category) {
+      const grid = document.getElementById('emote-tray-content');
+      let html = '';
+
+      if (category === 'emojis') {
+        const availableEmojis = [
+          { symbol: '🎸', name: 'Chibi Idol' },
+          { symbol: '⚡', name: 'Glitch Spark' },
+          { symbol: '🐾', name: 'Nekomi Paws' },
+          { symbol: '👑', name: 'VIP Crown' },
+          { symbol: '🎤', name: 'Microphone' },
+          { symbol: '💖', name: 'Heart' },
+          { symbol: '🌀', name: 'Vortex' },
+          { symbol: '🖥️', name: 'HUD Display' }
+        ];
+
+        availableEmojis.forEach(item => {
+          html += `<button type="button" class="tray-item-btn" title="${item.name}" onclick="insertIntoChatInput('${item.symbol}')">${item.symbol}</button>`;
+        });
+      } else if (category === 'colors') {
+        html = `
+          <div style="grid-column: span 4; font-size:0.75rem; color:var(--text-muted); text-align:center; padding: 10px;">
+            Name colors automatically highlight your username in live chat when equipped!
+          </div>`;
+      } else if (category === 'frames') {
+        html = `
+          <div style="grid-column: span 4; font-size:0.75rem; color:var(--text-muted); text-align:center; padding: 10px;">
+            Avatar frames surround your profile picture in chat rooms.
+          </div>`;
+      }
+
+      grid.innerHTML = html;
+    }
+
+    function insertIntoChatInput(symbol) {
+      const inputField = document.getElementById('user-input-msg');
+      if (inputField) {
+        inputField.value += symbol + ' ';
+        inputField.focus();
+      }
+      document.getElementById('emote-picker-tray').style.display = 'none';
     }
 
     document.addEventListener('DOMContentLoaded', () => {
