@@ -23,6 +23,9 @@
       --text-muted: #b8a7d4;
       --card-border: rgba(255, 0, 127, 0.35);
       --border-cyan: rgba(0, 240, 255, 0.4);
+      --border-subtle: rgba(157, 78, 221, 0.3);
+      --btn-grad: linear-gradient(135deg, #9d4edd 0%, #ff007f 100%);
+      --btn-text: #ffffff;
     }
 
     * {
@@ -44,29 +47,225 @@
         radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.12) 0%, transparent 50%);
     }
 
-    <!-- Top Navigation Bar -->
-<header id="chat-header" class="chat-header">
-  <div class="user-profile-summary">
-    <span id="header-username">Member</span>
-    <span id="vip-badge" class="vip-badge" style="display: none;">👑 VIP</span>
-  </div>
+    /* ============================================================ */
+    /* 🔮 CHAT HEADER, ORB COUNTER & TOAST STYLES                   */
+    /* ============================================================ */
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: rgba(8, 3, 16, 0.95);
+      border-bottom: 1.5px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 1001;
+      backdrop-filter: blur(12px);
+    }
 
-  <!-- Orb Balance Display -->
-  <div class="orb-counter">
-    <span class="orb-icon">🔮</span>
-    <span id="orb-count-display">0 Orbs</span>
-  </div>
+    .user-profile-summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
 
-  <!-- Hidden Toast Alert -->
-  <div id="daily-toast" class="daily-toast" style="display: none;"></div>
-</header>
-    
+    .vip-badge {
+      background: linear-gradient(135deg, var(--accent-gold), #ffa500);
+      color: #000;
+      font-weight: 900;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(255, 209, 102, 0.4);
+    }
+
+    .orb-counter {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid var(--border-cyan);
+      padding: 6px 14px;
+      border-radius: 16px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .orb-counter:hover {
+      background: rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
+    }
+
+    .daily-toast {
+      position: absolute;
+      top: 100%;
+      right: 20px;
+      margin-top: 10px;
+      background: var(--card-inner);
+      color: var(--accent-cyan);
+      border: 1.5px solid var(--accent-cyan);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+      z-index: 1002;
+    }
+
+    /* ============================================================ */
+    /* 🔮 COSMETIC ORB STORE MODAL STYLES                           */
+    /* ============================================================ */
+    .store-modal-card {
+      max-width: 680px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      text-align: left;
+      background: var(--card-bg);
+      border: 2px solid var(--accent-cyan);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 240, 255, 0.3);
+    }
+
+    .store-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+
+    .store-orb-balance-pill {
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: 800;
+      font-size: 0.88rem;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .store-tabs-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .store-tab-btn {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .store-tab-btn.active, .store-tab-btn:hover {
+      background: rgba(157, 78, 221, 0.25);
+      color: var(--text-light);
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .store-item-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .store-item-card {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+
+    .store-item-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 240, 255, 0.2);
+    }
+
+    .store-item-preview {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin: 12px 0;
+      padding: 8px;
+      border-radius: 8px;
+      background: rgba(5, 4, 10, 0.6);
+      border: 1px dashed var(--border-subtle);
+    }
+
+    .buy-orb-btn {
+      background: var(--btn-grad);
+      color: var(--btn-text);
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+      width: 100%;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .buy-orb-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
+    .buy-orb-btn:disabled {
+      background: rgba(160, 155, 185, 0.15);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Modal Overlay Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 2, 9, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .close-btn {
+      background: transparent;
+      color: var(--accent-purple);
+      border: 1px solid var(--card-border);
+      padding: 8px 20px;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
     /* ============================================================ */
     /* ⚡ TOP LEFT PROMINENT LOGIN BUTTON                           */
     /* ============================================================ */
     .top-header-bar {
       position: absolute;
-      top: 24px;
+      top: 74px;
       left: 28px;
       z-index: 1000;
       display: flex;
@@ -144,7 +343,7 @@
     }
 
     /* ============================================================ */
-    /* ⚡ INTERACTIVE PORTAL FREQUENCY MONITOR (HUD BANNER)        */
+    /* ⚡ INTERACTIVE PORTAL FREQUENCY MONITOR (HUD BANNER)         */
     /* ============================================================ */
     .hud-banner {
       background: var(--card-inner);
@@ -352,6 +551,23 @@
 </head>
 <body class="twilight-mode">
 
+  <!-- Top Navigation Header Bar with Orbs & VIP Status -->
+  <header id="chat-header" class="chat-header">
+    <div class="user-profile-summary">
+      <span id="header-username">Member</span>
+      <span id="vip-badge" class="vip-badge" style="display: none;">👑 VIP</span>
+    </div>
+
+    <!-- Orb Balance Display (Clickable to open Orb Store) -->
+    <div class="orb-counter" onclick="openOrbStoreModal()" title="Click to open Orb Store">
+      <span class="orb-icon">🔮</span>
+      <span id="orb-count-display">0 Orbs</span>
+    </div>
+
+    <!-- Hidden Toast Alert -->
+    <div id="daily-toast" class="daily-toast" style="display: none;"></div>
+  </header>
+
   <!-- TOP LEFT PROMINENT LOGIN BAR -->
   <div class="top-header-bar">
     <button class="top-left-login-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }">
@@ -424,8 +640,7 @@
         <a href="neko-fm.html" class="card-link-btn">Open Radio Station →</a>
       </div>
 
-      <!-- CARD 3: SAKURAOKA BBS FORUM
-      COMING SOON-->
+      <!-- CARD 3: SAKURAOKA BBS FORUM -->
       <div class="portal-card">
         <div>
           <span class="card-badge">Community Forum</span>
@@ -434,7 +649,7 @@
             Join fan theories, episode breakdowns, music production debates, and lore discussions with fellow Otaku Overload readers.
           </p>
         </div>
-         ✦ Transmission Pending...
+        <a href="bbs-forum.html" class="card-link-btn">Explore Student BBS →</a>
       </div>
 
       <!-- CARD 4: LIVE CHAT -->
@@ -446,7 +661,7 @@
             Hang out with members in real time, discuss live radio broadcasts, and get instant updates on new chapter releases.
           </p>
         </div>
-         <a href="chat.html" class="card-link-btn">Live Chat →</a>
+        <a href="chat.html" class="card-link-btn">Live Chat →</a>
       </div>
 
       <!-- CARD 5: PODCAST HUB -->
@@ -544,6 +759,75 @@
     function cycleSyncStatus() {
       idxSync = (idxSync + 1) % syncStates.length;
       updateHudBtn('btn-sync', 'text-sync', syncStates, idxSync);
+    }
+
+    /* ORB STORE MODAL LOGIC */
+    function openOrbStoreModal() {
+      removeExistingModals();
+
+      const userOrbs = window.userData?.orb_balance || 0;
+
+      const modalHTML = `
+        <div id="neko-gate-modal" class="modal-overlay">
+          <div class="modal-card store-modal-card">
+            
+            <div class="store-header-row">
+              <h3 style="margin: 0; color: #ffffff;">🔮 Cosmetic Orb Store</h3>
+              <span class="store-orb-balance-pill">Your Orbs: 🔮 ${userOrbs.toLocaleString()}</span>
+            </div>
+
+            <div class="store-tabs-nav">
+              <button class="store-tab-btn active">🎨 Name Colors</button>
+              <button class="store-tab-btn">🖼️ Avatar Frames</button>
+              <button class="store-tab-btn">🏷️ Titles</button>
+            </div>
+
+            <div class="store-item-grid">
+              <div class="store-item-card">
+                <div>
+                  <div style="font-weight: 800; color: var(--text-light);">Neon Cyan Glow</div>
+                  <div class="store-item-preview" style="color: #00F0FF; text-shadow: 0 0 8px #00F0FF;">[Preview] Member</div>
+                </div>
+                <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>
+                  ${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}
+                </button>
+              </div>
+
+              <div class="store-item-card">
+                <div>
+                  <div style="font-weight: 800; color: var(--text-light);">Golden Radiance</div>
+                  <div class="store-item-preview" style="color: #FFD166; text-shadow: 0 0 10px #FFD166;">[Preview] Member</div>
+                </div>
+                <button class="buy-orb-btn" ${userOrbs < 300 ? 'disabled' : ''}>
+                  ${userOrbs < 300 ? 'Needs 300 Orbs' : 'Buy for 🔮 300'}
+                </button>
+              </div>
+
+              <div class="store-item-card">
+                <div>
+                  <div style="font-weight: 800; color: var(--text-light);">Sakura Pink Sparkle</div>
+                  <div class="store-item-preview" style="color: #ff007f; text-shadow: 0 0 8px #ff007f;">[Preview] Member</div>
+                </div>
+                <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>
+                  ${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}
+                </button>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px; text-align: right;">
+              <button class="close-btn" onclick="removeExistingModals()">Close Store</button>
+            </div>
+
+          </div>
+        </div>
+      `;
+
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function removeExistingModals() {
+      const existing = document.getElementById('neko-gate-modal');
+      if (existing) existing.remove();
     }
   </script>
   <script src="music-player.js"></script>
