@@ -48,77 +48,6 @@
     }
 
     /* ============================================================ */
-    /* 🔮 CHAT HEADER, ORB COUNTER & TOAST STYLES                   */
-    /* ============================================================ */
-    .chat-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background: rgba(8, 3, 16, 0.95);
-      border-bottom: 1.5px solid var(--card-border);
-      position: sticky;
-      top: 0;
-      z-index: 1001;
-      backdrop-filter: blur(12px);
-    }
-
-    .user-profile-summary {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--text-light);
-    }
-
-    .vip-badge {
-      background: linear-gradient(135deg, var(--accent-gold), #ffa500);
-      color: #000;
-      font-weight: 900;
-      font-size: 0.72rem;
-      padding: 2px 8px;
-      border-radius: 6px;
-      box-shadow: 0 0 10px rgba(255, 209, 102, 0.4);
-    }
-
-    .orb-counter {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(0, 240, 255, 0.1);
-      border: 1px solid var(--border-cyan);
-      padding: 6px 14px;
-      border-radius: 16px;
-      font-size: 0.88rem;
-      font-weight: 800;
-      color: var(--accent-cyan);
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .orb-counter:hover {
-      background: rgba(0, 240, 255, 0.2);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
-    }
-
-    .daily-toast {
-      position: absolute;
-      top: 100%;
-      right: 20px;
-      margin-top: 10px;
-      background: var(--card-inner);
-      color: var(--accent-cyan);
-      border: 1.5px solid var(--accent-cyan);
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-      z-index: 1002;
-    }
-
-    /* ============================================================ */
     /* 🔮 COSMETIC ORB STORE MODAL STYLES                           */
     /* ============================================================ */
     .store-modal-card {
@@ -265,7 +194,7 @@
     /* ============================================================ */
     .top-header-bar {
       position: absolute;
-      top: 74px;
+      top: 28px;
       left: 28px;
       z-index: 1000;
       display: flex;
@@ -301,7 +230,7 @@
     /* ============================================================ */
     .container {
       max-width: 1200px;
-      margin: 80px auto 3rem;
+      margin: 40px auto 3rem;
       padding: 0 1.2rem;
     }
 
@@ -516,6 +445,7 @@
       text-align: center;
       transition: all 0.25s ease;
       display: block;
+      cursor: pointer;
     }
 
     .card-link-btn:hover {
@@ -550,23 +480,6 @@
   </style>
 </head>
 <body class="twilight-mode">
-
-  <!-- Top Navigation Header Bar with Orbs & VIP Status -->
-  <header id="chat-header" class="chat-header">
-    <div class="user-profile-summary">
-      <span id="header-username">Member</span>
-      <span id="vip-badge" class="vip-badge" style="display: none;">👑 VIP</span>
-    </div>
-
-    <!-- Orb Balance Display (Clickable to open Orb Store) -->
-    <div class="orb-counter" onclick="openOrbStoreModal()" title="Click to open Orb Store">
-      <span class="orb-icon">🔮</span>
-      <span id="orb-count-display">0 Orbs</span>
-    </div>
-
-    <!-- Hidden Toast Alert -->
-    <div id="daily-toast" class="daily-toast" style="display: none;"></div>
-  </header>
 
   <!-- TOP LEFT PROMINENT LOGIN BAR -->
   <div class="top-header-bar">
@@ -676,18 +589,18 @@
         <a href="podcast.html" class="card-link-btn">Listen to Podcast →</a>
       </div>
 
-      <!-- CARD 6: MORE COMING SOON -->
-      <div class="portal-card" style="border-color: rgba(255, 209, 102, 0.4);">
+      <!-- CARD 6: COSMETIC ORB STORE -->
+      <div class="portal-card" style="border-color: var(--accent-cyan);">
         <div>
-          <span class="card-badge" style="border-color: var(--accent-gold); color: var(--accent-gold); background: rgba(255, 209, 102, 0.15);">Under Development</span>
-          <h3 class="card-title" style="color: var(--accent-gold);">⚡ More Coming Soon</h3>
+          <span class="card-badge" style="border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(0, 240, 255, 0.12);">Members Bazaar</span>
+          <h3 class="card-title" style="color: var(--accent-cyan);">🔮 Cosmetic Orb Store</h3>
           <p class="card-desc">
-            Interactive Sub-Stage mini-games, digital art galleries, downloadable 16-bit desktop wallpapers, and secret side stories are currently in development.
+            Spend your daily Orbs to unlock custom name colors, glowing cyberpunk frames, and rare profile title badges for chat rooms.
           </p>
         </div>
-        <div class="card-link-btn" style="border-color: var(--accent-gold); color: var(--accent-gold); background: rgba(255, 209, 102, 0.1); cursor: default;">
-          ✦ Transmission Pending...
-        </div>
+        <button class="card-link-btn" style="border-color: var(--accent-cyan); background: rgba(0, 240, 255, 0.15);" onclick="openOrbStoreModal()">
+          Open Orb Store 🔮 →
+        </button>
       </div>
 
     </div>
