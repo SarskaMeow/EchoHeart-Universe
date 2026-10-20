@@ -863,17 +863,127 @@
     import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     window.currentUser = null;
-    window.userData = {};
+    window.userData = {
+      displayName: "Lounge Member",
+      email: "",
+      photoURL: "",
+      equippedFrame: "none",
+      equippedGlow: "none",
+      equippedTitle: "listener",
+      isVIP: false
+    };
 
-    // 1. Auth Listener
+    // Helper: Update Avatar Frame Preview safely
+    function updateAvatarFramePreview(frame) {
+      const frameOverlay = document.getElementById('user-avatar-frame-overlay');
+      if (!frameOverlay) return;
+
+      if (frame === 'sakura_pink') {
+        frameOverlay.style.border = "3px solid #f4b8c4";
+        frameOverlay.style.boxShadow = "0 0 10px #f4b8c4";
+      } else if (frame === 'cavern_purple') {
+        frameOverlay.style.border = "3px solid #a88beb";
+        frameOverlay.style.boxShadow = "0 0 12px #a88beb";
+      } else if (frame === 'gold_aura') {
+        frameOverlay.style.border = "3px solid #ffd166";
+        frameOverlay.style.boxShadow = "0 0 14px #ffd166";
+      } else if (frame === 'neon_spotlight') {
+        frameOverlay.style.border = "3px solid #ff007f";
+        frameOverlay.style.boxShadow = "0 0 16px #ff007f";
+      } else {
+        frameOverlay.style.border = "2px solid transparent";
+        frameOverlay.style.boxShadow = "none";
+      }
+    }
+
+    // Helper: Safely set element text content if present
+    function setSafeText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.innerText = text;
+    }
+
+    // Helper: Safely set form element value if present
+    function setSafeValue(id, val) {
+      const el = document.getElementById(id);
+      if (el && val !== undefined) el.value = val;
+    }
+
+    // Update Page UI
+    window.updatePageUI = function() {
+      const isVIP = window.userData.isVIP || localStorage.getItem('neko_is_vip') === 'true';
+
+      setSafeText('user-display-name', window.userData.displayName || "Lounge Member");
+      setSafeText('user-email-text', window.userData.email || window.currentUser?.email || "");
+
+      const avatarImg = document.getElementById('user-avatar-img');
+      if (avatarImg) {
+        avatarImg.src = window.userData.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${window.currentUser?.uid || 'default'}`;
+      }
+
+      const titleMap = {
+        listener: '[Prep Room Listener]',
+        otaku: '[Otaku Lounge Member]',
+        rocker: '[J-Rock Specialist]',
+        producer: '[Prep Room B Producer] 🎟️',
+        crew: '[Phantom Crew] 🎟️'
+      };
+      setSafeText('user-title-badge-text', titleMap[window.userData.equippedTitle] || '[Prep Room Listener]');
+
+      setSafeValue('edit-display-name-input', window.userData.displayName || "");
+      setSafeValue('edit-bio-input', window.userData.bio || "");
+      setSafeValue('fav-member-select', window.userData.favMember || "none");
+      setSafeValue('edit-avatar-url-input', window.userData.photoURL || "");
+
+      setSafeText('safety-email-display', window.userData.email || window.currentUser?.email || "");
+      setSafeText('safety-13-status', window.userData.ageVerified13 ? "✅ Verified (13+)" : "❌ Not Verified");
+      setSafeText('safety-17-status', window.userData.ageVerified17 ? "✅ Verified (17+)" : "❌ Not Verified");
+
+      const tierPill = document.getElementById('user-tier-pill');
+      const toggleVipBtn = document.getElementById('toggle-vip-btn');
+
+      if (isVIP) {
+        if (tierPill) tierPill.className = "tier-pill vip-tier";
+        setSafeText('user-tier-icon', "🎟️");
+        setSafeText('user-tier-name', "Backstage Pass VIP");
+        setSafeText('toggle-vip-btn', "Manage / Cancel VIP Subscription");
+      } else {
+        if (tierPill) tierPill.className = "tier-pill";
+        setSafeText('user-tier-icon', "🌸");
+        setSafeText('user-tier-name', "Twilight Member");
+        setSafeText('toggle-vip-btn', "Unlock Backstage Pass VIP");
+      }
+
+      setSafeValue('equip-frame-select', window.userData.equippedFrame || 'none');
+      setSafeValue('equip-glow-select', window.userData.equippedGlow || 'none');
+      setSafeValue('equip-title-select', window.userData.equippedTitle || 'listener');
+
+      setSafeValue('setting-default-mode', localStorage.getItem('neko_setting_defaultMode') || 'twilight');
+      
+      const autoPlayCb = document.getElementById('setting-autoplay');
+      if (autoPlayCb) autoPlayCb.checked = localStorage.getItem('neko_setting_autoplay') === 'true';
+
+      const notifCb = document.getElementById('setting-notifications');
+      if (notifCb) notifCb.checked = localStorage.getItem('neko_setting_notifications') === 'true';
+
+      const joinAlertsCb = document.getElementById('setting-join-alerts');
+      if (joinAlertsCb) joinAlertsCb.checked = localStorage.getItem('neko_setting_joinAlerts') === 'true';
+
+      updateAvatarFramePreview(window.userData.equippedFrame);
+    };
+
+    // 1. Auth Listener & Firestore Sync
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         window.currentUser = user;
         try {
           const userRef = doc(db, "users", user.uid);
           const snap = await getDoc(userRef);
+
           if (snap.exists()) {
-            window.userData = snap.data();
+            window.userData = Object.assign({}, window.userData, snap.data());
+            if (window.userData.isVIP !== undefined) {
+              localStorage.setItem('neko_is_vip', window.userData.isVIP ? 'true' : 'false');
+            }
           } else {
             window.userData = {
               displayName: user.displayName || "Lounge Member",
@@ -881,13 +991,15 @@
               photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
               equippedFrame: 'none',
               equippedGlow: 'none',
-              equippedTitle: 'listener'
+              equippedTitle: 'listener',
+              isVIP: false
             };
             await setDoc(userRef, window.userData, { merge: true });
           }
         } catch (e) {
           console.error("Firestore sync error:", e);
-          window.userData = { displayName: user.displayName, email: user.email };
+          window.userData.displayName = user.displayName || "Lounge Member";
+          window.userData.email = user.email || "";
         }
         window.updatePageUI();
         window.renderProfileBadges();
@@ -1004,7 +1116,7 @@
     window.equipSelectedItem = async function(type, value) {
       if (!window.currentUser) return;
 
-      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
+      const isVIP = window.userData.isVIP || localStorage.getItem('neko_is_vip') === 'true';
       const vipValues = ['gold_aura', 'neon_spotlight', 'gold_glow', 'cyber_sunset', 'producer', 'crew'];
 
       if (vipValues.includes(value) && !isVIP) {
@@ -1029,7 +1141,7 @@
       }
     };
 
-    // Live Avatar Preview
+    // Live Avatar Preview Listener
     document.getElementById('edit-avatar-url-input')?.addEventListener('input', (e) => {
       const previewImg = document.getElementById('user-avatar-img');
       if (previewImg && e.target.value.trim()) {
@@ -1038,18 +1150,27 @@
     });
 
     // Modal Helpers
-    window.openPaymentModal = () => document.getElementById('payment-modal').style.display = 'flex';
-    window.closePaymentModal = () => document.getElementById('payment-modal').style.display = 'none';
+    window.openPaymentModal = () => {
+      const modal = document.getElementById('payment-modal');
+      if (modal) modal.style.display = 'flex';
+    };
+
+    window.closePaymentModal = () => {
+      const modal = document.getElementById('payment-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
     window.showPaymentNotice = (gateway) => alert(`⚡ ${gateway} payments coming soon! Use Dev Override below.`);
 
     window.simulateVIPUnlock = async function() {
       if (!window.currentUser) return;
-      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
+      const isVIP = window.userData.isVIP || localStorage.getItem('neko_is_vip') === 'true';
       const newStatus = !isVIP;
 
       try {
         const userRef = doc(db, "users", window.currentUser.uid);
         await setDoc(userRef, { isVIP: newStatus }, { merge: true });
+        window.userData.isVIP = newStatus;
         localStorage.setItem('neko_is_vip', newStatus ? 'true' : 'false');
         alert(newStatus ? "🎟️ Backstage Pass VIP Unlocked!" : "Reverted to Twilight Member.");
         window.closePaymentModal();
@@ -1067,83 +1188,6 @@
         window.location.href = "index.html";
       });
     };
-
-    // 6. Update UI Elements
-    window.updatePageUI = function() {
-      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
-
-      document.getElementById('user-display-name').innerText = window.userData.displayName || "Lounge Member";
-      document.getElementById('user-email-text').innerText = window.userData.email || window.currentUser?.email || "";
-      document.getElementById('user-avatar-img').src = window.userData.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${window.currentUser?.uid}`;
-
-      const titleMap = {
-        listener: '[Prep Room Listener]',
-        otaku: '[Otaku Lounge Member]',
-        rocker: '[J-Rock Specialist]',
-        producer: '[Prep Room B Producer] 🎟️',
-        crew: '[Phantom Crew] 🎟️'
-      };
-      document.getElementById('user-title-badge-text').innerText = titleMap[window.userData.equippedTitle] || '[Prep Room Listener]';
-
-      document.getElementById('edit-display-name-input').value = window.userData.displayName || "";
-      document.getElementById('edit-bio-input').value = window.userData.bio || "";
-      document.getElementById('fav-member-select').value = window.userData.favMember || "none";
-      document.getElementById('edit-avatar-url-input').value = window.userData.photoURL || "";
-
-      document.getElementById('safety-email-display').innerText = window.userData.email || window.currentUser?.email || "";
-      document.getElementById('safety-13-status').innerText = window.userData.ageVerified13 ? "✅ Verified (13+)" : "❌ Not Verified";
-      document.getElementById('safety-17-status').innerText = window.userData.ageVerified17 ? "✅ Verified (17+)" : "❌ Not Verified";
-
-      const tierPill = document.getElementById('user-tier-pill');
-      const tierIcon = document.getElementById('user-tier-icon');
-      const tierName = document.getElementById('user-tier-name');
-      const toggleVipBtn = document.getElementById('toggle-vip-btn');
-
-      if (isVIP) {
-        if (tierPill) tierPill.className = "tier-pill vip-tier";
-        if (tierIcon) tierIcon.innerText = "🎟️";
-        if (tierName) tierName.innerText = "Backstage Pass VIP";
-        if (toggleVipBtn) toggleVipBtn.innerText = "Manage / Cancel VIP Subscription";
-      } else {
-        if (tierPill) tierPill.className = "tier-pill";
-        if (tierIcon) tierIcon.innerText = "🌸";
-        if (tierName) tierName.innerText = "Twilight Member";
-        if (toggleVipBtn) toggleVipBtn.innerText = "Unlock Backstage Pass VIP";
-      }
-
-      document.getElementById('equip-frame-select').value = window.userData.equippedFrame || 'none';
-      document.getElementById('equip-glow-select').value = window.userData.equippedGlow || 'none';
-      document.getElementById('equip-title-select').value = window.userData.equippedTitle || 'listener';
-
-      document.getElementById('setting-default-mode').value = localStorage.getItem('neko_setting_defaultMode') || 'twilight';
-      document.getElementById('setting-autoplay').checked = localStorage.getItem('neko_setting_autoplay') === 'true';
-      document.getElementById('setting-notifications').checked = localStorage.getItem('neko_setting_notifications') === 'true';
-      document.getElementById('setting-join-alerts').checked = localStorage.getItem('neko_setting_joinAlerts') === 'true';
-
-      updateAvatarFramePreview(window.userData.equippedFrame);
-    };
-
-    function updateAvatarFramePreview(frame) {
-      const frameOverlay = document.getElementById('user-avatar-frame-overlay');
-      if (!frameOverlay) return;
-
-      if (frame === 'sakura_pink') {
-        frameOverlay.style.border = "3px solid #f4b8c4";
-        frameOverlay.style.boxShadow = "0 0 10px #f4b8c4";
-      } else if (frame === 'cavern_purple') {
-        frameOverlay.style.border = "3px solid #a88beb";
-        frameOverlay.style.boxShadow = "0 0 12px #a88beb";
-      } else if (frame === 'gold_aura') {
-        frameOverlay.style.border = "3px solid #ffd166";
-        frameOverlay.style.boxShadow = "0 0 14px #ffd166";
-      } else if (frame === 'neon_spotlight') {
-        frameOverlay.style.border = "3px solid #ff007f";
-        frameOverlay.style.boxShadow = "0 0 16px #ff007f";
-      } else {
-        frameOverlay.style.border = "2px solid transparent";
-        frameOverlay.style.boxShadow = "none";
-      }
-    }
   </script>
   <script src="music-player.js"></script>
 </body>
