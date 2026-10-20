@@ -1,1181 +1,295 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile & Account Hub — Otaku Overload</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    :root {
-      --nav-bg-twilight: rgba(18, 12, 36, 0.94);
-      --nav-border-twilight: rgba(168, 139, 235, 0.35);
-      --bg-dark: #0d0b18;
-      --card-bg: #160f2a;
-      --sidebar-bg: #120924;
-      --accent-pink: #f4b8c4;
-      --accent-purple: #a88beb;
-      --accent-gold: #ffd166;
-      --accent-red: #ff4d6d;
-      --accent-cyan: #00f0ff;
-      --accent-neon-pink: #ff007f;
-      --text-light: #e2daf8;
-      --text-muted: #a092c0;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: var(--bg-dark);
-      color: var(--text-light);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-
-    /* Universal Navbar Base Styles */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      width: 100%;
-      background: var(--nav-bg-twilight);
-      border-bottom: 2px solid var(--nav-border-twilight);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .nav-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo-main {
-      font-family: 'Fredoka', cursive, sans-serif;
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .logo-sub {
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: var(--accent-pink);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .nav-item {
-      color: #cbb8f6;
-      font-size: 0.88rem;
-      font-weight: 700;
-      padding: 10px 14px;
-      border-radius: 10px;
-      text-decoration: none;
-      transition: all 0.25s ease;
-    }
-
-    .nav-item:hover, .nav-item.active {
-      background: rgba(168, 139, 235, 0.18);
-      color: #ffffff;
-    }
-
-    /* Fullscreen Dashboard Wrapper */
-    .dashboard-wrapper {
-      display: flex;
-      flex: 1;
-      height: calc(100vh - 65px);
-      overflow: hidden;
-    }
-
-    /* Left Sidebar */
-    .account-sidebar {
-      width: 320px;
-      background: var(--sidebar-bg);
-      border-right: 1px solid var(--nav-border-twilight);
-      padding: 24px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      overflow-y: auto;
-      flex-shrink: 0;
-    }
-
-    .sidebar-user-card {
-      background: rgba(22, 15, 42, 0.95);
-      border: 1px solid var(--nav-border-twilight);
-      border-radius: 16px;
-      padding: 20px 16px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .avatar-wrapper {
-      position: relative;
-      width: 96px;
-      height: 96px;
-      margin-bottom: 12px;
-    }
-
-    .avatar-wrapper img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #120924;
-    }
-
-    .avatar-frame-overlay {
-      position: absolute;
-      top: -6px;
-      left: -6px;
-      right: -6px;
-      bottom: -6px;
-      border-radius: 50%;
-      pointer-events: none;
-      border: 2px solid transparent;
-      transition: all 0.3s ease;
-    }
-
-    .user-name {
-      color: #fff;
-      font-size: 1.2rem;
-      font-weight: 800;
-      margin-bottom: 2px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .user-title-badge {
-      font-size: 0.72rem;
-      color: var(--accent-pink);
-      background: rgba(168, 139, 235, 0.2);
-      border: 1px solid rgba(168, 139, 235, 0.4);
-      padding: 2px 8px;
-      border-radius: 8px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .user-email {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      word-break: break-all;
-      margin-bottom: 12px;
-    }
-
-    /* Access Tier Badge */
-    .tier-pill {
-      background: rgba(35, 20, 60, 0.9);
-      border: 1px solid var(--accent-purple);
-      border-radius: 20px;
-      padding: 6px 14px;
-      color: #fff;
-      font-size: 0.82rem;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .tier-pill.vip-tier {
-      border-color: var(--accent-gold);
-      background: rgba(255, 209, 102, 0.15);
-      color: var(--accent-gold);
-    }
-
-    /* Nav Side Tabs */
-    .side-tabs-menu {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 0.92rem;
-      font-weight: 700;
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      transition: all 0.2s ease;
-    }
-
-    .tab-btn:hover {
-      background: rgba(168, 139, 235, 0.12);
-      color: #fff;
-    }
-
-    .tab-btn.active {
-      background: linear-gradient(135deg, rgba(168, 139, 235, 0.25), rgba(244, 184, 196, 0.25));
-      border: 1px solid var(--accent-purple);
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn-signout {
-      margin-top: auto;
-      background: rgba(255, 77, 109, 0.15);
-      border: 1px solid var(--accent-red);
-      color: var(--accent-red);
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-signout:hover {
-      background: var(--accent-red);
-      color: #fff;
-    }
-
-    /* Main Content Display Area */
-    .dashboard-content {
-      flex: 1;
-      padding: 32px 40px;
-      overflow-y: auto;
-    }
-
-    .tab-panel {
-      display: none;
-      max-width: 950px;
-      animation: fadeIn 0.25s ease-in-out;
-    }
-
-    .tab-panel.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .panel-header {
-      margin-bottom: 24px;
-      border-bottom: 1px solid var(--nav-border-twilight);
-      padding-bottom: 16px;
-    }
-
-    .panel-header h2 {
-      color: #fff;
-      font-size: 1.6rem;
-      margin-bottom: 6px;
-    }
-
-    .panel-header p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .content-card {
-      background: var(--card-bg);
-      border: 1px solid var(--nav-border-twilight);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      color: var(--accent-purple);
-      font-size: 0.85rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 12px;
-      background: #120924;
-      border: 1px solid var(--nav-border-twilight);
-      border-radius: 10px;
-      color: #fff;
-      font-size: 0.95rem;
-      font-family: inherit;
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: var(--accent-purple);
-    }
-
-    .btn-action {
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-      color: #000;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: opacity 0.2s ease;
-    }
-
-    .btn-action:hover {
-      opacity: 0.9;
-    }
-
-    .grid-2col {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-
-    .toggle-setting-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(168, 139, 235, 0.15);
-    }
-
-    .toggle-setting-row:last-child {
-      border-bottom: none;
-    }
-
-    .toggle-setting-label h4 {
-      color: #fff;
-      font-size: 0.98rem;
-      margin-bottom: 4px;
-    }
-
-    .toggle-setting-label p {
-      color: var(--text-muted);
-      font-size: 0.82rem;
-    }
-
-    .switch-checkbox {
-      width: 44px;
-      height: 24px;
-      accent-color: var(--accent-purple);
-      cursor: pointer;
-    }
-
-    /* BADGES TAB STYLES */
-    .badges-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-    }
-
-    .profile-badge-card {
-      background: rgba(18, 9, 36, 0.8);
-      border: 1px solid var(--accent-gold);
-      box-shadow: 0 4px 15px rgba(255, 209, 102, 0.15);
-      border-radius: 14px;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transition: transform 0.2s ease;
-    }
-
-    .profile-badge-card:hover {
-      transform: translateY(-2px);
-    }
-
-    .badge-icon-box {
-      width: 52px;
-      height: 52px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(255, 209, 102, 0.2), rgba(244, 184, 196, 0.2));
-      border: 1px solid var(--accent-gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      flex-shrink: 0;
-    }
-
-    .badge-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .badge-name {
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 800;
-    }
-
-    .badge-date {
-      color: var(--text-muted);
-      font-size: 0.78rem;
-    }
-
-    .no-badges-box {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--text-muted);
-    }
-
-    /* ============================================================ */
-    /* 👑 VIP PAYMENT MODAL STYLES                                   */
-    /* ============================================================ */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(5, 3, 12, 0.85);
-      backdrop-filter: blur(12px);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-card {
-      background: rgba(22, 12, 38, 0.98);
-      border: 1.5px solid var(--accent-neon-pink);
-      box-shadow: 0 0 30px rgba(255, 0, 127, 0.4), inset 0 0 15px rgba(255, 0, 127, 0.2);
-      border-radius: 20px;
-      width: 100%;
-      max-width: 480px;
-      padding: 24px;
-      position: relative;
-      animation: modalSlideUp 0.3s ease-out;
-    }
-
-    @keyframes modalSlideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 0, 127, 0.3);
-      padding-bottom: 12px;
-    }
-
-    .modal-header h3 {
-      color: #ffffff;
-      font-size: 1.25rem;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-      text-shadow: 0 0 10px rgba(255, 0, 127, 0.6);
-    }
-
-    .close-modal-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 4px;
-      transition: color 0.2s ease;
-    }
-
-    .close-modal-btn:hover {
-      color: var(--accent-neon-pink);
-    }
-
-    .payment-options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .payment-option-item {
-      background: rgba(12, 6, 24, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 12px;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .payment-option-item:hover {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
-      transform: translateX(4px);
-    }
-
-    .payment-icon {
-      font-size: 1.5rem;
-    }
-
-    .payment-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      flex: 1;
-    }
-
-    .payment-info strong {
-      color: #ffffff;
-      font-size: 0.95rem;
-    }
-
-    .coming-soon-tag {
-      display: inline-block;
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: var(--accent-gold);
-      background: rgba(255, 209, 102, 0.15);
-      border: 1px solid rgba(255, 209, 102, 0.4);
-      padding: 2px 6px;
-      border-radius: 6px;
-      width: fit-content;
-      margin-top: 2px;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Universal Header Navigation Bar -->
-  <header class="navbar">
-    <div class="nav-container">
-      <div class="logo-container">
-        <a href="index.html" style="text-decoration: none; display: flex; flex-direction: column;">
-          <span class="logo-main">🌸 OTAKU OVERLOAD</span>
-          <span class="logo-sub">✦ GIRLS DEAD PHANTOM</span>
-        </a>
-      </div>
-
-      <nav class="nav-links">
-        <a href="index.html" class="nav-item">🏠 Home</a>
-        <a href="echoheart.html" class="nav-item">📚 Lore & Books</a>
-        <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
-        <a href="chat.html" class="nav-item">💬 Live Chat</a>
-        <button id="nav-auth-btn" class="nav-item active" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; cursor: pointer;">
-          👤 Account
-        </button>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Fullscreen Dashboard Interface -->
-  <div class="dashboard-wrapper">
-    
-    <!-- Left Sidebar Menu -->
-    <aside class="account-sidebar">
-      <div class="sidebar-user-card">
-        <div class="avatar-wrapper">
-          <img id="user-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Lounge" alt="Avatar">
-          <div id="user-avatar-frame-overlay" class="avatar-frame-overlay"></div>
-        </div>
-        <div id="user-display-name" class="user-name">Syncing Profile...</div>
-        <div id="user-title-badge-text" class="user-title-badge">[Prep Room Listener]</div>
-        <div id="user-email-text" class="user-email">Connecting...</div>
-        
-        <!-- Access Tier Status -->
-        <div id="user-tier-pill" class="tier-pill">
-          <span id="user-tier-icon">🌸</span>
-          <span id="user-tier-name">Twilight Member</span>
-        </div>
-      </div>
-
-      <nav class="side-tabs-menu">
-        <button class="tab-btn active" onclick="switchDashboardTab('profile')">👤 Profile & Bio</button>
-        <button class="tab-btn" onclick="switchDashboardTab('badges')">🏆 Badges & Achievements</button>
-        <button class="tab-btn" onclick="switchDashboardTab('wardrobe')">🎨 Wardrobe & Cosmetics</button>
-        <button class="tab-btn" onclick="switchDashboardTab('tiers')">🎟️ VIP Pass & Tiers</button>
-        <button class="tab-btn" onclick="switchDashboardTab('settings')">⚙️ App & Audio Settings</button>
-        <button class="tab-btn" onclick="switchDashboardTab('safety')">🛡️ Account & Safety</button>
-      </nav>
-
-      <button onclick="window.logoutUser()" class="btn-signout">Sign Out</button>
-    </aside>
-
-    <!-- Main Right Content Panels -->
-    <main class="dashboard-content">
-
-      <!-- PANEL 1: PROFILE & BIO -->
-      <section id="panel-profile" class="tab-panel active">
-        <div class="panel-header">
-          <h2>Profile & Public Identity</h2>
-          <p>Customize your public display name, avatar, profile bio, and favorite band member.</p>
-        </div>
-
-        <div class="content-card">
-          <div class="form-group">
-            <label>Display Name</label>
-            <input type="text" id="edit-display-name-input" class="form-control" placeholder="Enter username...">
-          </div>
-
-          <div class="form-group">
-            <label>Profile Bio / About Me</label>
-            <textarea id="edit-bio-input" class="form-control" rows="3" placeholder="Tell the lounge about yourself..."></textarea>
-          </div>
-
-          <div class="grid-2col">
-            <div class="form-group">
-              <label>Favorite Girls Dead Phantom Member</label>
-              <select id="fav-member-select" class="form-control">
-                <option value="none">Select favorite member...</option>
-                <option value="akari">🥁 Akari Minase (Drums)</option>
-                <option value="nekomi">🎙️ Nekomi (Vocals & Lead Guitar)</option>
-                <option value="sera">🎹 Sera (Keytar & Vocals)</option>
-                <option value="aoi">🎸 Aoi (Bass)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Avatar Seed / Custom Image URL</label>
-              <input type="text" id="edit-avatar-url-input" class="form-control" placeholder="Image URL or DiceBear Seed...">
-            </div>
-          </div>
-
-          <button onclick="window.saveProfileDetails()" class="btn-action">Save Profile Details</button>
-        </div>
-      </section>
-
-      <!-- PANEL 2: BADGES & ACHIEVEMENTS -->
-      <section id="panel-badges" class="tab-panel">
-        <div class="panel-header">
-          <h2>Unlocked Mystery Badges</h2>
-          <p>View your earned event rewards from solving Sakuraoka BBS forum cases.</p>
-        </div>
-
-        <div class="content-card">
-          <div id="account-badges-container" class="badges-grid">
-            <!-- Badges render here dynamically -->
-          </div>
-        </div>
-      </section>
-
-      <!-- PANEL 3: WARDROBE & COSMETICS -->
-      <section id="panel-wardrobe" class="tab-panel">
-        <div class="panel-header">
-          <h2>Wardrobe & Equipped Flair</h2>
-          <p>Equip free and VIP avatar borders, chat name glows, and community stage titles.</p>
-        </div>
-
-        <div class="content-card">
-          <div class="grid-2col">
-            <div class="form-group">
-              <label>Avatar Border Style</label>
-              <select id="equip-frame-select" onchange="window.equipSelectedItem('frame', this.value)" class="form-control">
-                <option value="none">Standard Circle (Free)</option>
-                <option value="sakura_pink">🌸 Sakura Blossom Ring (Free)</option>
-                <option value="cavern_purple">🔮 Cavern Purple Ring (Free)</option>
-                <option value="gold_aura">✨ Backstage Gold Aura (VIP 🎟️)</option>
-                <option value="neon_spotlight">⚡ Neon Spotlight Pulse (VIP 🎟️)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Chat Name Glow Style</label>
-              <select id="equip-glow-select" onchange="window.equipSelectedItem('glow', this.value)" class="form-control">
-                <option value="none">Standard Text (Free)</option>
-                <option value="pink_glow">🌸 Pink Echo Glow (Free)</option>
-                <option value="purple_glow">🔮 Cavern Dusk Glow (Free)</option>
-                <option value="gold_glow">⚡ Golden Voltage Glow (VIP 🎟️)</option>
-                <option value="cyber_sunset">🌅 Cyber Sunset Gradient (VIP 🎟️)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Chat Stage Title Badge</label>
-            <select id="equip-title-select" onchange="window.equipSelectedItem('title', this.value)" class="form-control">
-              <option value="listener">[Prep Room Listener] (Free)</option>
-              <option value="otaku">[Otaku Lounge Member] (Free)</option>
-              <option value="rocker">[J-Rock Specialist] (Free)</option>
-              <option value="producer">[Prep Room B Producer] (VIP 🎟️)</option>
-              <option value="crew">[Phantom Crew] (VIP 🎟️)</option>
-            </select>
-          </div>
-        </div>
-      </section>
-
-      <!-- PANEL 4: VIP PASS & TIERS -->
-      <section id="panel-tiers" class="tab-panel">
-        <div class="panel-header">
-          <h2>Membership Tiers & Perks</h2>
-          <p>Review your active lounge access tier or upgrade to unlock Backstage Pass features.</p>
-        </div>
-
-        <div class="grid-2col">
-          <!-- Twilight & Basement Card -->
-          <div class="content-card">
-            <h3 style="color: var(--accent-purple); margin-bottom: 8px;">🌸 Public & After-Hours Tiers</h3>
-            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">Standard access for all lounge members.</p>
-            <ul style="font-size: 0.85rem; color: var(--text-light); padding-left: 20px; line-height: 1.8;">
-              <li>128kbps Standard Radio Streams</li>
-              <li>1 Vote per Hourly Setlist Poll</li>
-              <li>Standard Chat & Free Kaomojis</li>
-              <li>20s Discography Track Previews</li>
-            </ul>
-          </div>
-
-          <!-- Backstage VIP Card -->
-          <div class="content-card" style="border-color: var(--accent-gold); background: rgba(25, 18, 48, 0.95);">
-            <h3 style="color: var(--accent-gold); margin-bottom: 8px;">🎟️ Backstage Pass VIP ($4.99/mo)</h3>
-            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">Full unlocked potential across every tab.</p>
-            <ul style="font-size: 0.85rem; color: var(--text-light); padding-left: 20px; line-height: 1.8; margin-bottom: 20px;">
-              <li><strong>2x Weighted Voting Power</strong> in Polls</li>
-              <li>Full Playback on GDP Discography Tracks</li>
-              <li>Exclusive Gold Avatar Borders & Name Glows</li>
-              <li>Slow-Mode Bypass in Live Chat</li>
-            </ul>
-            <button id="toggle-vip-btn" onclick="window.openPaymentModal()" class="btn-action" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; width: 100%;">
-              Unlock Backstage Pass VIP
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- PANEL 5: APP & AUDIO SETTINGS -->
-      <section id="panel-settings" class="tab-panel">
-        <div class="panel-header">
-          <h2>App & Audio Preferences</h2>
-          <p>Configure how Neko FM, radio streams, and live chat behave across your session.</p>
-        </div>
-
-        <div class="content-card">
-          <div class="form-group">
-            <label>Default Launch Mode</label>
-            <select id="setting-default-mode" onchange="window.saveAppSetting('defaultMode', this.value)" class="form-control">
-              <option value="twilight">🌸 Twilight (Public Lounge)</option>
-              <option value="basement">⚡ Basement (After-Hours Underground)</option>
-            </select>
-          </div>
-
-          <div class="toggle-setting-row">
-            <div class="toggle-setting-label">
-              <h4>Audio Station Autoplay</h4>
-              <p>Automatically begin playback when selecting a new station preset.</p>
-            </div>
-            <input type="checkbox" id="setting-autoplay" class="switch-checkbox" onchange="window.saveAppSetting('autoplay', this.checked)">
-          </div>
-
-          <div class="toggle-setting-row">
-            <div class="toggle-setting-label">
-              <h4>Live Chat Desktop Notifications</h4>
-              <p>Receive sound cues when mentioned in live chat events.</p>
-            </div>
-            <input type="checkbox" id="setting-notifications" class="switch-checkbox" onchange="window.saveAppSetting('notifications', this.checked)">
-          </div>
-
-          <div class="toggle-setting-row">
-            <div class="toggle-setting-label">
-              <h4>Show Broadcast Join Alerts</h4>
-              <p>Display live banner announcements when VIP members enter the room.</p>
-            </div>
-            <input type="checkbox" id="setting-join-alerts" class="switch-checkbox" onchange="window.saveAppSetting('joinAlerts', this.checked)">
-          </div>
-        </div>
-      </section>
-
-      <!-- PANEL 6: ACCOUNT & SAFETY -->
-      <section id="panel-safety" class="tab-panel">
-        <div class="panel-header">
-          <h2>Account Security & Verification</h2>
-          <p>Verify age access flags for community chatrooms and after-hours channels.</p>
-        </div>
-
-        <div class="content-card">
-          <p style="margin-bottom: 12px;"><strong>Google Email:</strong> <span id="safety-email-display">Loading...</span></p>
-          <p style="margin-bottom: 12px;"><strong>Twilight Mode (13+ Access):</strong> <span id="safety-13-status">❌ Not Verified</span></p>
-          <p style="margin-bottom: 0;"><strong>Basement Mode (17+ Access):</strong> <span id="safety-17-status">❌ Not Verified</span></p>
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-  <!-- VIP PAYMENT OPTIONS MODAL -->
-  <div id="payment-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>👑 Select VIP Payment Method</h3>
-        <button class="close-modal-btn" onclick="window.closePaymentModal()">✕</button>
-      </div>
-
-      <div class="payment-options-grid">
-        <!-- Stripe Credit / Debit Card -->
-        <div class="payment-option-item" onclick="window.showPaymentNotice('Stripe Credit / Debit Card')">
-          <div class="payment-icon">💳</div>
-          <div class="payment-info">
-            <strong>Credit / Debit Card</strong>
-            <span class="coming-soon-tag">COMING SOON</span>
-          </div>
-        </div>
-
-        <!-- PayPal / Venmo -->
-        <div class="payment-option-item" onclick="window.showPaymentNotice('PayPal / Venmo')">
-          <div class="payment-icon">🅿️</div>
-          <div class="payment-info">
-            <strong>PayPal / Venmo</strong>
-            <span class="coming-soon-tag">COMING SOON</span>
-          </div>
-        </div>
-
-        <!-- Apple Pay / Google Pay -->
-        <div class="payment-option-item" onclick="window.showPaymentNotice('Apple Pay & Google Pay')">
-          <div class="payment-icon">🍎</div>
-          <div class="payment-info">
-            <strong>Apple Pay / Google Pay</strong>
-            <span class="coming-soon-tag">COMING SOON</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dev / Testing Mode Unlock -->
-      <div class="admin-dev-bypass" style="margin-top: 18px; padding-top: 14px; border-top: 1px dashed rgba(255,0,127,0.3); text-align: center;">
-        <p style="font-size: 0.75rem; color: #a092c0; margin-bottom: 8px;">Dev / Testing Mode Override:</p>
-        <button class="dev-unlock-btn" onclick="window.simulateVIPUnlock()" style="background: rgba(255,0,127,0.2); border: 1px solid #ff007f; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 800;">
-          ⚡ Instantly Unlock VIP (Test Mode)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Single Unified Script for Account Page -->
-  <script type="module">
-    import { auth, db } from './firebase-config.js?v=3';
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    window.currentUser = null;
-    window.userData = {};
-
-    // 1. Listen directly to Firebase Auth changes on load
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        window.currentUser = user;
-        try {
-          const userRef = doc(db, "users", user.uid);
-          const snap = await getDoc(userRef);
-          if (snap.exists()) {
-            window.userData = snap.data();
-          } else {
-            window.userData = {
-              displayName: user.displayName || "Lounge Member",
-              email: user.email,
-              photoURL: user.photoURL
-            };
-          }
-        } catch (e) {
-          console.error("Firestore sync error:", e);
-          window.userData = { displayName: user.displayName, email: user.email };
-        }
-        window.updatePageUI();
-        window.renderProfileBadges();
-      } else {
-        window.location.href = "index.html";
-      }
-    });
-
-    // Modal Helpers
-    window.openPaymentModal = function() {
-      if (!window.currentUser) {
-        alert("Please sign in to manage your VIP subscription.");
-        return;
-      }
-      document.getElementById('payment-modal').style.display = 'flex';
-    };
-
-    window.closePaymentModal = function() {
-      document.getElementById('payment-modal').style.display = 'none';
-    };
-
-    window.showPaymentNotice = function(gateway) {
-      alert(`⚡ ${gateway} payments are currently under development!\n\nUse the Dev Override button below to test VIP features on your portal.`);
-    };
-
-    window.simulateVIPUnlock = async function() {
-      if (!window.currentUser) return;
-
-      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
-      const newStatus = !isVIP;
-
+<script type="module">
+  import { auth, db } from './firebase-config.js?v=3';
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  window.currentUser = null;
+  window.userData = {};
+
+  // 1. Auth Listener
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      window.currentUser = user;
       try {
-        const userRef = doc(db, "users", window.currentUser.uid);
-        await updateDoc(userRef, { isVIP: newStatus });
-        
-        localStorage.setItem('neko_is_vip', newStatus ? 'true' : 'false');
-        alert(newStatus ? "🎟️ Backstage Pass VIP Unlocked via Test Override!" : "Backstage Pass cancelled. Reverted to Twilight Member.");
-        
-        window.closePaymentModal();
-        window.updatePageUI();
-      } catch (err) {
-        console.error("Failed to update VIP status:", err);
-        localStorage.setItem('neko_is_vip', newStatus ? 'true' : 'false');
-        window.closePaymentModal();
-        window.updatePageUI();
-      }
-    };
-
-    // Tab Switcher Function
-    window.switchDashboardTab = function(tabName) {
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-      const targetPanel = document.getElementById(`panel-${tabName}`);
-      if (targetPanel) targetPanel.classList.add('active');
-      if (event && event.currentTarget) event.currentTarget.classList.add('active');
-
-      if (tabName === 'badges') {
-        window.renderProfileBadges();
-      }
-    };
-
-    // Render Badges from LocalStorage
-    window.renderProfileBadges = function() {
-      const container = document.getElementById('account-badges-container');
-      if (!container) return;
-
-      let savedBadges = [];
-      try {
-        savedBadges = JSON.parse(localStorage.getItem('user_profile_badges')) || [];
-      } catch (err) {
-        savedBadges = [];
-      }
-
-      if (savedBadges.length === 0) {
-        container.innerHTML = `
-          <div class="no-badges-box">
-            <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">🔍</span>
-            <p style="font-size: 0.95rem; color: var(--text-light); font-weight: 700;">No Badges Unlocked Yet</p>
-            <p style="font-size: 0.82rem; margin-top: 4px;">Solve weekly mystery cases on the Sakuraoka BBS and enter the passcodes in the Mystery Decoder tab!</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = savedBadges.map(badge => `
-        <div class="profile-badge-card">
-          <div class="badge-icon-box">${badge.icon || '🏆'}</div>
-          <div class="badge-info">
-            <span class="badge-name">${badge.name}</span>
-            <span class="badge-date">Unlocked: ${badge.unlockedAt}</span>
-          </div>
-        </div>
-      `).join('');
-    };
-
-    // Listen for real-time badge updates from the BBS Decoder tab
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'user_profile_badges') {
-        window.renderProfileBadges();
-      }
-    });
-
-    // Save Profile Details (Name, Bio, Favorite Member, Custom Avatar)
-    window.saveProfileDetails = async function() {
-      const nameInput = document.getElementById('edit-display-name-input');
-      const bioInput = document.getElementById('edit-bio-input');
-      const favSelect = document.getElementById('fav-member-select');
-      const avatarInput = document.getElementById('edit-avatar-url-input');
-
-      const newName = nameInput ? nameInput.value.trim() : '';
-      const newBio = bioInput ? bioInput.value.trim() : '';
-      const newFav = favSelect ? favSelect.value : 'none';
-      const newAvatar = avatarInput ? avatarInput.value.trim() : '';
-
-      if (!newName) {
-        alert("Please enter a valid display name.");
-        return;
-      }
-
-      try {
-        const userRef = doc(db, "users", window.currentUser.uid);
-        const updates = {
-          displayName: newName,
-          bio: newBio,
-          favMember: newFav
-        };
-
-        if (newAvatar) updates.photoURL = newAvatar;
-
-        await updateDoc(userRef, updates);
-        Object.assign(window.userData, updates);
-
-        alert("🌸 Profile details updated successfully!");
-        window.updatePageUI();
-      } catch (err) {
-        console.error("Failed to update profile:", err);
-        alert("Error saving profile: " + err.message);
-      }
-    };
-
-    // Equip Cosmetic Item
-    window.equipSelectedItem = async function(type, value) {
-      if (!window.currentUser) return;
-
-      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
-
-      if ((value === 'gold_aura' || value === 'neon_spotlight' || value === 'gold_glow' || value === 'cyber_sunset' || value === 'producer' || value === 'crew') && !isVIP) {
-        alert("🎟️ Backstage Pass VIP required to equip this cosmetic flair!");
-        window.updatePageUI();
-        return;
-      }
-
-      try {
-        const userRef = doc(db, "users", window.currentUser.uid);
-        const fieldMap = { frame: 'equippedFrame', glow: 'equippedGlow', title: 'equippedTitle' };
-        
-        if (fieldMap[type]) {
-          await updateDoc(userRef, { [fieldMap[type]]: value });
-          window.userData[fieldMap[type]] = value;
-        }
-
-        updateAvatarFramePreview(window.userData.equippedFrame);
-        window.updatePageUI();
-      } catch (err) {
-        console.error("Failed to update equipment:", err);
-      }
-    };
-
-    // Save App Preference
-    window.saveAppSetting = function(key, val) {
-      localStorage.setItem(`neko_setting_${key}`, val);
-    };
-
-    // Sign Out
-    window.logoutUser = function() {
-      signOut(auth).then(() => {
-        localStorage.removeItem('neko_logged_in');
-        window.location.href = "index.html";
-      });
-    };
-
-    // Update Profile Page Elements
-    window.updatePageUI = function() {
-      const nameEl = document.getElementById('user-display-name');
-      const emailEl = document.getElementById('user-email-text');
-      const avatarEl = document.getElementById('user-avatar-img');
-      const titleBadgeEl = document.getElementById('user-title-badge-text');
-
-      const tierPill = document.getElementById('user-tier-pill');
-      const tierIcon = document.getElementById('user-tier-icon');
-      const tierName = document.getElementById('user-tier-name');
-      const toggleVipBtn = document.getElementById('toggle-vip-btn');
-
-      const inputName = document.getElementById('edit-display-name-input');
-      const inputBio = document.getElementById('edit-bio-input');
-      const inputFav = document.getElementById('fav-member-select');
-      const inputAvatar = document.getElementById('edit-avatar-url-input');
-
-      const safetyEmail = document.getElementById('safety-email-display');
-      const safety13 = document.getElementById('safety-13-status');
-      const safety17 = document.getElementById('safety-17-status');
-
-      const isVIP = localStorage.getItem('neko_is_vip') === 'true';
-
-      if (window.currentUser && window.userData) {
-        if (nameEl) nameEl.innerText = window.userData.displayName || "Lounge Member";
-        if (emailEl) emailEl.innerText = window.userData.email || window.currentUser.email;
-        if (avatarEl) avatarEl.src = window.userData.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${window.currentUser.uid}`;
-
-        const titleMap = {
-          listener: '[Prep Room Listener]',
-          otaku: '[Otaku Lounge Member]',
-          rocker: '[J-Rock Specialist]',
-          producer: '[Prep Room B Producer] 🎟️',
-          crew: '[Phantom Crew] 🎟️'
-        };
-        if (titleBadgeEl) titleBadgeEl.innerText = titleMap[window.userData.equippedTitle] || '[Prep Room Listener]';
-
-        if (inputName) inputName.value = window.userData.displayName || "";
-        if (inputBio) inputBio.value = window.userData.bio || "";
-        if (inputFav) inputFav.value = window.userData.favMember || "none";
-        if (inputAvatar) inputAvatar.value = window.userData.photoURL || "";
-
-        if (safetyEmail) safetyEmail.innerText = window.userData.email || window.currentUser.email;
-        if (safety13) safety13.innerText = window.userData.ageVerified13 ? "✅ Verified (13+)" : "❌ Not Verified";
-        if (safety17) safety17.innerText = window.userData.ageVerified17 ? "✅ Verified (17+)" : "❌ Not Verified";
-
-        if (isVIP) {
-          if (tierPill) tierPill.className = "tier-pill vip-tier";
-          if (tierIcon) tierIcon.innerText = "🎟️";
-          if (tierName) tierName.innerText = "Backstage Pass VIP";
-          if (toggleVipBtn) toggleVipBtn.innerText = "Manage / Cancel VIP Subscription";
+        const userRef = doc(db, "users", user.uid);
+        const snap = await getDoc(userRef);
+        if (snap.exists()) {
+          window.userData = snap.data();
         } else {
-          if (tierPill) tierPill.className = "tier-pill";
-          if (tierIcon) tierIcon.innerText = "🌸";
-          if (tierName) tierName.innerText = "Twilight Member";
-          if (toggleVipBtn) toggleVipBtn.innerText = "Unlock Backstage Pass VIP";
+          window.userData = {
+            displayName: user.displayName || "Lounge Member",
+            email: user.email,
+            photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
+            equippedFrame: 'none',
+            equippedGlow: 'none',
+            equippedTitle: 'listener'
+          };
+          await setDoc(userRef, window.userData, { merge: true });
         }
-
-        const frameSelect = document.getElementById('equip-frame-select');
-        const glowSelect = document.getElementById('equip-glow-select');
-        const titleSelect = document.getElementById('equip-title-select');
-
-        if (frameSelect) frameSelect.value = window.userData.equippedFrame || 'none';
-        if (glowSelect) glowSelect.value = window.userData.equippedGlow || 'none';
-        if (titleSelect) titleSelect.value = window.userData.equippedTitle || 'listener';
-
-        const defMode = document.getElementById('setting-default-mode');
-        const autoPlay = document.getElementById('setting-autoplay');
-        const notifs = document.getElementById('setting-notifications');
-        const alerts = document.getElementById('setting-join-alerts');
-
-        if (defMode) defMode.value = localStorage.getItem('neko_setting_defaultMode') || 'twilight';
-        if (autoPlay) autoPlay.checked = localStorage.getItem('neko_setting_autoplay') === 'true';
-        if (notifs) notifs.checked = localStorage.getItem('neko_setting_notifications') === 'true';
-        if (alerts) alerts.checked = localStorage.getItem('neko_setting_joinAlerts') === 'true';
-
-        updateAvatarFramePreview(window.userData.equippedFrame);
+      } catch (e) {
+        console.error("Firestore sync error:", e);
+        window.userData = { displayName: user.displayName, email: user.email };
       }
-    };
-
-    function updateAvatarFramePreview(frame) {
-      const frameOverlay = document.getElementById('user-avatar-frame-overlay');
-      if (!frameOverlay) return;
-
-      if (frame === 'sakura_pink') {
-        frameOverlay.style.border = "3px solid #f4b8c4";
-        frameOverlay.style.boxShadow = "0 0 10px #f4b8c4";
-      } else if (frame === 'cavern_purple') {
-        frameOverlay.style.border = "3px solid #a88beb";
-        frameOverlay.style.boxShadow = "0 0 12px #a88beb";
-      } else if (frame === 'gold_aura') {
-        frameOverlay.style.border = "3px solid #ffd166";
-        frameOverlay.style.boxShadow = "0 0 14px #ffd166";
-      } else if (frame === 'neon_spotlight') {
-        frameOverlay.style.border = "3px solid #ff007f";
-        frameOverlay.style.boxShadow = "0 0 16px #ff007f";
-      } else {
-        frameOverlay.style.border = "2px solid transparent";
-        frameOverlay.style.boxShadow = "none";
-      }
+      window.updatePageUI();
+      window.renderProfileBadges();
+    } else {
+      window.location.href = "index.html";
     }
-  </script>
-  <script src="music-player.js"></script>
-</body>
-</html>
+  });
+
+  // 2. Tab Switcher (Fixed Event Handling)
+  window.switchDashboardTab = function(tabName, evt) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    const targetPanel = document.getElementById(`panel-${tabName}`);
+    if (targetPanel) targetPanel.classList.add('active');
+
+    if (evt && evt.currentTarget) {
+      evt.currentTarget.classList.add('active');
+    } else {
+      // Fallback selector
+      const btns = document.querySelectorAll('.side-tabs-menu .tab-btn');
+      btns.forEach(btn => {
+        if (btn.getAttribute('onclick')?.includes(`'${tabName}'`)) {
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    if (tabName === 'badges') {
+      window.renderProfileBadges();
+    }
+  };
+
+  // 3. Render Badges from LocalStorage
+  window.renderProfileBadges = function() {
+    const container = document.getElementById('account-badges-container');
+    if (!container) return;
+
+    let savedBadges = [];
+    try {
+      savedBadges = JSON.parse(localStorage.getItem('user_profile_badges')) || [];
+    } catch (err) {
+      savedBadges = [];
+    }
+
+    if (savedBadges.length === 0) {
+      container.innerHTML = `
+        <div class="no-badges-box">
+          <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">🔍</span>
+          <p style="font-size: 0.95rem; color: var(--text-light); font-weight: 700;">No Badges Unlocked Yet</p>
+          <p style="font-size: 0.82rem; margin-top: 4px;">Solve weekly mystery cases on the Sakuraoka BBS and enter passcodes in the Mystery Decoder!</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = savedBadges.map(badge => `
+      <div class="profile-badge-card">
+        <div class="badge-icon-box">${badge.icon || '🏆'}</div>
+        <div class="badge-info">
+          <span class="badge-name">${badge.name}</span>
+          <span class="badge-date">Unlocked: ${badge.unlockedAt}</span>
+        </div>
+      </div>
+    `).join('');
+  };
+
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'user_profile_badges') {
+      window.renderProfileBadges();
+    }
+  });
+
+  // 4. Save Profile Details (Using setDoc with merge)
+  window.saveProfileDetails = async function() {
+    if (!window.currentUser) return;
+
+    const nameInput = document.getElementById('edit-display-name-input');
+    const bioInput = document.getElementById('edit-bio-input');
+    const favSelect = document.getElementById('fav-member-select');
+    const avatarInput = document.getElementById('edit-avatar-url-input');
+
+    const newName = nameInput ? nameInput.value.trim() : '';
+    const newBio = bioInput ? bioInput.value.trim() : '';
+    const newFav = favSelect ? favSelect.value : 'none';
+    const newAvatar = avatarInput ? avatarInput.value.trim() : '';
+
+    if (!newName) {
+      alert("Please enter a valid display name.");
+      return;
+    }
+
+    try {
+      const userRef = doc(db, "users", window.currentUser.uid);
+      const updates = {
+        displayName: newName,
+        bio: newBio,
+        favMember: newFav
+      };
+
+      if (newAvatar) updates.photoURL = newAvatar;
+
+      await setDoc(userRef, updates, { merge: true });
+      Object.assign(window.userData, updates);
+
+      alert("🌸 Profile details updated successfully!");
+      window.updatePageUI();
+    } catch (err) {
+      console.error("Failed to update profile:", err);
+      alert("Error saving profile: " + err.message);
+    }
+  };
+
+  // 5. Equip Cosmetic Item
+  window.equipSelectedItem = async function(type, value) {
+    if (!window.currentUser) return;
+
+    const isVIP = localStorage.getItem('neko_is_vip') === 'true';
+    const vipValues = ['gold_aura', 'neon_spotlight', 'gold_glow', 'cyber_sunset', 'producer', 'crew'];
+
+    if (vipValues.includes(value) && !isVIP) {
+      alert("🎟️ Backstage Pass VIP required to equip this cosmetic flair!");
+      window.updatePageUI();
+      return;
+    }
+
+    try {
+      const userRef = doc(db, "users", window.currentUser.uid);
+      const fieldMap = { frame: 'equippedFrame', glow: 'equippedGlow', title: 'equippedTitle' };
+      
+      if (fieldMap[type]) {
+        await setDoc(userRef, { [fieldMap[type]]: value }, { merge: true });
+        window.userData[fieldMap[type]] = value;
+      }
+
+      updateAvatarFramePreview(window.userData.equippedFrame);
+      window.updatePageUI();
+    } catch (err) {
+      console.error("Failed to update equipment:", err);
+    }
+  };
+
+  // 6. Live Avatar Preview Listener
+  document.getElementById('edit-avatar-url-input')?.addEventListener('input', (e) => {
+    const previewImg = document.getElementById('user-avatar-img');
+    if (previewImg && e.target.value.trim()) {
+      previewImg.src = e.target.value.trim();
+    }
+  });
+
+  // Modal Helpers
+  window.openPaymentModal = () => document.getElementById('payment-modal').style.display = 'flex';
+  window.closePaymentModal = () => document.getElementById('payment-modal').style.display = 'none';
+  window.showPaymentNotice = (gateway) => alert(`⚡ ${gateway} payments coming soon! Use Dev Override below.`);
+
+  window.simulateVIPUnlock = async function() {
+    if (!window.currentUser) return;
+    const isVIP = localStorage.getItem('neko_is_vip') === 'true';
+    const newStatus = !isVIP;
+
+    try {
+      const userRef = doc(db, "users", window.currentUser.uid);
+      await setDoc(userRef, { isVIP: newStatus }, { merge: true });
+      localStorage.setItem('neko_is_vip', newStatus ? 'true' : 'false');
+      alert(newStatus ? "🎟️ Backstage Pass VIP Unlocked!" : "Reverted to Twilight Member.");
+      window.closePaymentModal();
+      window.updatePageUI();
+    } catch (err) {
+      console.error("VIP Toggle Error:", err);
+    }
+  };
+
+  window.saveAppSetting = (key, val) => localStorage.setItem(`neko_setting_${key}`, val);
+
+  window.logoutUser = function() {
+    signOut(auth).then(() => {
+      localStorage.removeItem('neko_logged_in');
+      window.location.href = "index.html";
+    });
+  };
+
+  // 7. Update UI Elements
+  window.updatePageUI = function() {
+    const isVIP = localStorage.getItem('neko_is_vip') === 'true';
+
+    // Update Headers & Profile Text
+    document.getElementById('user-display-name').innerText = window.userData.displayName || "Lounge Member";
+    document.getElementById('user-email-text').innerText = window.userData.email || window.currentUser?.email || "";
+    document.getElementById('user-avatar-img').src = window.userData.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${window.currentUser?.uid}`;
+
+    const titleMap = {
+      listener: '[Prep Room Listener]',
+      otaku: '[Otaku Lounge Member]',
+      rocker: '[J-Rock Specialist]',
+      producer: '[Prep Room B Producer] 🎟️',
+      crew: '[Phantom Crew] 🎟️'
+    };
+    document.getElementById('user-title-badge-text').innerText = titleMap[window.userData.equippedTitle] || '[Prep Room Listener]';
+
+    // Populate Inputs
+    document.getElementById('edit-display-name-input').value = window.userData.displayName || "";
+    document.getElementById('edit-bio-input').value = window.userData.bio || "";
+    document.getElementById('fav-member-select').value = window.userData.favMember || "none";
+    document.getElementById('edit-avatar-url-input').value = window.userData.photoURL || "";
+
+    // Safety & Tier Status
+    document.getElementById('safety-email-display').innerText = window.userData.email || window.currentUser?.email || "";
+    document.getElementById('safety-13-status').innerText = window.userData.ageVerified13 ? "✅ Verified (13+)" : "❌ Not Verified";
+    document.getElementById('safety-17-status').innerText = window.userData.ageVerified17 ? "✅ Verified (17+)" : "❌ Not Verified";
+
+    // VIP Pill & Button Updates
+    const tierPill = document.getElementById('user-tier-pill');
+    const tierIcon = document.getElementById('user-tier-icon');
+    const tierName = document.getElementById('user-tier-name');
+    const toggleVipBtn = document.getElementById('toggle-vip-btn');
+
+    if (isVIP) {
+      if (tierPill) tierPill.className = "tier-pill vip-tier";
+      if (tierIcon) tierIcon.innerText = "🎟️";
+      if (tierName) tierName.innerText = "Backstage Pass VIP";
+      if (toggleVipBtn) toggleVipBtn.innerText = "Manage / Cancel VIP Subscription";
+    } else {
+      if (tierPill) tierPill.className = "tier-pill";
+      if (tierIcon) tierIcon.innerText = "🌸";
+      if (tierName) tierName.innerText = "Twilight Member";
+      if (toggleVipBtn) toggleVipBtn.innerText = "Unlock Backstage Pass VIP";
+    }
+
+    // Wardrobe Select Values
+    document.getElementById('equip-frame-select').value = window.userData.equippedFrame || 'none';
+    document.getElementById('equip-glow-select').value = window.userData.equippedGlow || 'none';
+    document.getElementById('equip-title-select').value = window.userData.equippedTitle || 'listener';
+
+    // App Settings
+    document.getElementById('setting-default-mode').value = localStorage.getItem('neko_setting_defaultMode') || 'twilight';
+    document.getElementById('setting-autoplay').checked = localStorage.getItem('neko_setting_autoplay') === 'true';
+    document.getElementById('setting-notifications').checked = localStorage.getItem('neko_setting_notifications') === 'true';
+    document.getElementById('setting-join-alerts').checked = localStorage.getItem('neko_setting_joinAlerts') === 'true';
+
+    updateAvatarFramePreview(window.userData.equippedFrame);
+  };
+
+  function updateAvatarFramePreview(frame) {
+    const frameOverlay = document.getElementById('user-avatar-frame-overlay');
+    if (!frameOverlay) return;
+
+    if (frame === 'sakura_pink') {
+      frameOverlay.style.border = "3px solid #f4b8c4";
+      frameOverlay.style.boxShadow = "0 0 10px #f4b8c4";
+    } else if (frame === 'cavern_purple') {
+      frameOverlay.style.border = "3px solid #a88beb";
+      frameOverlay.style.boxShadow = "0 0 12px #a88beb";
+    } else if (frame === 'gold_aura') {
+      frameOverlay.style.border = "3px solid #ffd166";
+      frameOverlay.style.boxShadow = "0 0 14px #ffd166";
+    } else if (frame === 'neon_spotlight') {
+      frameOverlay.style.border = "3px solid #ff007f";
+      frameOverlay.style.boxShadow = "0 0 16px #ff007f";
+    } else {
+      frameOverlay.style.border = "2px solid transparent";
+      frameOverlay.style.boxShadow = "none";
+    }
+  }
+</script>
