@@ -144,6 +144,9 @@
       font-size: 1.5rem;
       border: 2px solid var(--accent-cyan);
       box-shadow: 0 0 10px var(--accent-cyan);
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
     }
 
     .preview-username {
@@ -264,6 +267,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .avatar-img-preview {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
     }
 
     .buy-orb-btn {
@@ -505,7 +517,7 @@
 
   <div class="container">
     <h1 class="page-title">🔮 Cosmetic Showcase</h1>
-    <p class="page-subtitle">Customize your chat presence with unlocked glowing colors, borders, command packs, and emoji sets.</p>
+    <p class="page-subtitle">Customize your chat presence with unlocked glowing colors, borders, custom avatars, command packs, and emoji sets.</p>
 
     <!-- EQUIPPED PROFILE PREVIEW & REFILL BUTTON -->
     <div class="equipped-banner">
@@ -529,6 +541,7 @@
       <div class="store-tabs-nav">
         <button class="store-tab-btn active" id="tab-colors" onclick="switchTab('colors')">🎨 Name Colors (100 🔮)</button>
         <button class="store-tab-btn" id="tab-frames" onclick="switchTab('frames')">🖼️ Avatar Borders (100 🔮)</button>
+        <button class="store-tab-btn" id="tab-avatars" onclick="switchTab('avatars')">🎭 Avatars (500 🔮)</button>
         <button class="store-tab-btn" id="tab-commands" onclick="switchTab('commands')">💬 Chat Commands (250 🔮)</button>
         <button class="store-tab-btn" id="tab-emojis" onclick="switchTab('emojis')">😃 Emoji Packs (250 🔮)</button>
       </div>
@@ -664,7 +677,33 @@
     function updateUI() {
       const orbs = window.userData?.orb_balance || 0;
       document.getElementById('user-orb-display').innerText = `Your Balance: 🔮 ${orbs.toLocaleString()} Orbs`;
+
+      // Update equipped preview avatar
+      const equippedAvatar = window.userData?.equipped_avatar;
+      const avatarBox = document.getElementById('equipped-avatar-frame');
+      if (equippedAvatar && avatarBox) {
+        const item = getAvatarById(equippedAvatar);
+        if (item) {
+          avatarBox.style.backgroundImage = `url('${item.src}')`;
+          avatarBox.innerText = '';
+        }
+      }
+
       renderGrid(currentCategory);
+    }
+
+    function getAvatarById(id) {
+      const avatars = [
+        { id: 'avatar_akari', name: 'Akari Minase', src: 'images/avatars/akari.png', fallback: '🔥' },
+        { id: 'avatar_nekomi', name: 'Nekomi Idol', src: 'images/avatars/nekomi.png', fallback: '🐱' },
+        { id: 'avatar_lily', name: 'Lily Blossom', src: 'images/avatars/lily.png', fallback: '🌸' },
+        { id: 'avatar_sloane', name: 'Sloane Vance', src: 'images/avatars/sloane.png', fallback: '⚡' },
+        { id: 'avatar_sera', name: 'Sera Starlight', src: 'images/avatars/sera.png', fallback: '✨' },
+        { id: 'avatar_aoi', name: 'Aoi Bassist', src: 'images/avatars/aoi.png', fallback: '🎸' },
+        { id: 'avatar_cyberpunk', name: 'Cyber Runner', src: 'images/avatars/cyberpunk.png', fallback: '🤖' },
+        { id: 'avatar_golden', name: 'Void Sovereign', src: 'images/avatars/sovereign.png', fallback: '👑' }
+      ];
+      return avatars.find(a => a.id === id);
     }
 
     window.switchTab = function(category) {
@@ -678,6 +717,7 @@
       const grid = document.getElementById('store-grid-content');
       const userOrbs = window.userData?.orb_balance || 0;
       const unlocked = window.userData?.unlocked_items || [];
+      const equippedAvatar = window.userData?.equipped_avatar || '';
       let html = '';
 
       if (category === 'colors') {
@@ -746,6 +786,36 @@
             </div>
           `;
         });
+      } else if (category === 'avatars') {
+        const avatars = [
+          { id: 'avatar_akari', name: 'Akari Minase Avatar', cost: 500, src: 'images/avatars/akari.png', fallback: '🔥' },
+          { id: 'avatar_nekomi', name: 'Nekomi Idol Avatar', cost: 500, src: 'images/avatars/nekomi.png', fallback: '🐱' },
+          { id: 'avatar_lily', name: 'Lily Blossom Avatar', cost: 500, src: 'images/avatars/lily.png', fallback: '🌸' },
+          { id: 'avatar_sloane', name: 'Sloane Vance Avatar', cost: 500, src: 'images/avatars/sloane.png', fallback: '⚡' },
+          { id: 'avatar_sera', name: 'Sera Starlight Avatar', cost: 500, src: 'images/avatars/sera.png', fallback: '✨' },
+          { id: 'avatar_aoi', name: 'Aoi Bassist Avatar', cost: 500, src: 'images/avatars/aoi.png', fallback: '🎸' },
+          { id: 'avatar_cyberpunk', name: 'Cyber Runner Avatar', cost: 500, src: 'images/avatars/cyberpunk.png', fallback: '🤖' },
+          { id: 'avatar_golden', name: 'Void Sovereign Avatar', cost: 500, src: 'images/avatars/sovereign.png', fallback: '👑' }
+        ];
+
+        avatars.forEach(item => {
+          const owned = unlocked.includes(item.id);
+          const isEquipped = equippedAvatar === item.id;
+
+          html += `
+            <div class="store-item-card">
+              <div>
+                <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
+                <div class="store-item-preview">
+                  <img src="${item.src}" class="avatar-img-preview" alt="${item.name}" onerror="this.onerror=null; this.replaceWith('${item.fallback}');">
+                </div>
+              </div>
+              <button class="buy-orb-btn" ${isEquipped ? 'disabled' : ''} onclick="${owned ? `equipAvatar('${item.id}')` : `handleCosmeticClick('${item.id}', ${item.cost})`}">
+                ${isEquipped ? 'Equipped ✨' : (owned ? 'Equip Avatar' : `Buy for 🔮 ${item.cost}`)}
+              </button>
+            </div>
+          `;
+        });
       } else if (category === 'commands') {
         const commands = [
           { id: 'pack_hacker', name: '⚡ Sub-Stage Hacker Pack', cost: 250, preview: '/glitch, /matrix, :breach:' },
@@ -796,6 +866,26 @@
 
       grid.innerHTML = html;
     }
+
+    // Equip Avatar Handler
+    window.equipAvatar = async function(avatarId) {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const userRef = doc(db, "users", user.uid);
+      try {
+        await updateDoc(userRef, { equipped_avatar: avatarId });
+        alert("🎭 Avatar Equipped!");
+        
+        const snap = await getDoc(userRef);
+        if (snap.exists()) {
+          window.userData = snap.data();
+          updateUI();
+        }
+      } catch (e) {
+        alert(`⚠️ Failed to equip avatar: ${e.message}`);
+      }
+    };
 
     // Smart Click Handler: Purchases item if enough Orbs, opens Modal if short on Orbs!
     window.handleCosmeticClick = function(itemId, cost) {
