@@ -1191,6 +1191,24 @@
       'vip': '⚡ #BACKSTAGE-VIP LOUNGE'
     };
 
+    // Prompt login function for guests
+    window.promptLogin = function() {
+      if (!window.currentUser) {
+        if (confirm("🔒 You must be logged in with Email or Google to post in live chat. Would you like to go to the login page now?")) {
+          window.location.href = "account.html";
+        }
+      }
+    };
+
+    // Attach click prompt listener on locked input bar
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('user-input-msg')?.addEventListener('click', () => {
+        if (!window.currentUser) {
+          window.promptLogin();
+        }
+      });
+    });
+
     // 1. Auth Listener & Input Locking
     onAuthStateChanged(auth, async (user) => {
       const inputEl = document.getElementById('user-input-msg');
@@ -1495,28 +1513,59 @@
       if (e.key === 'Enter') sendChatMessage();
     }
 
-    /* MUSIC PLAYER */
+    /* MUSIC PLAYER WITH CROSS-PAGE LOCALSTORAGE PERSISTENCE */
     const dockedAudio = document.getElementById('docked-radio-audio');
     let isDockedMusicPlaying = false;
     const defaultStreamUrl = "https://kathy.torontocast.com:3060/stream";
+
+    // Save audio state before page unload
+    window.addEventListener('beforeunload', () => {
+      if (dockedAudio && !dockedAudio.paused) {
+        localStorage.setItem('neko_fm_active', 'true');
+        localStorage.setItem('neko_fm_volume', dockedAudio.volume.toString());
+      }
+    });
+
+    // Sync audio state automatically on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const isPlaying = localStorage.getItem('neko_fm_active') === 'true';
+      const savedVol = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
+
+      if (isPlaying && dockedAudio) {
+        dockedAudio.src = defaultStreamUrl;
+        dockedAudio.volume = savedVol;
+        dockedAudio.play().then(() => {
+          isDockedMusicPlaying = true;
+          const playBtn = document.getElementById('docked-play-btn');
+          if (playBtn) playBtn.innerText = "⏸ PAUSE MUSIC";
+        }).catch(() => {
+          console.log("Autoplay paused: User interaction required to resume stream.");
+        });
+      }
+    });
 
     function toggleDockedMusic() {
       const playBtn = document.getElementById('docked-play-btn');
       if (isDockedMusicPlaying) {
         dockedAudio.pause();
         isDockedMusicPlaying = false;
+        localStorage.setItem('neko_fm_active', 'false');
         playBtn.innerText = "▶ PLAY MUSIC";
       } else {
         if (!dockedAudio.src) dockedAudio.src = defaultStreamUrl;
         dockedAudio.play().then(() => {
           isDockedMusicPlaying = true;
+          localStorage.setItem('neko_fm_active', 'true');
           playBtn.innerText = "⏸ PAUSE MUSIC";
         }).catch(err => console.error("Playback error:", err));
       }
     }
 
     function setDockedVolume(val) {
-      if (dockedAudio) dockedAudio.volume = val / 100;
+      if (dockedAudio) {
+        dockedAudio.volume = val / 100;
+        localStorage.setItem('neko_fm_volume', dockedAudio.volume.toString());
+      }
     }
 
     function toggleDockedCollapse() {
