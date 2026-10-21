@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile & Account Hub — Otaku Overload</title>
   <link rel="stylesheet" href="style.css">
+  <script type="module" src="firebase-config.js?v=3"></script>
+  <script type="module" src="age-gate.js"></script>
   <style>
     :root {
       --nav-bg-twilight: rgba(18, 12, 36, 0.94);
@@ -142,6 +144,7 @@
       border-radius: 50%;
       object-fit: cover;
       background: #120924;
+      border: 2px solid var(--accent-purple);
     }
 
     .avatar-frame-overlay {
@@ -383,6 +386,56 @@
       cursor: pointer;
     }
 
+    /* WARDROBE GRID STYLES */
+    .cosmetic-selection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .cosmetic-card-item {
+      background: rgba(18, 9, 36, 0.9);
+      border: 1px solid var(--nav-border-twilight);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cosmetic-card-item:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .cosmetic-card-item.active {
+      border-color: var(--accent-pink);
+      background: rgba(244, 184, 196, 0.15);
+      box-shadow: 0 0 14px rgba(255, 0, 127, 0.4);
+    }
+
+    .cosmetic-img-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 6px;
+      border: 1px solid var(--accent-cyan);
+    }
+
+    .cosmetic-item-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
     /* BADGES TAB STYLES */
     .badges-grid {
       display: grid;
@@ -577,6 +630,7 @@
         <a href="echoheart.html" class="nav-item">📚 Lore & Books</a>
         <a href="neko-fm.html" class="nav-item">📻 24/7 Neko FM</a>
         <a href="chat.html" class="nav-item">💬 Live Chat</a>
+        <a href="cosmetics.html" class="nav-item">🔮 Orb Store</a>
         <a href="account.html" id="nav-auth-btn" class="nav-item active" style="background: rgba(168, 139, 235, 0.25); border: 1px solid #a88beb; text-decoration: none;">
           👤 Account
         </a>
@@ -591,7 +645,7 @@
     <aside class="account-sidebar">
       <div class="sidebar-user-card">
         <div class="avatar-wrapper">
-          <img id="user-avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Lounge" alt="Avatar">
+          <img id="user-avatar-img" src="images/avatars/akari.png" alt="Avatar">
           <div id="user-avatar-frame-overlay" class="avatar-frame-overlay"></div>
         </div>
         <div id="user-display-name" class="user-name">Syncing Profile...</div>
@@ -607,8 +661,8 @@
 
       <nav class="side-tabs-menu">
         <button class="tab-btn active" onclick="switchDashboardTab('profile', event)">👤 Profile & Bio</button>
+        <button class="tab-btn" onclick="switchDashboardTab('wardrobe', event)">🎭 Wardrobe & Avatars</button>
         <button class="tab-btn" onclick="switchDashboardTab('badges', event)">🏆 Badges & Achievements</button>
-        <button class="tab-btn" onclick="switchDashboardTab('wardrobe', event)">🎨 Wardrobe & Cosmetics</button>
         <button class="tab-btn" onclick="switchDashboardTab('tiers', event)">🎟️ VIP Pass & Tiers</button>
         <button class="tab-btn" onclick="switchDashboardTab('settings', event)">⚙️ App & Audio Settings</button>
         <button class="tab-btn" onclick="switchDashboardTab('safety', event)">🛡️ Account & Safety</button>
@@ -651,8 +705,8 @@
             </div>
 
             <div class="form-group">
-              <label>Avatar Seed / Custom Image URL</label>
-              <input type="text" id="edit-avatar-url-input" class="form-control" placeholder="Image URL or DiceBear Seed...">
+              <label>Custom Avatar Image URL (Optional)</label>
+              <input type="text" id="edit-avatar-url-input" class="form-control" placeholder="Direct Image URL...">
             </div>
           </div>
 
@@ -660,48 +714,47 @@
         </div>
       </section>
 
-      <!-- PANEL 2: BADGES & ACHIEVEMENTS -->
-      <section id="panel-badges" class="tab-panel">
-        <div class="panel-header">
-          <h2>Unlocked Mystery Badges</h2>
-          <p>View your earned event rewards from solving Sakuraoka BBS forum cases.</p>
-        </div>
-
-        <div class="content-card">
-          <div id="account-badges-container" class="badges-grid">
-            <!-- Badges render dynamically -->
-          </div>
-        </div>
-      </section>
-
-      <!-- PANEL 3: WARDROBE & COSMETICS -->
+      <!-- PANEL 2: WARDROBE & COSMETICS / AVATARS -->
       <section id="panel-wardrobe" class="tab-panel">
         <div class="panel-header">
-          <h2>Wardrobe & Equipped Flair</h2>
-          <p>Equip free and VIP avatar borders, chat name glows, and community stage titles.</p>
+          <h2>Wardrobe, Avatars & Borders</h2>
+          <p>Equip character avatars unlocked in the Orb Store and customize your profile borders and glows.</p>
         </div>
 
         <div class="content-card">
-          <div class="grid-2col">
+          <div class="form-group">
+            <label>Equipped Character Avatar</label>
+            <div class="cosmetic-selection-grid" id="avatar-unlocks-grid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <div class="grid-2col" style="margin-top: 24px;">
             <div class="form-group">
               <label>Avatar Border Style</label>
               <select id="equip-frame-select" onchange="window.equipSelectedItem('frame', this.value)" class="form-control">
-                <option value="none">Standard Circle (Free)</option>
-                <option value="sakura_pink">🌸 Sakura Blossom Ring (Free)</option>
-                <option value="cavern_purple">🔮 Cavern Purple Ring (Free)</option>
-                <option value="gold_aura">✨ Backstage Gold Aura (VIP 🎟️)</option>
-                <option value="neon_spotlight">⚡ Neon Spotlight Pulse (VIP 🎟️)</option>
+                <option value="none">Standard Border (Free)</option>
+                <option value="frame_cyan">🩵 Cyberpunk Neon Border</option>
+                <option value="frame_gold">👑 Royal Gold Crest Frame</option>
+                <option value="frame_plasma">💗 Phantom Plasma Frame</option>
+                <option value="frame_amethyst">🔮 Amethyst Crystal Ring</option>
+                <option value="frame_emerald">💚 Emerald Shield Border</option>
+                <option value="frame_laser">❤️ Laser Red Target Crest</option>
+                <option value="frame_solar">☀️ Solar Gold Crown Ring</option>
+                <option value="frame_frost">❄️ Frost Byte Ice Ring</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label>Chat Name Glow Style</label>
+              <label>Chat Name Glow Color</label>
               <select id="equip-glow-select" onchange="window.equipSelectedItem('glow', this.value)" class="form-control">
                 <option value="none">Standard Text (Free)</option>
-                <option value="pink_glow">🌸 Pink Echo Glow (Free)</option>
-                <option value="purple_glow">🔮 Cavern Dusk Glow (Free)</option>
-                <option value="gold_glow">⚡ Golden Voltage Glow (VIP 🎟️)</option>
-                <option value="cyber_sunset">🌅 Cyber Sunset Gradient (VIP 🎟️)</option>
+                <option value="color_cyan">🩵 Neon Cyan Glow</option>
+                <option value="color_pink">🌸 Sakura Pink Sparkle</option>
+                <option value="color_gold">✨ Golden Radiance</option>
+                <option value="color_purple">🔮 Void Purple Shade</option>
+                <option value="color_lime">⚡ Electric Lime Flash</option>
+                <option value="color_red">🔥 Laser Red Overdrive</option>
               </select>
             </div>
           </div>
@@ -715,6 +768,20 @@
               <option value="producer">[Prep Room B Producer] (VIP 🎟️)</option>
               <option value="crew">[Phantom Crew] (VIP 🎟️)</option>
             </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 3: BADGES & ACHIEVEMENTS -->
+      <section id="panel-badges" class="tab-panel">
+        <div class="panel-header">
+          <h2>Unlocked Badges</h2>
+          <p>View your earned event rewards from community activities and store milestones.</p>
+        </div>
+
+        <div class="content-card">
+          <div id="account-badges-container" class="badges-grid">
+            <!-- Badges render dynamically -->
           </div>
         </div>
       </section>
@@ -860,49 +927,63 @@
   <script type="module">
     import { auth, db } from './firebase-config.js?v=3';
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     window.currentUser = null;
     window.userData = {
       displayName: "Lounge Member",
       email: "",
       photoURL: "",
+      equipped_avatar: "avatar_akari",
       equippedFrame: "none",
       equippedGlow: "none",
       equippedTitle: "listener",
+      unlocked_items: [],
       isVIP: false
     };
+
+    const STORE_AVATARS = [
+      { id: 'avatar_akari', name: 'Akari Minase', src: 'images/avatars/akari.png', fallback: '🔥' },
+      { id: 'avatar_nekomi', name: 'Nekomi Idol', src: 'images/avatars/nekomi.png', fallback: '🐱' },
+      { id: 'avatar_lily', name: 'Lily Blossom', src: 'images/avatars/lily.png', fallback: '🌸' },
+      { id: 'avatar_sloane', name: 'Sloane Vance', src: 'images/avatars/sloane.png', fallback: '⚡' },
+      { id: 'avatar_sera', name: 'Sera Starlight', src: 'images/avatars/sera.png', fallback: '✨' },
+      { id: 'avatar_aoi', name: 'Aoi Bassist', src: 'images/avatars/aoi.png', fallback: '🎸' },
+      { id: 'avatar_cyberpunk', name: 'Cyber Runner', src: 'images/avatars/cyberpunk.png', fallback: '🤖' },
+      { id: 'avatar_golden', name: 'Void Sovereign', src: 'images/avatars/sovereign.png', fallback: '👑' }
+    ];
 
     // Helper: Update Avatar Frame Preview safely
     function updateAvatarFramePreview(frame) {
       const frameOverlay = document.getElementById('user-avatar-frame-overlay');
       if (!frameOverlay) return;
 
-      if (frame === 'sakura_pink') {
-        frameOverlay.style.border = "3px solid #f4b8c4";
-        frameOverlay.style.boxShadow = "0 0 10px #f4b8c4";
-      } else if (frame === 'cavern_purple') {
-        frameOverlay.style.border = "3px solid #a88beb";
-        frameOverlay.style.boxShadow = "0 0 12px #a88beb";
-      } else if (frame === 'gold_aura') {
-        frameOverlay.style.border = "3px solid #ffd166";
-        frameOverlay.style.boxShadow = "0 0 14px #ffd166";
-      } else if (frame === 'neon_spotlight') {
+      if (frame === 'frame_cyan') {
+        frameOverlay.style.border = "3px solid #00F0FF";
+        frameOverlay.style.boxShadow = "0 0 12px #00F0FF";
+      } else if (frame === 'frame_gold' || frame === 'frame_solar') {
+        frameOverlay.style.border = "3px solid #FFD166";
+        frameOverlay.style.boxShadow = "0 0 14px #FFD166";
+      } else if (frame === 'frame_plasma') {
         frameOverlay.style.border = "3px solid #ff007f";
-        frameOverlay.style.boxShadow = "0 0 16px #ff007f";
+        frameOverlay.style.boxShadow = "0 0 14px #ff007f";
+      } else if (frame === 'frame_amethyst') {
+        frameOverlay.style.border = "3px solid #9d4edd";
+        frameOverlay.style.boxShadow = "0 0 14px #9d4edd";
+      } else if (frame === 'frame_emerald') {
+        frameOverlay.style.border = "3px solid #00ff66";
+        frameOverlay.style.boxShadow = "0 0 14px #00ff66";
       } else {
         frameOverlay.style.border = "2px solid transparent";
         frameOverlay.style.boxShadow = "none";
       }
     }
 
-    // Helper: Safely set element text content if present
     function setSafeText(id, text) {
       const el = document.getElementById(id);
       if (el) el.innerText = text;
     }
 
-    // Helper: Safely set form element value if present
     function setSafeValue(id, val) {
       const el = document.getElementById(id);
       if (el && val !== undefined) el.value = val;
@@ -916,8 +997,15 @@
       setSafeText('user-email-text', window.userData.email || window.currentUser?.email || "");
 
       const avatarImg = document.getElementById('user-avatar-img');
+      const equippedAvatarId = window.userData.equipped_avatar || 'avatar_akari';
+      const matchedAvatar = STORE_AVATARS.find(a => a.id === equippedAvatarId);
+
       if (avatarImg) {
-        avatarImg.src = window.userData.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${window.currentUser?.uid || 'default'}`;
+        if (window.userData.photoURL) {
+          avatarImg.src = window.userData.photoURL;
+        } else if (matchedAvatar) {
+          avatarImg.src = matchedAvatar.src;
+        }
       }
 
       const titleMap = {
@@ -939,7 +1027,6 @@
       setSafeText('safety-17-status', window.userData.ageVerified17 ? "✅ Verified (17+)" : "❌ Not Verified");
 
       const tierPill = document.getElementById('user-tier-pill');
-      const toggleVipBtn = document.getElementById('toggle-vip-btn');
 
       if (isVIP) {
         if (tierPill) tierPill.className = "tier-pill vip-tier";
@@ -969,6 +1056,46 @@
       if (joinAlertsCb) joinAlertsCb.checked = localStorage.getItem('neko_setting_joinAlerts') === 'true';
 
       updateAvatarFramePreview(window.userData.equippedFrame);
+      window.renderAvatarUnlocksGrid();
+    };
+
+    // Render Avatar Selection Grid in Wardrobe
+    window.renderAvatarUnlocksGrid = function() {
+      const grid = document.getElementById('avatar-unlocks-grid');
+      if (!grid) return;
+
+      const unlocked = window.userData.unlocked_items || [];
+      const equippedId = window.userData.equipped_avatar || 'avatar_akari';
+
+      let html = '';
+      STORE_AVATARS.forEach(item => {
+        const isOwned = unlocked.includes(item.id) || item.id === 'avatar_akari';
+        const isEquipped = equippedId === item.id;
+
+        html += `
+          <div class="cosmetic-card-item ${isEquipped ? 'active' : ''}" 
+               onclick="${isOwned ? `equipAvatarFromWardrobe('${item.id}')` : `alert('🔒 Unlock this avatar in the Orb Store!')`}">
+            <img src="${item.src}" class="cosmetic-img-thumb" alt="${item.name}" onerror="this.onerror=null; this.replaceWith('${item.fallback}');">
+            <span class="cosmetic-item-title">${item.name}</span>
+            <span style="font-size: 0.68rem; font-weight: 800; color: ${isEquipped ? 'var(--accent-pink)' : (isOwned ? 'var(--accent-cyan)' : 'var(--text-muted)')};">
+              ${isEquipped ? 'Equipped ✨' : (isOwned ? 'Equip' : '🔒 Store')}
+            </span>
+          </div>
+        `;
+      });
+      grid.innerHTML = html;
+    };
+
+    window.equipAvatarFromWardrobe = async function(avatarId) {
+      if (!window.currentUser) return;
+      try {
+        const userRef = doc(db, "users", window.currentUser.uid);
+        await updateDoc(userRef, { equipped_avatar: avatarId });
+        window.userData.equipped_avatar = avatarId;
+        window.updatePageUI();
+      } catch (err) {
+        console.error("Failed to equip avatar:", err);
+      }
     };
 
     // 1. Auth Listener & Firestore Sync
@@ -989,9 +1116,11 @@
               displayName: user.displayName || "Lounge Member",
               email: user.email,
               photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
+              equipped_avatar: 'avatar_akari',
               equippedFrame: 'none',
               equippedGlow: 'none',
               equippedTitle: 'listener',
+              unlocked_items: [],
               isVIP: false
             };
             await setDoc(userRef, window.userData, { merge: true });
@@ -1049,7 +1178,7 @@
           <div class="no-badges-box">
             <span style="font-size: 2.5rem; display: block; margin-bottom: 8px;">🔍</span>
             <p style="font-size: 0.95rem; color: var(--text-light); font-weight: 700;">No Badges Unlocked Yet</p>
-            <p style="font-size: 0.82rem; margin-top: 4px;">Solve weekly mystery cases on the Sakuraoka BBS and enter passcodes in the Mystery Decoder!</p>
+            <p style="font-size: 0.82rem; margin-top: 4px;">Unlock cosmetics and solve weekly events to earn badges!</p>
           </div>
         `;
         return;
@@ -1115,15 +1244,6 @@
     // 5. Equip Cosmetic Item
     window.equipSelectedItem = async function(type, value) {
       if (!window.currentUser) return;
-
-      const isVIP = window.userData.isVIP || localStorage.getItem('neko_is_vip') === 'true';
-      const vipValues = ['gold_aura', 'neon_spotlight', 'gold_glow', 'cyber_sunset', 'producer', 'crew'];
-
-      if (vipValues.includes(value) && !isVIP) {
-        alert("🎟️ Backstage Pass VIP required to equip this cosmetic flair!");
-        window.updatePageUI();
-        return;
-      }
 
       try {
         const userRef = doc(db, "users", window.currentUser.uid);
