@@ -402,6 +402,41 @@
       box-shadow: 0 0 18px rgba(255, 0, 127, 0.45);
     }
 
+    /* VIP Spotlight Container Effect */
+    .msg-row.spotlight-active .msg-bubble {
+      background: linear-gradient(135deg, rgba(255, 209, 102, 0.2) 0%, rgba(157, 78, 221, 0.25) 100%) !important;
+      border: 1.5px solid var(--accent-gold) !important;
+      box-shadow: 0 0 20px rgba(255, 209, 102, 0.5) !important;
+    }
+
+    /* Glitch CSS FX */
+    .fx-glitch {
+      display: inline-block;
+      color: var(--accent-cyan);
+      font-weight: 800;
+      animation: chatGlitch 0.4s infinite alternate;
+      text-shadow: 2px 0 var(--accent-pink), -2px 0 var(--accent-cyan);
+    }
+
+    @keyframes chatGlitch {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(-1.5px, 1px); }
+      100% { transform: translate(1.5px, -1px); }
+    }
+
+    /* Shout Banner FX */
+    .fx-shout {
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 900;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      box-shadow: 0 0 15px var(--accent-pink);
+    }
+
     .mod-msg .msg-bubble {
       border-color: #ff007f;
       box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
@@ -469,7 +504,7 @@
       position: absolute;
       bottom: 70px;
       left: 1.2rem;
-      width: 380px;
+      width: 400px;
       background: var(--card-bg);
       border: 1.5px solid var(--accent-cyan);
       border-radius: 14px;
@@ -495,19 +530,21 @@
       display: flex;
       gap: 4px;
       margin-bottom: 10px;
+      flex-wrap: wrap;
     }
 
     .tray-tab {
       background: rgba(8,3,16,0.9);
       border: 1px solid rgba(255,0,127,0.3);
       color: var(--text-muted);
-      padding: 4px 8px;
+      padding: 5px 8px;
       border-radius: 6px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
       flex: 1;
       text-align: center;
+      white-space: nowrap;
     }
 
     .tray-tab.active {
@@ -525,7 +562,7 @@
       overflow-y: auto;
     }
 
-    /* Text Emote Picker Button Styling (Fixes dark text visibility) */
+    /* Text Emote Picker Button Styling */
     .tray-item-btn {
       background: rgba(18, 9, 36, 0.95);
       border: 1px solid rgba(0, 240, 255, 0.4);
@@ -891,6 +928,7 @@
         <a href="neko-fm.html" class="nav-pill">📻 24/7 Neko FM</a>
         <a href="chat.html" class="nav-pill active">💬 Live Chat</a>
         <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
+        <a href="cosmetics.html" class="nav-pill">🔮 Orb Store</a>
         <a href="account.html" class="nav-pill">👤 Account</a>
       </nav>
 
@@ -997,14 +1035,15 @@
         <!-- Popup Picker Tray -->
         <div id="emote-picker-tray" class="emote-tray-popup">
           <div class="emote-tray-header">
-            <span>✨ Kaomoji & Text Emotes</span>
+            <span>✨ Commands, Kaomojis & Shortcodes</span>
             <button type="button" onclick="toggleEmotePicker()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:bold;">✕</button>
           </div>
           
           <div class="emote-tray-tabs">
-            <button type="button" class="tray-tab active" onclick="switchEmoteTab(event, 'emojis')">Text Emotes</button>
-            <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'colors')">Colors</button>
-            <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'frames')">Frames</button>
+            <button type="button" class="tray-tab active" onclick="switchEmoteTab(event, 'kaomoji')">Kaomoji</button>
+            <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'commands')">Commands</button>
+            <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'shortcodes')">Shortcodes</button>
+            <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'icons')">Icons</button>
           </div>
 
           <!-- Content Area -->
@@ -1186,55 +1225,16 @@
       { id: 'k7', symbol: '(✿◠‿◠)', name: 'Gentle Smile', pack: 'free' },
       { id: 'k8', symbol: '(★ω★)', name: 'Starry Eyes', pack: 'free' },
       { id: 'k9', symbol: '(｡♥‿♥｡)', name: 'Love Sparkles', pack: 'free' },
-      { id: 'k10', symbol: '( ˆ͈̑꒳ˆ͈̑ )', name: 'Warm Grin', pack: 'free' },
-
-      // --- SAD & CRYING KAOMOJIS ---
-      { id: 'k11', symbol: '(╥﹏╥)', name: 'Tears', pack: 'free' },
-      { id: 'k12', symbol: '(ಥ﹏ಥ)', name: 'Crying Tears', pack: 'free' },
-      { id: 'k13', symbol: '(;´༎ຶД༎ຶ`)', name: 'Sobbing Out Loud', pack: 'free' },
-      { id: 'k14', symbol: '(T_T)', name: 'Classic Cry', pack: 'free' },
-      { id: 'k15', symbol: '(;﹏;)', name: 'Sniffle', pack: 'free' },
-      { id: 'k16', symbol: '(u_u)', name: 'Dejected', pack: 'free' },
 
       // --- ANGRY & FLIPPING TABLES ---
       { id: 'k17', symbol: '(╯°□°)╯︵ ┻━┻', name: 'Table Flip', pack: 'free' },
       { id: 'k18', symbol: '┬─┬ノ( º _ ºノ)', name: 'Table Respect', pack: 'free' },
       { id: 'k19', symbol: '(ง\'̀-\'́)ง', name: 'Fight Me', pack: 'free' },
-      { id: 'k20', symbol: ' (ಠ_ಠ)', name: 'Disapproval', pack: 'free' },
-      { id: 'k21', symbol: ' (╬▔皿▔)╯', name: 'Rage Scream', pack: 'free' },
-      { id: 'k22', symbol: ' ( ◣∀◢ )', name: 'Evil Smirk', pack: 'free' },
-
-      // --- SHY, BLUSHING & SURPRISED ---
-      { id: 'k23', symbol: '(⁠ ⁠•⁠_⁠•⁠)⁠;', name: 'Sweat Drop', pack: 'free' },
-      { id: 'k24', symbol: '(😳)', name: 'Flustered Blush', pack: 'free' },
-      { id: 'k25', symbol: '(☉_☉)', name: 'Shocked Eyes', pack: 'free' },
-      { id: 'k26', symbol: '∑(O_O;)', name: 'Gasp Shock', pack: 'free' },
-      { id: 'k27', symbol: '(*/ω\\*)', name: 'Cover Face Shy', pack: 'free' },
-      { id: 'k28', symbol: '(•﹏•)', name: 'Nervous Sweat', pack: 'free' },
 
       // --- SMIRK & MEME KAOMOJIS ---
       { id: 'k29', symbol: '( ° ͜ʖ °)', name: 'Lenny Smirk', pack: 'free' },
       { id: 'k30', symbol: '¯\\_(ツ)_/¯', name: 'Shrug', pack: 'free' },
       { id: 'k31', symbol: '( •_•)>⌐■-■', name: 'Shades On', pack: 'free' },
-      { id: 'k32', symbol: '(⌐■_■)', name: 'Deal With It', pack: 'free' },
-      { id: 'k33', symbol: 'ʕ•ᴥ•ʔ', name: 'Bear Hug', pack: 'free' },
-      { id: 'k34', symbol: '(x_x)', name: 'K.O.', pack: 'free' },
-      { id: 'k35', symbol: '(=' + '^' + '·' + 'a' + '·' + '^' + '=)', name: 'Cat Whisker', pack: 'free' },
-      { id: 'k36', symbol: 'V(=^･ω･^=)v', name: 'Neko Peace', pack: 'free' },
-
-      // --- CLASSIC TEXT & PHONE KEYBOARD EMOTES ---
-      { id: 't1', symbol: ':-)', name: 'Classic Smile', pack: 'free' },
-      { id: 't2', symbol: ';-)', name: 'Wink', pack: 'free' },
-      { id: 't3', symbol: ':-D', name: 'Big Laugh', pack: 'free' },
-      { id: 't4', symbol: 'xD', name: 'XD Laugh', pack: 'free' },
-      { id: 't5', symbol: ':-P', name: 'Tongue Out', pack: 'free' },
-      { id: 't6', symbol: ':-O', name: 'Surprised', pack: 'free' },
-      { id: 't7', symbol: '<3', name: 'Heart', pack: 'free' },
-      { id: 't8', symbol: '</3', name: 'Broken Heart', pack: 'free' },
-      { id: 't9', symbol: 'O_o', name: 'Raised Eyebrow', pack: 'free' },
-      { id: 't10', symbol: 'T_T', name: 'Tears Face', pack: 'free' },
-      { id: 't11', symbol: ':-*', name: 'Kiss', pack: 'free' },
-      { id: 't12', symbol: 'o7', name: 'Salute', pack: 'free' },
 
       // --- SYMBOLS & CYBER EMOJIS ---
       { id: 'e1', symbol: '⚡', name: 'Glitch Bolt', pack: 'free' },
@@ -1244,9 +1244,7 @@
       { id: 'e5', symbol: '✨', name: 'Sparkles', pack: 'free' },
       { id: 'e6', symbol: '🐾', name: 'Paws', pack: 'free' },
       { id: 'e7', symbol: '🎧', name: 'Headphones', pack: 'free' },
-      { id: 'e8', symbol: '🔮', name: 'Orb', pack: 'free' },
-      { id: 'e9', symbol: '👑', name: 'Crown', pack: 'free' },
-      { id: 'e10', symbol: '🔥', name: 'Overdrive Fire', pack: 'free' }
+      { id: 'e8', symbol: '🔮', name: 'Orb', pack: 'free' }
     ];
 
     /* REAL-TIME USER STATUS MANAGEMENT & 5-MINUTE AUTO-AWAY TIMER */
@@ -1340,18 +1338,18 @@
       return CRISIS_KEYWORDS.some(phrase => lower.includes(phrase));
     }
 
-    /* CHAT TRANSMISSION LOGIC & MODERATION */
+    /* CHAT TRANSMISSION LOGIC, UNLOCKED STORE COMMANDS & SHORTCODES PARSER */
     function sendChatMessage() {
       const input = document.getElementById('user-input-msg');
-      const text = input.value.trim();
-      if (!text) return;
+      const rawText = input.value.trim();
+      if (!rawText) return;
 
-      if (containsProfanity(text)) {
+      if (containsProfanity(rawText)) {
         alert("🛡️ [Auto-Mod]: Please keep our community lounge clean and avoid prohibited language.");
         return;
       }
 
-      if (checkCrisisIntervention(text)) {
+      if (checkCrisisIntervention(rawText)) {
         alert("❤️ [Support Notice]: It sounds like you might be going through a difficult time. Support is available 24/7 at 988 (Suicide & Crisis Lifeline). You are not alone.");
         input.value = '';
         return;
@@ -1359,12 +1357,85 @@
 
       recordUserActivity();
 
+      // Read unlocked items from Firestore window.userData or LocalStorage
+      const unlocked = window.userData?.unlocked_items || JSON.parse(localStorage.getItem('unlocked_cosmetics') || '[]');
+      let formattedContent = escapeHtml(rawText);
+      let isSpotlightActive = false;
+
+      // 1. COMMANDS PARSER
+      if (rawText.startsWith('/glitch ')) {
+        if (!unlocked.includes('pack_hacker')) {
+          alert('❌ You need to unlock the Sub-Stage Hacker Pack in the Orb Store to use /glitch!');
+          return;
+        }
+        const clean = escapeHtml(rawText.replace('/glitch ', ''));
+        formattedContent = `<span class="fx-glitch">${clean}</span>`;
+      }
+      else if (rawText.startsWith('/matrix ')) {
+        if (!unlocked.includes('pack_hacker')) {
+          alert('❌ Unlock the Sub-Stage Hacker Pack to use /matrix!');
+          return;
+        }
+        const clean = escapeHtml(rawText.replace('/matrix ', ''));
+        formattedContent = `<span style="color: #00ff66; font-family: monospace; background: #001100; padding: 4px 8px; border-radius: 4px; display: inline-block;">[MATRIX]: ${clean}</span>`;
+      }
+      else if (rawText === '/airhorn') {
+        if (!unlocked.includes('pack_dj')) {
+          alert('❌ Unlock the Underground DJ Pack to use /airhorn!');
+          return;
+        }
+        formattedContent = `<div style="color: var(--accent-gold); font-weight: 900;">📢 [B-B-B-BASS DROP!] 🎧✨ ─── 🔊🔊🔊</div>`;
+      }
+      else if (rawText === '/nyan') {
+        if (!unlocked.includes('pack_chibi') && !unlocked.includes('pack_chibi_emotes')) {
+          alert('❌ Unlock the Akari & Nekomi Chibi Pack to use /nyan!');
+          return;
+        }
+        formattedContent = `<div style="color: var(--accent-pink); font-weight: 800;">ฅ(= Return to Stage =)=ฅ 🐾</div>`;
+      }
+      else if (rawText === '/tableflip') {
+        if (!unlocked.includes('pack_chibi') && !unlocked.includes('pack_chibi_emotes')) {
+          alert('❌ Unlock the Akari & Nekomi Chibi Pack to use /tableflip!');
+          return;
+        }
+        formattedContent = `(╯°□°)╯︵ ┻━┻`;
+      }
+      else if (rawText.startsWith('/shout ')) {
+        if (!unlocked.includes('pack_vip') && !unlocked.includes('pack_vip_emotes')) {
+          alert('❌ Unlock the VIP Broadcaster Pack to use /shout!');
+          return;
+        }
+        const clean = escapeHtml(rawText.replace('/shout ', ''));
+        formattedContent = `<div class="fx-shout">📢 ${clean}</div>`;
+      }
+      else if (rawText.startsWith('/spotlight ')) {
+        if (!unlocked.includes('pack_vip') && !unlocked.includes('pack_vip_emotes')) {
+          alert('❌ Unlock the VIP Broadcaster Pack to use /spotlight!');
+          return;
+        }
+        isSpotlightActive = true;
+        formattedContent = escapeHtml(rawText.replace('/spotlight ', ''));
+      }
+
+      // 2. SHORTCODES PARSER
+      if (unlocked.includes('pack_hacker')) {
+        formattedContent = formattedContent.replace(/:breach:/g, '<b style="color: #ff0055;">[⚠️ BREACH]</b>');
+        formattedContent = formattedContent.replace(/:overclock:/g, '<b style="color: #00f0ff;">⚡[OVERCLOCK 200%]</b>');
+      }
+      if (unlocked.includes('pack_dj')) {
+        formattedContent = formattedContent.replace(/:vinyl:/g, '💿[33 RPM]');
+        formattedContent = formattedContent.replace(/:drop:/g, '💥▒▓█ BASS DROP █▓▒💥');
+      }
+      if (unlocked.includes('pack_chibi') || unlocked.includes('pack_chibi_emotes')) {
+        formattedContent = formattedContent.replace(/:neko_cheer:/g, 'ヽ(>∀<☆)ノ');
+      }
+
       const chatFeed = document.getElementById('chat-feed');
       const now = new Date();
       const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
       const msgRow = document.createElement('div');
-      msgRow.className = 'msg-row outgoing' + (window.isUserAdmin ? ' mod-msg' : '');
+      msgRow.className = 'msg-row outgoing' + (window.isUserAdmin ? ' mod-msg' : '') + (isSpotlightActive ? ' spotlight-active' : '');
       
       const authorHtml = window.isUserAdmin 
         ? `<span class="msg-author mod">🛡️ MODERATOR</span>`
@@ -1376,7 +1447,7 @@
           <span class="msg-time">${timeStr}</span>
           <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
         </div>
-        <div class="msg-bubble">${escapeHtml(text)}</div>
+        <div class="msg-bubble">${formattedContent}</div>
       `;
 
       chatFeed.appendChild(msgRow);
@@ -1456,14 +1527,14 @@
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    /* 💬 EMOTE & COSMETIC PICKER LOGIC */
+    /* 💬 EMOTE & COSMETIC PICKER LOGIC WITH SUB-CATEGORIES */
     function toggleEmotePicker() {
       const tray = document.getElementById('emote-picker-tray');
       if (tray.style.display === 'block') {
         tray.style.display = 'none';
       } else {
         tray.style.display = 'block';
-        loadTrayTab('emojis');
+        loadTrayTab('kaomoji');
       }
     }
 
@@ -1475,22 +1546,54 @@
 
     function loadTrayTab(category) {
       const grid = document.getElementById('emote-tray-content');
+      const unlocked = window.userData?.unlocked_items || JSON.parse(localStorage.getItem('unlocked_cosmetics') || '[]');
       let html = '';
 
-      if (category === 'emojis') {
+      if (category === 'kaomoji') {
         MASTER_EMOTE_CATALOG.forEach(item => {
           html += `<button type="button" class="tray-item-btn" title="${item.name}" onclick="insertIntoChatInput('${item.symbol}')">${item.symbol}</button>`;
         });
-      } else if (category === 'colors') {
-        html = `
-          <div style="grid-column: span 3; font-size:0.75rem; color:var(--text-muted); text-align:center; padding: 10px;">
-            Name colors highlight your username in live chat when equipped from your Account settings!
-          </div>`;
-      } else if (category === 'frames') {
-        html = `
-          <div style="grid-column: span 3; font-size:0.75rem; color:var(--text-muted); text-align:center; padding: 10px;">
-            Avatar frames surround your profile picture in chat rooms.
-          </div>`;
+      } else if (category === 'commands') {
+        const cmds = [
+          { cmd: '/glitch ', label: '/glitch', pack: 'pack_hacker' },
+          { cmd: '/matrix ', label: '/matrix', pack: 'pack_hacker' },
+          { cmd: '/airhorn', label: '/airhorn', pack: 'pack_dj' },
+          { cmd: '/nyan', label: '/nyan', pack: 'pack_chibi' },
+          { cmd: '/tableflip', label: '/tableflip', pack: 'pack_chibi' },
+          { cmd: '/shout ', label: '/shout', pack: 'pack_vip' },
+          { cmd: '/spotlight ', label: '/spotlight', pack: 'pack_vip' }
+        ];
+
+        cmds.forEach(item => {
+          const isUnlocked = unlocked.includes(item.pack) || unlocked.includes('pack_chibi_emotes') || unlocked.includes('pack_vip_emotes');
+          html += `
+            <button type="button" class="tray-item-btn" style="${!isUnlocked ? 'opacity: 0.5; border-color: rgba(255,255,255,0.2);' : ''}" 
+              onclick="${isUnlocked ? `insertIntoChatInput('${item.cmd}')` : `alert('🔒 Unlock this command in the Orb Store!')`}">
+              ${item.label} ${!isUnlocked ? '🔒' : ''}
+            </button>`;
+        });
+      } else if (category === 'shortcodes') {
+        const codes = [
+          { code: ':breach:', label: ':breach:', pack: 'pack_hacker' },
+          { code: ':overclock:', label: ':overclock:', pack: 'pack_hacker' },
+          { code: ':vinyl:', label: ':vinyl:', pack: 'pack_dj' },
+          { code: ':drop:', label: ':drop:', pack: 'pack_dj' },
+          { code: ':neko_cheer:', label: ':neko_cheer:', pack: 'pack_chibi' }
+        ];
+
+        codes.forEach(item => {
+          const isUnlocked = unlocked.includes(item.pack) || unlocked.includes('pack_chibi_emotes');
+          html += `
+            <button type="button" class="tray-item-btn" style="${!isUnlocked ? 'opacity: 0.5; border-color: rgba(255,255,255,0.2);' : ''}" 
+              onclick="${isUnlocked ? `insertIntoChatInput('${item.code}')` : `alert('🔒 Unlock this shortcode in the Orb Store!')`}">
+              ${item.label} ${!isUnlocked ? '🔒' : ''}
+            </button>`;
+        });
+      } else if (category === 'icons') {
+        const icons = ['⚡', '🌸', '🎸', '🎤', '✨', '🐾', '🎧', '🔮', '👑', '🔥', '💖', '💎'];
+        icons.forEach(icon => {
+          html += `<button type="button" class="tray-item-btn" onclick="insertIntoChatInput('${icon}')">${icon}</button>`;
+        });
       }
 
       grid.innerHTML = html;
