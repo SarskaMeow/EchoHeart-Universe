@@ -253,7 +253,7 @@
     }
 
     .store-item-preview {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 800;
       margin: 16px 0;
       padding: 12px;
@@ -264,14 +264,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .openmoji-icon-preview {
-      width: 28px;
-      height: 28px;
-      margin: 0 4px;
-      object-fit: contain;
-      vertical-align: middle;
     }
 
     .buy-orb-btn {
@@ -472,6 +464,26 @@
     .stripe-modal-btn:hover {
       box-shadow: 0 0 20px var(--accent-glow);
     }
+
+    /* CUSTOM ANIMATED GLOW & SPARKLE CLASSES */
+    @keyframes pulseGlowText {
+      0%, 100% { text-shadow: 0 0 6px currentColor; }
+      50% { text-shadow: 0 0 16px currentColor, 0 0 25px currentColor; }
+    }
+
+    @keyframes rotateBorderGlow {
+      0% { box-shadow: 0 0 8px currentColor; }
+      50% { box-shadow: 0 0 20px currentColor, inset 0 0 10px currentColor; }
+      100% { box-shadow: 0 0 8px currentColor; }
+    }
+
+    .fx-glow-text {
+      animation: pulseGlowText 2s infinite ease-in-out;
+    }
+
+    .fx-glow-border {
+      animation: rotateBorderGlow 2.5s infinite ease-in-out;
+    }
   </style>
 </head>
 <body>
@@ -493,7 +505,7 @@
 
   <div class="container">
     <h1 class="page-title">🔮 Cosmetic Showcase</h1>
-    <p class="page-subtitle">Customize your chat presence with unlocked colors, borders, command packs, and OpenMoji vector sets.</p>
+    <p class="page-subtitle">Customize your chat presence with unlocked glowing colors, borders, command packs, and emoji sets.</p>
 
     <!-- EQUIPPED PROFILE PREVIEW & REFILL BUTTON -->
     <div class="equipped-banner">
@@ -515,10 +527,10 @@
     <!-- MAIN STORE UNLOCKS GRID -->
     <div class="store-container">
       <div class="store-tabs-nav">
-        <button class="store-tab-btn active" id="tab-colors" onclick="switchTab('colors')">🎨 Name Colors</button>
-        <button class="store-tab-btn" id="tab-frames" onclick="switchTab('frames')">🖼️ Avatar Borders</button>
-        <button class="store-tab-btn" id="tab-commands" onclick="switchTab('commands')">💬 Chat Commands</button>
-        <button class="store-tab-btn" id="tab-emojis" onclick="switchTab('emojis')">😃 OpenMoji Packs</button>
+        <button class="store-tab-btn active" id="tab-colors" onclick="switchTab('colors')">🎨 Name Colors (100 🔮)</button>
+        <button class="store-tab-btn" id="tab-frames" onclick="switchTab('frames')">🖼️ Avatar Borders (100 🔮)</button>
+        <button class="store-tab-btn" id="tab-commands" onclick="switchTab('commands')">💬 Chat Commands (250 🔮)</button>
+        <button class="store-tab-btn" id="tab-emojis" onclick="switchTab('emojis')">😃 Emoji Packs (250 🔮)</button>
       </div>
 
       <div class="store-item-grid" id="store-grid-content">
@@ -670,10 +682,26 @@
 
       if (category === 'colors') {
         const colors = [
-          { id: 'color_cyan', name: 'Neon Cyan Glow', cost: 150, style: 'color: #00F0FF; text-shadow: 0 0 8px #00F0FF;' },
-          { id: 'color_gold', name: 'Golden Radiance', cost: 300, style: 'color: #FFD166; text-shadow: 0 0 10px #FFD166;' },
-          { id: 'color_pink', name: 'Sakura Pink Sparkle', cost: 150, style: 'color: #ff007f; text-shadow: 0 0 8px #ff007f;' },
-          { id: 'color_purple', name: 'Void Purple Shade', cost: 200, style: 'color: #9d4edd; text-shadow: 0 0 8px #9d4edd;' }
+          { id: 'color_cyan', name: 'Neon Cyan Glow', cost: 100, style: 'color: #00F0FF; text-shadow: 0 0 10px #00F0FF;' },
+          { id: 'color_pink', name: 'Sakura Pink Sparkle', cost: 100, style: 'color: #ff007f; text-shadow: 0 0 10px #ff007f;' },
+          { id: 'color_gold', name: 'Golden Radiance', cost: 100, style: 'color: #FFD166; text-shadow: 0 0 10px #FFD166;' },
+          { id: 'color_purple', name: 'Void Purple Shade', cost: 100, style: 'color: #9d4edd; text-shadow: 0 0 10px #9d4edd;' },
+          { id: 'color_lime', name: 'Electric Lime Flash', cost: 100, style: 'color: #00ff66; text-shadow: 0 0 10px #00ff66;' },
+          { id: 'color_red', name: 'Laser Red Overdrive', cost: 100, style: 'color: #ff0055; text-shadow: 0 0 10px #ff0055;' },
+          { id: 'color_yellow', name: 'Cyberpunk Yellow', cost: 100, style: 'color: #ffee00; text-shadow: 0 0 10px #ffee00;' },
+          { id: 'color_vapor', name: 'Vaporwave Sunset', cost: 100, style: 'color: #ff77ff; text-shadow: 0 0 10px #ff77ff;' },
+          { id: 'color_magenta', name: 'Hot Magenta Spark', cost: 100, style: 'color: #ff00cc; text-shadow: 0 0 10px #ff00cc;' },
+          { id: 'color_white', name: 'Arctic Frost White', cost: 100, style: 'color: #ffffff; text-shadow: 0 0 12px #ffffff;' },
+          { id: 'color_emerald', name: 'Emerald Beam', cost: 100, style: 'color: #00ffa2; text-shadow: 0 0 10px #00ffa2;' },
+          { id: 'color_orange', name: 'Sunset Amber Pulse', cost: 100, style: 'color: #ff6600; text-shadow: 0 0 10px #ff6600;' },
+          { id: 'color_plasma', name: 'Plasma Pink Aura', cost: 100, style: 'color: #ff3399; text-shadow: 0 0 10px #ff3399;' },
+          { id: 'color_cobalt', name: 'Cobalt Shock Blue', cost: 100, style: 'color: #0066ff; text-shadow: 0 0 10px #0066ff;' },
+          { id: 'color_acid', name: 'Acid Green Pulse', cost: 100, style: 'color: #bfff00; text-shadow: 0 0 10px #bfff00;' },
+          { id: 'color_hyper', name: 'Hyper Violet Beam', cost: 100, style: 'color: #7700ff; text-shadow: 0 0 10px #7700ff;' },
+          { id: 'color_infra', name: 'Infrared Neon', cost: 100, style: 'color: #ff2200; text-shadow: 0 0 10px #ff2200;' },
+          { id: 'color_solar', name: 'Solar Flare Gold', cost: 100, style: 'color: #ffbb00; text-shadow: 0 0 10px #ffbb00;' },
+          { id: 'color_frost', name: 'Frost Byte Cyan', cost: 100, style: 'color: #88ffff; text-shadow: 0 0 10px #88ffff;' },
+          { id: 'color_shadow', name: 'Shadow Pulse Glow', cost: 100, style: 'color: #bb77ff; text-shadow: 0 0 10px #bb77ff;' }
         ];
 
         colors.forEach(item => {
@@ -682,9 +710,9 @@
             <div class="store-item-card">
               <div>
                 <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
-                <div class="store-item-preview" style="${item.style}">[Preview] Member</div>
+                <div class="store-item-preview fx-glow-text" style="${item.style}">[Preview] Member</div>
               </div>
-              <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}', ${item.cost})">
+              <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}',${item.cost})">
                 ${owned ? 'Unlocked ✔' : `Buy for 🔮 ${item.cost}`}
               </button>
             </div>
@@ -692,10 +720,14 @@
         });
       } else if (category === 'frames') {
         const frames = [
-          { id: 'frame_cyan', name: 'Cyberpunk Neon Border', cost: 400, style: 'border: 2px solid #00F0FF; box-shadow: 0 0 10px #00F0FF;' },
-          { id: 'frame_gold', name: 'Royal Gold Crest Frame', cost: 600, style: 'border: 2px solid #FFD166; box-shadow: 0 0 10px #FFD166;' },
-          { id: 'frame_plasma', name: 'Phantom Plasma Frame', cost: 500, style: 'border: 2px solid #ff007f; box-shadow: 0 0 10px #ff007f;' },
-          { id: 'frame_amethyst', name: 'Amethyst Crystal Ring', cost: 450, style: 'border: 2px solid #9d4edd; box-shadow: 0 0 10px #9d4edd;' }
+          { id: 'frame_cyan', name: 'Cyberpunk Neon Border', cost: 100, style: 'border: 2px solid #00F0FF; color: #00F0FF;' },
+          { id: 'frame_gold', name: 'Royal Gold Crest Frame', cost: 100, style: 'border: 2px solid #FFD166; color: #FFD166;' },
+          { id: 'frame_plasma', name: 'Phantom Plasma Frame', cost: 100, style: 'border: 2px solid #ff007f; color: #ff007f;' },
+          { id: 'frame_amethyst', name: 'Amethyst Crystal Ring', cost: 100, style: 'border: 2px solid #9d4edd; color: #9d4edd;' },
+          { id: 'frame_emerald', name: 'Emerald Shield Border', cost: 100, style: 'border: 2px solid #00ff66; color: #00ff66;' },
+          { id: 'frame_laser', name: 'Laser Red Target Crest', cost: 100, style: 'border: 2px solid #ff0055; color: #ff0055;' },
+          { id: 'frame_solar', name: 'Solar Gold Crown Ring', cost: 100, style: 'border: 2px solid #ffee00; color: #ffee00;' },
+          { id: 'frame_frost', name: 'Frost Byte Ice Ring', cost: 100, style: 'border: 2px solid #88ffff; color: #88ffff;' }
         ];
 
         frames.forEach(item => {
@@ -705,10 +737,10 @@
               <div>
                 <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
                 <div class="store-item-preview">
-                  <div style="${item.style} padding: 8px; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">👤</div>
+                  <div class="fx-glow-border" style="${item.style} padding: 8px; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;">👤</div>
                 </div>
               </div>
-              <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}', ${item.cost})">
+              <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}',${item.cost})">
                 ${owned ? 'Unlocked ✔' : `Buy for 🔮 ${item.cost}`}
               </button>
             </div>
@@ -716,10 +748,12 @@
         });
       } else if (category === 'commands') {
         const commands = [
-          { id: 'pack_hacker', name: '⚡ Sub-Stage Hacker Pack', cost: 450, preview: '/glitch, /matrix, :breach:' },
-          { id: 'pack_dj', name: '🎙️ Underground DJ Pack', cost: 300, preview: '/airhorn, :vinyl:, :drop:' },
+          { id: 'pack_hacker', name: '⚡ Sub-Stage Hacker Pack', cost: 250, preview: '/glitch, /matrix, :breach:' },
+          { id: 'pack_dj', name: '🎙️ Underground DJ Pack', cost: 250, preview: '/airhorn, :vinyl:, :drop:' },
           { id: 'pack_chibi', name: '🐾 Akari & Nekomi Chibi Pack', cost: 250, preview: '/nyan, /tableflip, :neko_cheer:' },
-          { id: 'pack_vip', name: '👑 VIP Broadcaster Pack', cost: 750, preview: '/shout & /spotlight commands' }
+          { id: 'pack_vip', name: '👑 VIP Broadcaster Pack', cost: 250, preview: '/shout & /spotlight commands' },
+          { id: 'pack_producer', name: '🎛️ Stage Producer FX Pack', cost: 250, preview: '/encore, /bassboost, :strobe:' },
+          { id: 'pack_cyberlore', name: '📚 Cyber Lore Codex Pack', cost: 250, preview: '/phantom, /codex, :phantom_seal:' }
         ];
 
         commands.forEach(item => {
@@ -730,7 +764,7 @@
                 <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
                 <div class="store-item-preview" style="font-size: 0.85rem; color: var(--accent-cyan);">${item.preview}</div>
               </div>
-              <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}', ${item.cost})">
+              <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}',${item.cost})">
                 ${owned ? 'Unlocked ✔' : `Buy for 🔮 ${item.cost}`}
               </button>
             </div>
@@ -738,50 +772,10 @@
         });
       } else if (category === 'emojis') {
         const packs = [
-          { 
-            id: 'pack_openmoji_stage', 
-            name: '🎭 Stage Performance OpenMojis', 
-            cost: 300, 
-            preview: `
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F3AD.svg" class="openmoji-icon-preview" alt="Stage">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F3B8.svg" class="openmoji-icon-preview" alt="Guitar">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F3A7.svg" class="openmoji-icon-preview" alt="Headphones">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F3A4.svg" class="openmoji-icon-preview" alt="Mic">
-            ` 
-          },
-          { 
-            id: 'pack_openmoji_cyber', 
-            name: '⚡ Cyber & Glitch OpenMojis', 
-            cost: 350, 
-            preview: `
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/26A1.svg" class="openmoji-icon-preview" alt="Lightning">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F4BB.svg" class="openmoji-icon-preview" alt="Laptop">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/2728.svg" class="openmoji-icon-preview" alt="Sparkles">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F504.svg" class="openmoji-icon-preview" alt="Sync">
-            ` 
-          },
-          { 
-            id: 'pack_openmoji_neko', 
-            name: '🐾 Neko Sanctuary OpenMojis', 
-            cost: 250, 
-            preview: `
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F63A.svg" class="openmoji-icon-preview" alt="Cat Smile">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F431.svg" class="openmoji-icon-preview" alt="Cat Face">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F43A.svg" class="openmoji-icon-preview" alt="Wolf">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F496.svg" class="openmoji-icon-preview" alt="Sparkle Heart">
-            ` 
-          },
-          { 
-            id: 'pack_openmoji_vip', 
-            name: '👑 VIP Royal Crown OpenMojis', 
-            cost: 500, 
-            preview: `
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F451.svg" class="openmoji-icon-preview" alt="Crown">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F48E.svg" class="openmoji-icon-preview" alt="Gem">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F525.svg" class="openmoji-icon-preview" alt="Fire">
-              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/2B50.svg" class="openmoji-icon-preview" alt="Star">
-            ` 
-          }
+          { id: 'pack_chibi_emotes', name: 'Chibi Idol Kaomoji Pack', cost: 250, preview: '(๑•̀ㅂ•́)و (◕‿◕✿) ヽ(´▽`)/' },
+          { id: 'pack_glitch_emotes', name: 'Sub-Stage Cyber Glitch Pack', cost: 250, preview: '⚡ 🌀 🖥️ ⚠️ 💥 [MATRIX]' },
+          { id: 'pack_nekomi_emotes', name: 'Nekomi Cat Reaction Pack', cost: 250, preview: 'ฅ(= Return =)=ฅ 🐾 😺 🐟' },
+          { id: 'pack_vip_emotes', name: 'VIP Backstage Reactions', cost: 250, preview: '👑 💎 🎧 🔥 ✨ 💖' }
         ];
 
         packs.forEach(item => {
@@ -839,7 +833,7 @@
           });
         });
 
-        alert("✨ OpenMoji Pack Unlocked!");
+        alert("✨ Cosmetic Unlocked!");
         const updatedSnap = await getDoc(userRef);
         window.userData = updatedSnap.data();
         updateUI();
