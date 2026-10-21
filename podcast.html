@@ -982,8 +982,8 @@
       if (!ep || !ep.script || ep.script.length === 0) return;
 
       const currentTime = (audioElement && audioElement.src && !audioElement.paused && !isNaN(audioElement.currentTime))
-                          ? audioElement.currentTime
-                          : elapsedSeconds;
+                        ? audioElement.currentTime
+                        : elapsedSeconds;
 
       let activeLine = null;
       for (let i = 0; i < ep.script.length; i++) {
@@ -1130,5 +1130,22 @@
     }
   </script>
   <script src="global-player.js"></script>
+
+  <!-- AUTO-PAUSE SCRIPT FOR SECONDARY MEDIA -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const mediaElements = document.querySelectorAll('audio:not(#docked-radio-audio):not(#audio-player), video');
+      mediaElements.forEach(media => {
+        media.addEventListener('play', () => {
+          if (typeof isPodcastPlaying !== 'undefined' && isPodcastPlaying) {
+            stopPodcastPlayback();
+          }
+          if (typeof isDockedMusicPlaying !== 'undefined' && isDockedMusicPlaying && typeof toggleDockedMusic === 'function') {
+            toggleDockedMusic();
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
