@@ -1121,6 +1121,11 @@
       }
       selectEpisode(0);
       renderVisualizer();
+
+      // AUTO-PLAY PODCAST ON LOAD & AUTO-PAUSE LOGIC
+      setTimeout(() => {
+        startPodcastPlayback();
+      }, 500);
     }
 
     if (document.readyState === 'loading') {
