@@ -1388,6 +1388,7 @@
     }
 
     function syncRadioState(isPlaying, url, title, speaker) {
+      localStorage.setItem('neko_fm_active', isPlaying ? 'true' : 'false');
       localStorage.setItem('neko_radio_playing', isPlaying ? 'true' : 'false');
       if (url) localStorage.setItem('neko_radio_url', url);
       if (title) localStorage.setItem('neko_radio_title', title);
@@ -1462,6 +1463,7 @@
     function changeSynthVolume(val) {
       if (synthAudioPlayer) {
         synthAudioPlayer.volume = val / 100;
+        localStorage.setItem('neko_fm_volume', synthAudioPlayer.volume.toString());
       }
     }
 
@@ -2029,6 +2031,14 @@
       handleModeChange('backstage');
     }
 
+    // Save audio state prior to leaving or refreshing page
+    window.addEventListener('beforeunload', () => {
+      if (synthAudioPlayer && !synthAudioPlayer.paused) {
+        localStorage.setItem('neko_fm_active', 'true');
+        localStorage.setItem('neko_fm_volume', synthAudioPlayer.volume.toString());
+      }
+    });
+
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
       currentMode = getCurrentMode();
@@ -2037,6 +2047,31 @@
       renderDiscography();
       initMasterTimers();
       renderSynthVisualizer();
+
+      // Audio state restoration
+      const wasFmPlaying = localStorage.getItem('neko_fm_active') === 'true';
+      const savedVolume = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
+
+      if (wasFmPlaying && synthAudioPlayer) {
+        synthAudioPlayer.volume = savedVolume;
+        const volSlider = document.getElementById('yt-vol-slider');
+        if (volSlider) volSlider.value = Math.round(savedVolume * 100);
+
+        const preset = synthPresets[currentSynthPresetIdx];
+        synthAudioPlayer.src = preset.url;
+        synthAudioPlayer.play().then(() => {
+          isSynthPlaying = true;
+          const statusMsg = document.getElementById('yt-status-text');
+          const powerBtn = document.getElementById('yt-power-btn');
+          const eqVisualizer = document.getElementById('yt-eq-visualizer');
+          if (statusMsg) statusMsg.innerText = "STREAMING • " + preset.desc;
+          if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
+          if (eqVisualizer) eqVisualizer.classList.add('playing');
+          startTrackRefreshTimer();
+        }).catch(() => {
+          console.log("Autoplay blocked by browser policy. Interaction needed.");
+        });
+      }
 
       document.addEventListener('click', function(event) {
         const navMenu = document.getElementById('nav-menu');
@@ -2048,5 +2083,23 @@
     });
   </script>
   <script src="music-player.js"></script>
+
+  <!-- AUTO-PAUSE SCRIPT FOR SECONDARY MEDIA -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const mediaElements = document.querySelectorAll('audio:not(#synth-deck-audio):not(#radio-audio-player), video');
+      mediaElements.forEach(media => {
+        media.addEventListener('play', () => {
+          if (typeof isSynthPlaying !== 'undefined' && isSynthPlaying) {
+            toggleSynthPower();
+          }
+          if (typeof audioPlayer !== 'undefined' && !audioPlayer.paused) {
+            audioPlayer.pause();
+          }
+          localStorage.setItem('neko_fm_active', 'false');
+        });
+      });
+    });
+  </script>
 </body>
 </html>
