@@ -153,6 +153,12 @@
       text-shadow: 0 0 8px var(--accent-cyan);
     }
 
+    .balance-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .orb-balance-pill {
       background: rgba(0, 240, 255, 0.12);
       border: 1.5px solid var(--accent-cyan);
@@ -164,123 +170,27 @@
       box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
     }
 
-    /* SECTION TITLES */
-    .section-header {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--accent-gold);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-shadow: 0 0 10px rgba(255, 209, 102, 0.4);
-    }
-
-    /* STRIPE ORB PACKS GRID */
-    .orb-packs-section {
-      margin-bottom: 36px;
-    }
-
-    .orb-packs-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    @media (max-width: 900px) {
-      .orb-packs-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .orb-pack-card {
-      background: var(--card-inner);
-      border: 1.5px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      position: relative;
-      transition: all 0.3s ease;
-      overflow: hidden;
-    }
-
-    .orb-pack-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 12px 32px rgba(0, 240, 255, 0.3);
-    }
-
-    .orb-pack-card.popular-tier {
-      border-color: var(--accent-gold);
-      box-shadow: 0 0 20px rgba(255, 209, 102, 0.25);
-    }
-
-    .popular-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: var(--gold-grad);
-      color: #000;
-      font-weight: 900;
-      font-size: 0.68rem;
-      padding: 4px 10px;
-      border-radius: 10px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .pack-art {
-      width: 140px;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-    }
-
-    .pack-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text-light);
-      margin-bottom: 4px;
-    }
-
-    .pack-orbs {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--accent-cyan);
-      margin-bottom: 8px;
-    }
-
-    .pack-desc {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.35;
-      margin-bottom: 18px;
-      flex-grow: 1;
-    }
-
-    .stripe-checkout-btn {
+    .refill-btn {
       background: var(--btn-grad);
       color: #fff;
-      text-decoration: none;
-      padding: 12px 20px;
-      border-radius: 10px;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 20px;
       font-weight: 800;
       font-size: 0.9rem;
-      width: 100%;
-      display: block;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+      cursor: pointer;
+      box-shadow: 0 0 15px var(--accent-glow);
+      transition: all 0.25s ease;
+      animation: pulseGlow 2s infinite alternate;
     }
 
-    .stripe-checkout-btn:hover {
-      box-shadow: 0 0 20px var(--accent-glow);
-      transform: scale(1.02);
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 10px var(--accent-glow); }
+      100% { box-shadow: 0 0 22px var(--accent-glow), 0 0 10px var(--accent-cyan); }
+    }
+
+    .refill-btn:hover {
+      transform: scale(1.05);
     }
 
     /* STORE CONTAINER */
@@ -377,6 +287,182 @@
       color: var(--text-muted);
       cursor: not-allowed;
     }
+
+    /* GLITCH / GLOW ORB STORE MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(4, 2, 9, 0.88);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 2px solid var(--accent-cyan);
+      box-shadow: 0 0 35px var(--cyan-glow), 0 0 60px rgba(255, 0, 127, 0.25);
+      border-radius: 24px;
+      width: 90%;
+      max-width: 920px;
+      padding: 32px;
+      position: relative;
+      transform: scale(0.92);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+    }
+
+    /* CRT Scanline Glitch Accent */
+    .modal-content::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: rgba(255, 0, 127, 0.2);
+      border: 1px solid var(--accent-pink);
+      color: #fff;
+      font-size: 1.2rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--accent-pink);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 12px var(--accent-cyan);
+      margin-bottom: 6px;
+    }
+
+    .modal-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .orb-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 800px) {
+      .orb-modal-grid { grid-template-columns: 1fr; }
+    }
+
+    .modal-pack-card {
+      background: var(--card-inner);
+      border: 1.5px solid var(--card-border);
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .modal-pack-card:hover {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.35);
+      transform: translateY(-4px);
+    }
+
+    .modal-pack-card.popular-tier {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 25px rgba(255, 209, 102, 0.3);
+    }
+
+    .modal-pack-art {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+    }
+
+    .modal-pack-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+
+    .modal-pack-orbs {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      margin-bottom: 8px;
+    }
+
+    .modal-pack-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.35;
+      flex-grow: 1;
+    }
+
+    .stripe-modal-btn {
+      background: var(--btn-grad);
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      width: 100%;
+      display: block;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+    }
+
+    .stripe-modal-btn:hover {
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
   </style>
 </head>
 <body>
@@ -397,10 +483,10 @@
   </header>
 
   <div class="container">
-    <h1 class="page-title">🔮 Cosmetic Orb Store</h1>
-    <p class="page-subtitle">Acquire Orbs and unlock custom chat name colors, avatar borders, and reaction packs.</p>
+    <h1 class="page-title">🔮 Cosmetic Showcase</h1>
+    <p class="page-subtitle">Customize your chat presence with unlocked colors, borders, and emoji packs.</p>
 
-    <!-- EQUIPPED PROFILE PREVIEW -->
+    <!-- EQUIPPED PROFILE PREVIEW & REFILL BUTTON -->
     <div class="equipped-banner">
       <div class="profile-preview-box">
         <div class="preview-avatar" id="equipped-avatar-frame">👤</div>
@@ -409,56 +495,16 @@
           <div class="preview-username" id="equipped-name-preview">Member</div>
         </div>
       </div>
-      <div class="orb-balance-pill" id="user-orb-display">
-        Your Balance: 🔮 0 Orbs
+      <div class="balance-wrapper">
+        <div class="orb-balance-pill" id="user-orb-display">
+          Your Balance: 🔮 0 Orbs
+        </div>
+        <button class="refill-btn" onclick="openOrbModal()">⚡ + Get Orbs</button>
       </div>
     </div>
 
-    <!-- GET ORBS SECTION (STRIPE CHECKOUT PACKS) -->
-    <div class="orb-packs-section">
-      <div class="section-header">⚡ Get Orbs (Stripe Direct Purchase)</div>
-      <div class="orb-packs-grid">
-
-        <!-- TIER 1 -->
-        <div class="orb-pack-card">
-          <img src="watermarked_img_8717613388591277841.jpg" alt="Byakko's Ember" class="pack-art">
-          <div class="pack-title">Byakko's Ember</div>
-          <div class="pack-orbs">🔮 +250 Orbs</div>
-          <div class="pack-desc">A modest burst of spirit energy to start tuning your domain profile.</div>
-          <a href="https://buy.stripe.com/test_6oU14n6U84rL7tPaDt2sM00" target="_blank" class="stripe-checkout-btn">
-            Buy for $1.99 CAD
-          </a>
-        </div>
-
-        <!-- TIER 2 (FEATURED) -->
-        <div class="orb-pack-card popular-tier">
-          <span class="popular-badge">MOST POPULAR</span>
-          <img src="watermarked_img_1993483787348544270.jpg" alt="Crescent Moon Cache" class="pack-art">
-          <div class="pack-title" style="color: var(--accent-gold);">Crescent Moon Cache</div>
-          <div class="pack-orbs" style="color: var(--accent-gold);">🔮 +750 Orbs</div>
-          <div class="pack-desc">A solid reservoir of moon-lit frequency for unlocking borders and packs.</div>
-          <a href="https://buy.stripe.com/test_6oU14n92gaQ9eWhh1R2sM01" target="_blank" class="stripe-checkout-btn" style="background: var(--gold-grad);">
-            Buy for $4.99 CAD
-          </a>
-        </div>
-
-        <!-- TIER 3 -->
-        <div class="orb-pack-card">
-          <img src="watermarked_img_13168417790029793200.jpg" alt="Celestial Sanctuary Vault" class="pack-art">
-          <div class="pack-title">Celestial Vault</div>
-          <div class="pack-orbs">🔮 +2,000 Orbs</div>
-          <div class="pack-desc">A massive vault filled with pure Sanctuary Domain energy for top-tier rewards.</div>
-          <a href="https://buy.stripe.com/test_bJe9ATbao4rL6pLbHx2sM02" target="_blank" class="stripe-checkout-btn">
-            Buy for $9.99 CAD
-          </a>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- MAIN COSMETIC UNLOCKS STORE GRID & TABS -->
+    <!-- MAIN STORE UNLOCKS GRID -->
     <div class="store-container">
-      <div class="section-header" style="color: var(--accent-cyan);">🎨 Spend Orbs</div>
       <div class="store-tabs-nav">
         <button class="store-tab-btn active" id="tab-colors" onclick="switchTab('colors')">🎨 Name Colors</button>
         <button class="store-tab-btn" id="tab-frames" onclick="switchTab('frames')">🖼️ Avatar Borders</button>
@@ -466,7 +512,53 @@
       </div>
 
       <div class="store-item-grid" id="store-grid-content">
-        <!-- Rendered dynamically via JavaScript -->
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- HOLOGRAPHIC REFILL ORBS MODAL -->
+  <div class="modal-overlay" id="orb-modal-overlay" onclick="closeOrbModalOnBg(event)">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeOrbModal()">✕</button>
+      
+      <div class="modal-title">⚡ Sanctuary Orb Treasury</div>
+      <p class="modal-subtitle">Acquire domain frequency Orbs to unlock custom chat cosmetics & badges.</p>
+
+      <div class="orb-modal-grid">
+        <!-- TIER 1 -->
+        <div class="modal-pack-card">
+          <img src="watermarked_img_8717613388591277841.jpg" alt="Byakko's Ember" class="modal-pack-art">
+          <div class="modal-pack-title">Byakko's Ember</div>
+          <div class="modal-pack-orbs">🔮 +250 Orbs</div>
+          <div class="modal-pack-desc">A modest burst of spirit energy to start tuning your domain profile.</div>
+          <a href="https://buy.stripe.com/test_6oU14n6U84rL7tPaDt2sM00" target="_blank" class="stripe-modal-btn">
+            Buy for $1.99 CAD
+          </a>
+        </div>
+
+        <!-- TIER 2 (FEATURED) -->
+        <div class="modal-pack-card popular-tier">
+          <span class="popular-badge">MOST POPULAR</span>
+          <img src="watermarked_img_1993483787348544270.jpg" alt="Crescent Moon Cache" class="modal-pack-art">
+          <div class="modal-pack-title" style="color: var(--accent-gold);">Crescent Moon Cache</div>
+          <div class="modal-pack-orbs" style="color: var(--accent-gold);">🔮 +750 Orbs</div>
+          <div class="modal-pack-desc">A solid reservoir of moon-lit frequency for unlocks and cosmetics.</div>
+          <a href="PASTE_YOUR_CRESCENT_LINK_HERE" target="_blank" class="stripe-modal-btn" style="background: var(--gold-grad);">
+            Buy for $4.99 CAD
+          </a>
+        </div>
+
+        <!-- TIER 3 -->
+        <div class="modal-pack-card">
+          <img src="watermarked_img_13168417790029793200.jpg" alt="Celestial Vault" class="modal-pack-art">
+          <div class="modal-pack-title">Celestial Vault</div>
+          <div class="modal-pack-orbs">🔮 +2,000 Orbs</div>
+          <div class="modal-pack-desc">A massive vault filled with pure Sanctuary Domain energy.</div>
+          <a href="PASTE_YOUR_VAULT_LINK_HERE" target="_blank" class="stripe-modal-btn">
+            Buy for $9.99 CAD
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -478,6 +570,21 @@
 
     window.userData = null;
     let currentCategory = 'colors';
+
+    // MODAL CONTROL FUNCTIONS
+    window.openOrbModal = function() {
+      document.getElementById('orb-modal-overlay').classList.add('active');
+    };
+
+    window.closeOrbModal = function() {
+      document.getElementById('orb-modal-overlay').classList.remove('active');
+    };
+
+    window.closeOrbModalOnBg = function(e) {
+      if (e.target.id === 'orb-modal-overlay') {
+        closeOrbModal();
+      }
+    };
 
     // 1. LISTEN FOR STRIPE PAYMENT RETURN DIRECT & CREDIT ORBS
     window.addEventListener('DOMContentLoaded', async () => {
@@ -496,7 +603,7 @@
 
               alert(`🎉 Payment Successful! +${amountToAdd.toLocaleString()} Orbs credited to your account!`);
               
-              // Clean query parameters from URL
+              // Clean query string from browser address bar
               const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
               window.history.replaceState({ path: cleanUrl }, document.title, cleanUrl);
 
@@ -567,8 +674,8 @@
                 <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
                 <div class="store-item-preview" style="${item.style}">[Preview] Member</div>
               </div>
-              <button class="buy-orb-btn" ${owned || userOrbs < item.cost ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.cost})">
-                ${owned ? 'Unlocked ✔' : (userOrbs < item.cost ? `Needs ${item.cost} Orbs` : `Buy for 🔮 ${item.cost}`)}
+              <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}', ${item.cost})">
+                ${owned ? 'Unlocked ✔' : (userOrbs < item.cost ? `Buy for 🔮 ${item.cost}` : `Buy for 🔮 ${item.cost}`)}
               </button>
             </div>
           `;
@@ -591,8 +698,8 @@
                   <div style="${item.style} padding: 8px; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">👤</div>
                 </div>
               </div>
-              <button class="buy-orb-btn" ${owned || userOrbs < item.cost ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.cost})">
-                ${owned ? 'Unlocked ✔' : (userOrbs < item.cost ? `Needs ${item.cost} Orbs` : `Buy for 🔮 ${item.cost}`)}
+              <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}', ${item.cost})">
+                ${owned ? 'Unlocked ✔' : `Buy for 🔮 ${item.cost}`}
               </button>
             </div>
           `;
@@ -613,8 +720,8 @@
                 <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
                 <div class="store-item-preview">${item.preview}</div>
               </div>
-              <button class="buy-orb-btn" ${owned || userOrbs < item.cost ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.cost})">
-                ${owned ? 'Unlocked ✔' : (userOrbs < item.cost ? `Needs ${item.cost} Orbs` : `Buy for 🔮 ${item.cost}`)}
+              <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}', ${item.cost})">
+                ${owned ? 'Unlocked ✔' : `Buy for 🔮 ${item.cost}`}
               </button>
             </div>
           `;
@@ -623,6 +730,16 @@
 
       grid.innerHTML = html;
     }
+
+    // Smart Click Handler: Purchases item if enough Orbs, opens Modal if short on Orbs!
+    window.handleCosmeticClick = function(itemId, cost) {
+      const userOrbs = window.userData?.orb_balance || 0;
+      if (userOrbs < cost) {
+        openOrbModal();
+      } else {
+        buyItem(itemId, cost);
+      }
+    };
 
     window.buyItem = async function(itemId, cost) {
       const user = auth.currentUser;
