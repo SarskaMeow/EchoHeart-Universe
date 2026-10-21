@@ -206,6 +206,7 @@
       display: flex;
       gap: 10px;
       margin-bottom: 24px;
+      flex-wrap: wrap;
     }
 
     .store-tab-btn {
@@ -484,7 +485,7 @@
 
   <div class="container">
     <h1 class="page-title">🔮 Cosmetic Showcase</h1>
-    <p class="page-subtitle">Customize your chat presence with unlocked colors, borders, and emoji packs.</p>
+    <p class="page-subtitle">Customize your chat presence with unlocked colors, borders, command packs, and emoji sets.</p>
 
     <!-- EQUIPPED PROFILE PREVIEW & REFILL BUTTON -->
     <div class="equipped-banner">
@@ -508,7 +509,8 @@
       <div class="store-tabs-nav">
         <button class="store-tab-btn active" id="tab-colors" onclick="switchTab('colors')">🎨 Name Colors</button>
         <button class="store-tab-btn" id="tab-frames" onclick="switchTab('frames')">🖼️ Avatar Borders</button>
-        <button class="store-tab-btn" id="tab-emojis" onclick="switchTab('emojis')">💬 Emoji Packs</button>
+        <button class="store-tab-btn" id="tab-commands" onclick="switchTab('commands')">💬 Chat Commands</button>
+        <button class="store-tab-btn" id="tab-emojis" onclick="switchTab('emojis')">😃 Emoji Packs</button>
       </div>
 
       <div class="store-item-grid" id="store-grid-content">
@@ -675,7 +677,7 @@
                 <div class="store-item-preview" style="${item.style}">[Preview] Member</div>
               </div>
               <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}', ${item.cost})">
-                ${owned ? 'Unlocked ✔' : (userOrbs < item.cost ? `Buy for 🔮 ${item.cost}` : `Buy for 🔮 ${item.cost}`)}
+                ${owned ? 'Unlocked ✔' : `Buy for 🔮 ${item.cost}`}
               </button>
             </div>
           `;
@@ -704,12 +706,34 @@
             </div>
           `;
         });
+      } else if (category === 'commands') {
+        const commands = [
+          { id: 'pack_hacker', name: '⚡ Sub-Stage Hacker Pack', cost: 450, preview: '/glitch, /matrix, :breach:' },
+          { id: 'pack_dj', name: '🎙️ Underground DJ Pack', cost: 300, preview: '/airhorn, :vinyl:, :drop:' },
+          { id: 'pack_chibi', name: '🐾 Akari & Nekomi Chibi Pack', cost: 250, preview: '/nyan, /tableflip, :neko_cheer:' },
+          { id: 'pack_vip', name: '👑 VIP Broadcaster Pack', cost: 750, preview: '/shout & /spotlight commands' }
+        ];
+
+        commands.forEach(item => {
+          const owned = unlocked.includes(item.id);
+          html += `
+            <div class="store-item-card">
+              <div>
+                <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
+                <div class="store-item-preview" style="font-size: 0.85rem; color: var(--accent-cyan);">${item.preview}</div>
+              </div>
+              <button class="buy-orb-btn" ${owned ? 'disabled' : ''} onclick="handleCosmeticClick('${item.id}', ${item.cost})">
+                ${owned ? 'Unlocked ✔' : `Buy for 🔮 ${item.cost}`}
+              </button>
+            </div>
+          `;
+        });
       } else if (category === 'emojis') {
         const packs = [
-          { id: 'pack_chibi', name: 'Chibi Idol Emote Pack', cost: 250, preview: '🎸 🎤 ✨ 💖' },
-          { id: 'pack_glitch', name: 'Sub-Stage Glitch Pack', cost: 250, preview: '⚡ 🌀 🖥️ ⚠️' },
-          { id: 'pack_nekomi', name: 'Nekomi Cat Reaction Pack', cost: 300, preview: '🐾 😺 🐟 💤' },
-          { id: 'pack_vip', name: 'VIP Backstage Reactions', cost: 500, preview: '👑 💎 🎧 🔥' }
+          { id: 'pack_chibi_emotes', name: 'Chibi Idol Emote Pack', cost: 250, preview: '🎸 🎤 ✨ 💖' },
+          { id: 'pack_glitch_emotes', name: 'Sub-Stage Glitch Pack', cost: 250, preview: '⚡ 🌀 🖥️ ⚠️' },
+          { id: 'pack_nekomi_emotes', name: 'Nekomi Cat Reaction Pack', cost: 300, preview: '🐾 😺 🐟 💤' },
+          { id: 'pack_vip_emotes', name: 'VIP Backstage Reactions', cost: 500, preview: '👑 💎 🎧 🔥' }
         ];
 
         packs.forEach(item => {
