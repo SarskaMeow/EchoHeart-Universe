@@ -47,125 +47,6 @@
         radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.12) 0%, transparent 50%);
     }
 
-    /* ============================================================ */
-    /* 🔮 COSMETIC ORB STORE MODAL STYLES                           */
-    /* ============================================================ */
-    .store-modal-card {
-      max-width: 760px;
-      width: 90%;
-      max-height: 85vh;
-      overflow-y: auto;
-      text-align: left;
-      background: var(--card-bg);
-      border: 2px solid var(--accent-cyan);
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 240, 255, 0.3);
-    }
-
-    .store-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 12px;
-      margin-bottom: 18px;
-    }
-
-    .store-orb-balance-pill {
-      background: rgba(0, 240, 255, 0.12);
-      border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      font-weight: 800;
-      font-size: 0.88rem;
-      padding: 6px 14px;
-      border-radius: 20px;
-    }
-
-    .store-tabs-nav {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .store-tab-btn {
-      background: var(--card-inner);
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .store-tab-btn.active, .store-tab-btn:hover {
-      background: rgba(157, 78, 221, 0.25);
-      color: var(--text-light);
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 10px var(--accent-glow);
-    }
-
-    .store-item-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 14px;
-    }
-
-    .store-item-card {
-      background: var(--card-inner);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      text-align: center;
-      transition: all 0.25s ease;
-    }
-
-    .store-item-card:hover {
-      border-color: var(--accent-cyan);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 240, 255, 0.2);
-    }
-
-    .store-item-preview {
-      font-size: 1.1rem;
-      font-weight: 800;
-      margin: 12px 0;
-      padding: 8px;
-      border-radius: 8px;
-      background: rgba(5, 4, 10, 0.6);
-      border: 1px dashed var(--border-subtle);
-    }
-
-    .buy-orb-btn {
-      background: var(--btn-grad);
-      color: var(--btn-text);
-      border: none;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-weight: 800;
-      font-size: 0.82rem;
-      cursor: pointer;
-      width: 100%;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    .buy-orb-btn:hover {
-      transform: translateY(-1px);
-      opacity: 0.95;
-    }
-
-    .buy-orb-btn:disabled {
-      background: rgba(160, 155, 185, 0.15);
-      color: var(--text-muted);
-      cursor: not-allowed;
-      transform: none;
-    }
-
     /* Modal Overlay Styles */
     .modal-overlay {
       position: fixed;
@@ -190,7 +71,7 @@
     }
 
     /* ============================================================ */
-    /* ⚡ TOP LEFT PROMINENT LOGIN BUTTON                           */
+    /* ⚡ TOP LEFT PROMINENT LOGIN BUTTON                            */
     /* ============================================================ */
     .top-header-bar {
       position: absolute;
@@ -226,7 +107,7 @@
     }
 
     /* ============================================================ */
-    /* ⚡ LANDING HERO & CENTER BRANDING                            */
+    /* ⚡ LANDING HERO & CENTER BRANDING                             */
     /* ============================================================ */
     .container {
       max-width: 1200px;
@@ -598,9 +479,9 @@
             Spend your daily Orbs to unlock custom name colors, glowing cyberpunk frames, and rare profile title badges for chat rooms.
           </p>
         </div>
-        <button class="card-link-btn" style="border-color: var(--accent-cyan); background: rgba(0, 240, 255, 0.15);" onclick="openOrbStoreModal()">
-          Open Orb Store Modal 🔮 →
-        </button>
+        <a href="cosmetics.html" class="card-link-btn" style="border-color: var(--accent-cyan); background: rgba(0, 240, 255, 0.15);">
+          Enter Orb Store 🔮 →
+        </a>
       </div>
 
     </div>
@@ -672,149 +553,6 @@
     function cycleSyncStatus() {
       idxSync = (idxSync + 1) % syncStates.length;
       updateHudBtn('btn-sync', 'text-sync', syncStates, idxSync);
-    }
-
-    /* EXPANDED ORB STORE MODAL & TAB-SWITCHING LOGIC */
-    function openOrbStoreModal() {
-      removeExistingModals();
-      renderStoreTab('colors');
-    }
-
-    function renderStoreTab(category) {
-      const existingModal = document.getElementById('neko-gate-modal');
-      if (existingModal) existingModal.remove();
-
-      const userOrbs = window.userData?.orb_balance || 0;
-      let itemsHTML = '';
-
-      if (category === 'colors') {
-        itemsHTML = `
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Neon Cyan Glow</div>
-              <div class="store-item-preview" style="color: #00F0FF; text-shadow: 0 0 8px #00F0FF;">[Preview] Member</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Golden Radiance</div>
-              <div class="store-item-preview" style="color: #FFD166; text-shadow: 0 0 10px #FFD166;">[Preview] Member</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 300 ? 'disabled' : ''}>${userOrbs < 300 ? 'Needs 300 Orbs' : 'Buy for 🔮 300'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Sakura Pink Sparkle</div>
-              <div class="store-item-preview" style="color: #ff007f; text-shadow: 0 0 8px #ff007f;">[Preview] Member</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 150 ? 'disabled' : ''}>${userOrbs < 150 ? 'Needs 150 Orbs' : 'Buy for 🔮 150'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Void Purple Shade</div>
-              <div class="store-item-preview" style="color: #9d4edd; text-shadow: 0 0 8px #9d4edd;">[Preview] Member</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 200 ? 'disabled' : ''}>${userOrbs < 200 ? 'Needs 200 Orbs' : 'Buy for 🔮 200'}</button>
-          </div>
-        `;
-      } else if (category === 'frames') {
-        itemsHTML = `
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Cyberpunk Neon Border</div>
-              <div class="store-item-preview" style="border: 2px solid #00F0FF; box-shadow: 0 0 10px #00F0FF; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">👤</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 400 ? 'disabled' : ''}>${userOrbs < 400 ? 'Needs 400 Orbs' : 'Buy for 🔮 400'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Royal Gold Crest Frame</div>
-              <div class="store-item-preview" style="border: 2px solid #FFD166; box-shadow: 0 0 10px #FFD166; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">👑</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 600 ? 'disabled' : ''}>${userOrbs < 600 ? 'Needs 600 Orbs' : 'Buy for 🔮 600'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Phantom Plasma Frame</div>
-              <div class="store-item-preview" style="border: 2px solid #ff007f; box-shadow: 0 0 10px #ff007f; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">⚡</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 500 ? 'disabled' : ''}>${userOrbs < 500 ? 'Needs 500 Orbs' : 'Buy for 🔮 500'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Amethyst Crystal Ring</div>
-              <div class="store-item-preview" style="border: 2px solid #9d4edd; box-shadow: 0 0 10px #9d4edd; padding: 10px; border-radius: 50%; width: 40px; height: 40px; margin: 10px auto; display: flex; align-items: center; justify-content: center;">🔮</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 450 ? 'disabled' : ''}>${userOrbs < 450 ? 'Needs 450 Orbs' : 'Buy for 🔮 450'}</button>
-          </div>
-        `;
-      } else if (category === 'emojis') {
-        itemsHTML = `
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Chibi Idol Emote Pack</div>
-              <div class="store-item-preview">🎸 🎤 ✨ 💖</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 250 ? 'disabled' : ''}>${userOrbs < 250 ? 'Needs 250 Orbs' : 'Buy for 🔮 250'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Sub-Stage Glitch Pack</div>
-              <div class="store-item-preview">⚡ 🌀 🖥️ ⚠️</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 250 ? 'disabled' : ''}>${userOrbs < 250 ? 'Needs 250 Orbs' : 'Buy for 🔮 250'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">Nekomi Cat Reaction Pack</div>
-              <div class="store-item-preview">🐾 😺 🐟 💤</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 300 ? 'disabled' : ''}>${userOrbs < 300 ? 'Needs 300 Orbs' : 'Buy for 🔮 300'}</button>
-          </div>
-          <div class="store-item-card">
-            <div>
-              <div style="font-weight: 800; color: var(--text-light);">VIP Backstage Reactions</div>
-              <div class="store-item-preview">👑 💎 🎧 🔥</div>
-            </div>
-            <button class="buy-orb-btn" ${userOrbs < 500 ? 'disabled' : ''}>${userOrbs < 500 ? 'Needs 500 Orbs' : 'Buy for 🔮 500'}</button>
-          </div>
-        `;
-      }
-
-      const modalHTML = `
-        <div id="neko-gate-modal" class="modal-overlay">
-          <div class="modal-card store-modal-card">
-            
-            <div class="store-header-row">
-              <h3 style="margin: 0; color: #ffffff; font-size: 1.4rem;">🔮 Cosmetic Orb Store</h3>
-              <span class="store-orb-balance-pill">Your Orbs: 🔮 ${userOrbs.toLocaleString()}</span>
-            </div>
-
-            <div class="store-tabs-nav">
-              <button class="store-tab-btn ${category === 'colors' ? 'active' : ''}" onclick="renderStoreTab('colors')">🎨 Name Colors</button>
-              <button class="store-tab-btn ${category === 'frames' ? 'active' : ''}" onclick="renderStoreTab('frames')">🖼️ Avatar Borders</button>
-              <button class="store-tab-btn ${category === 'emojis' ? 'active' : ''}" onclick="renderStoreTab('emojis')">💬 Emoji Packs</button>
-            </div>
-
-            <div class="store-item-grid">
-              ${itemsHTML}
-            </div>
-
-            <div style="margin-top: 24px; text-align: right;">
-              <button class="close-btn" onclick="removeExistingModals()">Close Store</button>
-            </div>
-
-          </div>
-        </div>
-      `;
-
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-    }
-
-    function removeExistingModals() {
-      const existing = document.getElementById('neko-gate-modal');
-      if (existing) existing.remove();
     }
   </script>
   <script src="music-player.js"></script>
