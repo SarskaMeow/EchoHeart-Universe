@@ -25,6 +25,7 @@
       --card-border: rgba(255, 0, 127, 0.45);
       --border-cyan: rgba(0, 240, 255, 0.45);
       --btn-grad: linear-gradient(135deg, #9d4edd 0%, #ff007f 100%);
+      --gold-grad: linear-gradient(135deg, #ffd166 0%, #ff007f 100%);
     }
 
     * {
@@ -163,6 +164,125 @@
       box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
     }
 
+    /* SECTION TITLES */
+    .section-header {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-shadow: 0 0 10px rgba(255, 209, 102, 0.4);
+    }
+
+    /* STRIPE ORB PACKS GRID */
+    .orb-packs-section {
+      margin-bottom: 36px;
+    }
+
+    .orb-packs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .orb-packs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .orb-pack-card {
+      background: var(--card-inner);
+      border: 1.5px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .orb-pack-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 12px 32px rgba(0, 240, 255, 0.3);
+    }
+
+    .orb-pack-card.popular-tier {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 20px rgba(255, 209, 102, 0.25);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--gold-grad);
+      color: #000;
+      font-weight: 900;
+      font-size: 0.68rem;
+      padding: 4px 10px;
+      border-radius: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .pack-art {
+      width: 140px;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+    }
+
+    .pack-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+
+    .pack-orbs {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      margin-bottom: 8px;
+    }
+
+    .pack-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+      margin-bottom: 18px;
+      flex-grow: 1;
+    }
+
+    .stripe-checkout-btn {
+      background: var(--btn-grad);
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      width: 100%;
+      display: block;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+    }
+
+    .stripe-checkout-btn:hover {
+      box-shadow: 0 0 20px var(--accent-glow);
+      transform: scale(1.02);
+    }
+
     /* STORE CONTAINER */
     .store-container {
       background: var(--card-bg);
@@ -278,7 +398,7 @@
 
   <div class="container">
     <h1 class="page-title">🔮 Cosmetic Orb Store</h1>
-    <p class="page-subtitle">Customize your chat presence with unlocked colors, borders, and emoji packs.</p>
+    <p class="page-subtitle">Acquire Orbs and unlock custom chat name colors, avatar borders, and reaction packs.</p>
 
     <!-- EQUIPPED PROFILE PREVIEW -->
     <div class="equipped-banner">
@@ -294,8 +414,51 @@
       </div>
     </div>
 
-    <!-- MAIN STORE GRID & TABS -->
+    <!-- GET ORBS SECTION (STRIPE CHECKOUT PACKS) -->
+    <div class="orb-packs-section">
+      <div class="section-header">⚡ Get Orbs (Stripe Direct Purchase)</div>
+      <div class="orb-packs-grid">
+
+        <!-- TIER 1 -->
+        <div class="orb-pack-card">
+          <img src="watermarked_img_8717613388591277841.jpg" alt="Byakko's Ember" class="pack-art">
+          <div class="pack-title">Byakko's Ember</div>
+          <div class="pack-orbs">🔮 +250 Orbs</div>
+          <div class="pack-desc">A modest burst of spirit energy to start tuning your domain profile.</div>
+          <a href="https://buy.stripe.com/test_6oU14n6U84rL7tPaDt2sM00" target="_blank" class="stripe-checkout-btn">
+            Buy for $1.99 CAD
+          </a>
+        </div>
+
+        <!-- TIER 2 (FEATURED) -->
+        <div class="orb-pack-card popular-tier">
+          <span class="popular-badge">MOST POPULAR</span>
+          <img src="watermarked_img_1993483787348544270.jpg" alt="Crescent Moon Cache" class="pack-art">
+          <div class="pack-title" style="color: var(--accent-gold);">Crescent Moon Cache</div>
+          <div class="pack-orbs" style="color: var(--accent-gold);">🔮 +750 Orbs</div>
+          <div class="pack-desc">A solid reservoir of moon-lit frequency for unlocking borders and packs.</div>
+          <a href="PASTE_YOUR_CRESCENT_LINK_HERE" target="_blank" class="stripe-checkout-btn" style="background: var(--gold-grad);">
+            Buy for $4.99 CAD
+          </a>
+        </div>
+
+        <!-- TIER 3 -->
+        <div class="orb-pack-card">
+          <img src="watermarked_img_13168417790029793200.jpg" alt="Celestial Sanctuary Vault" class="pack-art">
+          <div class="pack-title">Celestial Vault</div>
+          <div class="pack-orbs">🔮 +2,000 Orbs</div>
+          <div class="pack-desc">A massive vault filled with pure Sanctuary Domain energy for top-tier rewards.</div>
+          <a href="PASTE_YOUR_VAULT_LINK_HERE" target="_blank" class="stripe-checkout-btn">
+            Buy for $9.99 CAD
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MAIN COSMETIC UNLOCKS STORE GRID & TABS -->
     <div class="store-container">
+      <div class="section-header" style="color: var(--accent-cyan);">🎨 Spend Orbs</div>
       <div class="store-tabs-nav">
         <button class="store-tab-btn active" id="tab-colors" onclick="switchTab('colors')">🎨 Name Colors</button>
         <button class="store-tab-btn" id="tab-frames" onclick="switchTab('frames')">🖼️ Avatar Borders</button>
@@ -303,7 +466,7 @@
       </div>
 
       <div class="store-item-grid" id="store-grid-content">
-        <!-- Rendered dynamically -->
+        <!-- Rendered dynamically via JavaScript -->
       </div>
     </div>
   </div>
@@ -311,11 +474,47 @@
   <script type="module">
     import { auth, db } from './firebase-config.js?v=3';
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { doc, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { doc, getDoc, runTransaction, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     window.userData = null;
     let currentCategory = 'colors';
 
+    // 1. LISTEN FOR STRIPE PAYMENT RETURN DIRECT & CREDIT ORBS
+    window.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const status = urlParams.get('status');
+      const amountToAdd = parseInt(urlParams.get('orbs'), 10);
+
+      if (status === 'success' && !isNaN(amountToAdd) && amountToAdd > 0) {
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            try {
+              const userRef = doc(db, "users", user.uid);
+              await updateDoc(userRef, {
+                orb_balance: increment(amountToAdd)
+              });
+
+              alert(`🎉 Payment Successful! +${amountToAdd.toLocaleString()} Orbs credited to your account!`);
+              
+              // Clean query parameters from URL
+              const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+              window.history.replaceState({ path: cleanUrl }, document.title, cleanUrl);
+
+              // Refresh UI state
+              const snap = await getDoc(userRef);
+              if (snap.exists()) {
+                window.userData = snap.data();
+                updateUI();
+              }
+            } catch (err) {
+              console.error("Error crediting Orbs:", err);
+            }
+          }
+        });
+      }
+    });
+
+    // 2. AUTH STATE LISTENER
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
