@@ -266,6 +266,14 @@
       justify-content: center;
     }
 
+    .openmoji-icon-preview {
+      width: 28px;
+      height: 28px;
+      margin: 0 4px;
+      object-fit: contain;
+      vertical-align: middle;
+    }
+
     .buy-orb-btn {
       background: var(--btn-grad);
       color: #fff;
@@ -485,7 +493,7 @@
 
   <div class="container">
     <h1 class="page-title">🔮 Cosmetic Showcase</h1>
-    <p class="page-subtitle">Customize your chat presence with unlocked colors, borders, command packs, and emoji sets.</p>
+    <p class="page-subtitle">Customize your chat presence with unlocked colors, borders, command packs, and OpenMoji vector sets.</p>
 
     <!-- EQUIPPED PROFILE PREVIEW & REFILL BUTTON -->
     <div class="equipped-banner">
@@ -510,7 +518,7 @@
         <button class="store-tab-btn active" id="tab-colors" onclick="switchTab('colors')">🎨 Name Colors</button>
         <button class="store-tab-btn" id="tab-frames" onclick="switchTab('frames')">🖼️ Avatar Borders</button>
         <button class="store-tab-btn" id="tab-commands" onclick="switchTab('commands')">💬 Chat Commands</button>
-        <button class="store-tab-btn" id="tab-emojis" onclick="switchTab('emojis')">😃 Emoji Packs</button>
+        <button class="store-tab-btn" id="tab-emojis" onclick="switchTab('emojis')">😃 OpenMoji Packs</button>
       </div>
 
       <div class="store-item-grid" id="store-grid-content">
@@ -730,10 +738,50 @@
         });
       } else if (category === 'emojis') {
         const packs = [
-          { id: 'pack_chibi_emotes', name: 'Chibi Idol Emote Pack', cost: 250, preview: '🎸 🎤 ✨ 💖' },
-          { id: 'pack_glitch_emotes', name: 'Sub-Stage Glitch Pack', cost: 250, preview: '⚡ 🌀 🖥️ ⚠️' },
-          { id: 'pack_nekomi_emotes', name: 'Nekomi Cat Reaction Pack', cost: 300, preview: '🐾 😺 🐟 💤' },
-          { id: 'pack_vip_emotes', name: 'VIP Backstage Reactions', cost: 500, preview: '👑 💎 🎧 🔥' }
+          { 
+            id: 'pack_openmoji_stage', 
+            name: '🎭 Stage Performance OpenMojis', 
+            cost: 300, 
+            preview: `
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F3AD.svg" class="openmoji-icon-preview" alt="Stage">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F3B8.svg" class="openmoji-icon-preview" alt="Guitar">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F3A7.svg" class="openmoji-icon-preview" alt="Headphones">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F3A4.svg" class="openmoji-icon-preview" alt="Mic">
+            ` 
+          },
+          { 
+            id: 'pack_openmoji_cyber', 
+            name: '⚡ Cyber & Glitch OpenMojis', 
+            cost: 350, 
+            preview: `
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/26A1.svg" class="openmoji-icon-preview" alt="Lightning">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F4BB.svg" class="openmoji-icon-preview" alt="Laptop">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/2728.svg" class="openmoji-icon-preview" alt="Sparkles">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F504.svg" class="openmoji-icon-preview" alt="Sync">
+            ` 
+          },
+          { 
+            id: 'pack_openmoji_neko', 
+            name: '🐾 Neko Sanctuary OpenMojis', 
+            cost: 250, 
+            preview: `
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F63A.svg" class="openmoji-icon-preview" alt="Cat Smile">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F431.svg" class="openmoji-icon-preview" alt="Cat Face">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F43A.svg" class="openmoji-icon-preview" alt="Wolf">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F496.svg" class="openmoji-icon-preview" alt="Sparkle Heart">
+            ` 
+          },
+          { 
+            id: 'pack_openmoji_vip', 
+            name: '👑 VIP Royal Crown OpenMojis', 
+            cost: 500, 
+            preview: `
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F451.svg" class="openmoji-icon-preview" alt="Crown">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F48E.svg" class="openmoji-icon-preview" alt="Gem">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F525.svg" class="openmoji-icon-preview" alt="Fire">
+              <img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/2B50.svg" class="openmoji-icon-preview" alt="Star">
+            ` 
+          }
         ];
 
         packs.forEach(item => {
@@ -791,7 +839,7 @@
           });
         });
 
-        alert("✨ Cosmetic unlocked!");
+        alert("✨ OpenMoji Pack Unlocked!");
         const updatedSnap = await getDoc(userRef);
         window.userData = updatedSnap.data();
         updateUI();
