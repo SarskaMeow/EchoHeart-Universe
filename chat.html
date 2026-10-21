@@ -504,7 +504,7 @@
       position: absolute;
       bottom: 70px;
       left: 1.2rem;
-      width: 400px;
+      width: 420px;
       background: var(--card-bg);
       border: 1.5px solid var(--accent-cyan);
       border-radius: 14px;
@@ -556,7 +556,7 @@
 
     .emote-tray-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       max-height: 250px;
       overflow-y: auto;
@@ -570,7 +570,7 @@
       padding: 8px 6px;
       text-align: center;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #ffffff !important;
       text-shadow: 0 0 6px rgba(0, 240, 255, 0.6);
@@ -690,18 +690,21 @@
     }
 
     .chatter-avatar {
-      width: 34px;
-      height: 34px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 900;
       color: #ffffff;
       box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
       flex-shrink: 0;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
     }
 
     .chatter-info {
@@ -929,7 +932,7 @@
         <a href="chat.html" class="nav-pill active">💬 Live Chat</a>
         <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
         <a href="cosmetics.html" class="nav-pill">🔮 Orb Store</a>
-        <a href="account.html" class="nav-pill">👤 Account</a>
+        <a href="profile.html" class="nav-pill">👤 Account</a>
       </nav>
 
       <div class="chat-status-indicator">
@@ -1035,15 +1038,15 @@
         <!-- Popup Picker Tray -->
         <div id="emote-picker-tray" class="emote-tray-popup">
           <div class="emote-tray-header">
-            <span>✨ Commands, Kaomojis & Shortcodes</span>
+            <span>✨ Hearts, Emojis, Kaomojis & Shortcodes</span>
             <button type="button" onclick="toggleEmotePicker()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:bold;">✕</button>
           </div>
           
           <div class="emote-tray-tabs">
-            <button type="button" class="tray-tab active" onclick="switchEmoteTab(event, 'kaomoji')">Kaomoji</button>
+            <button type="button" class="tray-tab active" onclick="switchEmoteTab(event, 'everyday')">Hearts & Emojis</button>
+            <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'kaomoji')">Kaomoji</button>
             <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'commands')">Commands</button>
             <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'shortcodes')">Shortcodes</button>
-            <button type="button" class="tray-tab" onclick="switchEmoteTab(event, 'icons')">Icons</button>
           </div>
 
           <!-- Content Area -->
@@ -1064,7 +1067,7 @@
       <div class="panel-title">// Personal Chat Space</div>
       <div class="chatter-card personal-space-card" id="user-chatter-card">
         <div class="personal-space-top">
-          <div class="chatter-avatar" id="user-avatar-box" style="background: linear-gradient(135deg, #00f0ff, #9d4edd);">U</div>
+          <div class="chatter-avatar" id="user-avatar-box">U</div>
           <div class="chatter-info">
             <span class="chatter-name" id="user-display-name">You (Logged In)</span>
             <span class="chatter-role" id="user-role-display">Portal Member</span>
@@ -1176,6 +1179,18 @@
     window.isUserAdmin = false;
     window.isUserVIP = false;
 
+    // Avatar Presets mapping for display fallback
+    const AVATAR_PRESETS = {
+      'avatar_akari': 'images/avatars/akari.png',
+      'avatar_nekomi': 'images/avatars/nekomi.png',
+      'avatar_lily': 'images/avatars/lily.png',
+      'avatar_sloane': 'images/avatars/sloane.png',
+      'avatar_sera': 'images/avatars/sera.png',
+      'avatar_aoi': 'images/avatars/aoi.png',
+      'avatar_cyberpunk': 'images/avatars/cyberpunk.png',
+      'avatar_golden': 'images/avatars/sovereign.png'
+    };
+
     // Listen for Auth changes and verify Admin / Moderator / VIP roles
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -1193,10 +1208,15 @@
             const roleEl = document.getElementById('user-role-display');
             const avatarBox = document.getElementById('user-avatar-box');
 
+            // Apply equipped avatar to user personal space
+            if (avatarBox && data.equipped_avatar && AVATAR_PRESETS[data.equipped_avatar]) {
+              avatarBox.style.backgroundImage = `url('${AVATAR_PRESETS[data.equipped_avatar]}')`;
+              avatarBox.innerText = '';
+            }
+
             if (window.isUserAdmin) {
               if (nameEl) nameEl.innerHTML = `<span style="color:#ff007f; font-weight:900;">🛡️ MODERATOR</span>`;
               if (roleEl) roleEl.innerText = "System Overwatch";
-              if (avatarBox) avatarBox.style.background = "linear-gradient(135deg, #ff007f, #ffd166)";
               
               const modBanner = document.getElementById('mod-overwatch-banner');
               if (modBanner) modBanner.classList.add('active');
@@ -1213,38 +1233,38 @@
   </script>
 
   <script>
+    /* EVERYDAY PHONE HEARTS & EMOTICONS CATALOG */
+    const EVERYDAY_PHONE_EMOJIS = [
+      '❤️', '💖', '💜', '🩵', '💙', '💚', '💛', '🧡', 
+      '🖤', '🤍', '🤎', '💕', '💞', '💓', '💗', '💘', 
+      '😊', '😃', '🤣', '😂', '🥺', '😍', '🤩', '😎', 
+      '🥳', '😋', '😴', '😏', '😭', '🤯', '😱', '😡', 
+      '👍', '👎', '👏', '🙌', '🙏', '🔥', '✨', '⚡', 
+      '🎉', '🎊', '💀', '👀', '💯', '💩', '🌟', '💫'
+    ];
+
     /* MASTER UNICODE KAOMOJI & KEYBOARD TEXT EMOTE CATALOG */
     const MASTER_EMOTE_CATALOG = [
       // --- JOY & HAPPY KAOMOJIS ---
-      { id: 'k1', symbol: '(๑•̀ㅂ•́)و', name: 'Determined', pack: 'free' },
-      { id: 'k2', symbol: '(◕‿◕✿)', name: 'Kawaii Smile', pack: 'free' },
-      { id: 'k3', symbol: 'ヽ(´▽`)/', name: 'Joy Hurrah', pack: 'free' },
-      { id: 'k4', symbol: '(⁠≧⁠▽⁠≦⁠)', name: 'Excited Laugh', pack: 'free' },
-      { id: 'k5', symbol: '(づ｡◕‿‿◕｡)づ', name: 'Gimme Hug', pack: 'free' },
-      { id: 'k6', symbol: '٩(◕‿◕｡)۶', name: 'Yay Dance', pack: 'free' },
-      { id: 'k7', symbol: '(✿◠‿◠)', name: 'Gentle Smile', pack: 'free' },
-      { id: 'k8', symbol: '(★ω★)', name: 'Starry Eyes', pack: 'free' },
-      { id: 'k9', symbol: '(｡♥‿♥｡)', name: 'Love Sparkles', pack: 'free' },
+      { id: 'k1', symbol: '(๑•̀ㅂ•́)و', name: 'Determined' },
+      { id: 'k2', symbol: '(◕‿◕✿)', name: 'Kawaii Smile' },
+      { id: 'k3', symbol: 'ヽ(´▽`)/', name: 'Joy Hurrah' },
+      { id: 'k4', symbol: '(⁠≧⁠▽⁠≦⁠)', name: 'Excited Laugh' },
+      { id: 'k5', symbol: '(づ｡◕‿‿◕｡)づ', name: 'Gimme Hug' },
+      { id: 'k6', symbol: '٩(◕‿◕｡)۶', name: 'Yay Dance' },
+      { id: 'k7', symbol: '(✿◠‿◠)', name: 'Gentle Smile' },
+      { id: 'k8', symbol: '(★ω★)', name: 'Starry Eyes' },
+      { id: 'k9', symbol: '(｡♥‿♥｡)', name: 'Love Sparkles' },
 
       // --- ANGRY & FLIPPING TABLES ---
-      { id: 'k17', symbol: '(╯°□°)╯︵ ┻━┻', name: 'Table Flip', pack: 'free' },
-      { id: 'k18', symbol: '┬─┬ノ( º _ ºノ)', name: 'Table Respect', pack: 'free' },
-      { id: 'k19', symbol: '(ง\'̀-\'́)ง', name: 'Fight Me', pack: 'free' },
+      { id: 'k17', symbol: '(╯°□°)╯︵ ┻━┻', name: 'Table Flip' },
+      { id: 'k18', symbol: '┬─┬ノ( º _ ºノ)', name: 'Table Respect' },
+      { id: 'k19', symbol: '(ง\'̀-\'́)ง', name: 'Fight Me' },
 
       // --- SMIRK & MEME KAOMOJIS ---
-      { id: 'k29', symbol: '( ° ͜ʖ °)', name: 'Lenny Smirk', pack: 'free' },
-      { id: 'k30', symbol: '¯\\_(ツ)_/¯', name: 'Shrug', pack: 'free' },
-      { id: 'k31', symbol: '( •_•)>⌐■-■', name: 'Shades On', pack: 'free' },
-
-      // --- SYMBOLS & CYBER EMOJIS ---
-      { id: 'e1', symbol: '⚡', name: 'Glitch Bolt', pack: 'free' },
-      { id: 'e2', symbol: '🌸', name: 'Sakura Blossom', pack: 'free' },
-      { id: 'e3', symbol: '🎸', name: 'Guitar', pack: 'free' },
-      { id: 'e4', symbol: '🎤', name: 'Mic', pack: 'free' },
-      { id: 'e5', symbol: '✨', name: 'Sparkles', pack: 'free' },
-      { id: 'e6', symbol: '🐾', name: 'Paws', pack: 'free' },
-      { id: 'e7', symbol: '🎧', name: 'Headphones', pack: 'free' },
-      { id: 'e8', symbol: '🔮', name: 'Orb', pack: 'free' }
+      { id: 'k29', symbol: '( ° ͜ʖ °)', name: 'Lenny Smirk' },
+      { id: 'k30', symbol: '¯\\_(ツ)_/¯', name: 'Shrug' },
+      { id: 'k31', symbol: '( •_•)>⌐■-■', name: 'Shades On' }
     ];
 
     /* REAL-TIME USER STATUS MANAGEMENT & 5-MINUTE AUTO-AWAY TIMER */
@@ -1439,7 +1459,7 @@
       
       const authorHtml = window.isUserAdmin 
         ? `<span class="msg-author mod">🛡️ MODERATOR</span>`
-        : `<span class="msg-author">You</span>`;
+        : `<span class="msg-author">${window.userData?.displayName || 'You'}</span>`;
 
       msgRow.innerHTML = `
         <div class="msg-meta">
@@ -1534,7 +1554,7 @@
         tray.style.display = 'none';
       } else {
         tray.style.display = 'block';
-        loadTrayTab('kaomoji');
+        loadTrayTab('everyday');
       }
     }
 
@@ -1549,7 +1569,11 @@
       const unlocked = window.userData?.unlocked_items || JSON.parse(localStorage.getItem('unlocked_cosmetics') || '[]');
       let html = '';
 
-      if (category === 'kaomoji') {
+      if (category === 'everyday') {
+        EVERYDAY_PHONE_EMOJIS.forEach(emoji => {
+          html += `<button type="button" class="tray-item-btn" onclick="insertIntoChatInput('${emoji}')">${emoji}</button>`;
+        });
+      } else if (category === 'kaomoji') {
         MASTER_EMOTE_CATALOG.forEach(item => {
           html += `<button type="button" class="tray-item-btn" title="${item.name}" onclick="insertIntoChatInput('${item.symbol}')">${item.symbol}</button>`;
         });
@@ -1588,11 +1612,6 @@
               onclick="${isUnlocked ? `insertIntoChatInput('${item.code}')` : `alert('🔒 Unlock this shortcode in the Orb Store!')`}">
               ${item.label} ${!isUnlocked ? '🔒' : ''}
             </button>`;
-        });
-      } else if (category === 'icons') {
-        const icons = ['⚡', '🌸', '🎸', '🎤', '✨', '🐾', '🎧', '🔮', '👑', '🔥', '💖', '💎'];
-        icons.forEach(icon => {
-          html += `<button type="button" class="tray-item-btn" onclick="insertIntoChatInput('${icon}')">${icon}</button>`;
         });
       }
 
