@@ -292,6 +292,7 @@
       font-weight: 800;
       cursor: pointer;
       transition: all 0.2s ease;
+      margin-left: 6px;
     }
 
     .mod-action-btn:hover {
@@ -334,6 +335,11 @@
       font-weight: 800;
       color: var(--accent-cyan);
       text-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+      cursor: pointer;
+    }
+
+    .msg-author:hover {
+      text-decoration: underline;
     }
 
     .msg-author.npc {
@@ -356,24 +362,25 @@
 
     .msg-time { opacity: 0.6; }
 
-    .delete-msg-btn {
+    .delete-msg-btn, .report-msg-btn {
       display: none;
       background: transparent;
       border: none;
-      color: var(--accent-red);
       font-size: 0.72rem;
       cursor: pointer;
-      margin-left: 8px;
+      margin-left: 6px;
       font-weight: 800;
       transition: color 0.2s ease;
     }
 
-    .delete-msg-btn:hover {
-      color: #ffffff;
-      text-shadow: 0 0 8px var(--accent-red);
-    }
+    .delete-msg-btn { color: var(--accent-red); }
+    .report-msg-btn { color: var(--accent-amber); }
 
-    .msg-row:hover .delete-msg-btn {
+    .delete-msg-btn:hover { color: #ffffff; text-shadow: 0 0 8px var(--accent-red); }
+    .report-msg-btn:hover { color: #ffffff; text-shadow: 0 0 8px var(--accent-amber); }
+
+    .msg-row:hover .delete-msg-btn,
+    .msg-row:hover .report-msg-btn {
       display: inline-block;
     }
 
@@ -640,6 +647,7 @@
       border: 1px solid rgba(157, 78, 221, 0.25);
       margin-bottom: 6px;
       transition: all 0.25s ease;
+      cursor: pointer;
     }
 
     .chatter-card:hover {
@@ -654,6 +662,7 @@
       flex-direction: column;
       align-items: stretch;
       gap: 8px;
+      cursor: default;
     }
 
     .personal-space-top {
@@ -849,6 +858,85 @@
       display: none;
     }
 
+    /* REPORT / MOD ACTION MODAL */
+    .chat-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(4, 2, 9, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .chat-modal-card {
+      background: rgba(18, 9, 36, 0.98);
+      border: 1.5px solid var(--accent-cyan);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .chat-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+      padding-bottom: 8px;
+    }
+
+    .chat-modal-header h3 {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+    }
+
+    .chat-modal-body textarea {
+      width: 100%;
+      background: #030108;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: #fff;
+      padding: 10px;
+      font-size: 0.9rem;
+      resize: none;
+      height: 90px;
+      outline: none;
+    }
+
+    .modal-btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .modal-submit-btn {
+      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+      border: none;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .modal-cancel-btn {
+      background: transparent;
+      border: 1px solid var(--text-muted);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
     /* MEDIA QUERIES FOR RESPONSIVENESS */
     @media (max-width: 1100px) {
       .chat-container {
@@ -932,7 +1020,7 @@
         <a href="chat.html" class="nav-pill active">💬 Live Chat</a>
         <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
         <a href="cosmetics.html" class="nav-pill">🔮 Orb Store</a>
-        <a href="profile.html" class="nav-pill">👤 Account</a>
+        <a href="account.html" class="nav-pill">👤 Account</a>
       </nav>
 
       <div class="chat-status-indicator">
@@ -945,25 +1033,25 @@
   <!-- EXPANDED CHAT CONTAINER -->
   <div class="chat-container">
 
-    <!-- LEFT SIDEBAR: CHANNELS (INCLUDING BACKSTAGE VIP) -->
+    <!-- LEFT SIDEBAR: 5 INDEPENDENT CHAT CHANNELS -->
     <aside class="sidebar-panel">
       <div class="panel-title">// Chat Channels</div>
       <div class="channel-list">
-        <button class="channel-btn active" onclick="switchChannel('general', '⚡ general-lounge')">
+        <button class="channel-btn active" onclick="switchChannel('general', '⚡ general-lounge', event)">
           <span># general-lounge</span>
           <span style="font-size: 0.7rem; opacity: 0.6;">LIVE</span>
         </button>
-        <button class="channel-btn" onclick="switchChannel('lore', '🎸 echoheart-lore')">
+        <button class="channel-btn" onclick="switchChannel('lore', '🎸 echoheart-lore', event)">
           <span># echoheart-lore</span>
         </button>
-        <button class="channel-btn" onclick="switchChannel('music', '📻 music-production')">
+        <button class="channel-btn" onclick="switchChannel('music', '📻 music-production', event)">
           <span># music-production</span>
         </button>
-        <button class="channel-btn" onclick="switchChannel('bots', '🤖 bot-commands')">
-          <span># bot-commands</span>
+        <button class="channel-btn" onclick="switchChannel('bots', '🤖 bot-roleplay', event)">
+          <span># bot-roleplay</span>
         </button>
         <!-- BACKSTAGE VIP CHANNEL (RESTRICTED TO VIP & MODS) -->
-        <button class="channel-btn vip-channel" onclick="switchVIPChannel()">
+        <button class="channel-btn vip-channel" onclick="switchVIPChannel(event)">
           <span>🔒 #backstage-vip</span>
           <span style="font-size: 0.7rem; font-weight: 900; color: var(--accent-gold);">VIP ⚡</span>
         </button>
@@ -977,56 +1065,18 @@
         <span style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold;" id="chat-sub-status">SUB-STAGE ENCRYPTION ACTIVE</span>
       </div>
 
-      <!-- MODERATOR OVERWATCH BANNER -->
+      <!-- MODERATOR OVERWATCH BANNER & TOOLKIT -->
       <div class="mod-overwatch-bar" id="mod-overwatch-banner">
         <span>🛡️ MODERATOR OVERWATCH MODE ACTIVE</span>
-        <button class="mod-action-btn" onclick="clearRoomFeed()">🗑️ Clear Room Feed</button>
+        <div>
+          <button class="mod-action-btn" onclick="openModActionPrompt('mute')">🔇 Mute Chatter</button>
+          <button class="mod-action-btn" onclick="openModActionPrompt('boot')">🥾 Boot Chatter</button>
+          <button class="mod-action-btn" onclick="clearRoomFeed()">🗑️ Purge Channel</button>
+        </div>
       </div>
 
       <div class="chat-messages-area" id="chat-feed">
-        <!-- Default Welcome & Interactive Messages -->
-        <div class="msg-row incoming bot-msg" data-msg-id="neko-bot-welcome">
-          <div class="msg-meta">
-            <span class="msg-author bot">🛡️ NekoBot (Mod)</span>
-            <span class="msg-time">Just now</span>
-          </div>
-          <div class="msg-bubble">
-            🤖 [System Notice]: Welcome to Otaku Overload! Keep the vibes cyberpunk, stay respectful, and enjoy the 24/7 Neko FM stream 🌸
-          </div>
-        </div>
-
-        <div class="msg-row incoming" data-msg-id="welcome-1">
-          <div class="msg-meta">
-            <span class="msg-author npc">Nekomi Aoyama [NPC]</span>
-            <span class="msg-time">10:42 PM</span>
-            <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
-          </div>
-          <div class="msg-bubble">
-            Welcome to the Sub-Stage lounge! Check out the 24/7 Neko FM stream or grab the volume 1 codex on the lore tab. 🎸
-          </div>
-        </div>
-
-        <div class="msg-row incoming" data-msg-id="welcome-2">
-          <div class="msg-meta">
-            <span class="msg-author npc">Akari Minase [NPC]</span>
-            <span class="msg-time">10:43 PM</span>
-            <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
-          </div>
-          <div class="msg-bubble">
-            Who's ready for the next live rehearsal set? Drums are tuned and ready to blast! 🔥
-          </div>
-        </div>
-
-        <div class="msg-row incoming" data-msg-id="welcome-3">
-          <div class="msg-meta">
-            <span class="msg-author">Guest_Otaku99</span>
-            <span class="msg-time">10:44 PM</span>
-            <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
-          </div>
-          <div class="msg-bubble">
-            The new cyberpunk styling on the portal looks insane!
-          </div>
-        </div>
+        <!-- Messages populate dynamically per isolated channel -->
       </div>
 
       <div class="chat-input-bar">
@@ -1055,7 +1105,7 @@
           </div>
         </div>
 
-        <input type="text" id="user-input-msg" class="chat-input-field" placeholder="Transmit message to Sub-Stage channel..." onkeydown="handleKeyPress(event)">
+        <input type="text" id="user-input-msg" class="chat-input-field" placeholder="Transmit message to channel..." onkeydown="handleKeyPress(event)">
         <button class="send-msg-btn" onclick="sendChatMessage()">TRANSMIT ⚡</button>
       </div>
     </main>
@@ -1087,7 +1137,7 @@
 
       <div class="chatter-group-header">✦ Core Four (NPCs)</div>
       
-      <div class="chatter-card">
+      <div class="chatter-card" onclick="openReportModal('Nekomi Aoyama [NPC]')">
         <div class="chatter-avatar" style="background: linear-gradient(135deg, #ff007f, #9d4edd);">N</div>
         <div class="chatter-info">
           <span class="chatter-name">Nekomi Aoyama</span>
@@ -1096,7 +1146,7 @@
         <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
-      <div class="chatter-card">
+      <div class="chatter-card" onclick="openReportModal('Akari Minase [NPC]')">
         <div class="chatter-avatar" style="background: linear-gradient(135deg, #ff4500, #ff007f);">A</div>
         <div class="chatter-info">
           <span class="chatter-name">Akari Minase</span>
@@ -1105,7 +1155,7 @@
         <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
-      <div class="chatter-card">
+      <div class="chatter-card" onclick="openReportModal('Sera Hanibara [NPC]')">
         <div class="chatter-avatar" style="background: linear-gradient(135deg, #ffb7c5, #ff007f);">S</div>
         <div class="chatter-info">
           <span class="chatter-name">Sera Hanibara</span>
@@ -1114,7 +1164,7 @@
         <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
-      <div class="chatter-card">
+      <div class="chatter-card" onclick="openReportModal('Aoi Mizuhara [NPC]')">
         <div class="chatter-avatar" style="background: linear-gradient(135deg, #008080, #00f0ff);">A</div>
         <div class="chatter-info">
           <span class="chatter-name">Aoi Mizuhara</span>
@@ -1125,7 +1175,7 @@
 
       <div class="chatter-group-header">✦ Real People & Members</div>
 
-      <div class="chatter-card">
+      <div class="chatter-card" onclick="openReportModal('Guest_Otaku99')">
         <div class="chatter-avatar" style="background: #332050;">G</div>
         <div class="chatter-info">
           <span class="chatter-name">Guest_Otaku99</span>
@@ -1134,7 +1184,7 @@
         <span class="status-dot-indicator away" title="Away"></span>
       </div>
 
-      <div class="chatter-card">
+      <div class="chatter-card" onclick="openReportModal('Kuro_Rhythm')">
         <div class="chatter-avatar" style="background: linear-gradient(135deg, #9d4edd, #ff007f);">K</div>
         <div class="chatter-info">
           <span class="chatter-name">Kuro_Rhythm</span>
@@ -1147,7 +1197,7 @@
 
   </div>
 
-  <!-- DOCKED MUSIC PLAYER - MOVED TO BOTTOM LEFT -->
+  <!-- DOCKED MUSIC PLAYER -->
   <div class="docked-music-player" id="docked-player">
     <div class="docked-player-header">
       <div class="docked-player-title">
@@ -1170,6 +1220,26 @@
     </div>
   </div>
 
+  <!-- REPORT USER MODAL -->
+  <div id="report-user-modal" class="chat-modal-overlay">
+    <div class="chat-modal-card">
+      <div class="chat-modal-header">
+        <h3>🚨 Report Chatter / Action</h3>
+        <button onclick="closeReportModal()" style="background:none; border:none; color:#fff; cursor:pointer;">✕</button>
+      </div>
+      <div class="chat-modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">
+          Reporting Chatter: <strong id="report-target-username" style="color: var(--accent-pink);">Target</strong>
+        </p>
+        <textarea id="report-reason-input" placeholder="State reason for report (harassment, spam, toxic language)..."></textarea>
+      </div>
+      <div class="modal-btn-row">
+        <button class="modal-cancel-btn" onclick="closeReportModal()">Cancel</button>
+        <button class="modal-submit-btn" onclick="submitUserReport()">Submit Report</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { auth, db } from './firebase-config.js?v=3';
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -1179,7 +1249,6 @@
     window.isUserAdmin = false;
     window.isUserVIP = false;
 
-    // Avatar Presets mapping for display fallback
     const AVATAR_PRESETS = {
       'avatar_akari': 'images/avatars/akari.png',
       'avatar_nekomi': 'images/avatars/nekomi.png',
@@ -1191,7 +1260,6 @@
       'avatar_golden': 'images/avatars/sovereign.png'
     };
 
-    // Listen for Auth changes and verify Admin / Moderator / VIP roles
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         window.currentUser = user;
@@ -1200,7 +1268,7 @@
           const snap = await getDoc(userRef);
           if (snap.exists()) {
             const data = snap.data();
-            window.userData = data; // Store user data globally
+            window.userData = data;
             window.isUserAdmin = data.role === 'admin' || data.role === 'moderator' || data.isAdmin === true;
             window.isUserVIP = data.isVIP === true || window.isUserAdmin;
             
@@ -1208,7 +1276,6 @@
             const roleEl = document.getElementById('user-role-display');
             const avatarBox = document.getElementById('user-avatar-box');
 
-            // Apply equipped avatar to user personal space
             if (avatarBox && data.equipped_avatar && AVATAR_PRESETS[data.equipped_avatar]) {
               avatarBox.style.backgroundImage = `url('${AVATAR_PRESETS[data.equipped_avatar]}')`;
               avatarBox.innerText = '';
@@ -1229,11 +1296,252 @@
           console.error("Firestore permission check error:", e);
         }
       }
+      window.renderActiveChannelFeed();
     });
   </script>
 
   <script>
-    /* EVERYDAY PHONE HEARTS & EMOTICONS CATALOG */
+    /* 1. SEPARATE CHANNELS & HISTORICAL BUFFER SETUP (MAX 100 LINES) */
+    const MAX_CHANNEL_LINES = 100;
+    let activeChannelKey = 'general';
+
+    // Default seed feeds for isolated channels
+    const CHANNEL_STREAMS = {
+      general: [
+        { id: 'gen_1', author: '🛡️ NekoBot (Mod)', role: 'bot', time: '10:40 PM', text: '🤖 [General Lounge]: Welcome! Stay respectful and enjoy the streams 🌸' },
+        { id: 'gen_2', author: 'Guest_Otaku99', role: 'user', time: '10:44 PM', text: 'The new cyberpunk styling on the portal looks insane!' }
+      ],
+      lore: [
+        { id: 'lore_1', author: 'Nekomi Aoyama [NPC]', role: 'npc', time: '10:42 PM', text: 'Welcome to the EchoHeart Lore tab! Ask me anything about Girls Dead Phantom Vol 1! 🎸' },
+        { id: 'lore_2', author: 'Kuro_Rhythm', role: 'user', time: '10:45 PM', text: 'Where can I read the latest chapter of EchoHeart?' }
+      ],
+      music: [
+        { id: 'mus_1', author: 'Sera Hanibara [NPC]', role: 'npc', time: '10:41 PM', text: 'Synth melodies are online! What J-Rock tracks are we listening to tonight? 🎹' },
+        { id: 'mus_2', author: 'Akari Minase [NPC]', role: 'npc', time: '10:43 PM', text: 'Drums are tuned and ready to blast! 🔥' }
+      ],
+      bots: [
+        { id: 'bot_1', author: '🛡️ NekoBot (Mod)', role: 'bot', time: '10:30 PM', text: '🤖 [Roleplay Channel Active]: Type your commands or start character RP here!' }
+      ],
+      vip: [
+        { id: 'vip_1', author: '🛡️ NekoBot (Mod)', role: 'bot', time: '10:00 PM', text: '⚡ [VIP BACKSTAGE RELAY]: Highly encrypted lounge reserved for VIP Members and Moderators.' }
+      ]
+    };
+
+    // Load from local buffer if available
+    try {
+      const saved = localStorage.getItem('otaku_chat_streams');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        Object.keys(parsed).forEach(k => { CHANNEL_STREAMS[k] = parsed[k]; });
+      }
+    } catch(e) { console.error("Error loading chat buffer:", e); }
+
+    function saveStreamsBuffer() {
+      try {
+        localStorage.setItem('otaku_chat_streams', JSON.stringify(CHANNEL_STREAMS));
+      } catch(e) {}
+    }
+
+    /* 2. RENDER CHANNEL MESSAGES */
+    function renderActiveChannelFeed() {
+      const feed = document.getElementById('chat-feed');
+      if (!feed) return;
+      feed.innerHTML = '';
+
+      const messages = CHANNEL_STREAMS[activeChannelKey] || [];
+      messages.forEach(msg => {
+        const msgRow = document.createElement('div');
+        const isUserMsg = msg.author === (window.userData?.displayName || 'You');
+        const isMod = msg.role === 'mod';
+        
+        msgRow.className = 'msg-row ' + (isUserMsg ? 'outgoing' : 'incoming') + (isMod ? ' mod-msg' : '') + (msg.role === 'bot' ? ' bot-msg' : '');
+        msgRow.setAttribute('data-msg-id', msg.id);
+
+        let authorClass = 'msg-author';
+        if (msg.role === 'mod') authorClass += ' mod';
+        else if (msg.role === 'bot') authorClass += ' bot';
+        else if (msg.role === 'npc') authorClass += ' npc';
+
+        const deleteBtnHtml = (window.isUserAdmin || isUserMsg) 
+          ? `<button class="delete-msg-btn" onclick="deleteMessage('${msg.id}')">🗑️ Delete</button>` : '';
+
+        const reportBtnHtml = (!isUserMsg && msg.role !== 'bot') 
+          ? `<button class="report-msg-btn" onclick="openReportModal('${msg.author}')">🚨 Report</button>` : '';
+
+        msgRow.innerHTML = `
+          <div class="msg-meta">
+            <span class="${authorClass}" onclick="openReportModal('${msg.author}')">${msg.author}</span>
+            <span class="msg-time">${msg.time}</span>
+            ${deleteBtnHtml}${reportBtnHtml}
+          </div>
+          <div class="msg-bubble">${msg.text}</div>
+        `;
+        feed.appendChild(msgRow);
+      });
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    /* 3. TRANSMIT CHAT MESSAGE */
+    function sendChatMessage() {
+      const input = document.getElementById('user-input-msg');
+      const rawText = input.value.trim();
+      if (!rawText) return;
+
+      if (window.isUserMuted) {
+        alert("🔇 You are currently muted by a moderator.");
+        return;
+      }
+
+      if (containsProfanity(rawText)) {
+        alert("🛡️ [Auto-Mod]: Please keep our community lounge clean and avoid prohibited language.");
+        return;
+      }
+
+      if (checkCrisisIntervention(rawText)) {
+        alert("❤️ [Support Notice]: It sounds like you might be going through a difficult time. Support is available 24/7 at 988 (Suicide & Crisis Lifeline). You are not alone.");
+        input.value = '';
+        return;
+      }
+
+      recordUserActivity();
+
+      const unlocked = window.userData?.unlocked_items || JSON.parse(localStorage.getItem('unlocked_cosmetics') || '[]');
+      let formattedContent = escapeHtml(rawText);
+
+      // Moderators get ALL commands unlocked free
+      const hasHacker = window.isUserAdmin || unlocked.includes('pack_hacker');
+      const hasDj = window.isUserAdmin || unlocked.includes('pack_dj');
+      const hasChibi = window.isUserAdmin || unlocked.includes('pack_chibi') || unlocked.includes('pack_chibi_emotes');
+      const hasVip = window.isUserAdmin || unlocked.includes('pack_vip') || unlocked.includes('pack_vip_emotes');
+
+      if (rawText.startsWith('/glitch ')) {
+        if (!hasHacker) { alert('❌ Requires Sub-Stage Hacker Pack!'); return; }
+        formattedContent = `<span class="fx-glitch">${escapeHtml(rawText.replace('/glitch ', ''))}</span>`;
+      } else if (rawText.startsWith('/shout ')) {
+        if (!hasVip) { alert('❌ Requires VIP Broadcaster Pack!'); return; }
+        formattedContent = `<div class="fx-shout">📢 ${escapeHtml(rawText.replace('/shout ', ''))}</div>`;
+      } else if (rawText === '/tableflip') {
+        if (!hasChibi) { alert('❌ Requires Chibi Pack!'); return; }
+        formattedContent = `(╯°□°)╯︵ ┻━┻`;
+      }
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const newMsg = {
+        id: 'msg_' + Date.now(),
+        author: window.isUserAdmin ? '🛡️ MODERATOR' : (window.userData?.displayName || 'You'),
+        role: window.isUserAdmin ? 'mod' : 'user',
+        time: timeStr,
+        text: formattedContent
+      };
+
+      CHANNEL_STREAMS[activeChannelKey].push(newMsg);
+
+      // Auto-trim feed if exceeding max lines
+      if (CHANNEL_STREAMS[activeChannelKey].length > MAX_CHANNEL_LINES) {
+        CHANNEL_STREAMS[activeChannelKey].shift();
+      }
+
+      saveStreamsBuffer();
+      renderActiveChannelFeed();
+      input.value = '';
+    }
+
+    /* 4. MODERATION & USER ACTIONS */
+    function deleteMessage(msgId) {
+      if (!window.isUserAdmin && !confirm("Delete this message?")) return;
+      CHANNEL_STREAMS[activeChannelKey] = CHANNEL_STREAMS[activeChannelKey].filter(m => m.id !== msgId);
+      saveStreamsBuffer();
+      renderActiveChannelFeed();
+    }
+
+    function clearRoomFeed() {
+      if (!window.isUserAdmin) return;
+      if (confirm("🛡️ Moderator Action: Purge all messages in this room feed?")) {
+        CHANNEL_STREAMS[activeChannelKey] = [];
+        saveStreamsBuffer();
+        renderActiveChannelFeed();
+      }
+    }
+
+    function openModActionPrompt(action) {
+      if (!window.isUserAdmin) return;
+      const target = prompt(`Enter chatter display name to ${action}:`);
+      if (!target) return;
+
+      if (action === 'mute') {
+        alert(`🔇 Chatter '${target}' has been muted for 15 minutes.`);
+      } else if (action === 'boot') {
+        alert(`🥾 Chatter '${target}' has been kicked/booted from the room.`);
+      }
+    }
+
+    let activeReportTarget = '';
+    function openReportModal(username) {
+      activeReportTarget = username;
+      document.getElementById('report-target-username').innerText = username;
+      document.getElementById('report-user-modal').style.display = 'flex';
+    }
+
+    function closeReportModal() {
+      document.getElementById('report-user-modal').style.display = 'none';
+      document.getElementById('report-reason-input').value = '';
+    }
+
+    function submitUserReport() {
+      const reason = document.getElementById('report-reason-input').value.trim();
+      if (!reason) { alert("Please state a reason for reporting."); return; }
+      alert(`🚨 Report submitted for ${activeReportTarget}. System Moderators will review the incident.`);
+      closeReportModal();
+    }
+
+    /* 5. CHANNEL SWITCHING LOGIC */
+    function switchChannel(channelKey, channelTitle, e) {
+      activeChannelKey = channelKey;
+      const mainWindow = document.getElementById('main-chat-window-box');
+      const headerBox = document.getElementById('chat-window-hdr');
+      const titleSpan = document.getElementById('current-room-title');
+      const subStatus = document.getElementById('chat-sub-status');
+
+      mainWindow.classList.remove('vip-window-active');
+      headerBox.classList.remove('vip-header');
+      titleSpan.classList.remove('vip-title');
+      subStatus.style.color = 'var(--accent-pink)';
+      subStatus.innerText = 'SUB-STAGE ENCRYPTION ACTIVE';
+
+      document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
+      if (e && e.currentTarget) e.currentTarget.classList.add('active');
+      titleSpan.textContent = channelTitle.toUpperCase();
+
+      renderActiveChannelFeed();
+    }
+
+    function switchVIPChannel(e) {
+      if (!window.isUserVIP && !window.isUserAdmin) {
+        alert("🔒 Access Denied: The #backstage-vip channel is reserved for Backstage VIP members and System Moderators.");
+        window.location.href = "account.html";
+        return;
+      }
+      activeChannelKey = 'vip';
+      document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
+      if (e && e.currentTarget) e.currentTarget.classList.add('active');
+
+      const mainWindow = document.getElementById('main-chat-window-box');
+      const headerBox = document.getElementById('chat-window-hdr');
+      const titleSpan = document.getElementById('current-room-title');
+      const subStatus = document.getElementById('chat-sub-status');
+
+      mainWindow.classList.add('vip-window-active');
+      headerBox.classList.add('vip-header');
+      titleSpan.classList.add('vip-title');
+      titleSpan.textContent = "⚡ #BACKSTAGE-VIP LOUNGE";
+      subStatus.style.color = 'var(--accent-gold)';
+      subStatus.innerText = '🔒 ENCRYPTED BACKSTAGE RELAY // VIP ACTIVE';
+
+      renderActiveChannelFeed();
+    }
+
+    /* 6. EMOTES & CATALOGS */
     const EVERYDAY_PHONE_EMOJIS = [
       '❤️', '💖', '💜', '🩵', '💙', '💚', '💛', '🧡', 
       '🖤', '🤍', '🤎', '💕', '💞', '💓', '💗', '💘', 
@@ -1243,9 +1551,7 @@
       '🎉', '🎊', '💀', '👀', '💯', '💩', '🌟', '💫'
     ];
 
-    /* MASTER UNICODE KAOMOJI & KEYBOARD TEXT EMOTE CATALOG */
     const MASTER_EMOTE_CATALOG = [
-      // --- JOY & HAPPY KAOMOJIS ---
       { id: 'k1', symbol: '(๑•̀ㅂ•́)و', name: 'Determined' },
       { id: 'k2', symbol: '(◕‿◕✿)', name: 'Kawaii Smile' },
       { id: 'k3', symbol: 'ヽ(´▽`)/', name: 'Joy Hurrah' },
@@ -1254,20 +1560,10 @@
       { id: 'k6', symbol: '٩(◕‿◕｡)۶', name: 'Yay Dance' },
       { id: 'k7', symbol: '(✿◠‿◠)', name: 'Gentle Smile' },
       { id: 'k8', symbol: '(★ω★)', name: 'Starry Eyes' },
-      { id: 'k9', symbol: '(｡♥‿♥｡)', name: 'Love Sparkles' },
-
-      // --- ANGRY & FLIPPING TABLES ---
       { id: 'k17', symbol: '(╯°□°)╯︵ ┻━┻', name: 'Table Flip' },
-      { id: 'k18', symbol: '┬─┬ノ( º _ ºノ)', name: 'Table Respect' },
-      { id: 'k19', symbol: '(ง\'̀-\'́)ง', name: 'Fight Me' },
-
-      // --- SMIRK & MEME KAOMOJIS ---
-      { id: 'k29', symbol: '( ° ͜ʖ °)', name: 'Lenny Smirk' },
-      { id: 'k30', symbol: '¯\\_(ツ)_/¯', name: 'Shrug' },
-      { id: 'k31', symbol: '( •_•)>⌐■-■', name: 'Shades On' }
+      { id: 'k30', symbol: '¯\\_(ツ)_/¯', name: 'Shrug' }
     ];
 
-    /* REAL-TIME USER STATUS MANAGEMENT & 5-MINUTE AUTO-AWAY TIMER */
     let currentUserStatus = 'active';
     let lastActivityTimestamp = Date.now();
     let isAutoAway = false;
@@ -1276,21 +1572,14 @@
     function changeUserStatus(newStatus, isAutomatic = false) {
       currentUserStatus = newStatus;
       if (!isAutomatic) isAutoAway = false;
-
       const dot = document.getElementById('user-status-dot');
       const select = document.getElementById('user-status-select');
-
       if (dot) {
         dot.className = `status-dot-indicator ${newStatus}`;
         dot.title = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
       }
-
-      if (select && select.value !== newStatus) {
-        select.value = newStatus;
-      }
-
+      if (select && select.value !== newStatus) select.value = newStatus;
       localStorage.setItem('neko_user_status', newStatus);
-      window.dispatchEvent(new CustomEvent('userStatusChanged', { detail: { status: newStatus } }));
     }
 
     function recordUserActivity() {
@@ -1306,14 +1595,12 @@
     });
 
     setInterval(() => {
-      const now = Date.now();
-      if (now - lastActivityTimestamp >= INACTIVITY_TIMEOUT_MS && currentUserStatus === 'active') {
+      if (Date.now() - lastActivityTimestamp >= INACTIVITY_TIMEOUT_MS && currentUserStatus === 'active') {
         isAutoAway = true;
         changeUserStatus('away', true);
       }
     }, 10000);
 
-    /* DOCKED MUSIC PLAYER CONTROLS */
     const dockedAudio = document.getElementById('docked-radio-audio');
     let isDockedMusicPlaying = false;
     const defaultStreamUrl = "https://kathy.torontocast.com:3060/stream";
@@ -1341,213 +1628,21 @@
       document.getElementById('docked-player').classList.toggle('collapsed');
     }
 
-    /* 🛡️ CONTENT RESTRICTIONS & SAFETY FILTERS */
     const PROFANITY_BLOCKLIST = ['badword1', 'badword2', 'slur1', 'toxicword'];
-    const CRISIS_KEYWORDS = [
-      'suicide', 'kill myself', 'want to die', 'end my life', 
-      'self harm', 'cutting myself', 'hopeless and want to end it'
-    ];
+    const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'want to die', 'end my life', 'self harm'];
 
     function containsProfanity(text) {
-      const lower = text.toLowerCase();
-      return PROFANITY_BLOCKLIST.some(word => lower.includes(word));
+      return PROFANITY_BLOCKLIST.some(word => text.toLowerCase().includes(word));
     }
 
     function checkCrisisIntervention(text) {
-      const lower = text.toLowerCase();
-      return CRISIS_KEYWORDS.some(phrase => lower.includes(phrase));
-    }
-
-    /* CHAT TRANSMISSION LOGIC, UNLOCKED STORE COMMANDS & SHORTCODES PARSER */
-    function sendChatMessage() {
-      const input = document.getElementById('user-input-msg');
-      const rawText = input.value.trim();
-      if (!rawText) return;
-
-      if (containsProfanity(rawText)) {
-        alert("🛡️ [Auto-Mod]: Please keep our community lounge clean and avoid prohibited language.");
-        return;
-      }
-
-      if (checkCrisisIntervention(rawText)) {
-        alert("❤️ [Support Notice]: It sounds like you might be going through a difficult time. Support is available 24/7 at 988 (Suicide & Crisis Lifeline). You are not alone.");
-        input.value = '';
-        return;
-      }
-
-      recordUserActivity();
-
-      // Read unlocked items from Firestore window.userData or LocalStorage
-      const unlocked = window.userData?.unlocked_items || JSON.parse(localStorage.getItem('unlocked_cosmetics') || '[]');
-      let formattedContent = escapeHtml(rawText);
-      let isSpotlightActive = false;
-
-      // 1. COMMANDS PARSER
-      if (rawText.startsWith('/glitch ')) {
-        if (!unlocked.includes('pack_hacker')) {
-          alert('❌ You need to unlock the Sub-Stage Hacker Pack in the Orb Store to use /glitch!');
-          return;
-        }
-        const clean = escapeHtml(rawText.replace('/glitch ', ''));
-        formattedContent = `<span class="fx-glitch">${clean}</span>`;
-      }
-      else if (rawText.startsWith('/matrix ')) {
-        if (!unlocked.includes('pack_hacker')) {
-          alert('❌ Unlock the Sub-Stage Hacker Pack to use /matrix!');
-          return;
-        }
-        const clean = escapeHtml(rawText.replace('/matrix ', ''));
-        formattedContent = `<span style="color: #00ff66; font-family: monospace; background: #001100; padding: 4px 8px; border-radius: 4px; display: inline-block;">[MATRIX]: ${clean}</span>`;
-      }
-      else if (rawText === '/airhorn') {
-        if (!unlocked.includes('pack_dj')) {
-          alert('❌ Unlock the Underground DJ Pack to use /airhorn!');
-          return;
-        }
-        formattedContent = `<div style="color: var(--accent-gold); font-weight: 900;">📢 [B-B-B-BASS DROP!] 🎧✨ ─── 🔊🔊🔊</div>`;
-      }
-      else if (rawText === '/nyan') {
-        if (!unlocked.includes('pack_chibi') && !unlocked.includes('pack_chibi_emotes')) {
-          alert('❌ Unlock the Akari & Nekomi Chibi Pack to use /nyan!');
-          return;
-        }
-        formattedContent = `<div style="color: var(--accent-pink); font-weight: 800;">ฅ(= Return to Stage =)=ฅ 🐾</div>`;
-      }
-      else if (rawText === '/tableflip') {
-        if (!unlocked.includes('pack_chibi') && !unlocked.includes('pack_chibi_emotes')) {
-          alert('❌ Unlock the Akari & Nekomi Chibi Pack to use /tableflip!');
-          return;
-        }
-        formattedContent = `(╯°□°)╯︵ ┻━┻`;
-      }
-      else if (rawText.startsWith('/shout ')) {
-        if (!unlocked.includes('pack_vip') && !unlocked.includes('pack_vip_emotes')) {
-          alert('❌ Unlock the VIP Broadcaster Pack to use /shout!');
-          return;
-        }
-        const clean = escapeHtml(rawText.replace('/shout ', ''));
-        formattedContent = `<div class="fx-shout">📢 ${clean}</div>`;
-      }
-      else if (rawText.startsWith('/spotlight ')) {
-        if (!unlocked.includes('pack_vip') && !unlocked.includes('pack_vip_emotes')) {
-          alert('❌ Unlock the VIP Broadcaster Pack to use /spotlight!');
-          return;
-        }
-        isSpotlightActive = true;
-        formattedContent = escapeHtml(rawText.replace('/spotlight ', ''));
-      }
-
-      // 2. SHORTCODES PARSER
-      if (unlocked.includes('pack_hacker')) {
-        formattedContent = formattedContent.replace(/:breach:/g, '<b style="color: #ff0055;">[⚠️ BREACH]</b>');
-        formattedContent = formattedContent.replace(/:overclock:/g, '<b style="color: #00f0ff;">⚡[OVERCLOCK 200%]</b>');
-      }
-      if (unlocked.includes('pack_dj')) {
-        formattedContent = formattedContent.replace(/:vinyl:/g, '💿[33 RPM]');
-        formattedContent = formattedContent.replace(/:drop:/g, '💥▒▓█ BASS DROP █▓▒💥');
-      }
-      if (unlocked.includes('pack_chibi') || unlocked.includes('pack_chibi_emotes')) {
-        formattedContent = formattedContent.replace(/:neko_cheer:/g, 'ヽ(>∀<☆)ノ');
-      }
-
-      const chatFeed = document.getElementById('chat-feed');
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      const msgRow = document.createElement('div');
-      msgRow.className = 'msg-row outgoing' + (window.isUserAdmin ? ' mod-msg' : '') + (isSpotlightActive ? ' spotlight-active' : '');
-      
-      const authorHtml = window.isUserAdmin 
-        ? `<span class="msg-author mod">🛡️ MODERATOR</span>`
-        : `<span class="msg-author">${window.userData?.displayName || 'You'}</span>`;
-
-      msgRow.innerHTML = `
-        <div class="msg-meta">
-          ${authorHtml}
-          <span class="msg-time">${timeStr}</span>
-          <button class="delete-msg-btn" onclick="deleteMessage(this)">🗑️ Delete</button>
-        </div>
-        <div class="msg-bubble">${formattedContent}</div>
-      `;
-
-      chatFeed.appendChild(msgRow);
-      input.value = '';
-      chatFeed.scrollTop = chatFeed.scrollHeight;
-    }
-
-    function deleteMessage(btnEl) {
-      if (!window.isUserAdmin && !confirm("Delete this message from feed?")) return;
-      const msgRow = btnEl.closest('.msg-row');
-      if (msgRow) {
-        msgRow.style.opacity = '0';
-        msgRow.style.transform = 'translateY(-6px)';
-        msgRow.style.transition = 'all 0.2s ease';
-        setTimeout(() => msgRow.remove(), 200);
-      }
-    }
-
-    function clearRoomFeed() {
-      if (confirm("🛡️ Moderator Action: Clear all messages in this room?")) {
-        const chatFeed = document.getElementById('chat-feed');
-        if (chatFeed) chatFeed.innerHTML = '';
-      }
-    }
-
-    function handleKeyPress(e) {
-      if (e.key === 'Enter') {
-        sendChatMessage();
-      }
-    }
-
-    function switchChannel(channelKey, channelTitle) {
-      const mainWindow = document.getElementById('main-chat-window-box');
-      const headerBox = document.getElementById('chat-window-hdr');
-      const titleSpan = document.getElementById('current-room-title');
-      const subStatus = document.getElementById('chat-sub-status');
-
-      mainWindow.classList.remove('vip-window-active');
-      headerBox.classList.remove('vip-header');
-      titleSpan.classList.remove('vip-title');
-      subStatus.style.color = 'var(--accent-pink)';
-      subStatus.innerText = 'SUB-STAGE ENCRYPTION ACTIVE';
-
-      document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
-      if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-      }
-      titleSpan.textContent = channelTitle.toUpperCase();
-    }
-
-    function switchVIPChannel() {
-      if (!window.isUserVIP && !window.isUserAdmin) {
-        alert("🔒 Access Denied: The #backstage-vip channel is reserved for Backstage VIP members and System Moderators. Upgrade your account on the Account page!");
-        window.location.href = "account.html";
-        return;
-      }
-      
-      document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
-      if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-      }
-
-      const mainWindow = document.getElementById('main-chat-window-box');
-      const headerBox = document.getElementById('chat-window-hdr');
-      const titleSpan = document.getElementById('current-room-title');
-      const subStatus = document.getElementById('chat-sub-status');
-
-      mainWindow.classList.add('vip-window-active');
-      headerBox.classList.add('vip-header');
-      titleSpan.classList.add('vip-title');
-      titleSpan.textContent = "⚡ #BACKSTAGE-VIP LOUNGE";
-      subStatus.style.color = 'var(--accent-gold)';
-      subStatus.innerText = '🔒 ENCRYPTED BACKSTAGE RELAY // VIP ACTIVE';
+      return CRISIS_KEYWORDS.some(phrase => text.toLowerCase().includes(phrase));
     }
 
     function escapeHtml(str) {
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    /* 💬 EMOTE & COSMETIC PICKER LOGIC WITH SUB-CATEGORIES */
     function toggleEmotePicker() {
       const tray = document.getElementById('emote-picker-tray');
       if (tray.style.display === 'block') {
@@ -1580,36 +1675,15 @@
       } else if (category === 'commands') {
         const cmds = [
           { cmd: '/glitch ', label: '/glitch', pack: 'pack_hacker' },
-          { cmd: '/matrix ', label: '/matrix', pack: 'pack_hacker' },
-          { cmd: '/airhorn', label: '/airhorn', pack: 'pack_dj' },
-          { cmd: '/nyan', label: '/nyan', pack: 'pack_chibi' },
           { cmd: '/tableflip', label: '/tableflip', pack: 'pack_chibi' },
-          { cmd: '/shout ', label: '/shout', pack: 'pack_vip' },
-          { cmd: '/spotlight ', label: '/spotlight', pack: 'pack_vip' }
+          { cmd: '/shout ', label: '/shout', pack: 'pack_vip' }
         ];
 
         cmds.forEach(item => {
-          const isUnlocked = unlocked.includes(item.pack) || unlocked.includes('pack_chibi_emotes') || unlocked.includes('pack_vip_emotes');
+          const isUnlocked = window.isUserAdmin || unlocked.includes(item.pack);
           html += `
             <button type="button" class="tray-item-btn" style="${!isUnlocked ? 'opacity: 0.5; border-color: rgba(255,255,255,0.2);' : ''}" 
               onclick="${isUnlocked ? `insertIntoChatInput('${item.cmd}')` : `alert('🔒 Unlock this command in the Orb Store!')`}">
-              ${item.label} ${!isUnlocked ? '🔒' : ''}
-            </button>`;
-        });
-      } else if (category === 'shortcodes') {
-        const codes = [
-          { code: ':breach:', label: ':breach:', pack: 'pack_hacker' },
-          { code: ':overclock:', label: ':overclock:', pack: 'pack_hacker' },
-          { code: ':vinyl:', label: ':vinyl:', pack: 'pack_dj' },
-          { code: ':drop:', label: ':drop:', pack: 'pack_dj' },
-          { code: ':neko_cheer:', label: ':neko_cheer:', pack: 'pack_chibi' }
-        ];
-
-        codes.forEach(item => {
-          const isUnlocked = unlocked.includes(item.pack) || unlocked.includes('pack_chibi_emotes');
-          html += `
-            <button type="button" class="tray-item-btn" style="${!isUnlocked ? 'opacity: 0.5; border-color: rgba(255,255,255,0.2);' : ''}" 
-              onclick="${isUnlocked ? `insertIntoChatInput('${item.code}')` : `alert('🔒 Unlock this shortcode in the Orb Store!')`}">
               ${item.label} ${!isUnlocked ? '🔒' : ''}
             </button>`;
         });
@@ -1625,6 +1699,10 @@
         inputField.focus();
       }
       document.getElementById('emote-picker-tray').style.display = 'none';
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') sendChatMessage();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
