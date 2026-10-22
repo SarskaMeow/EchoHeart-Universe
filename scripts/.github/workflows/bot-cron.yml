@@ -1,0 +1,27 @@
+name: Bot Chat Generator Cron
+
+on:
+  schedule:
+    # Runs twice per hour (:17 and :47)
+    - cron: '17,47 * * * *'
+  workflow_dispatch: # Allows manual trigger testing from Actions tab
+
+jobs:
+  run-bot-tick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install firebase-admin
+
+      - name: Execute Bot Generator Script
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: node scripts/bot-tick.js
