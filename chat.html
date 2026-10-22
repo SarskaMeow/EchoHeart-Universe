@@ -41,11 +41,10 @@
     body {
       background-color: var(--bg-dark);
       color: var(--text-main);
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
-      padding-bottom: 90px;
+      overflow: hidden;
       background-image: 
         radial-gradient(circle at 20% 20%, rgba(157, 78, 221, 0.25) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.22) 0%, transparent 50%),
@@ -61,6 +60,7 @@
       -webkit-backdrop-filter: blur(16px);
       box-shadow: 0 4px 20px rgba(0, 240, 255, 0.25), 0 0 15px rgba(255, 0, 127, 0.15);
       z-index: 100;
+      flex-shrink: 0;
     }
 
     .nav-inner {
@@ -130,13 +130,14 @@
     .chat-container {
       max-width: 1550px;
       width: 100%;
-      margin: 20px auto;
+      margin: 16px auto;
       padding: 0 1rem;
       display: grid;
       grid-template-columns: 260px 1fr 300px;
       gap: 16px;
-      height: calc(100vh - 130px);
       flex: 1;
+      height: calc(100vh - 100px);
+      min-height: 0;
     }
 
     /* LEFT SIDEBAR: CHAT CHANNELS */
@@ -148,6 +149,8 @@
       display: flex;
       flex-direction: column;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85), 0 0 20px rgba(255, 0, 127, 0.2);
+      overflow-y: auto;
+      min-height: 0;
     }
 
     .panel-title {
@@ -204,6 +207,7 @@
       overflow: hidden;
       animation: neonHudPulse 3.5s infinite ease-in-out;
       transition: all 0.4s ease;
+      min-height: 0;
     }
 
     .chat-window-header {
@@ -214,6 +218,7 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.15);
+      flex-shrink: 0;
     }
 
     .active-room-name {
@@ -236,6 +241,7 @@
       font-weight: 800;
       justify-content: space-between;
       align-items: center;
+      flex-shrink: 0;
     }
 
     .mod-overwatch-bar.active { display: flex; }
@@ -262,10 +268,23 @@
       flex: 1;
       padding: 1.2rem;
       overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       gap: 12px;
       scroll-behavior: smooth;
+      min-height: 0;
+    }
+
+    .chat-messages-area::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages-area::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .chat-messages-area::-webkit-scrollbar-thumb {
+      background: var(--accent-pink);
+      border-radius: 4px;
     }
 
     /* BUBBLE STYLES */
@@ -396,6 +415,7 @@
       gap: 10px;
       align-items: center;
       position: relative;
+      flex-shrink: 0;
     }
 
     .chat-input-field {
@@ -553,6 +573,7 @@
       flex-direction: column;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.85), 0 0 20px rgba(255, 0, 127, 0.2);
       overflow-y: auto;
+      min-height: 0;
     }
 
     .chatter-group-header {
@@ -859,9 +880,9 @@
     }
 
     @media (max-width: 768px) {
-      .chat-container { grid-template-columns: 1fr; height: auto; }
+      .chat-container { grid-template-columns: 1fr; height: calc(100vh - 120px); }
       .sidebar-panel { display: none; }
-      .chat-main-window { height: 650px; }
+      .chat-main-window { height: 100%; }
       .docked-music-player { left: 8px; bottom: 8px; width: 200px; }
     }
 
