@@ -2,8 +2,8 @@ name: Bot Chat Generator Cron
 
 on:
   schedule:
-    # Runs twice per hour (:17 and :47)
-    - cron: '17,47 * * * *'
+    # Runs every 5 minutes
+    - cron: '*/5 * * * *'
   workflow_dispatch: # Allows manual trigger testing from Actions tab
 
 jobs:
