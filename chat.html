@@ -1175,72 +1175,60 @@
       'bots': '🤖 BOT-ROLEPLAY'
     };
 
-    // 🏫 MASSIVE EXPANDED DIALOGUE ENGINE (MULTI-STORY ARCS)
-    const STORY_ARCS = [
-      // ARC 1: The Mystery Pick in Locker 104
-      [
-        { author: "Locker_104_Ren", role: "npc", text: "Morning run! Who left an acoustic guitar pick stuck in the combination dial of locker 104 again?! 🎸" },
-        { author: "Nekomi Aoyama", role: "npc", text: "Oh! Is it a purple Tortex pick with cat paw stickers on it? Asking for a friend... 🐾" },
-        { author: "Locker_104_Ren", role: "npc", text: "YES! Nekomi, it was jammed directly between the 20 and the 35!" },
-        { author: "Akari Minase", role: "npc", text: "BHKAHAHA! Nekomi was practicing her speed picking while waiting for her locker partner yesterday! 🥁" },
-        { author: "Nekomi Aoyama", role: "npc", text: "Shhhh Akari! I was testing resonance frequency on the metal doors okay?!" }
+    // 🏫 PROCEDURAL TIME-OF-DAY WORLD GENERATOR DATA
+    const TIME_CONTEXT_POOLS = {
+      morning: [
+        { author: "Locker_104_Ren", text: "Morning rush! Who left their coffee cup on locker 104's door shelf again? ☕" },
+        { author: "Nekomi Aoyama", text: "Guilty... but it was matcha and I was running late for homeroom! 🍵" },
+        { author: "Akari Minase", text: "First period bell in 5 minutes! Sprint speed test starting NOW 🏃‍♀️💨" },
+        { author: "Locker_212_Mina", text: "Did anyone actually finish the page 44 math homework? Please tell me I'm not the only one..." },
+        { author: "Aoi Mizuhara", text: "Mina, math solutions were posted on the board yesterday. Make sure to review during morning homeroom." }
       ],
-
-      // ARC 2: Pop Quiz Panic & Cafeteria Runs
-      [
-        { author: "Locker_212_Mina", role: "npc", text: "Did you guys hear? The pop quiz in History got pushed to Friday! Saved by the bell 🔔" },
-        { author: "Locker_052_Taro", role: "npc", text: "NO WAY! I stayed up till 2 AM reading about feudal trade routes for nothing?!" },
-        { author: "Aoi Mizuhara", role: "npc", text: "Taro, studying is never 'for nothing'. But yes, Sensei rescheduled due to the assembly." },
-        { author: "Akari Minase", role: "npc", text: "Since we have free period now, who's sprinting to cafeteria for strawberry parfaits before line builds? 🍓" },
-        { author: "Locker_205_Daisuke", role: "npc", text: "Don't run, Gym Sensei is standing right by the B-wing water fountain..." }
+      class_hours: [
+        { author: "Locker_052_Taro", text: "Sensei is writing notes so fast my pencil is literally smoking ✍️🔥" },
+        { author: "Sera Hanibara", text: "Psst, listening to synth synth presets under my desk... 🎧✨" },
+        { author: "Locker_142_Rin", text: "Whoever has hallway pass for B-wing, please grab extra sticky notes from library drop!" },
+        { author: "Akari Minase", text: "Counting down the seconds until lunch period... 12 minutes left 🍱" },
+        { author: "Aoi Mizuhara", text: "Pay attention in class, Akari." }
       ],
-
-      // ARC 3: Rooftop Practice & Synth Frequencies
-      [
-        { author: "Sera Hanibara", role: "npc", text: "Audio levels for rooftop practice are set! Keep your headphones warm, everyone ✨" },
-        { author: "Locker_115_Hana", role: "npc", text: "Who was playing synth lines in the music wing during lunch? Sounded like a retro 80s arcade game! 👾" },
-        { author: "Sera Hanibara", role: "npc", text: "That was me testing the new arpeggiator patch for our upcoming track~ Glad you liked it Hana!" },
-        { author: "Locker_115_Hana", role: "npc", text: "It was so good! My locker is right down the hall from the club room, best background music ever." },
-        { author: "Aoi Mizuhara", role: "npc", text: "Sera, keep the low end under 120Hz for rooftop test or the principal's office ceiling vibrates." }
+      lunchtime: [
+        { author: "Akari Minase", text: "CAFETERIA PARFAIT LINE IS CLEAR! RUN RUN RUN 🍓✨" },
+        { author: "Nekomi Aoyama", text: "Acoustic jam session on the rooftop during lunch today! Bring your sandwiches~ 🎸" },
+        { author: "Locker_077_Kenji", text: "Trading half a tuna sando for matcha Pocky at locker 77 table!" },
+        { author: "Sera Hanibara", text: "The sunlight on the rooftop is so warm right now~ perfect volume testing weather ✨" },
+        { author: "Locker_188_Sora", text: "Who was playing synth melodies in the music room? Sounded super retro!" }
       ],
-
-      // ARC 4: The Lost Lyric Notebook
-      [
-        { author: "Locker_142_Rin", role: "npc", text: "If anyone finds a pink notebook with stickers near locker 142 please tell me! It has all my lyric drafts 😭" },
-        { author: "Locker_089_Kaito", role: "npc", text: "Is it the one with the hologram cover and glitter bookmarks?" },
-        { author: "Locker_142_Rin", role: "npc", text: "YES KAITO! Did you see it?!" },
-        { author: "Locker_089_Kaito", role: "npc", text: "It's sitting safely on top of the library drop box! Someone left a sticky note on it saying 'DO NOT THROW AWAY'." },
-        { author: "Locker_142_Rin", role: "npc", text: "OMGGGG THANK YOU! Running to library right now!! 🏃‍♀️✨" }
+      afternoon: [
+        { author: "Locker_205_Daisuke", text: "Post-lunch 5th period fatigue is real... eyes getting so heavy 😴" },
+        { author: "Locker_115_Hana", text: "Lab period went well! No test tubes were broken today ✨" },
+        { author: "Aoi Mizuhara", text: "Reminder: Club activity forms due at the main office before final bell." },
+        { author: "Nekomi Aoyama", text: "Polishing chord progressions in my notebook until dismissal~ 🎶" }
       ],
-
-      // ARC 5: Vending Machine War
-      [
-        { author: "Locker_077_Kenji", role: "npc", text: "First period bell is about to ring and the vending machine near locker 77 just stole my last coin... help!" },
-        { author: "Akari Minase", role: "npc", text: "Give it a soft tap on the lower right panel! That machine's coin chute gets stuck on 100-yen coins!" },
-        { author: "Locker_077_Kenji", role: "npc", text: "*Taps panel* ...WHOA THREE CANNED COFFEES JUST DROPPED OUT?!" },
-        { author: "Aoi Mizuhara", role: "npc", text: "Kenji, leave two in the drop slot for whoever lost them earlier. We have rules in the hallway." },
-        { author: "Locker_077_Kenji", role: "npc", text: "Aye aye Vice Pres! Leaving them now!" }
+      club_hours: [
+        { author: "Sera Hanibara", text: "Rooftop practice setup complete! Amplifiers powered and ready ⚡" },
+        { author: "Akari Minase", text: "DRUM ROLL TIME! Let's get this tempo up to 160 BPM today! 🥁🔥" },
+        { author: "Nekomi Aoyama", text: "Girls of Phantom bridge section sounds so clean with the new distortion pedal!" },
+        { author: "Locker_301_Yuki", text: "Echoes of the band practice sound amazing from down in the courtyard 🌅" },
+        { author: "Aoi Mizuhara", text: "Keep the bass end balanced so we don't shake the staff room windows." }
       ],
-
-      // ARC 6: Sunset Acoustic Session
-      [
-        { author: "Locker_301_Yuki", role: "npc", text: "The golden hour light coming through the east wing hallway looks amazing right now 🌅" },
-        { author: "Nekomi Aoyama", role: "npc", text: "The sunset view from the music room is perfect for acoustic chord work~" },
-        { author: "Locker_188_Sora", role: "npc", text: "I can hear acoustic guitar echoing down to the courtyard. Sounds super cozy." },
-        { author: "Akari Minase", role: "npc", text: "That's Nekomi polishing her bridge chords for 'Girls of Phantom'! 🎸✨" },
-        { author: "Nekomi Aoyama", role: "npc", text: "Hehe, come up and listen if you're stuck doing late study in the library!" }
+      night: [
+        { author: "Locker_188_Sora", text: "Anyone still up doing late homework? Locker 188 group chat is live 🌙" },
+        { author: "Nekomi Aoyama", text: "Stargazing from my desk window... writing acoustic lyrics for Nekomi & Sera duo ✨" },
+        { author: "Sera Hanibara", text: "Exporting audio stems for our demo! Check Neko FM deck in a bit~ 🎧" },
+        { author: "Locker_089_Kaito", text: "Night owl study grind session... caffeine level at 100% ☕" },
+        { author: "Akari Minase", text: "Goodnight everyone! Heavy drum training tomorrow morning!! 🥁💤" }
       ]
-    ];
+    };
 
-    // Flat pool for random filler chat between story arcs
-    const FILLER_CHAT = [
-      { author: "Locker_052_Taro", role: "npc", text: "Who spilled iced coffee all over the lockers in the B-wing? Watch your shoes!" },
-      { author: "Locker_089_Kaito", role: "npc", text: "Someone left an unopened box of matcha Pocky on the bench by locker 89. Trap or free snacks? 🍵" },
-      { author: "Locker_205_Daisuke", role: "npc", text: "Sprint tests in Gym class right after eating lunch was the worst scheduling decision ever..." },
-      { author: "Locker_188_Sora", role: "npc", text: "Anyone staying for late library study group? Locker 188 has extra sticky notes!" },
-      { author: "Locker_099_Maya", role: "npc", text: "Left my gym bag in locker 99 overnight... hope nobody moves it during after-school cleanup." },
-      { author: "Aoi Mizuhara", role: "npc", text: "Remember to lock your lockers properly before leaving for club activities today." }
-    ];
+    function getCurrentTimeSlot() {
+      const hour = new Date().getHours();
+      if (hour >= 7 && hour < 9) return 'morning';
+      if (hour >= 9 && hour < 12) return 'class_hours';
+      if (hour >= 12 && hour < 14) return 'lunchtime';
+      if (hour >= 14 && hour < 16) return 'afternoon';
+      if (hour >= 16 && hour < 19) return 'club_hours';
+      return 'night';
+    }
 
     // Prompt login function for guests
     window.promptLogin = function() {
@@ -1406,41 +1394,29 @@
       }
 
       if (channelKey === 'bots') {
-        startPersistentBotRoleplaySimulation();
+        startProceduralLiveWorldSimulation();
       }
     };
 
-    // 3. Persistent Bot Roleplay Simulation (Posts NPC turns directly to Firestore)
-    function startPersistentBotRoleplaySimulation() {
-      let currentArcIdx = Math.floor(Math.random() * STORY_ARCS.length);
-      let currentLineIdx = 0;
-
-      async function streamNextMessage() {
-        const delay = Math.floor(Math.random() * (25000 - 10000 + 1)) + 10000;
+    // 3. Continuous Time-of-Day Procedural Simulation
+    function startProceduralLiveWorldSimulation() {
+      async function generateWorldTick() {
+        const delay = Math.floor(Math.random() * (22000 - 12000 + 1)) + 12000;
 
         botTimerId = setTimeout(async () => {
           if (window.activeChannelKey !== 'bots') return;
 
-          const activeArc = STORY_ARCS[currentArcIdx];
+          const timeSlot = getCurrentTimeSlot();
+          const pool = TIME_CONTEXT_POOLS[timeSlot] || TIME_CONTEXT_POOLS.morning;
+          const chosen = pool[Math.floor(Math.random() * pool.length)];
 
-          if (currentLineIdx < activeArc.length) {
-            const msg = activeArc[currentLineIdx];
-            await postNpcMessageToFirestore(msg.author, msg.role, msg.text);
-            currentLineIdx++;
-          } else {
-            if (Math.random() > 0.4) {
-              const filler = FILLER_CHAT[Math.floor(Math.random() * FILLER_CHAT.length)];
-              await postNpcMessageToFirestore(filler.author, filler.role, filler.text);
-            }
-            currentArcIdx = (currentArcIdx + 1) % STORY_ARCS.length;
-            currentLineIdx = 0;
-          }
+          await postNpcMessageToFirestore(chosen.author, 'npc', chosen.text);
 
-          streamNextMessage();
+          generateWorldTick();
         }, delay);
       }
 
-      streamNextMessage();
+      generateWorldTick();
     }
 
     async function postNpcMessageToFirestore(author, role, text) {
