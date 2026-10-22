@@ -905,10 +905,12 @@
     }
 
     function startPodcastPlayback() {
+      // Auto-pause docked background music when podcast starts
       if (isDockedMusicPlaying) {
         dockedAudio.pause();
         isDockedMusicPlaying = false;
-        document.getElementById('docked-play-btn').innerText = "▶ PLAY MUSIC";
+        const dockedPlayBtn = document.getElementById('docked-play-btn');
+        if (dockedPlayBtn) dockedPlayBtn.innerText = "▶ PLAY MUSIC";
       }
 
       initVisualizer();
@@ -1122,10 +1124,17 @@
       selectEpisode(0);
       renderVisualizer();
 
-      // AUTO-PLAY PODCAST ON LOAD & AUTO-PAUSE LOGIC
-      setTimeout(() => {
-        startPodcastPlayback();
-      }, 500);
+      // AUTO-PLAY BACKGROUND MUSIC PLAYER STREAM ON LOAD
+      if (dockedAudio) {
+        dockedAudio.src = defaultStreamUrl;
+        dockedAudio.play().then(() => {
+          isDockedMusicPlaying = true;
+          const playBtn = document.getElementById('docked-play-btn');
+          if (playBtn) playBtn.innerText = "⏸ PAUSE MUSIC";
+        }).catch(err => {
+          console.log("Background music autoplay restricted by browser policy until interaction:", err);
+        });
+      }
     }
 
     if (document.readyState === 'loading') {
