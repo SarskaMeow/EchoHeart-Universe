@@ -40,15 +40,50 @@ const CHAT_CONVERSATIONS = [
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// Cleanup Function: Keep collection trimmed to max 75 messages
+async function pruneOldMessages() {
+  try {
+    const messagesRef = db.collection("channels").doc("bots").collection("messages");
+    const snapshot = await messagesRef.orderBy("timestamp", "desc").get();
+
+    if (snapshot.size > 75) {
+      console.log(`[Cleaner]: Message count is ${snapshot.size}. Trimming to 75...`);
+      const docsToDelete = snapshot.docs.slice(75);
+      
+      const batch = db.batch();
+      docsToDelete.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+      console.log(`[Cleaner]: Successfully purged ${docsToDelete.length} old messages.`);
+    }
+  } catch (err) {
+    console.error("[Cleaner Error]: Failed to trim messages:", err);
+  }
+}
+
 async function runChatBurst() {
-  // Select a random dialogue sequence
-  const conversation = CHAT_CONVERSATIONS[Math.floor(Math.random() * CHAT_CONVERSATIONS.length)];
+  const messagesRef = db.collection("channels").doc("bots").collection("messages");
+
+  // Check the last posted message text to avoid repeating back-to-back
+  const lastMsgSnap = await messagesRef.orderBy("timestamp", "desc").limit(1).get();
+  let lastText = "";
+  if (!lastMsgSnap.empty) {
+    lastText = lastMsgSnap.docs[0].data().text || "";
+  }
+
+  // Filter out any conversation pool whose first line matches the last posted message
+  let availablePools = CHAT_CONVERSATIONS.filter(pool => pool[0].text !== lastText);
+  if (availablePools.length === 0) availablePools = CHAT_CONVERSATIONS;
+
+  // Select a random conversation sequence from the filtered pools
+  const conversation = availablePools[Math.floor(Math.random() * availablePools.length)];
 
   console.log(`[Bot Engine]: Starting chat sequence (${conversation.length} messages)...`);
 
   for (const msg of conversation) {
     try {
-      await db.collection("channels").doc("bots").collection("messages").add({
+      await messagesRef.add({
         author: msg.author,
         role: "npc",
         text: msg.text,
@@ -67,6 +102,9 @@ async function runChatBurst() {
   }
 
   console.log("[Bot Engine]: Chat sequence finished successfully.");
+
+  // Prune messages older than the top 75
+  await pruneOldMessages();
 }
 
 runChatBurst();
