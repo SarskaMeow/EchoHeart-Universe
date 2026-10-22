@@ -920,7 +920,7 @@
   <!-- MAIN CHAT CONTAINER -->
   <div class="chat-container">
 
-    <!-- LEFT SIDEBAR: CHANNELS -->
+    <!-- LEFT SIDEBAR: CHAT CHANNELS -->
     <aside class="sidebar-panel">
       <div class="panel-title">// Chat Channels</div>
       <div class="channel-list">
@@ -958,7 +958,7 @@
       </div>
 
       <div class="chat-messages-area" id="chat-feed">
-        <!-- Messages populate dynamically via Firebase Firestore or Bot Simulation -->
+        <!-- Messages populate dynamically via Firebase Firestore -->
       </div>
 
       <div class="chat-input-bar">
@@ -1314,7 +1314,7 @@
       window.switchChannel(window.activeChannelKey);
     });
 
-    // 2. Real-Time Channel Switcher
+    // 2. Real-Time Channel Switcher (Unified Firestore Listener for ALL channels including #bots)
     window.switchChannel = async function(channelKey, customTitle, e) {
       if (!CHANNELS[channelKey]) channelKey = 'general';
 
@@ -1347,137 +1347,117 @@
         inputEl.placeholder = `Transmit to #${channelKey}...`;
       }
 
-      // Unsubscribe previous feed & clear bot timeout
+      // Unsubscribe previous feed & clear bot timer
       if (unsubscribeListener) unsubscribeListener();
       if (botTimerId) clearTimeout(botTimerId);
 
-      if (channelKey === 'bots') {
-        startBotRoleplaySimulation();
-      } else {
-        // Real-Time Firestore Query (Cap 100)
-        try {
-          const q = query(
-            collection(db, "channels", channelKey, "messages"),
-            orderBy("timestamp", "asc"),
-            limit(100)
-          );
+      // Real-Time Firestore Query for all channels (including persistent #bots)
+      try {
+        const q = query(
+          collection(db, "channels", channelKey, "messages"),
+          orderBy("timestamp", "asc"),
+          limit(100)
+        );
 
-          unsubscribeListener = onSnapshot(q, (snapshot) => {
-            const feed = document.getElementById('chat-feed');
-            if (!feed) return;
-            feed.innerHTML = '';
+        unsubscribeListener = onSnapshot(q, (snapshot) => {
+          const feed = document.getElementById('chat-feed');
+          if (!feed) return;
+          feed.innerHTML = '';
 
-            snapshot.forEach((docSnap) => {
-              const msg = { docId: docSnap.id, ...docSnap.data() };
-              const isSelf = window.currentUser && msg.uid === window.currentUser.uid;
+          snapshot.forEach((docSnap) => {
+            const msg = { docId: docSnap.id, ...docSnap.data() };
+            const isSelf = window.currentUser && msg.uid === window.currentUser.uid;
 
-              const row = document.createElement('div');
-              row.className = `msg-row ${isSelf ? 'outgoing' : 'incoming'}` + 
-                (msg.role === 'mod' ? ' mod-msg' : '') + (msg.role === 'bot' ? ' bot-msg' : '');
+            const row = document.createElement('div');
+            row.className = `msg-row ${isSelf ? 'outgoing' : 'incoming'}` + 
+              (msg.role === 'mod' ? ' mod-msg' : '') + (msg.role === 'bot' || msg.role === 'npc' ? ' bot-msg' : '');
 
-              let authorClass = 'msg-author';
-              if (msg.role === 'mod') authorClass += ' mod';
-              else if (msg.role === 'bot') authorClass += ' bot';
-              else if (msg.role === 'npc') authorClass += ' npc';
+            let authorClass = 'msg-author';
+            if (msg.role === 'mod') authorClass += ' mod';
+            else if (msg.role === 'bot') authorClass += ' bot';
+            else if (msg.role === 'npc') authorClass += ' npc';
 
-              const deleteBtn = (isSelf || window.isUserAdmin)
-                ? `<button class="delete-msg-btn" onclick="window.deleteMessage('${msg.docId}')">🗑️ Delete</button>` : '';
+            const deleteBtn = (isSelf || window.isUserAdmin)
+              ? `<button class="delete-msg-btn" onclick="window.deleteMessage('${msg.docId}')">🗑️ Delete</button>` : '';
 
-              const reportBtn = (!isSelf && msg.role !== 'bot')
-                ? `<button class="report-msg-btn" onclick="openReportModal('${msg.author}')">🚨 Report</button>` : '';
+            const reportBtn = (!isSelf && msg.role !== 'bot' && msg.role !== 'npc')
+              ? `<button class="report-msg-btn" onclick="openReportModal('${msg.author}')">🚨 Report</button>` : '';
 
-              const timeStr = msg.timestamp?.toDate 
-                ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-                : 'Just now';
+            const timeStr = msg.timestamp?.toDate 
+              ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+              : 'Just now';
 
-              row.innerHTML = `
-                <div class="msg-meta">
-                  <span class="${authorClass}" onclick="openReportModal('${msg.author}')">${msg.author}</span>
-                  <span class="msg-time">${timeStr}</span>
-                  ${deleteBtn}${reportBtn}
-                </div>
-                <div class="msg-bubble">${msg.text}</div>
-              `;
-              feed.appendChild(row);
-            });
-            feed.scrollTop = feed.scrollHeight;
-          }, (err) => {
-            console.error(`Live channel error for #${channelKey}:`, err);
+            row.innerHTML = `
+              <div class="msg-meta">
+                <span class="${authorClass}" onclick="openReportModal('${msg.author}')">${msg.author}</span>
+                <span class="msg-time">${timeStr}</span>
+                ${deleteBtn}${reportBtn}
+              </div>
+              <div class="msg-bubble">${msg.text}</div>
+            `;
+            feed.appendChild(row);
           });
-        } catch (e) {
-          console.warn("Firestore collection unavailable, falling back to local channel stream.");
-        }
+          feed.scrollTop = feed.scrollHeight;
+        }, (err) => {
+          console.error(`Live channel error for #${channelKey}:`, err);
+        });
+      } catch (e) {
+        console.warn("Firestore collection unavailable, falling back to local channel stream.");
+      }
+
+      if (channelKey === 'bots') {
+        startPersistentBotRoleplaySimulation();
       }
     };
 
-    // 3. Dynamic Bot Roleplay Simulation (Story Arc Streamer)
-    function startBotRoleplaySimulation() {
-      const feed = document.getElementById('chat-feed');
-      if (!feed) return;
-      feed.innerHTML = '';
-
+    // 3. Persistent Bot Roleplay Simulation (Posts NPC turns directly to Firestore)
+    function startPersistentBotRoleplaySimulation() {
       let currentArcIdx = Math.floor(Math.random() * STORY_ARCS.length);
       let currentLineIdx = 0;
 
-      // Seed initial messages from first arc
-      STORY_ARCS[currentArcIdx].slice(0, 3).forEach(item => {
-        appendBotMessageUI(item.author, item.role, item.text);
-      });
-      currentLineIdx = 3;
-
-      function streamNextMessage() {
-        // Random interval between 10s and 25s
+      async function streamNextMessage() {
         const delay = Math.floor(Math.random() * (25000 - 10000 + 1)) + 10000;
 
-        botTimerId = setTimeout(() => {
+        botTimerId = setTimeout(async () => {
           if (window.activeChannelKey !== 'bots') return;
 
           const activeArc = STORY_ARCS[currentArcIdx];
 
           if (currentLineIdx < activeArc.length) {
-            // Post next line in arc
             const msg = activeArc[currentLineIdx];
-            appendBotMessageUI(msg.author, msg.role, msg.text);
+            await postNpcMessageToFirestore(msg.author, msg.role, msg.text);
             currentLineIdx++;
           } else {
-            // Arc finished: post a filler message or start a new arc
             if (Math.random() > 0.4) {
               const filler = FILLER_CHAT[Math.floor(Math.random() * FILLER_CHAT.length)];
-              appendBotMessageUI(filler.author, filler.role, filler.text);
+              await postNpcMessageToFirestore(filler.author, filler.role, filler.text);
             }
-            // Pick a new arc
             currentArcIdx = (currentArcIdx + 1) % STORY_ARCS.length;
             currentLineIdx = 0;
           }
 
-          streamNextMessage(); // Loop recursively
+          streamNextMessage();
         }, delay);
       }
 
       streamNextMessage();
     }
 
-    function appendBotMessageUI(author, role, text) {
-      const feed = document.getElementById('chat-feed');
-      if (!feed) return;
-
-      const row = document.createElement('div');
-      row.className = `msg-row incoming ${role === 'npc' ? 'npc-msg' : ''}`;
-
-      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      row.innerHTML = `
-        <div class="msg-meta">
-          <span class="msg-author ${role}" onclick="openReportModal('${author}')">${author}</span>
-          <span class="msg-time">${timeStr}</span>
-        </div>
-        <div class="msg-bubble">${text}</div>
-      `;
-      feed.appendChild(row);
-      feed.scrollTop = feed.scrollHeight;
+    async function postNpcMessageToFirestore(author, role, text) {
+      try {
+        await addDoc(collection(db, "channels", "bots", "messages"), {
+          author: author,
+          role: role || 'npc',
+          text: text,
+          uid: 'npc_system',
+          timestamp: serverTimestamp()
+        });
+      } catch (e) {
+        console.error("Failed to persist NPC message:", e);
+      }
     }
 
-    // 4. Transmit Message to Firestore / Local Bot Channel
+    // 4. Transmit Message to Firestore
     window.sendChatMessage = async function() {
       const input = document.getElementById('user-input-msg');
       const rawText = input ? input.value.trim() : '';
@@ -1513,14 +1493,19 @@
         formattedContent = `(╯°□°)╯︵ ┻━┻`;
       }
 
-      if (window.activeChannelKey === 'bots') {
-        const userName = window.isUserAdmin ? '🛡️ MODERATOR' : (window.userData?.displayName || window.currentUser.displayName || "Lounge Member");
-        appendBotMessageUI(userName, 'user', formattedContent);
+      try {
+        await addDoc(collection(db, "channels", window.activeChannelKey, "messages"), {
+          author: window.isUserAdmin ? '🛡️ MODERATOR' : (window.userData?.displayName || window.currentUser.displayName || "Lounge Member"),
+          role: window.isUserAdmin ? 'mod' : 'user',
+          text: formattedContent,
+          uid: window.currentUser.uid,
+          timestamp: serverTimestamp()
+        });
         input.value = '';
 
-        // Context-aware dynamic reply engine
-        setTimeout(() => {
-          if (window.activeChannelKey === 'bots') {
+        // Context-aware dynamic reply engine for #bots
+        if (window.activeChannelKey === 'bots') {
+          setTimeout(async () => {
             const lower = rawText.toLowerCase();
             let response = { author: "Akari Minase", text: "Awesome! Don't forget band practice at 4:30 PM sharp!" };
 
@@ -1534,21 +1519,9 @@
               response = { author: "Locker_077_Kenji", text: "Tap the lower panel! It dropped three coffees for me earlier!" };
             }
 
-            appendBotMessageUI(response.author, "npc", response.text);
-          }
-        }, 1200);
-        return;
-      }
-
-      try {
-        await addDoc(collection(db, "channels", window.activeChannelKey, "messages"), {
-          author: window.isUserAdmin ? '🛡️ MODERATOR' : (window.userData?.displayName || window.currentUser.displayName || "Lounge Member"),
-          role: window.isUserAdmin ? 'mod' : 'user',
-          text: formattedContent,
-          uid: window.currentUser.uid,
-          timestamp: serverTimestamp()
-        });
-        input.value = '';
+            await postNpcMessageToFirestore(response.author, "npc", response.text);
+          }, 1200);
+        }
       } catch (e) {
         console.error("Failed to post message:", e);
       }
