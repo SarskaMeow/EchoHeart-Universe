@@ -1047,6 +1047,44 @@
         <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
+      <div class="chatter-group-header">✦ Locker Room Students</div>
+
+      <div class="chatter-card" onclick="openReportModal('Locker_104_Ren')">
+        <div class="chatter-avatar" style="background: #2b1d3a;">R</div>
+        <div class="chatter-info">
+          <span class="chatter-name">Ren (Locker 104)</span>
+          <span class="chatter-role">Lost Pick Victim</span>
+        </div>
+        <span class="status-dot-indicator active" title="Active"></span>
+      </div>
+
+      <div class="chatter-card" onclick="openReportModal('Locker_212_Mina')">
+        <div class="chatter-avatar" style="background: #1b2e3b;">M</div>
+        <div class="chatter-info">
+          <span class="chatter-name">Mina (Locker 212)</span>
+          <span class="chatter-role">Pop Quiz Survivor</span>
+        </div>
+        <span class="status-dot-indicator active" title="Active"></span>
+      </div>
+
+      <div class="chatter-card" onclick="openReportModal('Locker_142_Rin')">
+        <div class="chatter-avatar" style="background: #3d1c28;">R</div>
+        <div class="chatter-info">
+          <span class="chatter-name">Rin (Locker 142)</span>
+          <span class="chatter-role">Lyric Notebook Writer</span>
+        </div>
+        <span class="status-dot-indicator away" title="Away"></span>
+      </div>
+
+      <div class="chatter-card" onclick="openReportModal('Locker_077_Kenji')">
+        <div class="chatter-avatar" style="background: #18332a;">K</div>
+        <div class="chatter-info">
+          <span class="chatter-name">Kenji (Locker 077)</span>
+          <span class="chatter-role">Vending Machine Nemesis</span>
+        </div>
+        <span class="status-dot-indicator active" title="Active"></span>
+      </div>
+
       <div class="chatter-group-header">✦ Real People & Members</div>
 
       <div class="chatter-card" onclick="openReportModal('Guest_Otaku99')">
@@ -1117,7 +1155,7 @@
     window.isUserAdmin = false;
     window.activeChannelKey = 'general';
     let unsubscribeListener = null;
-    let botLoopInterval = null;
+    let botTimerId = null;
 
     const AVATAR_PRESETS = {
       'avatar_akari': 'images/avatars/akari.png',
@@ -1137,16 +1175,71 @@
       'bots': '🤖 BOT-ROLEPLAY'
     };
 
-    // BOT DIALOGUE BANK FOR SCHOOL LIFESTYLE & CASUAL CHAT
-    const BOT_DIALOGUES = [
-      { author: "Akari Minase", role: "npc", text: "Did anyone catch the lunch special at the cafeteria today? The strawberry parfait line was ridiculous! 🍓" },
-      { author: "Nekomi Aoyama", role: "npc", text: "Haha Akari, you almost missed music club tuning your amp!" },
-      { author: "Sera Hanibara", role: "npc", text: "Audio levels for rooftop practice are set. Keep your headphones warm, everyone. ✨" },
-      { author: "Aoi Mizuhara", role: "npc", text: "Remember we have band practice at 4:30 PM sharp after second period. Don't be late!" },
-      { author: "Akari Minase", role: "npc", text: "I already tuned my drum kit during lunch! Ready to rock! 🥁⚡" },
-      { author: "Nekomi Aoyama", role: "npc", text: "The sunset view from the rooftop today is going to be amazing for acoustic practice~" },
-      { author: "Sera Hanibara", role: "npc", text: "Checking the synthesizer frequencies now... Everything sounds crisp." },
-      { author: "Aoi Mizuhara", role: "npc", text: "I bought extra drinks for everyone in the club fridge. Grab one after class! 🥤" }
+    // 🏫 MASSIVE EXPANDED DIALOGUE ENGINE (MULTI-STORY ARCS)
+    const STORY_ARCS = [
+      // ARC 1: The Mystery Pick in Locker 104
+      [
+        { author: "Locker_104_Ren", role: "npc", text: "Morning run! Who left an acoustic guitar pick stuck in the combination dial of locker 104 again?! 🎸" },
+        { author: "Nekomi Aoyama", role: "npc", text: "Oh! Is it a purple Tortex pick with cat paw stickers on it? Asking for a friend... 🐾" },
+        { author: "Locker_104_Ren", role: "npc", text: "YES! Nekomi, it was jammed directly between the 20 and the 35!" },
+        { author: "Akari Minase", role: "npc", text: "BHKAHAHA! Nekomi was practicing her speed picking while waiting for her locker partner yesterday! 🥁" },
+        { author: "Nekomi Aoyama", role: "npc", text: "Shhhh Akari! I was testing resonance frequency on the metal doors okay?!" }
+      ],
+
+      // ARC 2: Pop Quiz Panic & Cafeteria Runs
+      [
+        { author: "Locker_212_Mina", role: "npc", text: "Did you guys hear? The pop quiz in History got pushed to Friday! Saved by the bell 🔔" },
+        { author: "Locker_052_Taro", role: "npc", text: "NO WAY! I stayed up till 2 AM reading about feudal trade routes for nothing?!" },
+        { author: "Aoi Mizuhara", role: "npc", text: "Taro, studying is never 'for nothing'. But yes, Sensei rescheduled due to the assembly." },
+        { author: "Akari Minase", role: "npc", text: "Since we have free period now, who's sprinting to cafeteria for strawberry parfaits before line builds? 🍓" },
+        { author: "Locker_205_Daisuke", role: "npc", text: "Don't run, Gym Sensei is standing right by the B-wing water fountain..." }
+      ],
+
+      // ARC 3: Rooftop Practice & Synth Frequencies
+      [
+        { author: "Sera Hanibara", role: "npc", text: "Audio levels for rooftop practice are set! Keep your headphones warm, everyone ✨" },
+        { author: "Locker_115_Hana", role: "npc", text: "Who was playing synth lines in the music wing during lunch? Sounded like a retro 80s arcade game! 👾" },
+        { author: "Sera Hanibara", role: "npc", text: "That was me testing the new arpeggiator patch for our upcoming track~ Glad you liked it Hana!" },
+        { author: "Locker_115_Hana", role: "npc", text: "It was so good! My locker is right down the hall from the club room, best background music ever." },
+        { author: "Aoi Mizuhara", role: "npc", text: "Sera, keep the low end under 120Hz for rooftop test or the principal's office ceiling vibrates." }
+      ],
+
+      // ARC 4: The Lost Lyric Notebook
+      [
+        { author: "Locker_142_Rin", role: "npc", text: "If anyone finds a pink notebook with stickers near locker 142 please tell me! It has all my lyric drafts 😭" },
+        { author: "Locker_089_Kaito", role: "npc", text: "Is it the one with the hologram cover and glitter bookmarks?" },
+        { author: "Locker_142_Rin", role: "npc", text: "YES KAITO! Did you see it?!" },
+        { author: "Locker_089_Kaito", role: "npc", text: "It's sitting safely on top of the library drop box! Someone left a sticky note on it saying 'DO NOT THROW AWAY'." },
+        { author: "Locker_142_Rin", role: "npc", text: "OMGGGG THANK YOU! Running to library right now!! 🏃‍♀️✨" }
+      ],
+
+      // ARC 5: Vending Machine War
+      [
+        { author: "Locker_077_Kenji", role: "npc", text: "First period bell is about to ring and the vending machine near locker 77 just stole my last coin... help!" },
+        { author: "Akari Minase", role: "npc", text: "Give it a soft tap on the lower right panel! That machine's coin chute gets stuck on 100-yen coins!" },
+        { author: "Locker_077_Kenji", role: "npc", text: "*Taps panel* ...WHOA THREE CANNED COFFEES JUST DROPPED OUT?!" },
+        { author: "Aoi Mizuhara", role: "npc", text: "Kenji, leave two in the drop slot for whoever lost them earlier. We have rules in the hallway." },
+        { author: "Locker_077_Kenji", role: "npc", text: "Aye aye Vice Pres! Leaving them now!" }
+      ],
+
+      // ARC 6: Sunset Acoustic Session
+      [
+        { author: "Locker_301_Yuki", role: "npc", text: "The golden hour light coming through the east wing hallway looks amazing right now 🌅" },
+        { author: "Nekomi Aoyama", role: "npc", text: "The sunset view from the music room is perfect for acoustic chord work~" },
+        { author: "Locker_188_Sora", role: "npc", text: "I can hear acoustic guitar echoing down to the courtyard. Sounds super cozy." },
+        { author: "Akari Minase", role: "npc", text: "That's Nekomi polishing her bridge chords for 'Girls of Phantom'! 🎸✨" },
+        { author: "Nekomi Aoyama", role: "npc", text: "Hehe, come up and listen if you're stuck doing late study in the library!" }
+      ]
+    ];
+
+    // Flat pool for random filler chat between story arcs
+    const FILLER_CHAT = [
+      { author: "Locker_052_Taro", role: "npc", text: "Who spilled iced coffee all over the lockers in the B-wing? Watch your shoes!" },
+      { author: "Locker_089_Kaito", role: "npc", text: "Someone left an unopened box of matcha Pocky on the bench by locker 89. Trap or free snacks? 🍵" },
+      { author: "Locker_205_Daisuke", role: "npc", text: "Sprint tests in Gym class right after eating lunch was the worst scheduling decision ever..." },
+      { author: "Locker_188_Sora", role: "npc", text: "Anyone staying for late library study group? Locker 188 has extra sticky notes!" },
+      { author: "Locker_099_Maya", role: "npc", text: "Left my gym bag in locker 99 overnight... hope nobody moves it during after-school cleanup." },
+      { author: "Aoi Mizuhara", role: "npc", text: "Remember to lock your lockers properly before leaving for club activities today." }
     ];
 
     // Prompt login function for guests
@@ -1254,9 +1347,9 @@
         inputEl.placeholder = `Transmit to #${channelKey}...`;
       }
 
-      // Unsubscribe previous feed & clear bot loop
+      // Unsubscribe previous feed & clear bot timeout
       if (unsubscribeListener) unsubscribeListener();
-      if (botLoopInterval) clearInterval(botLoopInterval);
+      if (botTimerId) clearTimeout(botTimerId);
 
       if (channelKey === 'bots') {
         startBotRoleplaySimulation();
@@ -1317,24 +1410,51 @@
       }
     };
 
-    // 3. Bot Roleplay Local Simulation
+    // 3. Dynamic Bot Roleplay Simulation (Story Arc Streamer)
     function startBotRoleplaySimulation() {
       const feed = document.getElementById('chat-feed');
       if (!feed) return;
       feed.innerHTML = '';
 
-      // Populate initial dialogue lines
-      BOT_DIALOGUES.slice(0, 4).forEach(item => {
+      let currentArcIdx = Math.floor(Math.random() * STORY_ARCS.length);
+      let currentLineIdx = 0;
+
+      // Seed initial messages from first arc
+      STORY_ARCS[currentArcIdx].slice(0, 3).forEach(item => {
         appendBotMessageUI(item.author, item.role, item.text);
       });
+      currentLineIdx = 3;
 
-      let lineIdx = 4;
-      botLoopInterval = setInterval(() => {
-        if (window.activeChannelKey !== 'bots') return;
-        const msg = BOT_DIALOGUES[lineIdx % BOT_DIALOGUES.length];
-        appendBotMessageUI(msg.author, msg.role, msg.text);
-        lineIdx++;
-      }, 7000);
+      function streamNextMessage() {
+        // Random interval between 10s and 25s
+        const delay = Math.floor(Math.random() * (25000 - 10000 + 1)) + 10000;
+
+        botTimerId = setTimeout(() => {
+          if (window.activeChannelKey !== 'bots') return;
+
+          const activeArc = STORY_ARCS[currentArcIdx];
+
+          if (currentLineIdx < activeArc.length) {
+            // Post next line in arc
+            const msg = activeArc[currentLineIdx];
+            appendBotMessageUI(msg.author, msg.role, msg.text);
+            currentLineIdx++;
+          } else {
+            // Arc finished: post a filler message or start a new arc
+            if (Math.random() > 0.4) {
+              const filler = FILLER_CHAT[Math.floor(Math.random() * FILLER_CHAT.length)];
+              appendBotMessageUI(filler.author, filler.role, filler.text);
+            }
+            // Pick a new arc
+            currentArcIdx = (currentArcIdx + 1) % STORY_ARCS.length;
+            currentLineIdx = 0;
+          }
+
+          streamNextMessage(); // Loop recursively
+        }, delay);
+      }
+
+      streamNextMessage();
     }
 
     function appendBotMessageUI(author, role, text) {
@@ -1398,17 +1518,25 @@
         appendBotMessageUI(userName, 'user', formattedContent);
         input.value = '';
 
+        // Context-aware dynamic reply engine
         setTimeout(() => {
           if (window.activeChannelKey === 'bots') {
-            const replies = [
-              "That sounds like fun! Catch you after next period!",
-              "Awesome! Don't forget band practice at 4:30 PM!",
-              "Checking the audio meters now... sounds super crisp!"
-            ];
-            const randReply = replies[Math.floor(Math.random() * replies.length)];
-            appendBotMessageUI("Sera Hanibara", "npc", randReply);
+            const lower = rawText.toLowerCase();
+            let response = { author: "Akari Minase", text: "Awesome! Don't forget band practice at 4:30 PM sharp!" };
+
+            if (lower.includes('pick') || lower.includes('guitar') || lower.includes('104')) {
+              response = { author: "Locker_104_Ren", text: "Wait, are you talking about the purple pick in locker 104?! Did you find it?" };
+            } else if (lower.includes('notebook') || lower.includes('pink') || lower.includes('lyric')) {
+              response = { author: "Locker_142_Rin", text: "OMG did you see my lyric notebook near the library drop box?!" };
+            } else if (lower.includes('synth') || lower.includes('music') || lower.includes('audio')) {
+              response = { author: "Sera Hanibara", text: "Checking synth frequencies right now... everything sounds super clean!" };
+            } else if (lower.includes('vending') || lower.includes('coffee') || lower.includes('coin')) {
+              response = { author: "Locker_077_Kenji", text: "Tap the lower panel! It dropped three coffees for me earlier!" };
+            }
+
+            appendBotMessageUI(response.author, "npc", response.text);
           }
-        }, 1500);
+        }, 1200);
         return;
       }
 
