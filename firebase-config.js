@@ -12,7 +12,22 @@ import {
   signOut, 
   onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { 
+  getFirestore, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  arrayUnion,
+  collection,
+  addDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // 2. Firebase Configuration
 const firebaseConfig = {
@@ -34,9 +49,24 @@ const appCheck = initializeAppCheck(app, {
   isTokenAutoRefreshEnabled: true
 });
 
-// 5. Initialize Auth & Firestore
+// 5. Initialize Auth & Firestore Exports
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export { 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  arrayUnion, 
+  collection, 
+  addDoc, 
+  deleteDoc, 
+  query, 
+  orderBy, 
+  limit, 
+  onSnapshot, 
+  serverTimestamp 
+};
 
 // Global User State variables attached to window
 window.currentUser = null;
