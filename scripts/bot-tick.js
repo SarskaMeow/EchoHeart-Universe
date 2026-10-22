@@ -40,7 +40,7 @@ const CHAT_CONVERSATIONS = [
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Cleanup Function: Keep collection trimmed to max 75 messages
+// Cleanup Function: Keep collection trimmed to max 75 messages safely
 async function pruneOldMessages() {
   try {
     const messagesRef = db.collection("channels").doc("bots").collection("messages");
@@ -65,18 +65,21 @@ async function pruneOldMessages() {
 async function runChatBurst() {
   const messagesRef = db.collection("channels").doc("bots").collection("messages");
 
-  // Check the last posted message text to avoid repeating back-to-back
+  // Check the last posted message text across the whole channel
   const lastMsgSnap = await messagesRef.orderBy("timestamp", "desc").limit(1).get();
   let lastText = "";
   if (!lastMsgSnap.empty) {
     lastText = lastMsgSnap.docs[0].data().text || "";
   }
 
-  // Filter out any conversation pool whose first line matches the last posted message
-  let availablePools = CHAT_CONVERSATIONS.filter(pool => pool[0].text !== lastText);
+  // Check all messages in each pool so no line in the pool matches the last posted message
+  let availablePools = CHAT_CONVERSATIONS.filter(pool => {
+    return !pool.some(msg => msg.text === lastText);
+  });
+  
   if (availablePools.length === 0) availablePools = CHAT_CONVERSATIONS;
 
-  // Select a random conversation sequence from the filtered pools
+  // Pick a random conversation from the valid pools
   const conversation = availablePools[Math.floor(Math.random() * availablePools.length)];
 
   console.log(`[Bot Engine]: Starting chat sequence (${conversation.length} messages)...`);
@@ -92,7 +95,7 @@ async function runChatBurst() {
       });
       console.log(`[Bot Success]: ${msg.author} -> "${msg.text}"`);
 
-      // Wait 3 to 8 seconds between messages to feel like real typing
+      // 3 to 8 second typing gap
       const typingDelay = Math.floor(Math.random() * (8000 - 3000)) + 3000;
       await sleep(typingDelay);
     } catch (error) {
@@ -103,7 +106,7 @@ async function runChatBurst() {
 
   console.log("[Bot Engine]: Chat sequence finished successfully.");
 
-  // Prune messages older than the top 75
+  // Safely prune down to top 75 messages
   await pruneOldMessages();
 }
 
