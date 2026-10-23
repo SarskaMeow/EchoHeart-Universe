@@ -932,6 +932,7 @@
       font-weight: 800;
       cursor: pointer;
       transition: all 0.15s;
+      user-select: none;
     }
 
     .pad-btn:active, .pad-btn.playing {
@@ -1357,9 +1358,41 @@
           </div>
           <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <label style="font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan);">Master BPM: <span id="bpm-val">135</span></label>
-            <input type="range" min="100" max="175" value="135" oninput="songArranger.setBpm(this.value)" style="width: 90px; accent-color: var(--accent-pink);">
+            <input type="range" min="60" max="220" value="135" oninput="songArranger.setBpm(this.value)" style="width: 90px; accent-color: var(--accent-pink);">
             <button class="vote-btn" id="wav-rec-btn" style="background: var(--accent-pink); border-color: var(--accent-pink);" onclick="songArranger.toggleWavRecording()">🔴 Start Recording Song</button>
             <button class="vote-btn" style="background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan);" onclick="promptSaveCustomSong()">💾 Save Arrangement</button>
+          </div>
+        </div>
+
+        <!-- INSTRUMENT SELECTION & PERFORMANCE CONTROLS -->
+        <div style="background: rgba(15, 7, 28, 0.8); border: 1px solid var(--accent-purple); border-radius: 12px; padding: 14px; margin-bottom: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label style="font-size: 0.85rem; font-weight: 800; color: var(--accent-gold);">🎹 Instrument Presets:</label>
+              <select id="synth-instrument-select" onchange="songArranger.setInstrument(this.value)" style="background: #030108; color: var(--accent-cyan); border: 1px solid var(--accent-pink); border-radius: 8px; padding: 6px 12px; font-weight: 800; outline: none;">
+                <option value="keytar">🎹 FM Keytar</option>
+                <option value="lead">🎸 Overdriven Guitar Lead</option>
+                <option value="bass">🎶 Slap Bass Synth</option>
+                <option value="piano">🎹 Grand Piano</option>
+                <option value="brass">🎺 Cyberpunk Brass</option>
+                <option value="chiptune">👾 8-Bit Chiptune Square</option>
+              </select>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <label style="font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan);">Octave:</label>
+                <button class="vote-btn" style="padding: 2px 8px;" onclick="songArranger.changeOctave(-1)">-</button>
+                <span id="octave-val" style="font-weight: 900; color: #fff; font-size: 0.85rem;">4</span>
+                <button class="vote-btn" style="padding: 2px 8px;" onclick="songArranger.changeOctave(1)">+</button>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <label style="font-size: 0.8rem; font-weight: 800; color: var(--accent-pink); cursor: pointer;">
+                  <input type="checkbox" id="latch-mode-toggle" onchange="songArranger.toggleLatchMode(this.checked)"> 📌 Keep Held Down (Latch Mode)
+                </label>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1401,17 +1434,27 @@
 
         </div>
 
-        <!-- LIVE OVER-THE-TOP SOLO PADS -->
-        <h4 style="color: #ffffff; font-size: 0.95rem; margin-bottom: 8px;">⚡ Live Over-The-Top Solos & Drum Fills</h4>
+        <!-- LIVE OVER-THE-TOP SOLO PADS & FULL CHROMATIC KEYBOARD -->
+        <h4 style="color: #ffffff; font-size: 0.95rem; margin-bottom: 8px;">⚡ Live Over-The-Top Solos, Chromatic Notes & Drum Fills</h4>
         <div class="soundboard-grid">
-          <button class="pad-btn" onmousedown="songArranger.playPad('keytar_solo')">🎹 Keytar Solo <span class="pad-key">[ Key A ]</span></button>
-          <button class="pad-btn" onmousedown="songArranger.playPad('lead_bend')">🎸 Lead Bend <span class="pad-key">[ Key S ]</span></button>
-          <button class="pad-btn" onmousedown="songArranger.playPad('elec_chord')">⚡ Elec Stabs <span class="pad-key">[ Key D ]</span></button>
-          <button class="pad-btn" onmousedown="songArranger.playPad('vocal_chop')">🎙️ Vocal Chop <span class="pad-key">[ Key F ]</span></button>
-          <button class="pad-btn" onmousedown="songArranger.playPad('synth_brass')">🎺 Brass Stab <span class="pad-key">[ Key G ]</span></button>
-          <button class="pad-btn" onmousedown="songArranger.playPad('snare_fill')">💥 Snare Fill <span class="pad-key">[ Key H ]</span></button>
-          <button class="pad-btn" onmousedown="songArranger.playPad('crash')">🔔 Crash Cymbal <span class="pad-key">[ Key J ]</span></button>
-          <button class="pad-btn" onmousedown="songArranger.playPad('piano_chord')">🎹 Grand Piano <span class="pad-key">[ Key K ]</span></button>
+          <button class="pad-btn" id="pad-keytar_solo" onmousedown="songArranger.noteOn('keytar_solo')" onmouseup="songArranger.noteOff('keytar_solo')" onmouseleave="songArranger.noteOff('keytar_solo')">🎹 Keytar Solo <span class="pad-key">[ Key A ]</span></button>
+          <button class="pad-btn" id="pad-lead_bend" onmousedown="songArranger.noteOn('lead_bend')" onmouseup="songArranger.noteOff('lead_bend')" onmouseleave="songArranger.noteOff('lead_bend')">🎸 Lead Bend <span class="pad-key">[ Key S ]</span></button>
+          <button class="pad-btn" id="pad-elec_chord" onmousedown="songArranger.noteOn('elec_chord')" onmouseup="songArranger.noteOff('elec_chord')" onmouseleave="songArranger.noteOff('elec_chord')">⚡ Elec Stabs <span class="pad-key">[ Key D ]</span></button>
+          <button class="pad-btn" id="pad-vocal_chop" onmousedown="songArranger.noteOn('vocal_chop')" onmouseup="songArranger.noteOff('vocal_chop')" onmouseleave="songArranger.noteOff('vocal_chop')">🎙️ Vocal Chop <span class="pad-key">[ Key F ]</span></button>
+          <button class="pad-btn" id="pad-synth_brass" onmousedown="songArranger.noteOn('synth_brass')" onmouseup="songArranger.noteOff('synth_brass')" onmouseleave="songArranger.noteOff('synth_brass')">🎺 Brass Stab <span class="pad-key">[ Key G ]</span></button>
+          <button class="pad-btn" id="pad-snare_fill" onmousedown="songArranger.noteOn('snare_fill')" onmouseup="songArranger.noteOff('snare_fill')" onmouseleave="songArranger.noteOff('snare_fill')">💥 Snare Fill <span class="pad-key">[ Key H ]</span></button>
+          <button class="pad-btn" id="pad-crash" onmousedown="songArranger.noteOn('crash')" onmouseup="songArranger.noteOff('crash')" onmouseleave="songArranger.noteOff('crash')">🔔 Crash Cymbal <span class="pad-key">[ Key J ]</span></button>
+          <button class="pad-btn" id="pad-piano_chord" onmousedown="songArranger.noteOn('piano_chord')" onmouseup="songArranger.noteOff('piano_chord')" onmouseleave="songArranger.noteOff('piano_chord')">🎹 Grand Piano <span class="pad-key">[ Key K ]</span></button>
+          
+          <!-- Extended Musical Scale Keys -->
+          <button class="pad-btn" id="pad-note_C" onmousedown="songArranger.noteOn('note_C')" onmouseup="songArranger.noteOff('note_C')" onmouseleave="songArranger.noteOff('note_C')">🎵 Note C <span class="pad-key">[ Key Z ]</span></button>
+          <button class="pad-btn" id="pad-note_D" onmousedown="songArranger.noteOn('note_D')" onmouseup="songArranger.noteOff('note_D')" onmouseleave="songArranger.noteOff('note_D')">🎵 Note D <span class="pad-key">[ Key X ]</span></button>
+          <button class="pad-btn" id="pad-note_E" onmousedown="songArranger.noteOn('note_E')" onmouseup="songArranger.noteOff('note_E')" onmouseleave="songArranger.noteOff('note_E')">🎵 Note E <span class="pad-key">[ Key C ]</span></button>
+          <button class="pad-btn" id="pad-note_F" onmousedown="songArranger.noteOn('note_F')" onmouseup="songArranger.noteOff('note_F')" onmouseleave="songArranger.noteOff('note_F')">🎵 Note F <span class="pad-key">[ Key V ]</span></button>
+          <button class="pad-btn" id="pad-note_G" onmousedown="songArranger.noteOn('note_G')" onmouseup="songArranger.noteOff('note_G')" onmouseleave="songArranger.noteOff('note_G')">🎵 Note G <span class="pad-key">[ Key B ]</span></button>
+          <button class="pad-btn" id="pad-note_A" onmousedown="songArranger.noteOn('note_A')" onmouseup="songArranger.noteOff('note_A')" onmouseleave="songArranger.noteOff('note_A')">🎵 Note A <span class="pad-key">[ Key N ]</span></button>
+          <button class="pad-btn" id="pad-note_B" onmousedown="songArranger.noteOn('note_B')" onmouseup="songArranger.noteOff('note_B')" onmouseleave="songArranger.noteOff('note_B')">🎵 Note B <span class="pad-key">[ Key M ]</span></button>
+          <button class="pad-btn" id="pad-note_C2" onmousedown="songArranger.noteOn('note_C2')" onmouseup="songArranger.noteOff('note_C2')" onmouseleave="songArranger.noteOff('note_C2')">🎵 High C <span class="pad-key">[ Key L ]</span></button>
         </div>
       </div>
 
@@ -1473,7 +1516,7 @@
   <script src="global-player.js"></script>
   <script>
     /* ==========================================================================
-       ANIME SONG CREATOR & LOOP ARRANGER ENGINE
+       ANIME SONG CREATOR & LOOP ARRANGER ENGINE (EXPANDED SYNTHESIS)
        ========================================================================== */
     class AnimeSongArrangerEngine {
       constructor() {
@@ -1486,6 +1529,13 @@
         this.mediaRecorder = null;
         this.audioChunks = [];
         this.isRecording = false;
+
+        // Expanded Polyphonic Engine State
+        this.currentInstrument = 'keytar';
+        this.currentOctave = 4;
+        this.isLatchMode = false;
+        this.activeVoices = {}; // Active oscillator and gain nodes indexed by pad sound key
+        this.activePads = new Set();
       }
 
       init() {
@@ -1506,6 +1556,24 @@
             this.startLoop(type);
           }
         });
+      }
+
+      setInstrument(inst) {
+        this.currentInstrument = inst;
+      }
+
+      changeOctave(delta) {
+        this.currentOctave = Math.max(1, Math.min(7, this.currentOctave + delta));
+        const el = document.getElementById('octave-val');
+        if (el) el.innerText = this.currentOctave;
+      }
+
+      toggleLatchMode(val) {
+        this.isLatchMode = val;
+        if (!val) {
+          // Release all latched sustained sounds when latch mode is turned off
+          Object.keys(this.activeVoices).forEach(sound => this.releaseVoice(sound));
+        }
       }
 
       /* ---------------- BACKGROUND LOOP STACKING ---------------- */
@@ -1642,12 +1710,82 @@
         }
       }
 
-      /* ---------------- OVER-THE-TOP LIVE PADS ---------------- */
-      playPad(sound) {
+      /* ---------------- ADVANCED POLYPHONIC LIVE INSTRUMENT & SOLO PADS ---------------- */
+      getFrequencyForNote(noteName) {
+        const baseNotes = { C: 261.63, D: 293.66, E: 329.63, F: 349.23, G: 392.00, A: 440.00, B: 493.88, C2: 523.25 };
+        const baseFreq = baseNotes[noteName] || 440.00;
+        return baseFreq * Math.pow(2, this.currentOctave - 4);
+      }
+
+      noteOn(sound) {
         this.init();
         if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+
+        // Latch toggle behavior: if latch is on and key is already playing, stop it on second press
+        if (this.isLatchMode && this.activePads.has(sound)) {
+          this.releaseVoice(sound);
+          this.activePads.delete(sound);
+          this.updatePadUI(sound, false);
+          return;
+        }
+
+        this.updatePadUI(sound, true);
+        this.activePads.add(sound);
+
+        // If a voice exists, clear it before retriggering
+        if (this.activeVoices[sound]) {
+          this.releaseVoice(sound);
+        }
+
         const now = this.audioCtx.currentTime;
 
+        // Custom note synthesis for musical scale buttons
+        if (sound.startsWith('note_')) {
+          const noteKey = sound.replace('note_', '');
+          const freq = this.getFrequencyForNote(noteKey);
+          
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+
+          // Instrument type sound shaping
+          switch(this.currentInstrument) {
+            case 'lead':
+              osc.type = 'sawtooth';
+              gain.gain.setValueAtTime(0.35, now);
+              break;
+            case 'bass':
+              osc.type = 'triangle';
+              gain.gain.setValueAtTime(0.5, now);
+              break;
+            case 'piano':
+              osc.type = 'sine';
+              gain.gain.setValueAtTime(0.4, now);
+              break;
+            case 'brass':
+              osc.type = 'sawtooth';
+              gain.gain.setValueAtTime(0.3, now);
+              break;
+            case 'chiptune':
+              osc.type = 'square';
+              gain.gain.setValueAtTime(0.2, now);
+              break;
+            case 'keytar':
+            default:
+              osc.type = 'sawtooth';
+              gain.gain.setValueAtTime(0.3, now);
+              break;
+          }
+
+          osc.frequency.setValueAtTime(freq, now);
+          osc.connect(gain);
+          gain.connect(this.masterGain);
+          osc.start(now);
+
+          this.activeVoices[sound] = { oscs: [osc], gain: gain, isSustained: true };
+          return;
+        }
+
+        // Dedicated Solo Riffs & Drum One-Shots
         if (sound === 'keytar_solo') {
           const osc = this.audioCtx.createOscillator();
           const gain = this.audioCtx.createGain();
@@ -1655,11 +1793,9 @@
           osc.frequency.setValueAtTime(587.33, now); // D5
           osc.frequency.exponentialRampToValueAtTime(880.00, now + 0.35); // Bend to A5
           gain.gain.setValueAtTime(0.4, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-          osc.connect(gain);
-          gain.connect(this.masterGain);
+          osc.connect(gain); gain.connect(this.masterGain);
           osc.start(now);
-          osc.stop(now + 0.4);
+          this.activeVoices[sound] = { oscs: [osc], gain: gain, isSustained: true };
         } else if (sound === 'lead_bend') {
           const osc = this.audioCtx.createOscillator();
           const gain = this.audioCtx.createGain();
@@ -1667,11 +1803,9 @@
           osc.frequency.setValueAtTime(440.00, now);
           osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.4);
           gain.gain.setValueAtTime(0.5, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-          osc.connect(gain);
-          gain.connect(this.masterGain);
+          osc.connect(gain); gain.connect(this.masterGain);
           osc.start(now);
-          osc.stop(now + 0.45);
+          this.activeVoices[sound] = { oscs: [osc], gain: gain, isSustained: true };
         } else if (sound === 'vocal_chop') {
           const osc1 = this.audioCtx.createOscillator();
           const osc2 = this.audioCtx.createOscillator();
@@ -1680,47 +1814,52 @@
           osc1.frequency.setValueAtTime(523.25, now);
           osc2.frequency.setValueAtTime(1046.50, now);
           gain.gain.setValueAtTime(0.5, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
           osc1.connect(gain); osc2.connect(gain);
           gain.connect(this.masterGain);
           osc1.start(now); osc2.start(now);
-          osc1.stop(now + 0.3); osc2.stop(now + 0.3);
+          this.activeVoices[sound] = { oscs: [osc1, osc2], gain: gain, isSustained: true };
         } else if (sound === 'synth_brass') {
+          const oscs = [];
+          const gain = this.audioCtx.createGain();
+          gain.gain.setValueAtTime(0.25, now);
           [220.00, 277.18, 329.63].forEach(f => {
             const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(f, now);
-            gain.gain.setValueAtTime(0.25, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
             osc.connect(gain);
-            gain.connect(this.masterGain);
-            osc.start(now); osc.stop(now + 0.35);
+            osc.start(now);
+            oscs.push(osc);
           });
+          gain.connect(this.masterGain);
+          this.activeVoices[sound] = { oscs: oscs, gain: gain, isSustained: true };
         } else if (sound === 'elec_chord') {
+          const oscs = [];
+          const gain = this.audioCtx.createGain();
+          gain.gain.setValueAtTime(0.3, now);
           [130.81, 196.00, 261.63].forEach(f => {
             const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(f, now);
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
             osc.connect(gain);
-            gain.connect(this.masterGain);
-            osc.start(now); osc.stop(now + 0.5);
+            osc.start(now);
+            oscs.push(osc);
           });
+          gain.connect(this.masterGain);
+          this.activeVoices[sound] = { oscs: oscs, gain: gain, isSustained: true };
         } else if (sound === 'piano_chord') {
+          const oscs = [];
+          const gain = this.audioCtx.createGain();
+          gain.gain.setValueAtTime(0.3, now);
           [293.66, 369.99, 440.00].forEach(f => {
             const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
             osc.type = 'sine';
             osc.frequency.setValueAtTime(f, now);
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
             osc.connect(gain);
-            gain.connect(this.masterGain);
-            osc.start(now); osc.stop(now + 0.7);
+            osc.start(now);
+            oscs.push(osc);
           });
+          gain.connect(this.masterGain);
+          this.activeVoices[sound] = { oscs: oscs, gain: gain, isSustained: true };
         } else if (sound === 'snare_fill') {
           const bufSize = this.audioCtx.sampleRate * 0.15;
           const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
@@ -1747,6 +1886,43 @@
           src.connect(gain);
           gain.connect(this.masterGain);
           src.start(now);
+        }
+      }
+
+      noteOff(sound) {
+        if (this.isLatchMode) return; // Do not release note on keyup if Latch Mode is enabled
+        this.releaseVoice(sound);
+        this.activePads.delete(sound);
+        this.updatePadUI(sound, false);
+      }
+
+      releaseVoice(sound) {
+        const voice = this.activeVoices[sound];
+        if (!voice) return;
+
+        const now = this.audioCtx ? this.audioCtx.currentTime : 0;
+        if (voice.gain && this.audioCtx) {
+          voice.gain.gain.cancelScheduledValues(now);
+          voice.gain.gain.setValueAtTime(voice.gain.gain.value, now);
+          voice.gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+        }
+
+        setTimeout(() => {
+          if (voice.oscs) {
+            voice.oscs.forEach(osc => {
+              try { osc.stop(); osc.disconnect(); } catch(e){}
+            });
+          }
+        }, 130);
+
+        delete this.activeVoices[sound];
+      }
+
+      updatePadUI(sound, isPlaying) {
+        const btn = document.getElementById(`pad-${sound}`);
+        if (btn) {
+          if (isPlaying) btn.classList.add('playing');
+          else btn.classList.remove('playing');
         }
       }
 
@@ -2628,16 +2804,39 @@
       if (input) input.value = '';
     }
 
+    // EXPANDED KEYBOARD MAPS & EVENT LISTENERS
+    const keyMap = {
+      'a': 'keytar_solo',
+      's': 'lead_bend',
+      'd': 'elec_chord',
+      'f': 'vocal_chop',
+      'g': 'synth_brass',
+      'h': 'snare_fill',
+      'j': 'crash',
+      'k': 'piano_chord',
+      'z': 'note_C',
+      'x': 'note_D',
+      'c': 'note_E',
+      'v': 'note_F',
+      'b': 'note_G',
+      'n': 'note_A',
+      'm': 'note_B',
+      'l': 'note_C2'
+    };
+
     window.addEventListener('keydown', (e) => {
+      if (e.repeat) return; // Prevent repeated retriggering while held
       const key = e.key.toLowerCase();
-      if (key === 'a') songArranger.playPad('keytar_solo');
-      if (key === 's') songArranger.playPad('lead_bend');
-      if (key === 'd') songArranger.playPad('elec_chord');
-      if (key === 'f') songArranger.playPad('vocal_chop');
-      if (key === 'g') songArranger.playPad('synth_brass');
-      if (key === 'h') songArranger.playPad('snare_fill');
-      if (key === 'j') songArranger.playPad('crash');
-      if (key === 'k') songArranger.playPad('piano_chord');
+      if (keyMap[key]) {
+        songArranger.noteOn(keyMap[key]);
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      const key = e.key.toLowerCase();
+      if (keyMap[key]) {
+        songArranger.noteOff(keyMap[key]);
+      }
     });
 
     /* ==========================================================================
