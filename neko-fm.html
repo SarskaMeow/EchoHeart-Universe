@@ -887,7 +887,7 @@
     }
 
     .daw-track-label {
-      width: 110px;
+      width: 130px;
       font-size: 0.78rem;
       font-weight: 800;
       color: var(--accent-cyan);
@@ -1374,6 +1374,9 @@
           <button class="vote-btn" style="padding: 6px 12px; font-size: 0.78rem;" onclick="dawSequencer.loadPreset('jrock')">⚡ J-Rock Power Drive</button>
           <button class="vote-btn" style="padding: 6px 12px; font-size: 0.78rem;" onclick="dawSequencer.loadPreset('synthwave')">🎹 Synthwave Midnight</button>
           <button class="vote-btn" style="padding: 6px 12px; font-size: 0.78rem;" onclick="dawSequencer.loadPreset('lofi')">☕ Lo-Fi Chill Hop</button>
+          <button class="vote-btn" style="padding: 6px 12px; font-size: 0.78rem;" onclick="dawSequencer.loadPreset('acoustic')">🌅 Acoustic Sunset Folk</button>
+          <button class="vote-btn" style="padding: 6px 12px; font-size: 0.78rem;" onclick="dawSequencer.loadPreset('cyberpunk')">🚀 Cyberpunk Keytar Rush</button>
+          <button class="vote-btn" style="padding: 6px 12px; font-size: 0.78rem;" onclick="dawSequencer.loadPreset('funk')">🕺 Funk & Slap Groove</button>
         </div>
 
         <div class="daw-grid-container" id="daw-grid-element"></div>
@@ -1401,6 +1404,14 @@
             <label>Reverb Space: <span id="fx-reverb-display">15%</span></label>
             <input type="range" min="0" max="100" value="15" oninput="dawMasterFX.setReverb(this.value)" style="width: 100%; accent-color: var(--accent-gold);">
           </div>
+          <div class="mixer-channel">
+            <label>🎸 Guitar Amp Drive: <span id="fx-amp-display">25%</span></label>
+            <input type="range" min="0" max="100" value="25" oninput="dawMasterFX.setAmpDrive(this.value)" style="width: 100%; accent-color: var(--accent-pink);">
+          </div>
+          <div class="mixer-channel">
+            <label>🎹 Piano Tone Cutoff: <span id="fx-piano-display">15 kHz</span></label>
+            <input type="range" min="1000" max="20000" value="15000" step="200" oninput="dawMasterFX.setPianoTone(this.value)" style="width: 100%; accent-color: var(--accent-cyan);">
+          </div>
         </div>
       </div>
 
@@ -1427,6 +1438,15 @@
           <button class="pad-btn" onmousedown="dawInstruments.play('slap_bass')">🎶 Slap Bass <span class="pad-key">[ Key J ]</span></button>
           <button class="pad-btn" onmousedown="dawInstruments.play('keytar_lead')">🎹 Keytar Lead <span class="pad-key">[ Key K ]</span></button>
           <button class="pad-btn" onmousedown="dawInstruments.play('vocal_chop')">🎙️ Vocal Chop <span class="pad-key">[ Key L ]</span></button>
+          
+          <!-- EXPANDED INSTRUMENTS -->
+          <button class="pad-btn" onmousedown="dawInstruments.play('elec_power_chord')">⚡ Elec Power Chord <span class="pad-key">[ Key Q ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('acoustic_strum')">🪕 Acoustic Strum <span class="pad-key">[ Key W ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('grand_piano')">🎹 Grand Piano Chord <span class="pad-key">[ Key E ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('lead_bend')">🎸 Lead Solo Bend <span class="pad-key">[ Key R ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('synth_brass')">🎺 Brass Stab <span class="pad-key">[ Key T ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('floor_tom')">🥁 Floor Tom <span class="pad-key">[ Key Y ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('ride_bell')">🛎️ Ride Bell <span class="pad-key">[ Key U ]</span></button>
         </div>
       </div>
 
@@ -1518,7 +1538,8 @@
         this.masterGain = null;
         this.distortionNode = null;
         this.filterNode = null;
-        this.convolverNode = null;
+        this.pianoFilterNode = null;
+        this.ampDriveGain = null;
         this.destinationNode = null;
       }
 
@@ -1534,13 +1555,22 @@
         this.filterNode.type = 'lowpass';
         this.filterNode.frequency.value = 20000;
 
+        this.pianoFilterNode = this.audioCtx.createBiquadFilter();
+        this.pianoFilterNode.type = 'lowpass';
+        this.pianoFilterNode.frequency.value = 15000;
+
         this.distortionNode = this.audioCtx.createWaveShaper();
         this.distortionNode.curve = this.makeDistortionCurve(0);
 
-        // Chain: Source -> Distortion -> Filter -> MasterGain -> Destination
+        this.ampDriveGain = this.audioCtx.createGain();
+        this.ampDriveGain.gain.value = 1.25;
+
+        // Chain: Source -> Distortion -> AmpDrive -> Filter -> PianoFilter -> MasterGain -> Destination
         this.masterGain.connect(this.filterNode);
-        this.filterNode.connect(this.distortionNode);
-        this.distortionNode.connect(this.audioCtx.destination);
+        this.filterNode.connect(this.pianoFilterNode);
+        this.pianoFilterNode.connect(this.distortionNode);
+        this.distortionNode.connect(this.ampDriveGain);
+        this.ampDriveGain.connect(this.audioCtx.destination);
       }
 
       makeDistortionCurve(amount) {
@@ -1583,6 +1613,19 @@
 
       setReverb(val) {
         document.getElementById('fx-reverb-display').innerText = val + '%';
+      }
+
+      setAmpDrive(val) {
+        this.init();
+        let mult = 1 + (val / 100) * 2;
+        this.ampDriveGain.gain.setValueAtTime(mult, this.audioCtx.currentTime);
+        document.getElementById('fx-amp-display').innerText = val + '%';
+      }
+
+      setPianoTone(val) {
+        this.init();
+        this.pianoFilterNode.frequency.setValueAtTime(val, this.audioCtx.currentTime);
+        document.getElementById('fx-piano-display').innerText = val >= 1000 ? (val/1000).toFixed(1) + ' kHz' : val + ' Hz';
       }
     }
 
@@ -1745,6 +1788,112 @@
             osc2.stop(now + 0.3);
             break;
           }
+
+          /* EXPANDED INSTRUMENT SYNTHESIS METHODS */
+          case 'elec_power_chord': {
+            const freqs = [130.81, 196.00, 261.63]; // C5 Power Chord
+            freqs.forEach(f => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'sawtooth';
+              osc.frequency.setValueAtTime(f, now);
+              gain.gain.setValueAtTime(0.3, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+              osc.connect(gain);
+              gain.connect(dest);
+              osc.start(now);
+              osc.stop(now + 0.5);
+            });
+            break;
+          }
+          case 'acoustic_strum': {
+            const freqs = [164.81, 220.00, 293.66, 329.63]; // E-A-D-E Strum
+            freqs.forEach((f, idx) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(f, now + idx * 0.025);
+              gain.gain.setValueAtTime(0.25, now + idx * 0.025);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.025 + 0.6);
+              osc.connect(gain);
+              gain.connect(dest);
+              osc.start(now + idx * 0.025);
+              osc.stop(now + idx * 0.025 + 0.6);
+            });
+            break;
+          }
+          case 'grand_piano': {
+            const freqs = [261.63, 329.63, 392.00, 523.25]; // C Major Chord
+            freqs.forEach(f => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(f, now);
+              gain.gain.setValueAtTime(0.3, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+              osc.connect(gain);
+              gain.connect(dest);
+              osc.start(now);
+              osc.stop(now + 0.8);
+            });
+            break;
+          }
+          case 'lead_bend': {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(440.00, now);
+            osc.frequency.exponentialRampToValueAtTime(587.33, now + 0.25); // Pitch bend A4 -> D5
+            gain.gain.setValueAtTime(0.5, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.55);
+            break;
+          }
+          case 'synth_brass': {
+            const freqs = [174.61, 220.00, 261.63, 349.23]; // F Major Brass
+            freqs.forEach(f => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'sawtooth';
+              osc.frequency.setValueAtTime(f, now);
+              gain.gain.setValueAtTime(0.2, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+              osc.connect(gain);
+              gain.connect(dest);
+              osc.start(now);
+              osc.stop(now + 0.4);
+            });
+            break;
+          }
+          case 'floor_tom': {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.setValueAtTime(90, now);
+            osc.frequency.exponentialRampToValueAtTime(25, now + 0.35);
+            gain.gain.setValueAtTime(1.0, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.35);
+            break;
+          }
+          case 'ride_bell': {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1244.51, now); // D#6 Ride Bell
+            gain.gain.setValueAtTime(0.5, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.7);
+            break;
+          }
         }
       }
     }
@@ -1761,7 +1910,11 @@
           { name: '🥁 Sub Kick', sound: 'sub_kick', steps: Array(16).fill(false) },
           { name: '💥 Snare / Clap', sound: 'snare_clap', steps: Array(16).fill(false) },
           { name: '✨ Closed Hat', sound: 'closed_hat', steps: Array(16).fill(false) },
-          { name: '🎸 Rock Bass', sound: 'rock_bass', steps: Array(16).fill(false) }
+          { name: '🎸 Rock Bass', sound: 'rock_bass', steps: Array(16).fill(false) },
+          { name: '⚡ Elec Guitar Power', sound: 'elec_power_chord', steps: Array(16).fill(false) },
+          { name: '🪕 Acoustic Strum', sound: 'acoustic_strum', steps: Array(16).fill(false) },
+          { name: '🎹 Grand Piano', sound: 'grand_piano', steps: Array(16).fill(false) },
+          { name: '🎹 Keytar Lead', sound: 'keytar_lead', steps: Array(16).fill(false) }
         ];
         this.loadPreset('jrock');
       }
@@ -1776,21 +1929,40 @@
       }
 
       loadPreset(type) {
+        this.clearGrid();
         if (type === 'jrock') {
           this.tracks[0].steps = [true,false,false,false, true,false,false,false, true,false,false,false, true,false,false,false];
           this.tracks[1].steps = [false,false,false,false, true,false,false,false, false,false,false,false, true,false,false,false];
           this.tracks[2].steps = [true,true,true,true, true,true,true,true, true,true,true,true, true,true,true,true];
           this.tracks[3].steps = [true,false,true,false, true,false,true,false, true,false,true,false, true,false,true,false];
+          this.tracks[4].steps = [true,false,false,true, false,false,true,false, true,false,false,true, false,false,true,false];
+          this.tracks[7].steps = [false,false,true,false, false,true,false,false, false,false,true,false, false,true,false,false];
         } else if (type === 'synthwave') {
           this.tracks[0].steps = [true,false,false,false, false,false,true,false, true,false,false,false, false,false,true,false];
           this.tracks[1].steps = [false,false,false,false, true,false,false,false, false,false,false,false, true,false,false,false];
           this.tracks[2].steps = [false,false,true,false, false,false,true,false, false,false,true,false, false,false,true,false];
           this.tracks[3].steps = [true,true,false,false, true,true,false,false, true,true,false,false, true,true,false,false];
+          this.tracks[7].steps = [true,false,false,true, true,false,false,true, true,false,false,true, true,false,false,true];
         } else if (type === 'lofi') {
           this.tracks[0].steps = [true,false,false,false, false,false,false,true, true,false,false,false, false,false,false,false];
           this.tracks[1].steps = [false,false,false,false, true,false,false,false, false,false,false,false, true,false,false,true];
           this.tracks[2].steps = [true,false,true,false, true,false,true,false, true,false,true,false, true,false,true,false];
-          this.tracks[3].steps = [true,false,false,true, false,false,true,false, false,true,false,false, true,false,false,false];
+          this.tracks[6].steps = [true,false,false,false, false,true,false,false, true,false,false,false, false,false,true,false];
+        } else if (type === 'acoustic') {
+          this.tracks[0].steps = [true,false,false,false, false,false,true,false, false,false,true,false, false,false,false,false];
+          this.tracks[2].steps = [true,false,true,false, true,false,true,false, true,false,true,false, true,false,true,false];
+          this.tracks[5].steps = [true,false,true,false, false,true,false,true, true,false,true,false, false,true,false,true];
+          this.tracks[6].steps = [true,false,false,false, true,false,false,false, true,false,false,false, true,false,false,false];
+        } else if (type === 'cyberpunk') {
+          this.tracks[0].steps = [true,false,true,false, true,false,true,false, true,false,true,false, true,false,true,false];
+          this.tracks[1].steps = [false,false,false,false, true,false,false,false, false,false,false,false, true,false,false,false];
+          this.tracks[4].steps = [true,true,false,true, true,true,false,true, true,true,false,true, true,true,false,true];
+          this.tracks[7].steps = [false,true,true,false, false,true,true,false, false,true,true,false, false,true,true,false];
+        } else if (type === 'funk') {
+          this.tracks[0].steps = [true,false,false,true, false,false,true,false, false,true,false,false, true,false,false,false];
+          this.tracks[1].steps = [false,false,false,false, true,false,false,false, false,false,false,false, true,false,false,false];
+          this.tracks[3].steps = [true,true,false,true, false,true,true,false, true,true,false,true, false,true,true,false];
+          this.tracks[6].steps = [false,false,true,false, false,false,false,true, false,false,true,false, false,false,false,true];
         }
         this.renderGrid();
       }
@@ -2845,6 +3017,15 @@
       if (key === 'j') dawInstruments.play('slap_bass');
       if (key === 'k') dawInstruments.play('keytar_lead');
       if (key === 'l') dawInstruments.play('vocal_chop');
+
+      /* EXPANDED KEYBOARD SHORTCUT BINDINGS */
+      if (key === 'q') dawInstruments.play('elec_power_chord');
+      if (key === 'w') dawInstruments.play('acoustic_strum');
+      if (key === 'e') dawInstruments.play('grand_piano');
+      if (key === 'r') dawInstruments.play('lead_bend');
+      if (key === 't') dawInstruments.play('synth_brass');
+      if (key === 'y') dawInstruments.play('floor_tom');
+      if (key === 'u') dawInstruments.play('ride_bell');
     });
 
     /* ==========================================================================
