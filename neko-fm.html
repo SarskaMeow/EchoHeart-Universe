@@ -9,17 +9,6 @@
   <script type="module" src="age-gate.js"></script>
   <style>
     :root {
-      /* Deep Dark Cyberpunk Pale<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>24/7 Neko FM — Girls Dead Phantom Radio Lounge & Discography Hub</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="module" src="firebase-config.js?v=2"></script>
-  <script type="module" src="age-gate.js"></script>
-  <style>
-    :root {
       /* Deep Dark Cyberpunk Palette */
       --bg-dark: #040209;
       --card-bg: rgba(15, 7, 28, 0.94);
@@ -990,12 +979,41 @@
       box-shadow: 0 0 45px rgba(255, 0, 127, 0.6);
     }
 
+    .vip-modal-card { border-color: var(--accent-gold); box-shadow: 0 0 45px rgba(255, 209, 102, 0.6); }
     .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.35rem; font-weight: 900; }
     .modal-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; margin-bottom: 20px; }
+    .modal-price-tag {
+      background: rgba(255, 209, 102, 0.18);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
     .modal-actions { display: flex; flex-direction: column; gap: 10px; }
     .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
     .google-btn { background: #ffffff; color: #111; }
+    .stripe-btn { background: linear-gradient(135deg, var(--accent-pink), var(--accent-gold)); color: #000; }
     .close-btn { background: transparent; color: var(--accent-pink); border: 1px solid var(--card-border); }
+
+    /* TAB FOOTER STATUS BAR STYLING */
+    .tab-status-footer {
+      margin-top: 24px;
+      padding: 12px 18px;
+      background: rgba(8, 3, 16, 0.85);
+      border: 1px solid var(--border-cyan);
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Courier New', monospace;
+      font-size: 0.78rem;
+      color: var(--accent-cyan);
+      box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.15);
+    }
 
     /* CYBERPUNK ANIMATIONS */
     @keyframes neonHudPulse {
@@ -1115,2031 +1133,6 @@
             ⏱️ Premiere In: <span id="soundcheck-digits">10:00 (Waiting)</span>
           </div>
           <button class="vote-btn" id="play-premiere-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 18px; font-size: 0.88rem;">
-            ▶ Stream Full Premiere
-          </button>
-        </div>
-      </div>
-
-      <div id="poll-container"></div>
-
-      <div class="suggestion-box-panel">
-        <h4 style="margin:0 0 6px; color:#ffffff; font-size: 1.1rem; text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);">💡 Suggest a Song for Girls Dead Phantom</h4>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Have a J-Rock, Vocaloid, or anime track you want Akari Minase, Nekomi, Sera, and Aoi to cover?</p>
-        <input type="text" id="song-suggestion-input" class="form-control-poll" placeholder="e.g. 'Subterranean Resonance (Keytar & Acoustic Duo)'">
-        <button class="vote-btn" onclick="submitSongSuggestion()">🌸 Submit Suggestion to Prep Room B</button>
-      </div>
-    </section>
-
-    <!-- TAB 2: NEKO SYNTH DECK WITH LIVE SPECTRUM CANVAS & TELEMETRY HUD -->
-    <section id="youtube-tab" class="tab-content">
-      <div class="neko-radio-deck">
-        <div class="yt-radio-card">
-          
-          <div class="lcd-header">
-            <span class="live-indicator"><span class="pulse-dot"></span> LIVE BROADCAST</span>
-            <span class="deck-model">NEKO-88 DIRECT SYNTH DECK</span>
-          </div>
-
-          <!-- SPECTRUM VISUALIZER CANVAS WITH HUD TELEMETRY OVERLAY -->
-          <div class="synth-visualizer-wrapper">
-            <!-- Telemetry HUD Text Overlay -->
-            <div style="position: absolute; top: 8px; left: 12px; z-index: 10; font-family: 'Courier New', monospace; font-size: 0.7rem; color: var(--accent-cyan); text-shadow: 0 0 6px var(--accent-cyan); pointer-events: none; display: flex; gap: 12px; opacity: 0.85;">
-              <span>RATE: 44.1 kHz</span>
-              <span>BITRATE: 320 kbps</span>
-              <span>PEAK: -1.8 dB</span>
-            </div>
-
-            <!-- Floating Mode Toggle Button -->
-            <div style="position: absolute; top: 6px; right: 8px; z-index: 10;">
-              <button class="visualizer-toggle-btn" id="viz-mode-toggle-btn" onclick="toggleVisualizerMode()">
-                📊 SPECTRUM
-              </button>
-            </div>
-
-            <canvas id="synth-visualizer-canvas"></canvas>
-          </div>
-
-          <!-- LCD Screen -->
-          <div class="lcd-screen">
-            <div class="lcd-meta">
-              <div class="lcd-station-name" id="yt-channel-title">J-Pop Powerplay Kawaii 🌸</div>
-              <div class="lcd-status-msg" id="yt-status-text">SYSTEM READY • PURE DIRECT STREAM</div>
-            </div>
-            <div class="lcd-eq-bars" id="yt-eq-visualizer">
-              <span></span><span></span><span></span><span></span><span></span><span></span>
-            </div>
-          </div>
-
-          <!-- Presets -->
-          <div class="station-presets">
-            <button class="preset-btn active" onclick="selectSynthPreset(0)">🌸 J-Pop Kawaii</button>
-            <button class="preset-btn" onclick="selectSynthPreset(1)">⚡ J-Rock Powerplay</button>
-            <button class="preset-btn" onclick="selectSynthPreset(2)">🎤 J-Club Hip Hop</button>
-            <button class="preset-btn" onclick="selectSynthPreset(3)">🎙️ Japan Hits</button>
-          </div>
-
-          <!-- Controls -->
-          <div class="radio-deck-controls">
-            <button id="yt-power-btn" class="power-btn" onclick="toggleSynthPower()">
-              ▶ PLAY
-            </button>
-
-            <div class="volume-slider-group">
-              <span class="vol-icon">🔊</span>
-              <input type="range" id="yt-vol-slider" min="0" max="100" value="70" oninput="changeSynthVolume(this.value)">
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: DISCOGRAPHY & PREVIEW HUB -->
-    <section id="discography-tab" class="tab-content">
-      
-      <div class="gdp-hero-banner">
-        <div class="gdp-hero-top">
-          <div>
-            <h2 class="gdp-hero-title">🎸 GIRLS DEAD PHANTOM</h2>
-            <p style="margin: 6px 0 0; color: var(--accent-cyan); font-size: 0.9rem; text-shadow: 0 0 6px var(--cyan-glow);">
-              Prep Room B Sound Engineers • Sakuraoka High Underground Ensemble
-            </p>
-          </div>
-          <div style="text-align: right;">
-            <span class="premiere-badge" style="background: linear-gradient(135deg, var(--accent-gold), var(--accent-pink)); color: #000; box-shadow: 0 0 14px var(--gold-glow);">
-              ✨ 10 OFFICIAL RELEASES
-            </span>
-          </div>
-        </div>
-
-        <p style="color: var(--text-main); font-size: 0.9rem; line-height: 1.6; margin: 0 0 12px;">
-          Welcome to the official <strong>Girls Dead Phantom</strong> audio lounge! Formed inside Sakuraoka High's Prep Room B by Drums <strong>Akari Minase</strong>. Explore all 10 official studio releases, subterranean B-Sides, and preview 20-second teasers directly in your browser!
-        </p>
-
-        <div class="gdp-roster-chips">
-          <div class="member-chip">🥁 Akari Minase <span class="member-role">(Drums)</span></div>
-          <div class="member-chip">🎙️ Nekomi <span class="member-role">(Vocals & Guitar)</span></div>
-          <div class="member-chip">🎹 Sera <span class="member-role">(Keytar & Vocals)</span></div>
-          <div class="member-chip">🎸 Aoi <span class="member-role">(Bass)</span></div>
-        </div>
-      </div>
-
-      <div class="gdp-spotlight-box">
-        <div class="premiere-info-group">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <div class="soundwave-box">
-              <span class="soundwave-bar"></span>
-              <span class="soundwave-bar"></span>
-              <span class="soundwave-bar"></span>
-              <span class="soundwave-bar"></span>
-              <span class="soundwave-bar"></span>
-            </div>
-            <span class="premiere-badge">⚡ QUEUED PREMIERE WINNER</span>
-          </div>
-          
-          <h3 class="premiere-title" id="disco-deck-track-name" style="font-size: 1.25rem;">"Subterranean Resonance (Official Studio Cut)"</h3>
-          <p class="premiere-sub">Synchronized with Girls Dead Phantom Poll Leader • Auto-plays when soundcheck finishes</p>
-        </div>
-
-        <div class="premiere-actions-side">
-          <div class="premiere-10min-timer-badge">
-            ⏱️ Premiere In: <span id="hub-soundcheck-digits">10:00 (Waiting)</span>
-          </div>
-          <button class="vote-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 20px; font-size: 0.9rem;">
-            ▶ Stream Full On-Deck Track
-          </button>
-        </div>
-      </div>
-
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h3 style="margin: 0; color: #ffffff; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);">
-          CD Official Studio Tracklist <span style="font-size: 0.8rem; color: var(--accent-pink); font-weight: 600;">(20s Preview Teasers)</span>
-        </h3>
-        <span style="font-size: 0.8rem; color: var(--text-muted);">Showing 10 Tracks</span>
-      </div>
-
-      <div class="discography-grid" id="discography-container"></div>
-    </section>
-
-    <!-- TAB 4: SOUNDBOARD, LO-FI MIXER & DREAM SETLIST CREATOR -->
-    <section id="soundboard-tab" class="tab-content">
-      
-      <!-- PREP ROOM B INSTRUMENT SOUNDBOARD -->
-      <div class="suggestion-box-panel" style="margin-top: 0; margin-bottom: 24px;">
-        <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 6px;">🥁 Prep Room B Soundboard & Jam Station</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Tap the pads or use keyboard shortcuts (A, S, D, F, G, H) to trigger instant live instruments and create your own beats!</p>
-        <div class="soundboard-grid">
-          <button class="pad-btn" onclick="triggerPadSound('kick')">🥁 Kick Drum <span class="pad-key">[ Key A ]</span></button>
-          <button class="pad-btn" onclick="triggerPadSound('snare')">💥 Snare Hit <span class="pad-key">[ Key S ]</span></button>
-          <button class="pad-btn" onclick="triggerPadSound('hihat')">✨ Hi-Hat <span class="pad-key">[ Key D ]</span></button>
-          <button class="pad-btn" onclick="triggerPadSound('bass')">🎸 Bass Slap <span class="pad-key">[ Key F ]</span></button>
-          <button class="pad-btn" onclick="triggerPadSound('synth')">🎹 Synth Riser <span class="pad-key">[ Key G ]</span></button>
-          <button class="pad-btn" onclick="triggerPadSound('count')">🎙️ "1, 2, 3, GO!" <span class="pad-key">[ Key H ]</span></button>
-        </div>
-      </div>
-
-      <!-- MIDNIGHT LO-FI SOUNDSCAPE MIXER -->
-      <div class="suggestion-box-panel" style="margin-bottom: 24px;">
-        <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 6px;">🌙 Midnight Lo-Fi Soundscape Mixer</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Mix ambient background layers under your favorite tracks!</p>
-        <div class="mixer-controls">
-          <div class="mixer-channel">
-            <label>🌧️ Midnight Rain</label>
-            <input type="range" min="0" max="100" value="30" style="width: 100%; accent-color: var(--accent-cyan);">
-          </div>
-          <div class="mixer-channel">
-            <label>☕ Vinyl Crackle & Mug Stir</label>
-            <input type="range" min="0" max="100" value="20" style="width: 100%; accent-color: var(--accent-pink);">
-          </div>
-          <div class="mixer-channel">
-            <label>🍃 Rooftop Breeze</label>
-            <input type="range" min="0" max="100" value="0" style="width: 100%; accent-color: var(--accent-gold);">
-          </div>
-        </div>
-      </div>
-
-      <!-- CUSTOM DREAM CONCERT SETLIST CREATOR -->
-      <div class="suggestion-box-panel">
-        <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 6px;">📝 Custom Dream Concert Setlist Creator</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Drag tracks from the pool into your 4-song dream concert setlist!</p>
-        
-        <div class="setlist-builder-container">
-          <!-- Track Pool -->
-          <div>
-            <h4 style="color: var(--accent-cyan); margin-bottom: 8px;">Available Catalog Tracks</h4>
-            <div id="available-tracks-pool" style="display: flex; flex-direction: column; gap: 8px;">
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-1">1. Subterranean Resonance</div>
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-2">2. Keytar Midnight Run</div>
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-3">3. Sakuraoka Dusk Echoes</div>
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-4">4. Cavern Reverb Overdrive</div>
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-5">5. Phantom Echoes in Prep Room B</div>
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-6">6. 180 BPM Velocity</div>
-            </div>
-          </div>
-
-          <!-- Drop Slot -->
-          <div>
-            <h4 style="color: var(--accent-pink); margin-bottom: 8px;">Your 4-Song Concert Setlist</h4>
-            <div class="drop-zone" id="setlist-drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-              <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin: auto;">Drop tracks here to build your setlist...</div>
-            </div>
-            <button class="vote-btn" style="width: 100%; margin-top: 10px;" onclick="copySetlistTicket()">🎫 Generate Shareable Setlist Ticket</button>
-          </div>
-        </div>
-      </div>
-
-    </section>
-  </main>
-
-  <script src="global-player.js"></script>
-  <script>
-    const RADIO_STATIONS = {
-      twilight: [
-        { freq: "98.4 FM", name: "LISTEN.moe (24/7 Anime & Vocaloid)", genre: "Anime & Vocaloid Stream", url: "http://kathy.torontocast.com:3350/stream" },
-        { freq: "91.5 FM", name: "Gensokyo Radio (J-Rock & Arrangements)", genre: "Doujin Rock & Arrangements", url: "https://kathy.torontocast.com:3060/stream" },
-        { freq: "95.2 FM", name: "R/a/dio (24/7 Anime & J-Pop)", genre: "Anime & J-Pop Broadcast", url: "https://relay0.r-a-d.io/main.mp3" },
-        { freq: "106.8 FM", name: "Radio Animu J-Pop Stream", genre: "Kawaii Beats & Anison Pop", url: "https://kathy.torontocast.com/jrock" }
-      ],
-      basement: [
-        { freq: "88.0 FM", name: "J-Rock Powerplay Underground", genre: "Heavy Rock & Guitar Riffs", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
-        { freq: "108.5 FM", name: "Vocaloid Radio 24/7", genre: "180 BPM High-Energy Vocaloid", url: "https://vocaloid.radioca.st/stream" },
-        { freq: "95.7 FM", name: "Japan-a-Radio Vocaloid Set", genre: "Underground Vocaloid Mixes", url: "https://audio.misproductions.com/japan48k" },
-        { freq: "104.1 FM", name: "R/a/dio Underground Stream", genre: "Non-stop High-Quality Anime Beats", url: "https://relay0.r-a-d.io/main.mp3" }
-      ],
-      backstage: [
-        { freq: "101.1 FM", name: "🎸 Nightwave Plaza VIP Stream", genre: "80s City Pop & Vaporwave Hits", url: "https://plaza.one/stream" },
-        { freq: "102.5 FM", name: "⚡ Gensokyo Radio HQ Backstage", genre: "Heavy Guitars & Underground Riffs", url: "https://stream.gensokyoradio.net/1" },
-        { freq: "104.3 FM", name: "🌸 LISTEN.moe High-Bitrate HQ", genre: "Underground Anime & Vocaloid Mixes", url: "https://listen.moe/fallback" },
-        { freq: "107.9 FM", name: "🎹 Japan-a-Radio HD Stream", genre: "Non-stop High-Quality J-Pop & Rock", url: "https://audio.misproductions.com/japan48k" }
-      ]
-    };
-
-    const DISCOGRAPHY_CATALOG = [
-      { id: 'gdp-1', trackNo: '01', title: 'Subterranean Resonance', type: 'Debut Single (2026)', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/fallback' },
-      { id: 'gdp-2', trackNo: '02', title: 'Keytar Midnight Run', type: '180 BPM Synth Remix', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.gensokyoradio.net/1' },
-      { id: 'gdp-3', trackNo: '03', title: 'Sakuraoka Dusk Echoes', type: 'Live Acoustic Session', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://relay0.r-a-d.io/main.mp3' },
-      { id: 'gdp-4', trackNo: '04', title: 'Cavern Reverb Overdrive', type: 'Subterranean B-Side', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://plaza.one/stream' },
-      { id: 'gdp-5', trackNo: '05', title: 'Phantom Echoes in Prep Room B', type: 'Studio Cut', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/fallback' },
-      { id: 'gdp-6', trackNo: '06', title: '180 BPM Velocity', type: 'Fast Tempo Rock', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.gensokyoradio.net/1' },
-      { id: 'gdp-7', trackNo: '07', title: 'Dusk Over Sakuraoka', type: 'Melodic Punk', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://relay0.r-a-d.io/main.mp3' },
-      { id: 'gdp-8', trackNo: '08', title: 'Locker 102 Whispers', type: 'Dark Pop Underground', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://plaza.one/stream' },
-      { id: 'gdp-9', trackNo: '09', title: 'Akari\'s Crimson Riff', type: 'Guitar Instrumental', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://stream.gensokyoradio.net/1' },
-      { id: 'gdp-10', trackNo: '10', title: 'After Dark Distortion', type: 'Uncompressed Master Stem', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://listen.moe/fallback' }
-    ];
-
-    const synthPresets = [
-      { name: "J-Pop Powerplay Kawaii 🌸", url: "https://kathy.torontocast.com:3060/stream", desc: "Asia DREAM Radio • Kawaii J-Pop" },
-      { name: "J-Rock Powerplay ⚡", url: "https://kathy.torontocast.com:3340/stream", desc: "Asia DREAM Radio • High-Energy J-Rock" },
-      { name: "J-Club Hip Hop 🎤", url: "https://kathy.torontocast.com:3350/stream", desc: "Asia DREAM Radio • J-Club & Urban" },
-      { name: "Japan Hits 🎙️", url: "https://quincy.torontocast.com:2020/stream", desc: "Asia DREAM Radio • Top Japanese Hits" }
-    ];
-
-    let currentSynthPresetIdx = 0;
-    let isSynthPlaying = false;
-    let trackRefreshTimer = null;
-    const synthAudioPlayer = document.getElementById('synth-deck-audio');
-
-    // WEB AUDIO API VISUALIZER & MODE TOGGLE STATE
-    let synthAudioCtx = null;
-    let synthAnalyser = null;
-    let synthSource = null;
-    let synthAnimFrame = null;
-    let visualizerMode = 'bars'; // 'bars' or 'oscilloscope'
-    let phase = 0;
-
-    function toggleVisualizerMode() {
-      visualizerMode = (visualizerMode === 'bars') ? 'oscilloscope' : 'bars';
-      const btn = document.getElementById('viz-mode-toggle-btn');
-      if (btn) {
-        btn.innerText = (visualizerMode === 'bars') ? '📊 SPECTRUM' : '🌊 WAVEFORM';
-      }
-    }
-
-    function initSynthVisualizer() {
-      if (synthAudioCtx) return;
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        synthAudioCtx = new AudioContext();
-        synthAnalyser = synthAudioCtx.createAnalyser();
-        synthAnalyser.fftSize = 256;
-        
-        synthSource = synthAudioCtx.createMediaElementSource(synthAudioPlayer);
-        synthSource.connect(synthAnalyser);
-        synthAnalyser.connect(synthAudioCtx.destination);
-      } catch (e) {
-        console.warn("Synth visualizer audio context setup warning:", e);
-      }
-    }
-
-    function renderSynthVisualizer() {
-      const canvas = document.getElementById('synth-visualizer-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
-
-      const bufferLength = synthAnalyser ? synthAnalyser.frequencyBinCount : 64;
-      const dataArray = new Uint8Array(bufferLength);
-
-      function draw() {
-        synthAnimFrame = requestAnimationFrame(draw);
-        phase += 0.05;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        ctx.strokeStyle = 'rgba(0, 240, 255, 0.07)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        for (let gx = 0; gx < canvas.width; gx += 24) {
-          ctx.moveTo(gx, 0); ctx.lineTo(gx, canvas.height);
-        }
-        for (let gy = 0; gy < canvas.height; gy += 20) {
-          ctx.moveTo(0, gy); ctx.lineTo(canvas.width, gy);
-        }
-        ctx.stroke();
-
-        if (visualizerMode === 'bars') {
-          let hasData = false;
-          if (synthAnalyser && isSynthPlaying) {
-            synthAnalyser.getByteFrequencyData(dataArray);
-            for (let i = 0; i < bufferLength; i++) {
-              if (dataArray[i] > 0) { hasData = true; break; }
-            }
-          }
-
-          const barWidth = (canvas.width / bufferLength) * 1.8;
-          let x = 0;
-
-          for (let i = 0; i < bufferLength; i++) {
-            let val = dataArray[i];
-            if (!hasData) {
-              val = isSynthPlaying 
-                ? Math.floor((Math.sin(phase + i * 0.3) + 1) * 60 + Math.random() * 30)
-                : Math.floor((Math.sin(phase * 0.5 + i * 0.2) + 1) * 8 + 4);
-            }
-
-            let barHeight = (val / 255) * canvas.height * 0.85;
-            if (barHeight < 3) barHeight = 3;
-
-            const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-            gradient.addColorStop(0, '#9d4edd');
-            gradient.addColorStop(0.5, '#ff007f');
-            gradient.addColorStop(1, '#00f0ff');
-
-            ctx.fillStyle = gradient;
-            ctx.shadowBlur = isSynthPlaying ? 12 : 4;
-            ctx.shadowColor = '#00f0ff';
-
-            ctx.beginPath();
-            ctx.roundRect(x, canvas.height - barHeight, barWidth - 3, barHeight, [4, 4, 0, 0]);
-            ctx.fill();
-
-            x += barWidth;
-          }
-
-        } else {
-          let hasData = false;
-          if (synthAnalyser && isSynthPlaying) {
-            synthAnalyser.getByteTimeDomainData(dataArray);
-            for (let i = 0; i < bufferLength; i++) {
-              if (Math.abs(dataArray[i] - 128) > 2) { hasData = true; break; }
-            }
-          }
-
-          ctx.lineWidth = 2.5;
-          ctx.strokeStyle = '#00f0ff';
-          ctx.shadowBlur = isSynthPlaying ? 14 : 4;
-          ctx.shadowColor = '#00f0ff';
-
-          ctx.beginPath();
-
-          const sliceWidth = canvas.width / bufferLength;
-          let x = 0;
-
-          for (let i = 0; i < bufferLength; i++) {
-            let v = dataArray[i] / 128.0;
-            if (!hasData) {
-              v = isSynthPlaying 
-                ? 1 + Math.sin(phase * 2 + i * 0.25) * 0.35 + (Math.random() - 0.5) * 0.1
-                : 1 + Math.sin(phase * 0.8 + i * 0.15) * 0.08;
-            }
-
-            const y = (v * canvas.height) / 2;
-
-            if (i === 0) {
-              ctx.moveTo(x, y);
-            } else {
-              ctx.lineTo(x, y);
-            }
-
-            x += sliceWidth;
-          }
-
-          ctx.lineTo(canvas.width, canvas.height / 2);
-          ctx.stroke();
-        }
-      }
-
-      draw();
-    }
-
-    function startTrackRefreshTimer() {
-      stopTrackRefreshTimer();
-      triggerShazamFingerprint();
-
-      trackRefreshTimer = setInterval(() => {
-        if (isSynthPlaying && synthAudioPlayer && !synthAudioPlayer.paused) {
-          triggerShazamFingerprint();
-        }
-      }, 15000);
-    }
-
-    function stopTrackRefreshTimer() {
-      if (trackRefreshTimer) {
-        clearInterval(trackRefreshTimer);
-        trackRefreshTimer = null;
-      }
-    }
-
-    function syncRadioState(isPlaying, url, title, speaker) {
-      localStorage.setItem('neko_fm_active', isPlaying ? 'true' : 'false');
-      localStorage.setItem('neko_radio_playing', isPlaying ? 'true' : 'false');
-      if (url) localStorage.setItem('neko_radio_url', url);
-      if (title) localStorage.setItem('neko_radio_title', title);
-      if (speaker) localStorage.setItem('neko_radio_speaker', speaker);
-    }
-
-    function toggleSynthPower() {
-      stopActivePreview();
-
-      const statusMsg = document.getElementById('yt-status-text');
-      const powerBtn = document.getElementById('yt-power-btn');
-      const eqVisualizer = document.getElementById('yt-eq-visualizer');
-
-      initSynthVisualizer();
-      if (synthAudioCtx && synthAudioCtx.state === 'suspended') {
-        synthAudioCtx.resume();
-      }
-
-      if (isSynthPlaying) {
-        synthAudioPlayer.pause();
-        isSynthPlaying = false;
-        stopTrackRefreshTimer();
-        syncRadioState(false);
-        if (statusMsg) statusMsg.innerText = "STANDBY • PRESS PLAY";
-        if (powerBtn) powerBtn.innerText = "▶ PLAY";
-        if (eqVisualizer) eqVisualizer.classList.remove('playing');
-      } else {
-        const preset = synthPresets[currentSynthPresetIdx];
-        if (synthAudioPlayer.src !== preset.url) {
-          synthAudioPlayer.src = preset.url;
-        }
-
-        synthAudioPlayer.play().then(() => {
-          isSynthPlaying = true;
-          syncRadioState(true, preset.url, preset.name, preset.desc);
-          if (statusMsg) statusMsg.innerText = "STREAMING • " + preset.desc;
-          if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
-          if (eqVisualizer) eqVisualizer.classList.add('playing');
-          startTrackRefreshTimer();
-        }).catch(err => {
-          console.error("Playback error:", err);
-          alert("Click PLAY again to allow browser audio playback!");
-        });
-      }
-    }
-
-    function selectSynthPreset(presetIndex) {
-      currentSynthPresetIdx = presetIndex;
-      const selected = synthPresets[presetIndex];
-
-      const btns = document.querySelectorAll('#youtube-tab .station-presets .preset-btn');
-      btns.forEach((b, idx) => b.classList.toggle('active', idx === presetIndex));
-
-      const titleEl = document.getElementById('yt-channel-title');
-      if (titleEl) titleEl.innerText = selected.name;
-
-      if (isSynthPlaying) {
-        synthAudioPlayer.src = selected.url;
-        synthAudioPlayer.play().then(() => {
-          syncRadioState(true, selected.url, selected.name, selected.desc);
-          const statusMsg = document.getElementById('yt-status-text');
-          if (statusMsg) statusMsg.innerText = "STREAMING • " + selected.desc;
-          startTrackRefreshTimer();
-        }).catch(err => console.error(err));
-      } else {
-        triggerShazamFingerprint();
-        const statusMsg = document.getElementById('yt-status-text');
-        if (statusMsg) statusMsg.innerText = "READY • " + selected.desc;
-      }
-    }
-
-    function changeSynthVolume(val) {
-      if (synthAudioPlayer) {
-        synthAudioPlayer.volume = val / 100;
-        localStorage.setItem('neko_fm_volume', synthAudioPlayer.volume.toString());
-      }
-    }
-
-    async function triggerShazamFingerprint() {
-      const statusMsgEl = document.getElementById('yt-status-text');
-      const titleEl = document.getElementById('yt-channel-title');
-
-      const currentPreset = synthPresets[currentSynthPresetIdx];
-      const lambdaUrl = "https://5x4kcoismesnfh7b5rcqllrcau0pxdbt.lambda-url.us-east-2.on.aws/";
-      const endpoint = `${lambdaUrl}?url=${encodeURIComponent(currentPreset.url)}`;
-
-      try {
-        const res = await fetch(endpoint);
-        const data = await res.json();
-
-        if (data.success && (data.title || data.raw)) {
-          const rawString = data.raw || `${data.artist} - ${data.title}`;
-          const parts = rawString.split(/\s*[-–—－]\s*/);
-
-          let artistName = data.artist;
-          let trackTitle = data.title;
-
-          if (parts.length >= 2) {
-            artistName = parts[0].trim();
-            trackTitle = parts.slice(1).join(' - ').trim();
-          } else {
-            trackTitle = rawString.trim();
-            artistName = currentPreset.name;
-          }
-
-          if (titleEl) titleEl.innerText = `🎵 ${trackTitle}`;
-          if (statusMsgEl) statusMsgEl.innerText = `🎤 ${artistName} • ${currentPreset.name}`;
-
-        } else {
-          if (titleEl) titleEl.innerText = currentPreset.name;
-          if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
-        }
-      } catch (err) {
-        console.error("Metadata fetch error:", err);
-        if (titleEl) titleEl.innerText = currentPreset.name;
-        if (statusMsgEl) statusMsgEl.innerText = `📡 LIVE • ${currentPreset.desc}`;
-      }
-    }
-
-    function generateRandomPollItems() {
-      const performerOptions = [
-        'Akari Minase (Drums) & Nekomi (Vocals)',
-        'Sera (Keytar) & Aoi (Bass)',
-        'Girls Dead Phantom Ensemble',
-        'Akari Minase (Drums) & Aoi (Bass)'
-      ];
-
-      const shuffled = [...DISCOGRAPHY_CATALOG].sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, 4);
-
-      return selected.map((track, idx) => ({
-        id: idx,
-        title: `"${track.title}"`,
-        badge: track.type,
-        performers: performerOptions[idx % performerOptions.length],
-        streamUrl: track.url,
-        votes: 0
-      }));
-    }
-
-    let currentMode = 'twilight';
-    let masterTimerInterval = null;
-    let previewTimerInterval = null;
-    let previewTimeRemaining = 0;
-    let activePreviewTrackId = null;
-    let lastProcessedHour = localStorage.getItem('gdp_last_processed_hour');
-
-    const audioPlayer = document.getElementById('radio-audio-player');
-
-    let userState = {
-      isLoggedIn: true,
-      isVIP: true
-    };
-
-    function getStoredPollData() {
-      try {
-        const stored = localStorage.getItem('gdp_poll_votes_data');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-        }
-      } catch (e) { console.error("Error reading stored poll data:", e); }
-      return generateRandomPollItems();
-    }
-
-    function saveStoredPollData(data) {
-      try {
-        localStorage.setItem('gdp_poll_votes_data', JSON.stringify(data));
-      } catch (e) { console.error("Error saving poll data:", e); }
-    }
-
-    let pollData = getStoredPollData();
-
-    function getCurrentMode() {
-      return localStorage.getItem('neko_active_mode') || 'twilight';
-    }
-
-    function applyThemeMode(mode) {
-      const body = document.body;
-      body.classList.remove('twilight-mode', 'basement-mode', 'backstage-mode');
-      body.classList.add(`${mode}-mode`);
-    }
-
-    function initMasterTimers() {
-      updateTimersLoop();
-      if (masterTimerInterval) clearInterval(masterTimerInterval);
-      masterTimerInterval = setInterval(updateTimersLoop, 1000);
-    }
-
-    function updateTimersLoop() {
-      const pollTimerDigits = document.getElementById('poll-countdown-digits');
-      const pollTimerLabel = document.getElementById('poll-timer-label');
-      const soundcheckDigits = document.getElementById('soundcheck-digits');
-      const hubSoundcheckDigits = document.getElementById('hub-soundcheck-digits');
-
-      const now = Date.now();
-      const hourMs = 60 * 60 * 1000;
-      const currentHourIndex = Math.floor(now / hourMs);
-      const currentMsInHour = now % hourMs;
-      const votingDurationMs = 50 * 60 * 1000;
-
-      if (lastProcessedHour !== null && parseInt(lastProcessedHour, 10) !== currentHourIndex) {
-        pollData = generateRandomPollItems();
-        localStorage.removeItem('neko_voted_poll_id');
-        saveStoredPollData(pollData);
-        renderSetlistPolls();
-      }
-      lastProcessedHour = currentHourIndex.toString();
-      localStorage.setItem('gdp_last_processed_hour', lastProcessedHour);
-
-      if (currentMsInHour < votingDurationMs) {
-        const diff = votingDurationMs - currentMsInHour;
-        const m = Math.floor(diff / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-        const timeStr = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-
-        if (pollTimerDigits) pollTimerDigits.innerText = timeStr;
-        if (pollTimerLabel) pollTimerLabel.innerText = "⚡ Voting Closes In";
-
-        if (soundcheckDigits) soundcheckDigits.innerText = "10:00 (Waiting)";
-        if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = "10:00 (Waiting)";
-      } else {
-        const diff = hourMs - currentMsInHour;
-        const scM = Math.floor(diff / (1000 * 60));
-        const scS = Math.floor((diff % (1000 * 60)) / 1000);
-        const scTimeStr = `${scM.toString().padStart(2, '0')}:${scS.toString().padStart(2, '0')}`;
-
-        if (pollTimerDigits) pollTimerDigits.innerText = "LOCKED";
-        if (pollTimerLabel) pollTimerLabel.innerText = "🔒 Voting Closed";
-
-        if (soundcheckDigits) soundcheckDigits.innerText = scTimeStr;
-        if (hubSoundcheckDigits) hubSoundcheckDigits.innerText = scTimeStr;
-      }
-    }
-
-    function getWinningTrack() {
-      if (!pollData || pollData.length === 0) return { title: "Subterranean Resonance", badge: "Studio Cut", streamUrl: "https://listen.moe/fallback", performers: "Girls Dead Phantom" };
-      let highest = pollData[0];
-      pollData.forEach(item => { if (item.votes > highest.votes) highest = item; });
-      return highest;
-    }
-
-    function playOfficialSongPremiere() {
-      const winner = getWinningTrack();
-      const btn = document.getElementById('play-premiere-btn');
-
-      stopActivePreview();
-
-      if (isSynthPlaying) {
-        toggleSynthPower();
-      }
-
-      if (audioPlayer.src !== winner.streamUrl || audioPlayer.paused) {
-        audioPlayer.src = winner.streamUrl;
-        audioPlayer.play().then(() => {
-          syncRadioState(true, winner.streamUrl, winner.title, winner.performers);
-          if (btn) btn.innerText = "⏸ Pause Premiere";
-        }).catch(err => {
-          console.log("Audio play error:", err);
-          alert(`🌸 Now Premiering: ${winner.title}! Click again if blocked by browser audio settings.`);
-        });
-      } else {
-        audioPlayer.pause();
-        syncRadioState(false);
-        if (btn) btn.innerText = "▶ Stream Full Premiere";
-      }
-    }
-
-    function play20sTrackPreview(trackId, url, trackTitle) {
-      if (activePreviewTrackId === trackId && !audioPlayer.paused) {
-        stopActivePreview();
-        return;
-      }
-
-      stopActivePreview();
-
-      if (isSynthPlaying) {
-        toggleSynthPower();
-      }
-
-      audioPlayer.src = url;
-      audioPlayer.play().then(() => {
-        activePreviewTrackId = trackId;
-        syncRadioState(true, url, trackTitle, 'Girls Dead Phantom Teaser');
-        
-        previewTimeRemaining = 20;
-        renderDiscography();
-
-        if (previewTimerInterval) clearInterval(previewTimerInterval);
-        previewTimerInterval = setInterval(() => {
-          previewTimeRemaining--;
-          const timerEl = document.getElementById(`preview-timer-${trackId}`);
-          if (timerEl) timerEl.innerText = `${previewTimeRemaining}s`;
-
-          if (previewTimeRemaining <= 0) {
-            stopActivePreview();
-          }
-        }, 1000);
-      }).catch(err => {
-        console.log("Playback error:", err);
-        alert(`Click again to start playback for "${trackTitle}"`);
-      });
-    }
-
-    function stopActivePreview() {
-      if (previewTimerInterval) clearInterval(previewTimerInterval);
-      audioPlayer.pause();
-      if (synthAudioPlayer) synthAudioPlayer.pause();
-      isSynthPlaying = false;
-      stopTrackRefreshTimer();
-      syncRadioState(false);
-      activePreviewTrackId = null;
-      previewTimeRemaining = 0;
-      
-      const statusMsg = document.getElementById('yt-status-text');
-      const powerBtn = document.getElementById('yt-power-btn');
-      const eqVisualizer = document.getElementById('yt-eq-visualizer');
-      if (statusMsg) statusMsg.innerText = "STANDBY • PRESS PLAY";
-      if (powerBtn) powerBtn.innerText = "▶ PLAY";
-      if (eqVisualizer) eqVisualizer.classList.remove('playing');
-
-      renderDiscography();
-    }
-
-    function renderSetlistPolls() {
-      const container = document.getElementById('poll-container');
-      if (!container) return;
-
-      container.innerHTML = '';
-
-      const totalVotes = pollData.reduce((sum, item) => sum + item.votes, 0);
-      const votedSongId = localStorage.getItem('neko_voted_poll_id');
-
-      const winner = getWinningTrack();
-      const trackTitleEl = document.getElementById('winning-track-name');
-      const discoDeckEl = document.getElementById('disco-deck-track-name');
-
-      if (trackTitleEl) trackTitleEl.innerText = `${winner.title} (${winner.badge})`;
-      if (discoDeckEl) discoDeckEl.innerText = `${winner.title} (${winner.badge})`;
-
-      pollData.forEach(item => {
-        const percent = totalVotes > 0 ? Math.round((item.votes / totalVotes) * 100) : 0;
-        const isVoted = votedSongId !== null && parseInt(votedSongId) === item.id;
-
-        const card = document.createElement('div');
-        card.className = `poll-card ${isVoted ? 'voted-card' : ''}`;
-        
-        let voteBtnText = isVoted ? '✓ Voted' : '⚡ Vote Song';
-
-        const buttonHTML = `<button class="vote-btn ${isVoted ? 'voted-btn' : ''}" onclick="castSongVote(${item.id})">
-                            ${voteBtnText}
-                           </button>`;
-
-        card.innerHTML = `
-          <div class="poll-info-top">
-            <span class="poll-title">${item.title} <span class="poll-badge">${item.badge}</span></span>
-            <span class="poll-stats">${item.votes} Votes (${percent}%)</span>
-          </div>
-          <div class="poll-progress-bg">
-            <div class="poll-progress-fill" style="width: ${percent}%;"></div>
-          </div>
-          <div class="poll-actions-bottom">
-            <span class="poll-performers">👥 ${item.performers}</span>
-            ${buttonHTML}
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function castSongVote(id) {
-      const existingVote = localStorage.getItem('neko_voted_poll_id');
-
-      if (existingVote !== null) {
-        if (parseInt(existingVote) === id) {
-          alert("🌸 You've already voted for this track!");
-          return;
-        } else {
-          const prevItem = pollData.find(item => item.id === parseInt(existingVote));
-          if (prevItem && prevItem.votes > 0) {
-            prevItem.votes = Math.max(0, prevItem.votes - 1);
-          }
-        }
-      }
-
-      const currentItem = pollData.find(item => item.id === id);
-      if (currentItem) currentItem.votes += 1;
-
-      localStorage.setItem('neko_voted_poll_id', id);
-      saveStoredPollData(pollData);
-      renderSetlistPolls();
-    }
-
-    function renderDiscography() {
-      const container = document.getElementById('discography-container');
-      if (!container) return;
-
-      container.innerHTML = '';
-
-      DISCOGRAPHY_CATALOG.forEach(track => {
-        let actionHTML = '';
-        const isPreviewingThis = activePreviewTrackId === track.id;
-
-        if (isPreviewingThis) {
-          actionHTML = `<button class="vote-btn" style="background:#ff007f; color:#fff;" onclick="stopActivePreview()">
-                        ⏸ Stop (<span id="preview-timer-${track.id}">${previewTimeRemaining}s</span>)
-                      </button>`;
-        } else {
-          actionHTML = `<button class="vote-btn" onclick="play20sTrackPreview('${track.id}', '${track.url}', '${track.title}')">
-                        ▶ 20s Preview
-                      </button>`;
-        }
-
-        const card = document.createElement('div');
-        card.className = 'disco-track-card';
-        card.innerHTML = `
-          <div class="vinyl-icon-box">💿</div>
-          <div style="flex: 1;">
-            <div class="disco-title">${track.trackNo}. ${track.title}</div>
-            <div class="disco-meta">${track.type} • <span class="disco-tier-badge ${track.badgeClass}">${track.tierLabel}</span></div>
-            ${isPreviewingThis ? `<span class="preview-active-pill">🎵 Previewing Live</span>` : ''}
-          </div>
-          ${actionHTML}
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function submitSongSuggestion() {
-      const input = document.getElementById('song-suggestion-input');
-      const text = input ? input.value.trim() : '';
-      if (!text) return;
-
-      alert(`🌸 Suggestion received: "${text}" has been submitted to Prep Room B!`);
-      if (input) input.value = '';
-    }
-
-    function triggerPadSound(type) {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        if (type === 'kick') osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-        else if (type === 'snare') osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-        else osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.3);
-      } catch(e) {}
-    }
-
-    window.addEventListener('keydown', (e) => {
-      const key = e.key.toLowerCase();
-      if (key === 'a') triggerPadSound('kick');
-      if (key === 's') triggerPadSound('snare');
-      if (key === 'd') triggerPadSound('hihat');
-      if (key === 'f') triggerPadSound('bass');
-      if (key === 'g') triggerPadSound('synth');
-      if (key === 'h') triggerPadSound('count');
-    });
-
-    function handleDragStart(e) {
-      e.dataTransfer.setData("text/plain", e.target.innerText);
-    }
-    function handleDragOver(e) { e.preventDefault(); }
-    function handleDrop(e) {
-      e.preventDefault();
-      const trackName = e.dataTransfer.getData("text/plain");
-      const dropZone = document.getElementById('setlist-drop-zone');
-      const item = document.createElement('div');
-      item.className = 'draggable-track';
-      item.innerText = trackName;
-      dropZone.appendChild(item);
-    }
-
-    function copySetlistTicket() {
-      const tracks = Array.from(document.querySelectorAll('#setlist-drop-zone .draggable-track')).map(el => el.innerText);
-      if (tracks.length === 0) return alert("Drag some tracks into your setlist first!");
-      const text = `🎫 Girls Dead Phantom Dream Setlist:\n` + tracks.join('\n');
-      navigator.clipboard.writeText(text);
-      alert("Setlist Ticket copied to clipboard!\n\n" + text);
-    }
-
-    function switchTab(tabId, btnEl) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-content'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active-tab'));
-      document.getElementById(tabId).classList.add('active-content');
-      btnEl.classList.add('active-tab');
-    }
-
-    function toggleMobileMenu() {
-      const navMenu = document.getElementById('nav-menu');
-      if (navMenu) navMenu.classList.toggle('open');
-    }
-
-    function openAuthOrAccount() {
-      alert("You are logged in!");
-    }
-
-    function removeExistingModals() {
-      const existing = document.getElementById('neko-gate-modal');
-      if (existing) existing.remove();
-    }
-
-    // Save audio state prior to leaving or refreshing page
-    window.addEventListener('beforeunload', () => {
-      if (synthAudioPlayer && !synthAudioPlayer.paused) {
-        localStorage.setItem('neko_fm_active', 'true');
-        localStorage.setItem('neko_fm_volume', synthAudioPlayer.volume.toString());
-      }
-    });
-
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      currentMode = getCurrentMode();
-      applyThemeMode(currentMode);
-      renderSetlistPolls();
-      renderDiscography();
-      initMasterTimers();
-      renderSynthVisualizer();
-
-      // Audio state restoration
-      const wasFmPlaying = localStorage.getItem('neko_fm_active') === 'true';
-      const savedVolume = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
-
-      if (wasFmPlaying && synthAudioPlayer) {
-        synthAudioPlayer.volume = savedVolume;
-        const volSlider = document.getElementById('yt-vol-slider');
-        if (volSlider) volSlider.value = Math.round(savedVolume * 100);
-
-        const preset = synthPresets[currentSynthPresetIdx];
-        synthAudioPlayer.src = preset.url;
-        synthAudioPlayer.play().then(() => {
-          isSynthPlaying = true;
-          const statusMsg = document.getElementById('yt-status-text');
-          const powerBtn = document.getElementById('yt-power-btn');
-          const eqVisualizer = document.getElementById('yt-eq-visualizer');
-          if (statusMsg) statusMsg.innerText = "STREAMING • " + preset.desc;
-          if (powerBtn) powerBtn.innerText = "⏸ PAUSE";
-          if (eqVisualizer) eqVisualizer.classList.add('playing');
-          startTrackRefreshTimer();
-        }).catch(() => {
-          console.log("Autoplay blocked by browser policy. Interaction needed.");
-        });
-      }
-
-      document.addEventListener('click', function(event) {
-        const navMenu = document.getElementById('nav-menu');
-        const isInsideNavbar = event.target.closest('.navbar');
-        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
-          navMenu.classList.remove('open');
-        }
-      });
-    });
-  </script>
-  <script src="music-player.js"></script>
-
-  <!-- AUTO-PAUSE SCRIPT FOR SECONDARY MEDIA -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const mediaElements = document.querySelectorAll('audio:not(#synth-deck-audio):not(#radio-audio-player), video');
-      mediaElements.forEach(media => {
-        media.addEventListener('play', () => {
-          if (typeof isSynthPlaying !== 'undefined' && isSynthPlaying) {
-            toggleSynthPower();
-          }
-          if (typeof audioPlayer !== 'undefined' && !audioPlayer.paused) {
-            audioPlayer.pause();
-          }
-          localStorage.setItem('neko_fm_active', 'false');
-        });
-      });
-    });
-  </script>
-</body>
-</html>tte */
-      --bg-dark: #040209;
-      --card-bg: rgba(15, 7, 28, 0.94);
-      --card-inner: rgba(8, 3, 16, 0.94);
-      --nav-bg: rgba(9, 4, 18, 0.96);
-      --accent-purple: #9d4edd;
-      --accent-pink: #ff007f;
-      --accent-cyan: #00f0ff;
-      --accent-gold: #ffd166;
-      --accent-green: #00ffaa;
-      --accent-glow: rgba(255, 0, 127, 0.55);
-      --cyan-glow: rgba(0, 240, 255, 0.55);
-      --gold-glow: rgba(255, 209, 102, 0.55);
-      --text-main: #e8dff5;
-      --text-light: #ffffff;
-      --text-muted: #b8a7d4;
-      --card-border: rgba(255, 0, 127, 0.45);
-      --border-cyan: rgba(0, 240, 255, 0.45);
-      --nav-border-twilight: rgba(0, 240, 255, 0.4);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      min-height: 100vh;
-      line-height: 1.6;
-      padding-bottom: 60px;
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.25) 0%, transparent 50%),
-        radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.22) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12) 0%, transparent 60%);
-    }
-
-    /* UNIVERSAL NAVBAR */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      width: 100%;
-      background: var(--nav-bg);
-      border-bottom: 1.5px solid var(--nav-border-twilight);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.25), 0 0 15px rgba(255, 0, 127, 0.15);
-    }
-
-    .nav-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 8px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .nav-pills-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .nav-item-pill {
-      color: var(--text-muted);
-      font-size: 0.82rem;
-      font-weight: 800;
-      padding: 5px 14px;
-      border-radius: 12px;
-      text-decoration: none;
-      transition: all 0.25s ease;
-      white-space: nowrap;
-      background: rgba(22, 10, 36, 0.85);
-      border: 1px solid rgba(157, 78, 221, 0.35);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .nav-item-pill:hover {
-      background: rgba(157, 78, 221, 0.3);
-      color: #ffffff;
-      border-color: var(--accent-purple);
-      box-shadow: 0 0 14px rgba(157, 78, 221, 0.6);
-    }
-
-    .nav-item-pill.active {
-      background: rgba(255, 0, 127, 0.25);
-      color: #ffffff;
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 18px var(--accent-glow), inset 0 0 8px rgba(255, 0, 127, 0.4);
-      animation: navPulseGlow 2.5s infinite alternate;
-    }
-
-    .nav-item-pill.auth-pill {
-      background: rgba(255, 0, 127, 0.2);
-      border-color: var(--accent-pink);
-      cursor: pointer;
-    }
-
-    .nav-status-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.75rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      color: var(--accent-cyan);
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
-      background: rgba(0, 240, 255, 0.12);
-      border: 1px solid rgba(0, 240, 255, 0.45);
-      padding: 5px 12px;
-      border-radius: 20px;
-      white-space: nowrap;
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--accent-green);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--accent-green);
-      animation: statusBlink 1.2s infinite;
-    }
-
-    .mobile-menu-btn {
-      display: none;
-      background: rgba(14, 9, 28, 0.8);
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      padding: 6px 10px;
-      cursor: pointer;
-    }
-
-    .hamburger-bar {
-      width: 20px;
-      height: 2px;
-      background: var(--accent-pink);
-      border-radius: 2px;
-      margin: 3px 0;
-    }
-
-    @media (max-width: 992px) {
-      .mobile-menu-btn { display: flex; flex-direction: column; }
-      .nav-pills-row {
-        display: none;
-        width: 100%;
-        flex-direction: column;
-        padding-top: 8px;
-        gap: 8px;
-      }
-      .nav-pills-row.open { display: flex; }
-      .nav-item-pill { width: 100%; justify-content: center; }
-    }
-
-    /* STUDIO DASHBOARD CONTAINER */
-    .studio-dashboard {
-      max-width: 1240px;
-      margin: 30px auto;
-      background: var(--card-inner);
-      border: 1.5px solid var(--accent-cyan);
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0, 240, 255, 0.35);
-      animation: neonHudPulse 3.5s infinite ease-in-out;
-      position: relative;
-    }
-
-    .dashboard-tabs {
-      display: flex;
-      gap: 12px;
-      border-bottom: 2px solid rgba(255, 0, 127, 0.4);
-      padding-bottom: 14px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      padding: 10px 22px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tab-btn:hover {
-      color: #ffffff;
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
-    }
-
-    .tab-btn.active-tab {
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      color: #ffffff;
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 22px rgba(255, 0, 127, 0.75), inset 0 0 8px rgba(255, 255, 255, 0.3);
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-      animation: glitchGlowTab 4s infinite alternate;
-    }
-
-    .tab-content { display: none; }
-    .tab-content.active-content { display: block; animation: fadeInTab 0.35s ease-out forwards; }
-
-    .glitch-header {
-      font-size: 1.35rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      color: #ffffff;
-      animation: neonGlitchText 3s infinite alternate;
-      text-shadow: 0 0 12px rgba(0, 240, 255, 0.8), 0 0 20px rgba(255, 0, 127, 0.5);
-    }
-
-    /* NEKO RADIO DECK STYLES */
-    .neko-radio-deck {
-      background: rgba(10, 4, 22, 0.85);
-      border: 1.5px solid var(--border-cyan);
-      border-radius: 18px;
-      padding: 24px;
-      max-width: 780px;
-      margin: 0 auto;
-      box-shadow: 0 8px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 240, 255, 0.25);
-    }
-
-    /* SPECTRUM VISUALIZER CANVAS & HUD OVERLAY */
-    .synth-visualizer-wrapper {
-      position: relative;
-      width: 100%;
-      height: 110px;
-      background: #020106;
-      border: 1px solid rgba(0, 240, 255, 0.4);
-      border-radius: 14px;
-      margin-bottom: 20px;
-      overflow: hidden;
-      box-shadow: inset 0 0 18px rgba(0, 240, 255, 0.25), 0 0 14px rgba(255, 0, 127, 0.2);
-    }
-
-    #synth-visualizer-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .visualizer-toggle-btn {
-      background: rgba(10, 4, 22, 0.9);
-      border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      padding: 3px 10px;
-      border-radius: 8px;
-      font-size: 0.72rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
-    }
-
-    .visualizer-toggle-btn:hover {
-      background: var(--accent-cyan);
-      color: #000000;
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.7);
-    }
-
-    .preset-btn {
-      background: rgba(30, 15, 55, 0.85);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 0.88rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      text-align: left;
-    }
-
-    .preset-btn:hover, .preset-btn.active-preset, .preset-btn.active {
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      color: #ffffff;
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.7);
-      text-shadow: 0 0 6px #fff;
-    }
-
-    .action-btn, .power-btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
-      border: none;
-      border-radius: 12px;
-      color: #ffffff;
-      font-weight: 900;
-      cursor: pointer;
-      font-size: 1rem;
-      box-shadow: 0 0 24px rgba(255, 0, 127, 0.65);
-      transition: all 0.25s ease;
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
-    }
-
-    .action-btn:hover, .power-btn:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 32px rgba(255, 0, 127, 0.95), 0 0 16px var(--accent-cyan);
-    }
-
-    .yt-radio-card {
-      background: rgba(8, 3, 16, 0.95);
-      border: 1.5px solid var(--accent-cyan);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.15), 0 0 20px rgba(0, 240, 255, 0.2);
-    }
-
-    .lcd-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: var(--accent-cyan);
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px rgba(0, 240, 255, 0.7);
-    }
-
-    .pulse-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background: var(--accent-pink);
-      border-radius: 50%;
-      margin-right: 6px;
-      box-shadow: 0 0 12px var(--accent-pink);
-      animation: blinkDot 1.2s infinite;
-    }
-
-    .lcd-screen {
-      background: #030108;
-      border: 1.5px solid var(--accent-pink);
-      border-radius: 12px;
-      padding: 20px 22px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      box-shadow: inset 0 0 20px rgba(255, 0, 127, 0.28), 0 0 16px rgba(255, 0, 127, 0.25);
-    }
-
-    .lcd-station-name {
-      font-family: 'Courier New', monospace;
-      font-weight: 900;
-      color: var(--accent-cyan);
-      font-size: 1.15rem;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-      text-shadow: 0 0 12px rgba(0, 240, 255, 0.85);
-      animation: neonGlitchText 3.5s infinite alternate;
-    }
-
-    .lcd-status-msg {
-      font-size: 0.82rem;
-      color: var(--accent-pink);
-      font-weight: 700;
-      text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
-    }
-
-    .lcd-eq-bars {
-      display: flex;
-      align-items: flex-end;
-      gap: 4px;
-      height: 32px;
-    }
-
-    .lcd-eq-bars span {
-      width: 5px;
-      height: 4px;
-      background: var(--accent-gold);
-      border-radius: 2px;
-      transition: height 0.15s ease;
-      box-shadow: 0 0 8px var(--accent-gold);
-    }
-
-    .lcd-eq-bars.playing span {
-      animation: eqBar 0.7s infinite alternate ease-in-out;
-    }
-    .lcd-eq-bars.playing span:nth-child(2) { animation-delay: 0.12s; }
-    .lcd-eq-bars.playing span:nth-child(3) { animation-delay: 0.25s; }
-    .lcd-eq-bars.playing span:nth-child(4) { animation-delay: 0.38s; }
-    .lcd-eq-bars.playing span:nth-child(5) { animation-delay: 0.5s; }
-
-    .station-presets {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 22px;
-    }
-
-    .radio-deck-controls {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .volume-slider-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(10, 4, 22, 0.9);
-      padding: 10px 18px;
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.2);
-    }
-
-    .volume-slider-group input {
-      accent-color: var(--accent-pink);
-      width: 110px;
-      cursor: pointer;
-    }
-
-    /* Setlist Poll & Countdown Banner */
-    .poll-header-banner {
-      background: rgba(15, 7, 28, 0.95);
-      border: 1.5px solid var(--accent-cyan);
-      border-radius: 16px;
-      padding: 22px 26px;
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
-    }
-
-    .poll-header-text h3 {
-      margin: 0 0 6px;
-      color: #ffffff;
-      font-size: 1.3rem;
-      font-weight: 900;
-      text-shadow: 0 0 10px var(--cyan-glow);
-    }
-    
-    .poll-header-text p { margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
-
-    .countdown-timer-box {
-      background: rgba(10, 4, 22, 0.95);
-      border: 2px solid var(--accent-pink);
-      border-radius: 14px;
-      padding: 12px 20px;
-      text-align: center;
-      box-shadow: 0 0 22px rgba(255, 0, 127, 0.5);
-      min-width: 220px;
-    }
-
-    .countdown-label {
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: var(--accent-pink);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 2px;
-      text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
-    }
-
-    .countdown-digits {
-      font-family: 'Courier New', monospace;
-      font-size: 1.6rem;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: 2px;
-      text-shadow: 0 0 12px var(--accent-pink);
-    }
-
-    .premiere-showcase-card {
-      background: linear-gradient(135deg, rgba(35, 12, 55, 0.95), rgba(10, 4, 22, 0.95));
-      border: 2px solid var(--accent-pink);
-      border-radius: 16px;
-      padding: 22px 26px;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      box-shadow: 0 0 30px rgba(255, 0, 127, 0.45);
-    }
-
-    .premiere-info-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
-      min-width: 260px;
-    }
-
-    .premiere-actions-side {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .premiere-10min-timer-badge {
-      background: rgba(255, 0, 127, 0.22);
-      border: 1px solid var(--accent-pink);
-      color: #ffffff;
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-family: 'Courier New', monospace;
-      font-weight: 800;
-      font-size: 0.95rem;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 0 16px rgba(255, 0, 127, 0.4);
-    }
-
-    .premiere-badge {
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      color: #ffffff;
-      font-size: 0.72rem;
-      font-weight: 900;
-      padding: 4px 12px;
-      border-radius: 12px;
-      display: inline-block;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      width: fit-content;
-      box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
-    }
-
-    .premiere-title { font-size: 1.25rem; font-weight: 900; color: #ffffff; margin: 4px 0; text-shadow: 0 0 8px rgba(255, 255, 255, 0.6); }
-    .premiere-sub { font-size: 0.88rem; color: var(--accent-cyan); margin: 0; text-shadow: 0 0 6px rgba(0, 240, 255, 0.5); }
-
-    .poll-card {
-      background: var(--card-bg);
-      border: 1.5px solid var(--card-border);
-      border-radius: 16px;
-      padding: 18px 22px;
-      margin-bottom: 16px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-    }
-
-    .poll-card:hover {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 22px rgba(0, 240, 255, 0.35);
-    }
-
-    .poll-card.voted-card {
-      border-color: var(--accent-cyan);
-      background: rgba(10, 4, 22, 0.95);
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.45);
-    }
-
-    .poll-info-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .poll-title {
-      font-weight: 800;
-      font-size: 1.05rem;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .poll-badge {
-      font-size: 0.72rem;
-      padding: 3px 10px;
-      border-radius: 10px;
-      font-weight: 800;
-      background: rgba(255, 0, 127, 0.2);
-      color: var(--accent-pink);
-      border: 1px solid var(--accent-pink);
-      box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
-    }
-
-    .poll-stats {
-      font-size: 0.88rem;
-      font-weight: 800;
-      color: var(--accent-cyan);
-      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
-    }
-
-    .poll-progress-bg {
-      width: 100%;
-      height: 10px;
-      background: rgba(10, 4, 22, 0.8);
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 12px 0;
-      border: 1px solid var(--card-border);
-      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.8);
-    }
-
-    .poll-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink), var(--accent-cyan));
-      border-radius: 10px;
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 0 12px rgba(255, 0, 127, 0.8);
-    }
-
-    .poll-actions-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-    }
-
-    .poll-performers {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      font-weight: 700;
-    }
-
-    .vote-btn {
-      background: rgba(157, 78, 221, 0.3);
-      border: 1px solid var(--accent-purple);
-      color: #ffffff;
-      padding: 8px 18px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 0 10px rgba(157, 78, 221, 0.3);
-    }
-
-    .vote-btn:hover {
-      background: var(--accent-pink);
-      border-color: var(--accent-pink);
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.8);
-    }
-
-    .vote-btn.voted-btn {
-      background: var(--accent-cyan);
-      color: #000000;
-      border-color: var(--accent-cyan);
-      cursor: default;
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.6);
-    }
-
-    /* GIRLS DEAD PHANTOM HUB STYLES */
-    .gdp-hero-banner {
-      background: linear-gradient(135deg, rgba(28, 10, 48, 0.95), rgba(8, 3, 16, 0.98));
-      border: 2px solid var(--accent-pink);
-      border-radius: 20px;
-      padding: 28px;
-      margin-bottom: 28px;
-      box-shadow: 0 0 35px rgba(255, 0, 127, 0.45);
-      position: relative;
-    }
-
-    .gdp-hero-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .gdp-hero-title {
-      font-size: 2.1rem;
-      font-weight: 900;
-      color: var(--accent-cyan);
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      letter-spacing: 1px;
-      text-shadow: 0 0 16px rgba(0, 240, 255, 0.9), 0 0 25px rgba(255, 0, 127, 0.6);
-      animation: neonGlitchText 3.2s infinite alternate;
-    }
-
-    .gdp-roster-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .member-chip {
-      background: rgba(10, 4, 22, 0.95);
-      border: 1px solid var(--border-cyan);
-      color: #ffffff;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.82rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
-    }
-
-    .member-role { color: var(--accent-pink); font-weight: 700; text-shadow: 0 0 6px rgba(255, 0, 127, 0.5); }
-
-    .gdp-spotlight-box {
-      background: rgba(8, 3, 16, 0.95);
-      border: 2px solid var(--accent-cyan);
-      border-radius: 18px;
-      padding: 24px;
-      margin-bottom: 28px;
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .soundwave-box {
-      display: flex;
-      align-items: flex-end;
-      gap: 4px;
-      height: 24px;
-      margin-bottom: 6px;
-    }
-
-    .soundwave-bar {
-      width: 4px;
-      background: var(--accent-pink);
-      border-radius: 2px;
-      box-shadow: 0 0 8px var(--accent-pink);
-      animation: soundwavePulse 1.2s infinite ease-in-out alternate;
-    }
-
-    .soundwave-bar:nth-child(1) { height: 30%; animation-delay: 0.1s; }
-    .soundwave-bar:nth-child(2) { height: 90%; animation-delay: 0.3s; }
-    .soundwave-bar:nth-child(3) { height: 50%; animation-delay: 0.2s; }
-    .soundwave-bar:nth-child(4) { height: 100%; animation-delay: 0.4s; }
-    .soundwave-bar:nth-child(5) { height: 40%; animation-delay: 0.15s; }
-
-    .discography-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-      margin-top: 20px;
-    }
-
-    @media (max-width: 768px) {
-      .discography-grid { grid-template-columns: 1fr; }
-    }
-
-    .disco-track-card {
-      background: var(--card-bg);
-      border: 1.5px solid var(--card-border);
-      border-radius: 16px;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-    }
-
-    .disco-track-card:hover {
-      border-color: var(--accent-cyan);
-      transform: translateY(-3px);
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
-    }
-
-    .vinyl-icon-box {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--accent-purple) 20%, #030108 80%);
-      border: 2px solid var(--accent-pink);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      color: #ffffff;
-      flex-shrink: 0;
-      box-shadow: 0 0 16px rgba(255, 0, 127, 0.5);
-    }
-
-    .disco-title { font-weight: 900; font-size: 1.05rem; color: #ffffff; margin-bottom: 4px; text-shadow: 0 0 6px rgba(255, 255, 255, 0.5); }
-    .disco-meta { font-size: 0.82rem; color: var(--text-muted); }
-
-    .disco-tier-badge {
-      font-size: 0.7rem;
-      font-weight: 900;
-      padding: 3px 8px;
-      border-radius: 6px;
-      text-transform: uppercase;
-    }
-
-    .badge-twilight { background: rgba(0, 240, 255, 0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); box-shadow: 0 0 8px rgba(0, 240, 255, 0.4); }
-    .badge-basement { background: rgba(255, 0, 127, 0.2); color: var(--accent-pink); border: 1px solid var(--accent-pink); box-shadow: 0 0 8px rgba(255, 0, 127, 0.4); }
-    .badge-backstage { background: rgba(255, 209, 102, 0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold); box-shadow: 0 0 8px rgba(255, 209, 102, 0.4); }
-
-    .preview-active-pill {
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      color: #ffffff;
-      font-size: 0.72rem;
-      font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 12px;
-      display: inline-block;
-      margin-top: 4px;
-      box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
-    }
-
-    .suggestion-box-panel {
-      background: rgba(10, 4, 22, 0.95);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 22px 26px;
-      margin-top: 28px;
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.25);
-    }
-
-    .form-control-poll {
-      width: 100%;
-      padding: 12px 16px;
-      background: #030108;
-      border: 1.5px solid var(--card-border);
-      border-radius: 10px;
-      color: #ffffff;
-      margin: 12px 0 16px;
-      box-sizing: border-box;
-      outline: none;
-    }
-
-    .form-control-poll:focus {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-    }
-
-    /* Modal Overlay */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(4, 2, 9, 0.92);
-      backdrop-filter: blur(12px);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-card {
-      background: var(--card-bg);
-      border: 2px solid var(--accent-pink);
-      border-radius: 20px;
-      padding: 28px;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 0 45px rgba(255, 0, 127, 0.6);
-    }
-
-    .vip-modal-card { border-color: var(--accent-gold); box-shadow: 0 0 45px rgba(255, 209, 102, 0.6); }
-    .modal-card h3 { margin: 0 0 10px; color: #ffffff; font-size: 1.35rem; font-weight: 900; }
-    .modal-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.5; margin-bottom: 20px; }
-    .modal-price-tag {
-      background: rgba(255, 209, 102, 0.18);
-      border: 1px solid var(--accent-gold);
-      color: var(--accent-gold);
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-weight: 900;
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-      display: inline-block;
-    }
-    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
-    .modal-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; }
-    .google-btn { background: #ffffff; color: #111; }
-    .stripe-btn { background: linear-gradient(135deg, var(--accent-pink), var(--accent-gold)); color: #000; }
-    .close-btn { background: transparent; color: var(--accent-pink); border: 1px solid var(--card-border); }
-
-    /* CYBERPUNK ANIMATIONS */
-    @keyframes neonHudPulse {
-      0% { border-color: rgba(0, 240, 255, 0.45); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
-      50% { border-color: rgba(0, 240, 255, 0.95); box-shadow: 0 0 35px rgba(0, 240, 255, 0.5), 0 0 15px rgba(255, 0, 127, 0.3); }
-      100% { border-color: rgba(0, 240, 255, 0.45); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
-    }
-
-    @keyframes neonGlitchText {
-      0%, 100% { text-shadow: 2px 0 var(--accent-pink), -2px 0 var(--accent-cyan); }
-      50% { text-shadow: -2px 0 var(--accent-pink), 2px 0 var(--accent-cyan); }
-    }
-
-    @keyframes glitchGlowTab {
-      from { box-shadow: 0 0 16px rgba(255, 0, 127, 0.6); }
-      to { box-shadow: 0 0 28px rgba(255, 0, 127, 0.95), 0 0 12px var(--accent-cyan); }
-    }
-
-    @keyframes statusBlink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.25; }
-    }
-
-    @keyframes blinkDot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
-    }
-
-    @keyframes eqBar {
-      0% { height: 4px; }
-      100% { height: 32px; }
-    }
-
-    @keyframes soundwavePulse {
-      0% { height: 20%; }
-      100% { height: 100%; }
-    }
-
-    @keyframes fadeInTab {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes navPulseGlow {
-      from { box-shadow: 0 0 10px rgba(255, 0, 127, 0.4); }
-      to { box-shadow: 0 0 22px rgba(255, 0, 127, 0.85); }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Universal Header Navigation Bar -->
-  <header class="navbar">
-    <div class="nav-container">
-      
-      <nav class="nav-pills-row" id="nav-menu">
-        <a href="index.html" class="nav-item-pill">🏠 Home</a>
-        <a href="echoheart.html" class="nav-item-pill">📚 Girls of Phantom</a>
-        <a href="chat.html" class="nav-item-pill">💬 Live Chat</a>
-        <a href="podcast.html" class="nav-item-pill">🎙️ Podcast</a>
-        <button id="nav-auth-btn" onclick="openAuthOrAccount()" class="nav-item-pill auth-pill">
-          🔑 Login
-        </button>
-      </nav>
-
-      <div class="nav-status-badge">
-        <span class="status-dot"></span>
-        📻 NEKO FM: LIVE BROADCAST
-      </div>
-
-      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-      </button>
-
-    </div>
-  </header>
-
-  <!-- HTML5 Audio Engines -->
-  <audio id="radio-audio-player" crossorigin="anonymous"></audio>
-  <audio id="synth-deck-audio" crossorigin="anonymous"></audio>
-
-  <!-- Studio Dashboard Container -->
-  <main class="studio-dashboard">
-    <div class="dashboard-tabs">
-      <button class="tab-btn active-tab" onclick="switchTab('board-tab', this)">📋 Setlist Polls</button>
-      <button class="tab-btn" onclick="switchTab('youtube-tab', this)">🎛️ Neko Synth Deck</button>
-      <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 Girls Dead Phantom Hub</button>
-    </div>
-
-    <!-- TAB 1: PREP ROOM BOARD & SETLIST POLLS -->
-    <section id="board-tab" class="tab-content active-content">
-      
-      <div class="poll-header-banner">
-        <div class="poll-header-text">
-          <h3 class="glitch-header">📋 PREP ROOM B — HOURLY SETLIST VOTING</h3>
-          <p>Vote for the next broadcast song cover! The winning arrangement will be performed by <strong>Girls Dead Phantom</strong> in Prep Room B.</p>
-        </div>
-
-        <div class="countdown-timer-box">
-          <div class="countdown-label" id="poll-timer-label">⚡ Voting Closes In</div>
-          <div class="countdown-digits" id="poll-countdown-digits">50:00</div>
-        </div>
-      </div>
-
-      <div class="premiere-showcase-card">
-        <div class="premiere-info-group">
-          <span class="premiere-badge">🌟 Girls Dead Phantom Leader</span>
-          <h4 class="premiere-title" id="winning-track-name">"Subterranean Resonance (Official Studio Cut)"</h4>
-          <p class="premiere-sub">Akari Minase (Drums) • Nekomi (Vocals & Lead Guitar) • Sera (Keytar) • Aoi (Bass)</p>
-        </div>
-
-        <div class="premiere-actions-side">
-          <div class="premiere-10min-timer-badge" id="premier-soundcheck-box">
-            ⏱️ Premiere In: <span id="soundcheck-digits">10:00 (Waiting)</span>
-          </div>
-          <button class="vote-btn" id="play-premiere-btn" onclick="playOfficialSongPremiere()" style="padding: 10px 18px; font-size: 0.88rem;">
             ▶ Stream Premiere
           </button>
         </div>
@@ -3153,6 +1146,12 @@
         <input type="text" id="song-suggestion-input" class="form-control-poll" placeholder="e.g. 'Subterranean Resonance (Keytar & Acoustic Duo)'">
         <button class="vote-btn" onclick="submitSongSuggestion()">🌸 Submit Suggestion to Prep Room B</button>
       </div>
+
+      <!-- TAB 1 STATUS FOOTER -->
+      <div class="tab-status-footer">
+        <span>STATUS: POLL_ENGINE_ACTIVE</span>
+        <span>PREP ROOM B TELEMETRY: SYNCED</span>
+      </div>
     </section>
 
     <!-- TAB 2: NEKO SYNTH DECK WITH LIVE SPECTRUM CANVAS & TELEMETRY HUD -->
@@ -3216,6 +1215,12 @@
           </div>
 
         </div>
+      </div>
+
+      <!-- TAB 2 STATUS FOOTER -->
+      <div class="tab-status-footer">
+        <span>STATUS: SYNTH_DECK_ONLINE</span>
+        <span>AUDIO_BUFFER: 100%</span>
       </div>
     </section>
 
@@ -3284,11 +1289,355 @@
       </div>
 
       <div class="discography-grid" id="discography-container"></div>
+
+      <!-- TAB 3 STATUS FOOTER -->
+      <div class="tab-status-footer">
+        <span>STATUS: DISCOGRAPHY_INDEXED</span>
+        <span>CATALOG: 10/10_READY</span>
+      </div>
+    </section>
+
+    <!-- TAB 4: SOUNDBOARD, LO-FI MIXER & DREAM SETLIST CREATOR -->
+    <section id="soundboard-tab" class="tab-content">
+      
+      <!-- MY OWNED / CREATED TRACKS PLAYLIST -->
+      <div class="suggestion-box-panel" style="margin-top: 0; margin-bottom: 24px; border-color: var(--accent-cyan);">
+        <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 6px;">🎧 My Custom Jammed & Created Tracks</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">Tracks you record and synthesize in Prep Room B are saved directly to your local studio library!</p>
+        <div id="my-custom-playlist-container"></div>
+      </div>
+
+      <!-- PREP ROOM B INSTRUMENT SOUNDBOARD & RECORDER -->
+      <div class="suggestion-box-panel" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+          <div>
+            <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 4px;">🥁 Prep Room B Soundboard & Jam Station</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Tap pads or use hotkeys (A, S, D, F, G, H) to synthesize live audio!</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="vote-btn" style="background: var(--accent-pink); border-color: var(--accent-pink);" onclick="jamStudio.startRecording()">🔴 Start Recording Jam</button>
+            <button class="vote-btn" style="background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan);" onclick="promptSaveJam()">💾 Save Recording</button>
+          </div>
+        </div>
+
+        <div class="soundboard-grid">
+          <button class="pad-btn" onclick="jamStudio.playInstrument('kick')">🥁 Kick Drum <span class="pad-key">[ Key A ]</span></button>
+          <button class="pad-btn" onclick="jamStudio.playInstrument('snare')">💥 Snare Hit <span class="pad-key">[ Key S ]</span></button>
+          <button class="pad-btn" onclick="jamStudio.playInstrument('hihat')">✨ Hi-Hat <span class="pad-key">[ Key D ]</span></button>
+          <button class="pad-btn" onclick="jamStudio.playInstrument('bass')">🎸 Bass Slap <span class="pad-key">[ Key F ]</span></button>
+          <button class="pad-btn" onclick="jamStudio.playInstrument('synth')">🎹 Synth Riser <span class="pad-key">[ Key G ]</span></button>
+          <button class="pad-btn" onclick="jamStudio.playInstrument('count')">🎙️ "1, 2, 3, GO!" <span class="pad-key">[ Key H ]</span></button>
+        </div>
+      </div>
+
+      <!-- MIDNIGHT LO-FI SOUNDSCAPE MIXER -->
+      <div class="suggestion-box-panel" style="margin-bottom: 24px;">
+        <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 6px;">🌙 Midnight Lo-Fi Soundscape Mixer</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Adjust sliders to dynamically control real synthesized ambient sound nodes!</p>
+        <div class="mixer-controls">
+          <div class="mixer-channel">
+            <label>🌧️ Midnight Rain</label>
+            <input type="range" min="0" max="100" value="20" oninput="jamStudio.setAmbientVolume('rain', this.value)" style="width: 100%; accent-color: var(--accent-cyan);">
+          </div>
+          <div class="mixer-channel">
+            <label>☕ Vinyl Crackle & Mug Stir</label>
+            <input type="range" min="0" max="100" value="10" oninput="jamStudio.setAmbientVolume('vinyl', this.value)" style="width: 100%; accent-color: var(--accent-pink);">
+          </div>
+          <div class="mixer-channel">
+            <label>🍃 Rooftop Breeze</label>
+            <input type="range" min="0" max="100" value="0" oninput="jamStudio.setAmbientVolume('breeze', this.value)" style="width: 100%; accent-color: var(--accent-gold);">
+          </div>
+        </div>
+      </div>
+
+      <!-- CUSTOM DREAM CONCERT SETLIST CREATOR -->
+      <div class="suggestion-box-panel">
+        <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 6px;">📝 Custom Dream Concert Setlist Creator</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Drag tracks from the pool into your 4-song dream concert setlist!</p>
+        
+        <div class="setlist-builder-container">
+          <!-- Track Pool -->
+          <div>
+            <h4 style="color: var(--accent-cyan); margin-bottom: 8px;">Available Catalog Tracks</h4>
+            <div id="available-tracks-pool" style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-1">1. Subterranean Resonance</div>
+              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-2">2. Keytar Midnight Run</div>
+              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-3">3. Sakuraoka Dusk Echoes</div>
+              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-4">4. Cavern Reverb Overdrive</div>
+              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-5">5. Phantom Echoes in Prep Room B</div>
+              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-6">6. 180 BPM Velocity</div>
+            </div>
+          </div>
+
+          <!-- Drop Slot -->
+          <div>
+            <h4 style="color: var(--accent-pink); margin-bottom: 8px;">Your 4-Song Concert Setlist</h4>
+            <div class="drop-zone" id="setlist-drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin: auto;">Drop tracks here to build your setlist...</div>
+            </div>
+            <button class="vote-btn" style="width: 100%; margin-top: 10px;" onclick="copySetlistTicket()">🎫 Generate Shareable Setlist Ticket</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4 STATUS FOOTER -->
+      <div class="tab-status-footer">
+        <span>STATUS: JAM_STATION_READY</span>
+        <span>AUDIO_SYNTH: WEB_AUDIO_API</span>
+      </div>
+
     </section>
   </main>
 
   <script src="global-player.js"></script>
   <script>
+    /* ==========================================================================
+       NEKO FM — PREP ROOM B JAM ENGINE & CUSTOM PLAYLIST MANAGER
+       ========================================================================== */
+    class JamStudioEngine {
+      constructor() {
+        this.audioCtx = null;
+        this.isRecording = false;
+        this.recordStartTime = 0;
+        this.recordedEvents = [];
+        this.myCustomPlaylist = this.loadCustomPlaylist();
+        this.ambientGains = { rain: null, vinyl: null, breeze: null };
+      }
+
+      initAudio() {
+        if (!this.audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.audioCtx = new AudioContext();
+          this.setupAmbientGenerators();
+        }
+        if (this.audioCtx.state === 'suspended') {
+          this.audioCtx.resume();
+        }
+      }
+
+      playInstrument(type) {
+        this.initAudio();
+        const now = this.audioCtx.currentTime;
+
+        if (this.isRecording) {
+          this.recordedEvents.push({ type: type, time: now - this.recordStartTime });
+        }
+
+        switch (type) {
+          case 'kick': {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.5);
+            gain.gain.setValueAtTime(1, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.5);
+            break;
+          }
+          case 'snare': {
+            const noise = this.audioCtx.createBufferSource();
+            const bufferSize = this.audioCtx.sampleRate * 0.2;
+            const buffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+            noise.buffer = buffer;
+
+            const filter = this.audioCtx.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.value = 1000;
+
+            const gain = this.audioCtx.createGain();
+            gain.gain.setValueAtTime(0.8, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            noise.start(now);
+            break;
+          }
+          case 'hihat': {
+            const bufferSize = this.audioCtx.sampleRate * 0.08;
+            const buffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+            
+            const source = this.audioCtx.createBufferSource();
+            source.buffer = buffer;
+            
+            const filter = this.audioCtx.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.value = 7000;
+
+            const gain = this.audioCtx.createGain();
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            source.start(now);
+            break;
+          }
+          case 'bass': {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(87.31, now);
+            gain.gain.setValueAtTime(0.7, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.4);
+            break;
+          }
+          case 'synth': {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.exponentialRampToValueAtTime(880, now + 0.6);
+            gain.gain.setValueAtTime(0.5, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.6);
+            break;
+          }
+          case 'count': {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, now);
+            gain.gain.setValueAtTime(0.6, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.25);
+            break;
+          }
+        }
+      }
+
+      setupAmbientGenerators() {
+        const bufferSize = 2 * this.audioCtx.sampleRate;
+        const noiseBuffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+
+        const rainSource = this.audioCtx.createBufferSource();
+        rainSource.buffer = noiseBuffer;
+        rainSource.loop = true;
+
+        const rainFilter = this.audioCtx.createBiquadFilter();
+        rainFilter.type = 'lowpass';
+        rainFilter.frequency.value = 800;
+
+        this.ambientGains.rain = this.audioCtx.createGain();
+        this.ambientGains.rain.gain.value = 0.05;
+
+        rainSource.connect(rainFilter);
+        rainFilter.connect(this.ambientGains.rain);
+        this.ambientGains.rain.connect(this.audioCtx.destination);
+        rainSource.start();
+      }
+
+      setAmbientVolume(type, val) {
+        this.initAudio();
+        const gainValue = (val / 100) * 0.2;
+        if (this.ambientGains[type]) {
+          this.ambientGains[type].gain.setValueAtTime(gainValue, this.audioCtx.currentTime);
+        }
+      }
+
+      startRecording() {
+        this.initAudio();
+        this.isRecording = true;
+        this.recordStartTime = this.audioCtx.currentTime;
+        this.recordedEvents = [];
+        alert("🔴 Jam Recording Started! Perform on the soundboard pads below.");
+      }
+
+      stopRecordingAndSave(title = "Prep Room B Session Jam") {
+        this.isRecording = false;
+        if (this.recordedEvents.length === 0) return alert("No inputs recorded!");
+
+        const track = {
+          id: 'custom-' + Date.now(),
+          title: title,
+          date: new Date().toLocaleDateString(),
+          events: this.recordedEvents
+        };
+
+        this.myCustomPlaylist.push(track);
+        this.saveCustomPlaylist();
+        this.renderPlaylistUI();
+        alert(`🎉 Saved "${title}" to your Custom Created Tracklist!`);
+      }
+
+      playbackCustomTrack(trackId) {
+        const track = this.myCustomPlaylist.find(t => t.id === trackId);
+        if (!track) return;
+
+        this.initAudio();
+        track.events.forEach(event => {
+          setTimeout(() => {
+            this.playInstrument(event.type);
+          }, event.time * 1000);
+        });
+      }
+
+      loadCustomPlaylist() {
+        try {
+          const saved = localStorage.getItem('neko_custom_created_tracks');
+          return saved ? JSON.parse(saved) : [];
+        } catch(e) { return []; }
+      }
+
+      saveCustomPlaylist() {
+        localStorage.setItem('neko_custom_created_tracks', JSON.stringify(this.myCustomPlaylist));
+      }
+
+      renderPlaylistUI() {
+        const container = document.getElementById('my-custom-playlist-container');
+        if (!container) return;
+
+        if (this.myCustomPlaylist.length === 0) {
+          container.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">No custom jammed tracks saved yet. Tap 'Start Jam Recording' below to make your own music!</p>`;
+          return;
+        }
+
+        container.innerHTML = '';
+        this.myCustomPlaylist.forEach(track => {
+          const item = document.createElement('div');
+          item.className = 'disco-track-card';
+          item.style.marginBottom = '10px';
+          item.innerHTML = `
+            <div class="vinyl-icon-box">🎹</div>
+            <div style="flex: 1;">
+              <div class="disco-title">${track.title}</div>
+              <div class="disco-meta">Recorded on ${track.date} • ${track.events.length} Notes</div>
+            </div>
+            <button class="vote-btn" onclick="jamStudio.playbackCustomTrack('${track.id}')">▶ Play Jam</button>
+          `;
+          container.appendChild(item);
+        });
+      }
+    }
+
+    const jamStudio = new JamStudioEngine();
+
+    function promptSaveJam() {
+      const name = prompt("Enter a title for your custom jam track:", "Prep Room B Session Jam");
+      if (name) jamStudio.stopRecordingAndSave(name);
+    }
+
     const RADIO_STATIONS = {
       twilight: [
         { freq: "98.4 FM", name: "LISTEN.moe (24/7 Anime & Vocaloid)", genre: "Anime & Vocaloid Stream", url: "http://kathy.torontocast.com:3350/stream" },
@@ -3340,7 +1689,7 @@
     let synthAnalyser = null;
     let synthSource = null;
     let synthAnimFrame = null;
-    let visualizerMode = 'bars'; // 'bars' or 'oscilloscope'
+    let visualizerMode = 'bars';
     let phase = 0;
 
     function toggleVisualizerMode() {
@@ -3384,7 +1733,6 @@
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Render ambient matrix grid lines so visualizer box is never black
         ctx.strokeStyle = 'rgba(0, 240, 255, 0.07)';
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -3397,7 +1745,6 @@
         ctx.stroke();
 
         if (visualizerMode === 'bars') {
-          // MODE 1: SPECTRUM FREQUENCY BARS
           let hasData = false;
           if (synthAnalyser && isSynthPlaying) {
             synthAnalyser.getByteFrequencyData(dataArray);
@@ -3437,7 +1784,6 @@
           }
 
         } else {
-          // MODE 2: OSCILLOSCOPE TIME-DOMAIN WAVEFORM
           let hasData = false;
           if (synthAnalyser && isSynthPlaying) {
             synthAnalyser.getByteTimeDomainData(dataArray);
@@ -4022,7 +2368,7 @@
         const card = document.createElement('div');
         card.className = 'disco-track-card';
         card.innerHTML = `
-          <div class="vinyl-icon-box">💿</div>
+          <div class="vinyl-icon-box">CD</div>
           <div style="flex: 1;">
             <div class="disco-title">${track.trackNo}. ${track.title}</div>
             <div class="disco-meta">${track.type} • <span class="disco-tier-badge ${track.badgeClass}">${track.tierLabel}</span></div>
@@ -4048,6 +2394,38 @@
         return;
       }
       if (input) input.value = '';
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const key = e.key.toLowerCase();
+      if (key === 'a') jamStudio.playInstrument('kick');
+      if (key === 's') jamStudio.playInstrument('snare');
+      if (key === 'd') jamStudio.playInstrument('hihat');
+      if (key === 'f') jamStudio.playInstrument('bass');
+      if (key === 'g') jamStudio.playInstrument('synth');
+      if (key === 'h') jamStudio.playInstrument('count');
+    });
+
+    function handleDragStart(e) {
+      e.dataTransfer.setData("text/plain", e.target.innerText);
+    }
+    function handleDragOver(e) { e.preventDefault(); }
+    function handleDrop(e) {
+      e.preventDefault();
+      const trackName = e.dataTransfer.getData("text/plain");
+      const dropZone = document.getElementById('setlist-drop-zone');
+      const item = document.createElement('div');
+      item.className = 'draggable-track';
+      item.innerText = trackName;
+      dropZone.appendChild(item);
+    }
+
+    function copySetlistTicket() {
+      const tracks = Array.from(document.querySelectorAll('#setlist-drop-zone .draggable-track')).map(el => el.innerText);
+      if (tracks.length === 0) return alert("Drag some tracks into your setlist first!");
+      const text = `🎫 Girls Dead Phantom Dream Setlist:\n` + tracks.join('\n');
+      navigator.clipboard.writeText(text);
+      alert("Setlist Ticket copied to clipboard!\n\n" + text);
     }
 
     function switchTab(tabId, btnEl) {
@@ -4145,7 +2523,6 @@
       handleModeChange('backstage');
     }
 
-    // Save audio state prior to leaving or refreshing page
     window.addEventListener('beforeunload', () => {
       if (synthAudioPlayer && !synthAudioPlayer.paused) {
         localStorage.setItem('neko_fm_active', 'true');
@@ -4153,7 +2530,6 @@
       }
     });
 
-    // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
       currentMode = getCurrentMode();
       applyThemeMode(currentMode);
@@ -4161,8 +2537,8 @@
       renderDiscography();
       initMasterTimers();
       renderSynthVisualizer();
+      jamStudio.renderPlaylistUI();
 
-      // Audio state restoration
       const wasFmPlaying = localStorage.getItem('neko_fm_active') === 'true';
       const savedVolume = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
 
