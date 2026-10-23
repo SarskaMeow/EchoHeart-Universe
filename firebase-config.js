@@ -7,6 +7,7 @@ import {
   getAuth, 
   signInWithPopup, 
   signInWithRedirect, 
+  getRedirectResult,
   GoogleAuthProvider, 
   FacebookAuthProvider,
   signOut, 
@@ -72,6 +73,17 @@ export {
 window.currentUser = null;
 window.userData = null;
 
+// Catch result from mobile redirect auth flows upon returning to page
+getRedirectResult(auth)
+  .then((result) => {
+    if (result && result.user) {
+      console.log("Redirect login successful:", result.user.displayName);
+    }
+  })
+  .catch((error) => {
+    console.error("Error catching redirect result:", error);
+  });
+
 // Track auth state automatically across all pages
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -109,12 +121,37 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Google Login Function
+// Google Login Function (Mobile & WebView Optimized)
 window.loginWithGoogle = async () => {
   console.log("Attempting Google Sign-In...");
+
+  // Detect social in-app WebViews (Messenger, Instagram, FB)
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const isInApp = /FBAN|FBAV|Instagram|Line|Messenger/i.test(ua);
+  
+  if (isInApp) {
+    alert("Google Sign-In isn't supported inside social app browsers. Please tap the top right menu (⋮ or ...) and choose 'Open in Chrome' or 'Open in Browser'.");
+    return;
+  }
+
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
 
+  // Detect if user is on mobile browser
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    try {
+      console.log("Mobile browser detected. Initiating redirect flow...");
+      await signInWithRedirect(auth, provider);
+    } catch (redirectError) {
+      console.error("Redirect Login Error:", redirectError);
+      alert("Sign-in failed: " + redirectError.message);
+    }
+    return;
+  }
+
+  // Desktop Popup Flow
   try {
     const result = await signInWithPopup(auth, provider);
     console.log("Google login successful:", result.user.displayName);
