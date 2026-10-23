@@ -14,10 +14,16 @@ const db = getFirestore();
 const TIME_BASED_CONVERSATIONS = {
   // Morning (5:00 AM - 8:59 AM)
   morning: [
+    // Long 8-Message Morning Assembly & Lost Key Exchange
     [
       { author: "Locker_104_Ren", text: "Morning rush! Who left their coffee cup on locker 104's door shelf again? ☕" },
       { author: "Nekomi Aoyama", text: "Guilty... but it was matcha and I was running late for homeroom! 🍵" },
-      { author: "Akari Minase", text: "First period bell in 5 minutes! Sprint speed test starting NOW 🏃‍♀️💨" }
+      { author: "Locker_104_Ren", text: "Fair enough, but it nearly knocked over my acoustic guitar case! 😅" },
+      { author: "Akari Minase", text: "First period bell in 5 minutes! Sprint speed test starting NOW 🏃‍♀️💨" },
+      { author: "Locker_212_Mina", text: "Wait!! Did anyone find a brass key with a pink cat charm near the lockers?!" },
+      { author: "Aoi Mizuhara", text: "Mina, check the lost and found box near the main office counter." },
+      { author: "Locker_212_Mina", text: "FOUND IT! Someone turned it in already! Thank you Aoi-senpai! ✨" },
+      { author: "Akari Minase", text: "30 SECONDS LEFT! GET TO CLASS EVERYONE!! 🔔🔥" }
     ],
     [
       { author: "Locker_212_Mina", text: "Did anyone actually finish the page 44 math homework? Please tell me I'm not the only one..." },
@@ -38,9 +44,17 @@ const TIME_BASED_CONVERSATIONS = {
       { author: "Sera Hanibara", text: "Psst, tuning synth presets under my desk... 🎧✨" },
       { author: "Aoi Mizuhara", text: "Pay attention in class, everyone." }
     ],
+    // Long 9-Message Secret Note Passing Session
     [
       { author: "Locker_142_Rin", text: "Whoever has hallway pass for B-wing, grab extra sticky notes from library drop!" },
-      { author: "Nekomi Aoyama", text: "I'm passing by B-wing right now! Grabbing a stack for the music room 📝" }
+      { author: "Nekomi Aoyama", text: "I'm passing by B-wing right now! Grabbing a stack for the music room 📝" },
+      { author: "Locker_142_Rin", text: "Can you snag the blue pastel ones? Trying to write down song lyrics!" },
+      { author: "Nekomi Aoyama", text: "Got them! Leaving them inside locker 142's top shelf slot 🌸" },
+      { author: "Sera Hanibara", text: "Wait, are those lyrics for the new synth track?!" },
+      { author: "Nekomi Aoyama", text: "Yes! Chorus line for 'Girls of Phantom' is coming together so nicely ✨" },
+      { author: "Akari Minase", text: "I ALREADY HAVE THE BASS DRUM PATTERN FOR IT IN MY HEAD 🥁⚡" },
+      { author: "Aoi Mizuhara", text: "Please refrain from messaging during lectures." },
+      { author: "Akari Minase", text: "Oops... phone going back in bag now!! 🤫" }
     ],
     [
       { author: "Locker_205_Daisuke", text: "3rd period physics lab experiment is bubbling weirdly... is that supposed to turn blue?" },
@@ -50,15 +64,18 @@ const TIME_BASED_CONVERSATIONS = {
 
   // Lunchtime (12:00 PM - 1:59 PM)
   lunchtime: [
+    // Long 10-Message Full Band Cafeteria & Rooftop Debate
     [
       { author: "Akari Minase", text: "CAFETERIA PARFAIT LINE IS CLEAR! RUN RUN RUN 🍓✨" },
       { author: "Locker_077_Kenji", text: "Trading half a tuna sando for matcha Pocky at locker 77 table!" },
-      { author: "Aoi Mizuhara", text: "Please do not run in the hallways." }
-    ],
-    [
       { author: "Nekomi Aoyama", text: "Acoustic jam session on the rooftop during lunch today! Bring your sandwiches~ 🎸" },
-      { author: "Sera Hanibara", text: "The sunlight on the rooftop is so warm right now~ perfect volume testing weather ✨" },
-      { author: "Akari Minase", text: "OMW WITH MY DRUMSTICKS AND A BENTO! 🍱🔥" }
+      { author: "Sera Hanibara", text: "I brought the portable synth module! We can test input levels 🎧" },
+      { author: "Locker_104_Ren", text: "Save space on the bench! I'm bringing my guitar cable adapter." },
+      { author: "Akari Minase", text: "I HAVE THE PRACTICE PADS AND BENTO IN HAND! OMW UP! 🍱🔥" },
+      { author: "Aoi Mizuhara", text: "Akari, please do not run on the rooftop stairs." },
+      { author: "Akari Minase", text: "Fast walking! Fast walking only!! 🏃‍♀️💨" },
+      { author: "Nekomi Aoyama", text: "Sunlight is perfect today! Setup complete! ☀️✨" },
+      { author: "Sera Hanibara", text: "Count us in, Akari! 1... 2... 3... GO! 🎶" }
     ],
     [
       { author: "Locker_115_Hana", text: "Rooftop acoustics today are amazing! We can hear the guitar chords down from the courtyard!" },
@@ -68,36 +85,42 @@ const TIME_BASED_CONVERSATIONS = {
 
   // Afternoon & Club Hours (2:00 PM - 6:59 PM)
   afternoon: [
+    // Long 8-Message Intense Band Rehearsal Sequence
     [
       { author: "Sera Hanibara", text: "Rooftop amp setup complete! Checking gain levels on input 2 ⚡" },
       { author: "Nekomi Aoyama", text: "Girls of Phantom bridge section sounds so clean with the new distortion pedal! 🎸" },
-      { author: "Akari Minase", text: "GIVE ME THAT COUNT-IN! 1... 2... 3... GO! 🥁🔥" }
+      { author: "Akari Minase", text: "GIVE ME THAT COUNT-IN! 1... 2... 3... GO! 🥁🔥" },
+      { author: "Aoi Mizuhara", text: "Bass frequency is clipping slightly on the low E string. Tightening tone knob." },
+      { author: "Sera Hanibara", text: "Adjusted EQ on mixer panel! Waveform looks super smooth now 🎛️✨" },
+      { author: "Nekomi Aoyama", text: "That transition into the chorus gave me chills! One more time from measure 16?" },
+      { author: "Akari Minase", text: "COUNTING IN AGAIN! 1... 2... 3... LET'S GOOOOO!! 🥁💥" },
+      { author: "Locker_205_Daisuke", text: "Sounds insane from the courtyard! You guys are killin it today! 🌅" }
     ],
     [
       { author: "Locker_205_Daisuke", text: "Echoes of the band practice sound amazing from down in the courtyard 🌅" },
       { author: "Aoi Mizuhara", text: "Keep the bass end balanced so we don't shake the staff room windows." }
-    ],
-    [
-      { author: "Akari Minase", text: "Tempo test at 165 BPM hit perfectly on the third attempt today!! 🥁✨" },
-      { author: "Sera Hanibara", text: "Saved the audio stems! Waveform looks super tight~" }
     ]
   ],
 
   // Late Night & Night Owls (7:00 PM - 4:59 AM)
   night: [
+    // Long 10-Message Late Night Group Study & Music Production Chat
     [
       { author: "Locker_188_Sora", text: "Anyone still up working on chapter 4 math problems? 🌙" },
       { author: "Sera Hanibara", text: "Exporting audio stems for our demo while doing algebra... dual screen focus 🎧" },
-      { author: "Nekomi Aoyama", text: "Don't forget to get some sleep before tomorrow's sound check!" }
+      { author: "Nekomi Aoyama", text: "Working on acoustic lyrics under my desk lamp... 📝✨" },
+      { author: "Locker_089_Kaito", text: "Problem #14 is brutal... how do you factor the cubic equation?!" },
+      { author: "Aoi Mizuhara", text: "Group the first two terms together, Kaito. Factor out x squared." },
+      { author: "Locker_089_Kaito", text: "THAT WORKED!! Aoi-senpai you are a literal lifesaver!! 🙏" },
+      { author: "Sera Hanibara", text: "Audio stems finished exporting! Uploading to Neko FM deck now 🎶" },
+      { author: "Nekomi Aoyama", text: "Listening now... the ambient synth pads sound so dreamy! 🌌" },
+      { author: "Akari Minase", text: "Just woke up to drink water... ARE YOU GUYS STILL UP?!" },
+      { author: "Nekomi Aoyama", text: "Heading to sleep now! Goodnight everyone~ 💤✨" }
     ],
     [
       { author: "Locker_089_Kaito", text: "Night owl study grind session... caffeine level at 100% ☕" },
       { author: "Akari Minase", text: "Goodnight everyone! Heavy drum training tomorrow morning!! 🥁💤" },
       { author: "Nekomi Aoyama", text: "Stargazing from my desk window... writing acoustic lyrics for Nekomi & Sera duo ✨" }
-    ],
-    [
-      { author: "Sera Hanibara", text: "Finished mixing the synth pads for Neko FM loop... export complete 🎧✨" },
-      { author: "Locker_188_Sora", text: "Sounds incredible! Perfect background audio for late night homework." }
     ]
   ]
 };
