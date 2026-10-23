@@ -75,8 +75,8 @@
     /* ============================================================ */
     .top-header-bar {
       position: absolute;
-      top: 28px;
-      left: 28px;
+      top: 24px;
+      left: 24px;
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -97,6 +97,8 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .top-left-login-btn:hover {
@@ -111,33 +113,34 @@
     /* ============================================================ */
     .container {
       max-width: 1200px;
-      margin: 40px auto 3rem;
+      margin: 80px auto 3rem;
       padding: 0 1.2rem;
     }
 
     .hero-landing {
       text-align: center;
-      padding: 3rem 1.5rem 2rem;
+      padding: 2rem 1rem 1.5rem;
       position: relative;
     }
 
     .hero-glitch-title {
-      font-family: 'Fredoka', 'Segoe UI', cursive, sans-serif;
-      font-size: 3.8rem;
+      font-family: 'Fredoka', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font-size: clamp(2.2rem, 7vw, 3.8rem);
       font-weight: 900;
-      letter-spacing: 4px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--accent-cyan);
       text-shadow: 0 0 25px rgba(0, 240, 255, 0.8), 0 0 40px rgba(255, 0, 127, 0.4);
       animation: textGlitch 4s infinite;
       margin-bottom: 0.4rem;
+      word-break: break-word;
     }
 
     .hero-tagline {
-      font-size: 1.25rem;
+      font-size: clamp(0.95rem, 3.5vw, 1.25rem);
       font-weight: 800;
       color: var(--accent-pink);
-      letter-spacing: 3px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       margin-bottom: 1.2rem;
       text-shadow: 0 0 12px var(--accent-glow);
@@ -164,7 +167,7 @@
       position: relative;
       overflow: hidden;
       animation: hudPulse 3s infinite ease-in-out;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: Consolas, 'Courier New', Courier, monospace;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     }
 
@@ -175,6 +178,8 @@
       margin-bottom: 0.8rem;
       position: relative;
       z-index: 2;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     .hud-header {
@@ -220,6 +225,7 @@
       align-items: center;
       text-align: left;
       width: 100%;
+      touch-action: manipulation;
     }
 
     .hud-metric-btn:hover {
@@ -246,7 +252,7 @@
     }
 
     /* ============================================================ */
-    /* ⚡ DESTINATION CARDS GRID                                    */
+    /* ⚡ DESTINATION CARDS GRID                                     */
     /* ============================================================ */
     .portal-section-title {
       font-size: 1.8rem;
@@ -262,8 +268,8 @@
 
     .portal-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
       margin-bottom: 3rem;
     }
 
@@ -327,6 +333,8 @@
       transition: all 0.25s ease;
       display: block;
       cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .card-link-btn:hover {
@@ -343,6 +351,37 @@
       margin-top: 4rem;
       border-top: 1px solid var(--card-border);
       padding-top: 1.5rem;
+    }
+
+    /* MOBILE SPECIFIC RESPONSIVE ADJUSTMENTS */
+    @media (max-width: 600px) {
+      .top-header-bar {
+        position: relative;
+        top: 0;
+        left: 0;
+        padding: 16px 16px 0 16px;
+        justify-content: center;
+      }
+      
+      .top-left-login-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+
+      .container {
+        margin-top: 20px;
+        padding: 0 1rem;
+      }
+
+      .portal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hud-banner {
+        padding: 1rem;
+      }
     }
 
     /* KEYFRAMES */
@@ -364,7 +403,7 @@
 
   <!-- TOP LEFT PROMINENT LOGIN BAR -->
   <div class="top-header-bar">
-    <button class="top-left-login-btn" onclick="if (window.openAuthOrAccount) { window.openAuthOrAccount(); } else if (window.loginWithGoogle) { window.loginWithGoogle(); }">
+    <button class="top-left-login-btn" onclick="executeMobileSafeAuth()">
       🔑 Account Login
     </button>
   </div>
@@ -493,6 +532,26 @@
   </div>
 
   <script>
+    /* MOBILE-SAFE LOGIN DISPATCHER */
+    function executeMobileSafeAuth() {
+      // Check if inside social media WebView (Messenger/Instagram/Facebook/Line)
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const isInApp = /FBAN|FBAV|Instagram|Line|Messenger/i.test(ua);
+
+      if (isInApp) {
+        alert("Google Sign-In isn't supported inside social app browsers. Please tap the top right menu (⋮ or ...) and select 'Open in Chrome' or 'Open in Browser'.");
+        return;
+      }
+
+      if (window.openAuthOrAccount) {
+        window.openAuthOrAccount();
+      } else if (window.loginWithGoogle) {
+        window.loginWithGoogle();
+      } else {
+        alert("Auth module is initializing... Please try again in a moment.");
+      }
+    }
+
     /* INTERACTIVE HUD CYCLING LOGIC FOR LANDING PAGE */
     const gateStates = [
       { text: "[Sub-Stage Gate: Online]", mode: "" },
