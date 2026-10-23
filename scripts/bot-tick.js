@@ -10,8 +10,98 @@ initializeApp({
 
 const db = getFirestore();
 
-// Time-Aware Conversational Pools for Natural 24/7 Activity
-const TIME_BASED_CONVERSATIONS = {
+// ==========================================
+// PATH 2: DYNAMIC MAD-LIBS VARIABLE BANKS
+// ==========================================
+const LOCATIONS = [
+  "the rooftop bench", 
+  "locker 104", 
+  "the B-wing stairs", 
+  "the courtyard kiosk", 
+  "the music room counter", 
+  "the library drop box"
+];
+
+const ITEMS = [
+  "a purple guitar pick", 
+  "a matcha Pocky box", 
+  "a synth cable adapter", 
+  "a worn lyric notebook", 
+  "a 0.5mm lead pack", 
+  "a strawberry parfait coupon"
+];
+
+const SUBJECTS = [
+  "chapter 4 algebra", 
+  "3rd period physics lab", 
+  "world history notes", 
+  "16th note rhythm theory"
+];
+
+function getRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// Dynamic Template Generators for Path 2
+const DYNAMIC_TEMPLATES = {
+  morning: [
+    () => {
+      const item = getRandom(ITEMS);
+      const loc = getRandom(LOCATIONS);
+      return [
+        { author: "Locker_104_Ren", text: `Has anyone seen ${item}? I think I dropped it near ${loc}! 😅` },
+        { author: "Nekomi Aoyama", text: `I passed by ${loc} a few minutes ago, let me check for you!` },
+        { author: "Akari Minase", text: `FOUND IT! Leaving it right on top of ${loc} for you! 🏃‍♀️💨` }
+      ];
+    }
+  ],
+  class_hours: [
+    () => {
+      const subject = getRandom(SUBJECTS);
+      return [
+        { author: "Locker_052_Taro", text: `Is anyone else lost on the ${subject} assignment? ✍️` },
+        { author: "Aoi Mizuhara", text: `Review the board examples from yesterday before class ends.` },
+        { author: "Sera Hanibara", text: `I saved a summary diagram if anyone needs to glance at it later~` }
+      ];
+    }
+  ],
+  lunchtime: [
+    () => {
+      const item = getRandom(ITEMS);
+      const loc = getRandom(LOCATIONS);
+      return [
+        { author: "Locker_077_Kenji", text: `Trading ${item} for lunch snacks near ${loc}!` },
+        { author: "Nekomi Aoyama", text: `Save some for rooftop jam practice later! 🎸` }
+      ];
+    }
+  ],
+  afternoon: [
+    () => {
+      const loc = getRandom(LOCATIONS);
+      return [
+        { author: "Akari Minase", text: `Speed run to ${loc} for post-practice snacks!! 🏃‍♀️💨` },
+        { author: "Aoi Mizuhara", text: `Please do not run inside the building.` },
+        { author: "Akari Minase", text: "Fast walking mode engaged!! 🤫" }
+      ];
+    }
+  ],
+  night: [
+    () => {
+      const subject = getRandom(SUBJECTS);
+      const item = getRandom(ITEMS);
+      return [
+        { author: "Locker_188_Sora", text: `Late night study grind... currently stuck on ${subject} 🌙` },
+        { author: "Sera Hanibara", text: `Taking a quick break from mixing synth tracks! Left ${item} on my desk for focus ✨` },
+        { author: "Aoi Mizuhara", text: `Remember to take short breaks every 45 minutes, Sora.` }
+      ];
+    }
+  ]
+};
+
+// ==========================================
+// PATH 1: STATIC NARRATIVE CONVERSATIONS
+// ==========================================
+const STORY_CONVERSATIONS = {
   // Morning (5:00 AM - 8:59 AM)
   morning: [
     // Long 8-Message Morning Assembly & Lost Key Exchange
@@ -160,29 +250,32 @@ async function pruneOldMessages() {
 
 async function runChatBurst() {
   const messagesRef = db.collection("channels").doc("bots").collection("messages");
-
-  // Get current time slot pool
   const timeSlot = getCurrentTimeSlot();
-  const activePools = TIME_BASED_CONVERSATIONS[timeSlot] || TIME_BASED_CONVERSATIONS.night;
 
-  // Check the last posted message text across the whole channel
+  // Get the last posted message text across the channel to prevent back-to-back duplicates
   const lastMsgSnap = await messagesRef.orderBy("timestamp", "desc").limit(1).get();
   let lastText = "";
   if (!lastMsgSnap.empty) {
     lastText = lastMsgSnap.docs[0].data().text || "";
   }
 
-  // Check all messages in each pool so no line in the pool matches the last posted message
-  let availablePools = activePools.filter(pool => {
-    return !pool.some(msg => msg.text === lastText);
-  });
-  
-  if (availablePools.length === 0) availablePools = activePools;
+  // 50% Chance to pick Path 2 (Dynamic Template) vs Path 1 (Narrative Story)
+  const useDynamic = Math.random() > 0.5 && DYNAMIC_TEMPLATES[timeSlot] && DYNAMIC_TEMPLATES[timeSlot].length > 0;
 
-  // Pick a random conversation from the valid pools
-  const conversation = availablePools[Math.floor(Math.random() * availablePools.length)];
+  let conversation;
 
-  console.log(`[Bot Engine] Slot: ${timeSlot} | Starting chat sequence (${conversation.length} messages)...`);
+  if (useDynamic) {
+    const generator = getRandom(DYNAMIC_TEMPLATES[timeSlot]);
+    conversation = generator();
+    console.log(`[Bot Engine] Slot: ${timeSlot} | Generated Path 2 Dynamic Sequence (${conversation.length} msgs)...`);
+  } else {
+    const staticPool = STORY_CONVERSATIONS[timeSlot] || STORY_CONVERSATIONS.night;
+    let availablePools = staticPool.filter(pool => !pool.some(msg => msg.text === lastText));
+    if (availablePools.length === 0) availablePools = staticPool;
+
+    conversation = getRandom(availablePools);
+    console.log(`[Bot Engine] Slot: ${timeSlot} | Picked Path 1 Story Sequence (${conversation.length} msgs)...`);
+  }
 
   for (const msg of conversation) {
     try {
@@ -195,7 +288,7 @@ async function runChatBurst() {
       });
       console.log(`[Bot Success]: ${msg.author} -> "${msg.text}"`);
 
-      // 3 to 8 second typing gap
+      // 3 to 8 second typing delay between messages
       const typingDelay = Math.floor(Math.random() * (8000 - 3000)) + 3000;
       await sleep(typingDelay);
     } catch (error) {
