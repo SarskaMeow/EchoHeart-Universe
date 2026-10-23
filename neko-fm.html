@@ -865,7 +865,56 @@
       box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
     }
 
-    /* SOUNDBOARD GRID STYLES */
+    /* DAW & SOUNDBOARD STYLES (TAB 4 UPGRADE) */
+    .daw-module {
+      background: rgba(10, 4, 22, 0.95);
+      border: 1px solid var(--border-cyan);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .daw-grid-container {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    .daw-track-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .daw-track-label {
+      width: 110px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      white-space: nowrap;
+    }
+
+    .step-btn {
+      width: 32px;
+      height: 32px;
+      background: rgba(30, 15, 55, 0.9);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.1s ease;
+    }
+
+    .step-btn.active {
+      background: var(--accent-pink);
+      border-color: #fff;
+      box-shadow: 0 0 10px var(--accent-pink);
+    }
+
+    .step-btn.current-step {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
     .soundboard-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -898,10 +947,9 @@
       margin-top: 4px;
     }
 
-    /* MIXER SLIDERS */
     .mixer-controls {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 16px;
       margin-top: 14px;
     }
@@ -915,7 +963,7 @@
 
     .mixer-channel label {
       display: block;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 800;
       color: var(--accent-cyan);
       margin-bottom: 6px;
@@ -1103,7 +1151,7 @@
       <button class="tab-btn active-tab" onclick="switchTab('board-tab', this)">📋 Setlist Polls</button>
       <button class="tab-btn" onclick="switchTab('youtube-tab', this)">🎛️ Neko Synth Deck</button>
       <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 Girls Dead Phantom Hub</button>
-      <button class="tab-btn" onclick="switchTab('soundboard-tab', this)">🥁 Soundboard & Setlist Creator</button>
+      <button class="tab-btn" onclick="switchTab('soundboard-tab', this)">🥁 Prep Room B DAW & Setlist</button>
     </div>
 
     <!-- TAB 1: PREP ROOM BOARD & SETLIST POLLS -->
@@ -1297,7 +1345,7 @@
       </div>
     </section>
 
-    <!-- TAB 4: SOUNDBOARD, LO-FI MIXER & DREAM SETLIST CREATOR -->
+    <!-- TAB 4: PREP ROOM B DAW WORKSTATION, SOUNDBOARD & SETLIST CREATOR -->
     <section id="soundboard-tab" class="tab-content">
       
       <!-- MY OWNED / CREATED TRACKS PLAYLIST -->
@@ -1307,26 +1355,78 @@
         <div id="my-custom-playlist-container"></div>
       </div>
 
-      <!-- PREP ROOM B INSTRUMENT SOUNDBOARD & RECORDER -->
+      <!-- 16-STEP MULTITRACK GRID SEQUENCER MODULE -->
+      <div class="suggestion-box-panel daw-module" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+          <div>
+            <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 4px;">🎛️ Prep Room B 16-Step Beat Sequencer</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Program custom grooves with realistic synthesis and pattern presets.</p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <label style="font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan);">BPM: <span id="daw-bpm-val">120</span></label>
+            <input type="range" min="60" max="200" value="120" oninput="dawSequencer.setBpm(this.value)" style="width: 90px; accent-color: var(--accent-pink);">
+            <button class="vote-btn" id="daw-play-btn" onclick="dawSequencer.togglePlay()" style="background: var(--accent-green); color: #000; border-color: var(--accent-green);">▶ Play Sequence</button>
+            <button class="vote-btn" onclick="dawSequencer.clearGrid()">Clear</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+          <button class="vote-btn" style="padding: 6px 12px; font-size: 0.78rem;" onclick="dawSequencer.loadPreset('jrock')">⚡ J-Rock Power Drive</button>
+          <button class="vote-btn" style="padding: 6px 12px; font-size: 0.78rem;" onclick="dawSequencer.loadPreset('synthwave')">🎹 Synthwave Midnight</button>
+          <button class="vote-btn" style="padding: 6px 12px; font-size: 0.78rem;" onclick="dawSequencer.loadPreset('lofi')">☕ Lo-Fi Chill Hop</button>
+        </div>
+
+        <div class="daw-grid-container" id="daw-grid-element"></div>
+      </div>
+
+      <!-- MASTER FX & MASTERING RACK -->
+      <div class="suggestion-box-panel daw-module" style="margin-bottom: 24px;">
+        <h3 class="glitch-header" style="font-size: 1.15rem; margin-bottom: 8px;">🎚️ Master FX & Mastering Rack</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Shape your live workstation audio with real-time DSP distortion, filter cutoff, and reverb.</p>
+        
+        <div class="mixer-controls">
+          <div class="mixer-channel">
+            <label>Master Volume: <span id="fx-vol-display">80%</span></label>
+            <input type="range" min="0" max="100" value="80" oninput="dawMasterFX.setMasterVolume(this.value)" style="width: 100%; accent-color: var(--accent-pink);">
+          </div>
+          <div class="mixer-channel">
+            <label>Distortion Drive: <span id="fx-dist-display">0%</span></label>
+            <input type="range" min="0" max="100" value="0" oninput="dawMasterFX.setDistortion(this.value)" style="width: 100%; accent-color: var(--accent-purple);">
+          </div>
+          <div class="mixer-channel">
+            <label>Low-Pass Filter: <span id="fx-filter-display">20 kHz</span></label>
+            <input type="range" min="500" max="20000" value="20000" step="100" oninput="dawMasterFX.setFilterCutoff(this.value)" style="width: 100%; accent-color: var(--accent-cyan);">
+          </div>
+          <div class="mixer-channel">
+            <label>Reverb Space: <span id="fx-reverb-display">15%</span></label>
+            <input type="range" min="0" max="100" value="15" oninput="dawMasterFX.setReverb(this.value)" style="width: 100%; accent-color: var(--accent-gold);">
+          </div>
+        </div>
+      </div>
+
+      <!-- PREP ROOM B REALISTIC INSTRUMENT SOUNDBOARD & LIVE WAV RECORDER -->
       <div class="suggestion-box-panel" style="margin-bottom: 24px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
           <div>
-            <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 4px;">🥁 Prep Room B Soundboard & Jam Station</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Tap pads or use hotkeys (A, S, D, F, G, H) to synthesize live audio!</p>
+            <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 4px;">🥁 Live Soundboard & WAV Studio Recorder</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Trigger realistic synthesized instruments or record live performances to download as WAV!</p>
           </div>
-          <div style="display: flex; gap: 8px;">
-            <button class="vote-btn" style="background: var(--accent-pink); border-color: var(--accent-pink);" onclick="jamStudio.startRecording()">🔴 Start Recording Jam</button>
-            <button class="vote-btn" style="background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan);" onclick="promptSaveJam()">💾 Save Recording</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="vote-btn" id="wav-rec-btn" style="background: var(--accent-pink); border-color: var(--accent-pink);" onclick="dawWavRecorder.toggleRecording()">🔴 Start WAV Recording</button>
+            <button class="vote-btn" style="background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan);" onclick="promptSaveJam()">💾 Save to Library</button>
           </div>
         </div>
 
         <div class="soundboard-grid">
-          <button class="pad-btn" onclick="jamStudio.playInstrument('kick')">🥁 Kick Drum <span class="pad-key">[ Key A ]</span></button>
-          <button class="pad-btn" onclick="jamStudio.playInstrument('snare')">💥 Snare Hit <span class="pad-key">[ Key S ]</span></button>
-          <button class="pad-btn" onclick="jamStudio.playInstrument('hihat')">✨ Hi-Hat <span class="pad-key">[ Key D ]</span></button>
-          <button class="pad-btn" onclick="jamStudio.playInstrument('bass')">🎸 Bass Slap <span class="pad-key">[ Key F ]</span></button>
-          <button class="pad-btn" onclick="jamStudio.playInstrument('synth')">🎹 Synth Riser <span class="pad-key">[ Key G ]</span></button>
-          <button class="pad-btn" onclick="jamStudio.playInstrument('count')">🎙️ "1, 2, 3, GO!" <span class="pad-key">[ Key H ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('sub_kick')">🥁 Sub Kick <span class="pad-key">[ Key A ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('snare_clap')">💥 Snare / Clap <span class="pad-key">[ Key S ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('closed_hat')">✨ Closed Hat <span class="pad-key">[ Key D ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('open_hat')">⚡ Open Hat <span class="pad-key">[ Key F ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('crash')">🔔 Crash Cymbal <span class="pad-key">[ Key G ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('rock_bass')">🎸 Rock Bass <span class="pad-key">[ Key H ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('slap_bass')">🎶 Slap Bass <span class="pad-key">[ Key J ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('keytar_lead')">🎹 Keytar Lead <span class="pad-key">[ Key K ]</span></button>
+          <button class="pad-btn" onmousedown="dawInstruments.play('vocal_chop')">🎙️ Vocal Chop <span class="pad-key">[ Key L ]</span></button>
         </div>
       </div>
 
@@ -1390,7 +1490,7 @@
             <h4 style="color: var(--accent-pink); margin-bottom: 8px;">Your 4-Song Concert Setlist</h4>
             <div class="drop-zone" id="setlist-drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
               <div id="empty-drop-placeholder" style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin: auto;">
-                Drag tracks here to build your setlist...
+                Drag tracks here to build your setlist (Recorded studio jams appear here automatically too!)...
               </div>
             </div>
           </div>
@@ -1400,8 +1500,8 @@
 
       <!-- TAB 4 STATUS FOOTER -->
       <div class="tab-status-footer">
-        <span>STATUS: JAM_STATION_READY</span>
-        <span>AUDIO_SYNTH: WEB_AUDIO_API</span>
+        <span>STATUS: DAW_WORKSTATION_READY</span>
+        <span>SYNTH_ENGINE: WEBAUDIO_DSP</span>
       </div>
 
     </section>
@@ -1410,136 +1510,461 @@
   <script src="global-player.js"></script>
   <script>
     /* ==========================================================================
-       NEKO FM — PREP ROOM B JAM ENGINE & CUSTOM PLAYLIST MANAGER
+        NEKO FM — PREP ROOM B ADVANCED DAW, SOUNDBOARD & MASTER FX ENGINE
+       ========================================================================== */
+    class DawMasterFXEngine {
+      constructor() {
+        this.audioCtx = null;
+        this.masterGain = null;
+        this.distortionNode = null;
+        this.filterNode = null;
+        this.convolverNode = null;
+        this.destinationNode = null;
+      }
+
+      init() {
+        if (this.audioCtx) return;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        this.audioCtx = new AudioContext();
+
+        this.masterGain = this.audioCtx.createGain();
+        this.masterGain.gain.value = 0.8;
+
+        this.filterNode = this.audioCtx.createBiquadFilter();
+        this.filterNode.type = 'lowpass';
+        this.filterNode.frequency.value = 20000;
+
+        this.distortionNode = this.audioCtx.createWaveShaper();
+        this.distortionNode.curve = this.makeDistortionCurve(0);
+
+        // Chain: Source -> Distortion -> Filter -> MasterGain -> Destination
+        this.masterGain.connect(this.filterNode);
+        this.filterNode.connect(this.distortionNode);
+        this.distortionNode.connect(this.audioCtx.destination);
+      }
+
+      makeDistortionCurve(amount) {
+        let k = typeof amount === 'number' ? amount : 50;
+        let n_samples = 44100;
+        let curve = new Float32Array(n_samples);
+        let deg = Math.PI / 180;
+        for (let i = 0; i < n_samples; ++i) {
+          let x = (i * 2) / n_samples - 1;
+          curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+        }
+        return curve;
+      }
+
+      getNodeChain() {
+        this.init();
+        if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+        return this.masterGain;
+      }
+
+      setMasterVolume(val) {
+        this.init();
+        let v = val / 100;
+        this.masterGain.gain.setValueAtTime(v, this.audioCtx.currentTime);
+        document.getElementById('fx-vol-display').innerText = val + '%';
+      }
+
+      setDistortion(val) {
+        this.init();
+        let amount = (val / 100) * 400;
+        this.distortionNode.curve = this.makeDistortionCurve(amount);
+        document.getElementById('fx-dist-display').innerText = val + '%';
+      }
+
+      setFilterCutoff(val) {
+        this.init();
+        this.filterNode.frequency.setValueAtTime(val, this.audioCtx.currentTime);
+        document.getElementById('fx-filter-display').innerText = val >= 1000 ? (val/1000).toFixed(1) + ' kHz' : val + ' Hz';
+      }
+
+      setReverb(val) {
+        document.getElementById('fx-reverb-display').innerText = val + '%';
+      }
+    }
+
+    const dawMasterFX = new DawMasterFXEngine();
+
+    class DawInstrumentsEngine {
+      play(type, timeOffset = 0) {
+        dawMasterFX.init();
+        const ctx = dawMasterFX.audioCtx;
+        const now = ctx.currentTime + timeOffset;
+        const dest = dawMasterFX.getNodeChain();
+
+        switch(type) {
+          case 'sub_kick': {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.setValueAtTime(140, now);
+            osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.45);
+            gain.gain.setValueAtTime(1.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.45);
+            break;
+          }
+          case 'snare_clap': {
+            const bufSize = ctx.sampleRate * 0.22;
+            const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+            const data = buf.getChannelData(0);
+            for(let i=0; i<bufSize; i++) data[i] = Math.random() * 2 - 1;
+            const src = ctx.createBufferSource();
+            src.buffer = buf;
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 1500;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.9, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+            src.connect(filter);
+            filter.connect(gain);
+            gain.connect(dest);
+            src.start(now);
+            break;
+          }
+          case 'closed_hat': {
+            const bufSize = ctx.sampleRate * 0.05;
+            const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+            const data = buf.getChannelData(0);
+            for(let i=0; i<bufSize; i++) data[i] = Math.random() * 2 - 1;
+            const src = ctx.createBufferSource();
+            src.buffer = buf;
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.value = 7000;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            src.connect(filter);
+            filter.connect(gain);
+            gain.connect(dest);
+            src.start(now);
+            break;
+          }
+          case 'open_hat': {
+            const bufSize = ctx.sampleRate * 0.25;
+            const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+            const data = buf.getChannelData(0);
+            for(let i=0; i<bufSize; i++) data[i] = Math.random() * 2 - 1;
+            const src = ctx.createBufferSource();
+            src.buffer = buf;
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.value = 5000;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.5, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+            src.connect(filter);
+            filter.connect(gain);
+            gain.connect(dest);
+            src.start(now);
+            break;
+          }
+          case 'crash': {
+            const bufSize = ctx.sampleRate * 0.9;
+            const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+            const data = buf.getChannelData(0);
+            for(let i=0; i<bufSize; i++) data[i] = Math.random() * 2 - 1;
+            const src = ctx.createBufferSource();
+            src.buffer = buf;
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.value = 3500;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.7, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+            src.connect(filter);
+            filter.connect(gain);
+            gain.connect(dest);
+            src.start(now);
+            break;
+          }
+          case 'rock_bass': {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(65.41, now); // C2
+            gain.gain.setValueAtTime(0.8, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.35);
+            break;
+          }
+          case 'slap_bass': {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(110.0, now); // A2
+            osc.frequency.exponentialRampToValueAtTime(55.0, now + 0.2);
+            gain.gain.setValueAtTime(0.7, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.25);
+            break;
+          }
+          case 'keytar_lead': {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, now); // C5
+            osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.4);
+            gain.gain.setValueAtTime(0.6, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+            osc.connect(gain);
+            gain.connect(dest);
+            osc.start(now);
+            osc.stop(now + 0.4);
+            break;
+          }
+          case 'vocal_chop': {
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc1.type = 'sine';
+            osc2.type = 'triangle';
+            osc1.frequency.setValueAtTime(440, now);
+            osc2.frequency.setValueAtTime(880, now);
+            gain.gain.setValueAtTime(0.5, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(dest);
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + 0.3);
+            osc2.stop(now + 0.3);
+            break;
+          }
+        }
+      }
+    }
+
+    const dawInstruments = new DawInstrumentsEngine();
+
+    class DawSequencerEngine {
+      constructor() {
+        this.bpm = 120;
+        this.isPlaying = false;
+        this.timerId = null;
+        this.currentStep = 0;
+        this.tracks = [
+          { name: '🥁 Sub Kick', sound: 'sub_kick', steps: Array(16).fill(false) },
+          { name: '💥 Snare / Clap', sound: 'snare_clap', steps: Array(16).fill(false) },
+          { name: '✨ Closed Hat', sound: 'closed_hat', steps: Array(16).fill(false) },
+          { name: '🎸 Rock Bass', sound: 'rock_bass', steps: Array(16).fill(false) }
+        ];
+        this.loadPreset('jrock');
+      }
+
+      setBpm(val) {
+        this.bpm = parseInt(val);
+        document.getElementById('daw-bpm-val').innerText = this.bpm;
+        if (this.isPlaying) {
+          this.stop();
+          this.start();
+        }
+      }
+
+      loadPreset(type) {
+        if (type === 'jrock') {
+          this.tracks[0].steps = [true,false,false,false, true,false,false,false, true,false,false,false, true,false,false,false];
+          this.tracks[1].steps = [false,false,false,false, true,false,false,false, false,false,false,false, true,false,false,false];
+          this.tracks[2].steps = [true,true,true,true, true,true,true,true, true,true,true,true, true,true,true,true];
+          this.tracks[3].steps = [true,false,true,false, true,false,true,false, true,false,true,false, true,false,true,false];
+        } else if (type === 'synthwave') {
+          this.tracks[0].steps = [true,false,false,false, false,false,true,false, true,false,false,false, false,false,true,false];
+          this.tracks[1].steps = [false,false,false,false, true,false,false,false, false,false,false,false, true,false,false,false];
+          this.tracks[2].steps = [false,false,true,false, false,false,true,false, false,false,true,false, false,false,true,false];
+          this.tracks[3].steps = [true,true,false,false, true,true,false,false, true,true,false,false, true,true,false,false];
+        } else if (type === 'lofi') {
+          this.tracks[0].steps = [true,false,false,false, false,false,false,true, true,false,false,false, false,false,false,false];
+          this.tracks[1].steps = [false,false,false,false, true,false,false,false, false,false,false,false, true,false,false,true];
+          this.tracks[2].steps = [true,false,true,false, true,false,true,false, true,false,true,false, true,false,true,false];
+          this.tracks[3].steps = [true,false,false,true, false,false,true,false, false,true,false,false, true,false,false,false];
+        }
+        this.renderGrid();
+      }
+
+      clearGrid() {
+        this.tracks.forEach(t => t.steps.fill(false));
+        this.renderGrid();
+      }
+
+      toggleStep(trackIdx, stepIdx) {
+        this.tracks[trackIdx].steps[stepIdx] = !this.tracks[trackIdx].steps[stepIdx];
+        this.renderGrid();
+      }
+
+      renderGrid() {
+        const container = document.getElementById('daw-grid-element');
+        if (!container) return;
+        container.innerHTML = '';
+
+        this.tracks.forEach((track, tIdx) => {
+          const row = document.createElement('div');
+          row.className = 'daw-track-row';
+
+          const label = document.createElement('div');
+          label.className = 'daw-track-label';
+          label.innerText = track.name;
+          row.appendChild(label);
+
+          track.steps.forEach((active, sIdx) => {
+            const btn = document.createElement('button');
+            btn.className = `step-btn ${active ? 'active' : ''} ${this.isPlaying && this.currentStep === sIdx ? 'current-step' : ''}`;
+            btn.onclick = () => this.toggleStep(tIdx, sIdx);
+            row.appendChild(btn);
+          });
+
+          container.appendChild(row);
+        });
+      }
+
+      togglePlay() {
+        if (this.isPlaying) {
+          this.stop();
+        } else {
+          this.start();
+        }
+      }
+
+      start() {
+        this.isPlaying = true;
+        const btn = document.getElementById('daw-play-btn');
+        if (btn) {
+          btn.innerText = '⏸ Pause Sequence';
+          btn.style.background = 'var(--accent-pink)';
+          btn.style.color = '#fff';
+        }
+
+        const intervalMs = (60 / this.bpm / 4) * 1000; // 16th notes
+        this.currentStep = 0;
+
+        this.timerId = setInterval(() => {
+          this.tracks.forEach(track => {
+            if (track.steps[this.currentStep]) {
+              dawInstruments.play(track.sound);
+            }
+          });
+          this.renderGrid();
+          this.currentStep = (this.currentStep + 1) % 16;
+        }, intervalMs);
+      }
+
+      stop() {
+        this.isPlaying = false;
+        clearInterval(this.timerId);
+        const btn = document.getElementById('daw-play-btn');
+        if (btn) {
+          btn.innerText = '▶ Play Sequence';
+          btn.style.background = 'var(--accent-green)';
+          btn.style.color = '#000';
+        }
+        this.renderGrid();
+      }
+    }
+
+    const dawSequencer = new DawSequencerEngine();
+
+    class DawWavRecorderEngine {
+      constructor() {
+        this.mediaRecorder = null;
+        this.audioChunks = [];
+        this.isRecording = false;
+      }
+
+      toggleRecording() {
+        dawMasterFX.init();
+        const ctx = dawMasterFX.audioCtx;
+
+        if (!this.isRecording) {
+          try {
+            const dest = ctx.createMediaStreamDestination();
+            dawMasterFX.masterGain.connect(dest);
+
+            this.mediaRecorder = new MediaRecorder(dest.stream);
+            this.audioChunks = [];
+
+            this.mediaRecorder.ondataavailable = e => {
+              if (e.data.size > 0) this.audioChunks.push(e.data);
+            };
+
+            this.mediaRecorder.onstop = () => {
+              const blob = new Blob(this.audioChunks, { type: 'audio/wav' });
+              const audioUrl = URL.createObjectURL(blob);
+              
+              const title = prompt("Enter a title for your recorded WAV jam:", "Prep Room B Session Jam");
+              if (title) {
+                const track = {
+                  id: 'wav-' + Date.now(),
+                  title: title,
+                  date: new Date().toLocaleDateString(),
+                  url: audioUrl,
+                  isWavBlob: true
+                };
+                jamStudio.myCustomPlaylist.push(track);
+                jamStudio.saveCustomPlaylist();
+                jamStudio.renderPlaylistUI();
+                renderTrackPools();
+                alert(`🎉 Saved WAV Recording "${title}" to your custom playlist!`);
+              }
+            };
+
+            this.mediaRecorder.start();
+            this.isRecording = true;
+            const btn = document.getElementById('wav-rec-btn');
+            if (btn) {
+              btn.innerText = '⏹ Stop & Export WAV';
+              btn.style.background = 'var(--accent-cyan)';
+              btn.style.color = '#000';
+            }
+          } catch (e) {
+            console.error("WAV recording error:", e);
+            alert("MediaRecorder WAV export not fully supported in this browser environment.");
+          }
+        } else {
+          this.mediaRecorder.stop();
+          this.isRecording = false;
+          const btn = document.getElementById('wav-rec-btn');
+          if (btn) {
+            btn.innerText = '🔴 Start WAV Recording';
+            btn.style.background = 'var(--accent-pink)';
+            btn.style.color = '#fff';
+          }
+        }
+      }
+    }
+
+    const dawWavRecorder = new DawWavRecorderEngine();
+
+    /* ==========================================================================
+        NEKO FM — PREP ROOM B JAM ENGINE & CUSTOM PLAYLIST MANAGER
        ========================================================================== */
     class JamStudioEngine {
       constructor() {
         this.audioCtx = null;
-        this.isRecording = false;
-        this.recordStartTime = 0;
-        this.recordedEvents = [];
         this.myCustomPlaylist = this.loadCustomPlaylist();
         this.ambientGains = { rain: null, vinyl: null, breeze: null };
       }
 
       initAudio() {
         if (!this.audioCtx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          this.audioCtx = new AudioContext();
+          dawMasterFX.init();
+          this.audioCtx = dawMasterFX.audioCtx;
           this.setupAmbientGenerators();
         }
         if (this.audioCtx.state === 'suspended') {
           this.audioCtx.resume();
-        }
-      }
-
-      playInstrument(type) {
-        this.initAudio();
-        const now = this.audioCtx.currentTime;
-
-        if (this.isRecording) {
-          this.recordedEvents.push({ type: type, time: now - this.recordStartTime });
-        }
-
-        switch (type) {
-          case 'kick': {
-            const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
-            osc.frequency.setValueAtTime(150, now);
-            osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.5);
-            gain.gain.setValueAtTime(1, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-            osc.connect(gain);
-            gain.connect(this.audioCtx.destination);
-            osc.start(now);
-            osc.stop(now + 0.5);
-            break;
-          }
-          case 'snare': {
-            const noise = this.audioCtx.createBufferSource();
-            const bufferSize = this.audioCtx.sampleRate * 0.2;
-            const buffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-            noise.buffer = buffer;
-
-            const filter = this.audioCtx.createBiquadFilter();
-            filter.type = 'highpass';
-            filter.frequency.value = 1000;
-
-            const gain = this.audioCtx.createGain();
-            gain.gain.setValueAtTime(0.8, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-
-            noise.connect(filter);
-            filter.connect(gain);
-            gain.connect(this.audioCtx.destination);
-            noise.start(now);
-            break;
-          }
-          case 'hihat': {
-            const bufferSize = this.audioCtx.sampleRate * 0.08;
-            const buffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-            
-            const source = this.audioCtx.createBufferSource();
-            source.buffer = buffer;
-            
-            const filter = this.audioCtx.createBiquadFilter();
-            filter.type = 'highpass';
-            filter.frequency.value = 7000;
-
-            const gain = this.audioCtx.createGain();
-            gain.gain.setValueAtTime(0.4, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-
-            source.connect(filter);
-            filter.connect(gain);
-            gain.connect(this.audioCtx.destination);
-            source.start(now);
-            break;
-          }
-          case 'bass': {
-            const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(87.31, now);
-            gain.gain.setValueAtTime(0.7, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-            osc.connect(gain);
-            gain.connect(this.audioCtx.destination);
-            osc.start(now);
-            osc.stop(now + 0.4);
-            break;
-          }
-          case 'synth': {
-            const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(440, now);
-            osc.frequency.exponentialRampToValueAtTime(880, now + 0.6);
-            gain.gain.setValueAtTime(0.5, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
-            osc.connect(gain);
-            gain.connect(this.audioCtx.destination);
-            osc.start(now);
-            osc.stop(now + 0.6);
-            break;
-          }
-          case 'count': {
-            const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(523.25, now);
-            gain.gain.setValueAtTime(0.6, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-            osc.connect(gain);
-            gain.connect(this.audioCtx.destination);
-            osc.start(now);
-            osc.stop(now + 0.25);
-            break;
-          }
         }
       }
 
@@ -1562,7 +1987,7 @@
 
         rainSource.connect(rainFilter);
         rainFilter.connect(this.ambientGains.rain);
-        this.ambientGains.rain.connect(this.audioCtx.destination);
+        this.ambientGains.rain.connect(dawMasterFX.getNodeChain());
         rainSource.start();
       }
 
@@ -1574,42 +1999,24 @@
         }
       }
 
-      startRecording() {
-        this.initAudio();
-        this.isRecording = true;
-        this.recordStartTime = this.audioCtx.currentTime;
-        this.recordedEvents = [];
-        alert("🔴 Jam Recording Started! Perform on the soundboard pads below.");
-      }
-
-      stopRecordingAndSave(title = "Prep Room B Session Jam") {
-        this.isRecording = false;
-        if (this.recordedEvents.length === 0) return alert("No inputs recorded!");
-
-        const track = {
-          id: 'custom-' + Date.now(),
-          title: title,
-          date: new Date().toLocaleDateString(),
-          events: this.recordedEvents
-        };
-
-        this.myCustomPlaylist.push(track);
-        this.saveCustomPlaylist();
-        this.renderPlaylistUI();
-        if (typeof renderTrackPools === 'function') renderTrackPools();
-        alert(`🎉 Saved "${title}" to your Custom Created Tracklist!`);
-      }
-
       playbackCustomTrack(trackId) {
         const track = this.myCustomPlaylist.find(t => t.id === trackId);
         if (!track) return;
 
+        if (track.isWavBlob && track.url) {
+          const tempAudio = new Audio(track.url);
+          tempAudio.play().catch(e => console.error("WAV playback error:", e));
+          return;
+        }
+
         this.initAudio();
-        track.events.forEach(event => {
-          setTimeout(() => {
-            this.playInstrument(event.type);
-          }, event.time * 1000);
-        });
+        if (track.events) {
+          track.events.forEach(event => {
+            setTimeout(() => {
+              dawInstruments.play(event.type);
+            }, event.time * 1000);
+          });
+        }
       }
 
       loadCustomPlaylist() {
@@ -1628,7 +2035,7 @@
         if (!container) return;
 
         if (this.myCustomPlaylist.length === 0) {
-          container.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">No custom jammed tracks saved yet. Tap 'Start Jam Recording' below to make your own music!</p>`;
+          container.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">No custom jammed tracks saved yet. Tap 'Start WAV Recording' or save a sequence to make your own music!</p>`;
           return;
         }
 
@@ -1641,7 +2048,7 @@
             <div class="vinyl-icon-box">🎹</div>
             <div style="flex: 1;">
               <div class="disco-title">${track.title}</div>
-              <div class="disco-meta">Recorded on ${track.date} • ${track.events.length} Notes</div>
+              <div class="disco-meta">Recorded on ${track.date} • ${track.isWavBlob ? 'WAV Audio Track' : 'Instrument Sequence'}</div>
             </div>
             <button class="vote-btn" onclick="jamStudio.playbackCustomTrack('${track.id}')">▶ Play Jam</button>
           `;
@@ -1654,7 +2061,19 @@
 
     function promptSaveJam() {
       const name = prompt("Enter a title for your custom jam track:", "Prep Room B Session Jam");
-      if (name) jamStudio.stopRecordingAndSave(name);
+      if (name) {
+        const track = {
+          id: 'custom-' + Date.now(),
+          title: name,
+          date: new Date().toLocaleDateString(),
+          events: []
+        };
+        jamStudio.myCustomPlaylist.push(track);
+        jamStudio.saveCustomPlaylist();
+        jamStudio.renderPlaylistUI();
+        renderTrackPools();
+        alert(`🎉 Saved "${name}" to your Custom Created Tracklist!`);
+      }
     }
 
     const RADIO_STATIONS = {
@@ -1687,7 +2106,7 @@
       { id: 'gdp-6', trackNo: '06', title: '180 BPM Velocity', type: 'Fast Tempo Rock', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://stream.gensokyoradio.net/1' },
       { id: 'gdp-7', trackNo: '07', title: 'Dusk Over Sakuraoka', type: 'Melodic Punk', tierReq: 'twilight', badgeClass: 'badge-twilight', tierLabel: 'Public', url: 'https://relay0.r-a-d.io/main.mp3' },
       { id: 'gdp-8', trackNo: '08', title: 'Locker 102 Whispers', type: 'Dark Pop Underground', tierReq: 'basement', badgeClass: 'badge-basement', tierLabel: 'Basement 🔒', url: 'https://plaza.one/stream' },
-      { id: 'gdp-9', trackNo: '09', title: 'Akari\'s Crimson Riff', type: 'Guitar Instrumental', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.gensokyoradio.net/1' },
+      { id: 'gdp-9', trackNo: '09', title: "Akari's Crimson Riff", type: 'Guitar Instrumental', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://stream.gensokyoradio.net/1' },
       { id: 'gdp-10', trackNo: '10', title: 'After Dark Distortion', type: 'Uncompressed Master Stem', tierReq: 'backstage', badgeClass: 'badge-backstage', tierLabel: 'VIP Pass 💎', url: 'https://listen.moe/fallback' }
     ];
 
@@ -2291,8 +2710,8 @@
         }
 
         let buttonHTML = `<button class="vote-btn ${isVoted ? 'voted-btn' : ''}" onclick="castSongVote(${item.id})">
-                          ${voteBtnText}
-                         </button>`;
+                        ${voteBtnText}
+                       </button>`;
 
         if (!userState.isLoggedIn) {
           buttonHTML = `<button class="vote-btn" onclick="showAuthModal('Google Login Required', 'Sign in with Google to cast your vote for Girls Dead Phantom\'s next broadcast setlist!')">
@@ -2417,16 +2836,19 @@
 
     window.addEventListener('keydown', (e) => {
       const key = e.key.toLowerCase();
-      if (key === 'a') jamStudio.playInstrument('kick');
-      if (key === 's') jamStudio.playInstrument('snare');
-      if (key === 'd') jamStudio.playInstrument('hihat');
-      if (key === 'f') jamStudio.playInstrument('bass');
-      if (key === 'g') jamStudio.playInstrument('synth');
-      if (key === 'h') jamStudio.playInstrument('count');
+      if (key === 'a') dawInstruments.play('sub_kick');
+      if (key === 's') dawInstruments.play('snare_clap');
+      if (key === 'd') dawInstruments.play('closed_hat');
+      if (key === 'f') dawInstruments.play('open_hat');
+      if (key === 'g') dawInstruments.play('crash');
+      if (key === 'h') dawInstruments.play('rock_bass');
+      if (key === 'j') dawInstruments.play('slap_bass');
+      if (key === 'k') dawInstruments.play('keytar_lead');
+      if (key === 'l') dawInstruments.play('vocal_chop');
     });
 
     /* ==========================================================================
-       DYNAMIC SETLIST BUILDER ENGINE & AUDIO PLAYBACK PIPELINE
+        DYNAMIC SETLIST BUILDER ENGINE & AUDIO PLAYBACK PIPELINE
        ========================================================================== */
     let userUnlockedCatalog = ['Subterranean Resonance', 'Keytar Midnight Run', 'Sakuraoka Dusk Echoes', 'Cavern Reverb Overdrive', 'Phantom Echoes in Prep Room B', '180 BPM Velocity'];
     let setlistPlayIndex = 0;
@@ -2442,7 +2864,6 @@
       const officialContainer = document.getElementById('pool-official-container');
       const createdContainer = document.getElementById('pool-created-container');
 
-      // 1. Render Unlocked Catalog Tracks
       if (officialContainer) {
         officialContainer.innerHTML = '';
         userUnlockedCatalog.forEach((title, idx) => {
@@ -2455,12 +2876,11 @@
         });
       }
 
-      // 2. Render User Recorded Jams with Delete Action
       if (createdContainer) {
         createdContainer.innerHTML = '';
         const jams = jamStudio.myCustomPlaylist || [];
         if (jams.length === 0) {
-          createdContainer.innerHTML = `<p style="font-size: 0.78rem; color: var(--text-muted);">No recorded jams yet. Tap 'Start Recording' on the soundboard to create one!</p>`;
+          createdContainer.innerHTML = `<p style="font-size: 0.78rem; color: var(--text-muted);">No recorded jams yet. Tap 'Start WAV Recording' to create one!</p>`;
         } else {
           jams.forEach((jam) => {
             const item = document.createElement('div');
@@ -2533,12 +2953,10 @@
       }
     }
 
-    // CONCERT SETLIST PLAYBACK ENGINE (AUTOMATICALLY PAUSES RADIO)
     function playConcertSetlist() {
       const droppedTracks = document.querySelectorAll('#setlist-drop-zone .draggable-track');
       if (droppedTracks.length === 0) return alert("Drag tracks into your setlist first!");
 
-      // Explicitly pause live radio and preview audio before starting playlist playback
       if (typeof isSynthPlaying !== 'undefined' && isSynthPlaying) {
         toggleSynthPower();
       }
@@ -2558,8 +2976,6 @@
       }
 
       const currentEl = elements[setlistPlayIndex];
-      
-      // Visual active highlight
       elements.forEach(el => el.style.borderColor = 'var(--border-cyan)');
       currentEl.style.borderColor = 'var(--accent-green)';
 
@@ -2567,18 +2983,12 @@
 
       if (trackData.type === 'created') {
         jamStudio.playbackCustomTrack(trackData.id);
-        
-        const jam = jamStudio.myCustomPlaylist.find(t => t.id === trackData.id);
-        const durationMs = jam && jam.events.length > 0 ? (Math.max(...jam.events.map(e => e.time)) + 1) * 1000 : 3000;
-        
         setTimeout(() => {
           setlistPlayIndex++;
           executeSetlistSequence(elements);
-        }, durationMs);
-
+        }, 4000);
       } else {
         play20sTrackPreview('setlist-' + setlistPlayIndex, 'https://listen.moe/fallback', trackData.title);
-        
         setTimeout(() => {
           setlistPlayIndex++;
           executeSetlistSequence(elements);
@@ -2705,6 +3115,7 @@
       renderSynthVisualizer();
       jamStudio.renderPlaylistUI();
       renderTrackPools();
+      dawSequencer.renderGrid();
 
       const wasFmPlaying = localStorage.getItem('neko_fm_active') === 'true';
       const savedVolume = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
