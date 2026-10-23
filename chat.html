@@ -1414,31 +1414,16 @@
         console.warn("Firestore collection unavailable, falling back to local channel stream.");
       }
 
-      if (channelKey === 'bots') {
-        startProceduralLiveWorldSimulation();
-      }
+if (channelKey === 'bots') {
+  // Local browser simulation disabled; handled by GitHub Actions cron.
+}
     };
 
-    // 3. Continuous Time-of-Day Procedural Simulation
-    function startProceduralLiveWorldSimulation() {
-      async function generateWorldTick() {
-        const delay = Math.floor(Math.random() * (22000 - 12000 + 1)) + 12000;
-
-        botTimerId = setTimeout(async () => {
-          if (window.activeChannelKey !== 'bots') return;
-
-          const timeSlot = getCurrentTimeSlot();
-          const pool = TIME_CONTEXT_POOLS[timeSlot] || TIME_CONTEXT_POOLS.morning;
-          const chosen = pool[Math.floor(Math.random() * pool.length)];
-
-          await postNpcMessageToFirestore(chosen.author, 'npc', chosen.text);
-
-          generateWorldTick();
-        }, delay);
-      }
-
-      generateWorldTick();
-    }
+// 3. Continuous Time-of-Day Procedural Simulation (Disabled)
+function startProceduralLiveWorldSimulation() {
+  // Local browser simulation disabled to prevent duplicate local spam.
+  // All NPC ticks are managed 24/7 by scripts/bot-tick.js via GitHub Actions.
+}
 
     async function postNpcMessageToFirestore(author, role, text) {
       try {
