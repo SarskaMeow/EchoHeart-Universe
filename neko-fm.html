@@ -865,143 +865,77 @@
       box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
     }
 
-    /* DAW & SOUNDBOARD STYLES (TAB 4 UPGRADE) */
-    .daw-module {
-      background: rgba(10, 4, 22, 0.95);
-      border: 1px solid var(--border-cyan);
-      border-radius: 14px;
-      padding: 16px;
+    /* SUNO-INSPIRED PROMPT GENERATOR & COMMERCIAL STUDIO STYLES */
+    .suno-builder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
       margin-bottom: 20px;
     }
 
-    .daw-grid-container {
-      overflow-x: auto;
-      margin-top: 10px;
+    .suno-card-box {
+      background: rgba(15, 7, 28, 0.9);
+      border: 1px solid var(--border-cyan);
+      border-radius: 14px;
+      padding: 16px;
     }
 
-    .daw-track-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .suno-card-box label {
+      display: block;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      font-size: 0.88rem;
       margin-bottom: 8px;
     }
 
-    .daw-track-label {
-      width: 130px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: var(--accent-cyan);
-      white-space: nowrap;
-    }
-
-    .step-btn {
-      width: 32px;
-      height: 32px;
-      background: rgba(30, 15, 55, 0.9);
+    .suno-select, .suno-input, .suno-textarea {
+      width: 100%;
+      background: #030108;
       border: 1px solid var(--card-border);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.1s ease;
-    }
-
-    .step-btn.active {
-      background: var(--accent-pink);
-      border-color: #fff;
-      box-shadow: 0 0 10px var(--accent-pink);
-    }
-
-    .step-btn.current-step {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 8px var(--accent-cyan);
-    }
-
-    .soundboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .pad-btn {
-      background: rgba(30, 15, 55, 0.9);
-      border: 2px solid var(--accent-pink);
-      border-radius: 14px;
-      padding: 16px;
-      text-align: center;
-      color: #fff;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.15s;
-      user-select: none;
-    }
-
-    .pad-btn:active, .pad-btn.playing {
-      background: var(--accent-pink);
-      box-shadow: 0 0 20px var(--accent-pink);
-      transform: scale(0.96);
-    }
-
-    .pad-key {
-      font-size: 0.7rem;
-      color: var(--accent-cyan);
-      display: block;
-      margin-top: 4px;
-    }
-
-    .mixer-controls {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-top: 14px;
-    }
-
-    .mixer-channel {
-      background: rgba(10, 4, 22, 0.9);
-      border: 1px solid var(--border-cyan);
-      padding: 14px;
-      border-radius: 12px;
-    }
-
-    .mixer-channel label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 800;
-      color: var(--accent-cyan);
-      margin-bottom: 6px;
-    }
-
-    /* DRAG AND DROP SETLIST */
-    .setlist-builder-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 14px;
-    }
-
-    @media (max-width: 850px) {
-      .setlist-builder-container { grid-template-columns: 1fr; }
-    }
-
-    .drop-zone {
-      background: rgba(8, 3, 16, 0.9);
-      border: 2px dashed var(--accent-pink);
-      border-radius: 14px;
-      padding: 16px;
-      min-height: 220px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .draggable-track {
-      background: rgba(30, 15, 55, 0.85);
-      border: 1px solid var(--border-cyan);
-      border-radius: 10px;
-      padding: 10px 14px;
-      cursor: grab;
+      color: #ffffff;
+      border-radius: 8px;
+      padding: 10px;
       font-size: 0.88rem;
-      font-weight: 800;
+      outline: none;
+    }
+
+    .suno-select:focus, .suno-input:focus, .suno-textarea:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+    }
+
+    .prompt-preview-screen {
+      background: #020106;
+      border: 1.5px solid var(--accent-pink);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      color: var(--accent-cyan);
+      font-size: 0.9rem;
+      min-height: 80px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-bottom: 14px;
+      box-shadow: inset 0 0 15px rgba(255, 0, 127, 0.2);
+    }
+
+    .suno-tag-btn {
+      background: rgba(157, 78, 221, 0.2);
+      border: 1px solid var(--accent-purple);
       color: #fff;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 3px;
+      transition: all 0.2s;
+    }
+
+    .suno-tag-btn:hover, .suno-tag-btn.selected {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 8px var(--accent-pink);
     }
 
     /* Modal Overlay */
@@ -1152,7 +1086,7 @@
       <button class="tab-btn active-tab" onclick="switchTab('board-tab', this)">📋 Setlist Polls</button>
       <button class="tab-btn" onclick="switchTab('youtube-tab', this)">🎛️ Neko Synth Deck</button>
       <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 Girls Dead Phantom Hub</button>
-      <button class="tab-btn" onclick="switchTab('soundboard-tab', this)">🎹 Soundscape Studio & Live Setlist</button>
+      <button class="tab-btn" onclick="switchTab('soundboard-tab', this)">🎼 Commercial AI Prompt & Instrumental Studio</button>
     </div>
 
     <!-- TAB 1: PREP ROOM BOARD & SETLIST POLLS -->
@@ -1346,30 +1280,107 @@
       </div>
     </section>
 
-    <!-- TAB 4: SOUNDSCAPE STUDIO & LIVE SETLIST -->
+    <!-- TAB 4: COMMERCIAL AI PROMPT & INSTRUMENTAL STUDIO -->
     <section id="soundboard-tab" class="tab-content">
       
-      <!-- CONTINUOUS BACKGROUND LOOP STACKER & LIVE SOLO SOUNDBOARD -->
+      <!-- COMMERCIAL INTRO & ARCHITECTURE BANNER -->
       <div class="suggestion-box-panel" style="margin-top: 0; margin-bottom: 24px; border-color: var(--accent-cyan);">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 12px;">
           <div>
-            <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 4px;">🎹 Continuous Rhythm Loops & Live Solo Workstation</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Stack up to 10 continuous background loops, compose beats in the 16-step sequencer, and perform live solos!</p>
+            <h3 class="glitch-header" style="font-size: 1.25rem; margin-bottom: 4px;">🎼 Commercial Instrumental Prompt Generator & Rights Hub</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">
+              Design down-to-earth instrumental music prompts for AI engines (Suno, Udio) with structural metatags, custom instrument choices, and human authorship workflows for commercial monetization.
+            </p>
           </div>
-          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <label style="font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan);">Master BPM: <span id="bpm-val">135</span></label>
-            <input type="range" min="60" max="220" value="135" oninput="songArranger.setBpm(this.value)" style="width: 90px; accent-color: var(--accent-pink);">
-            <button class="vote-btn" id="wav-rec-btn" style="background: var(--accent-pink); border-color: var(--accent-pink);" onclick="songArranger.toggleWavRecording()">🔴 Start Recording Song</button>
-            <button class="vote-btn" style="background: var(--accent-cyan); color: #000; border-color: var(--accent-cyan);" onclick="promptSaveCustomSong()">💾 Save Arrangement</button>
+          <div style="display: flex; gap: 10px;">
+            <button class="vote-btn" style="background: var(--accent-green); color: #000; border-color: var(--accent-green);" onclick="copyFullSunoPrompt()">📋 Copy Prompt & Structural Metatags</button>
           </div>
         </div>
 
-        <!-- SECTION 1: INSTRUMENT SELECTION & PERFORMANCE CONTROLS -->
-        <div style="background: rgba(15, 7, 28, 0.85); border: 1.5px solid var(--accent-purple); border-radius: 14px; padding: 16px; margin-bottom: 20px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <!-- COMMERCIAL RIGHTS & COPYRIGHT COMPLIANCE CHECKLIST -->
+        <div style="background: rgba(8, 3, 16, 0.9); border: 1px solid var(--accent-gold); border-radius: 12px; padding: 14px; margin-bottom: 20px;">
+          <h4 style="color: var(--accent-gold); font-size: 0.95rem; margin-bottom: 6px;">⚖️ Commercial Ownership & Licensing Guidelines</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; font-size: 0.8rem; color: var(--text-main);">
+            <div><strong>1. Paid Platform Plan:</strong> Ensure generation occurs under a active paid plan for full commercial exploit rights.</div>
+            <div><strong>2. No Vocal Glitches:</strong> Instrumental toggle gives 100% compute power to arrangement & mix clarity.</div>
+            <div><strong>3. Substantial Human Authorship:</strong> Edit, chop, or layer custom synth solos to claim full legal copyright over final releases.</div>
+          </div>
+        </div>
+
+        <!-- PROMPT BUILDER INTERFACE -->
+        <div class="suno-builder-grid">
+          
+          <!-- Column 1: Genre & Preset Mood -->
+          <div class="suno-card-box">
+            <label>🎸 Primary Genre & Vibe:</label>
+            <select id="suno-genre-select" class="suno-select" onchange="updateSunoPrompt()">
+              <option value="Lo-Fi Acoustic Indie Folk">🌾 Lo-Fi Acoustic Indie Folk</option>
+              <option value="J-Rock Synthpop Fusion">⚡ J-Rock Synthpop Fusion</option>
+              <option value="Chillhop Bedroom Beats">☕ Chillhop Bedroom Beats</option>
+              <option value="Cyberpunk Industrial Instrumental">🏙️ Cyberpunk Industrial Instrumental</option>
+              <option value="Ambient Cinematic Pastoral">🌌 Ambient Cinematic Pastoral</option>
+              <option value="Upbeat Funk Pop Groove">🕺 Upbeat Funk Pop Groove</option>
+            </select>
+
+            <div style="margin-top: 12px;">
+              <label>⏱️ Tempo & Production Style:</label>
+              <input type="text" id="suno-tempo-input" class="suno-input" value="135 BPM, Analog warmth, Crisp drum mix, Mellow sub bass" oninput="updateSunoPrompt()">
+            </div>
+          </div>
+
+          <!-- Column 2: Specific Key Instruments Selection -->
+          <div class="suno-card-box">
+            <label>🎹 Selected Instruments (Click to toggle):</label>
+            <div id="suno-instruments-chips">
+              <button class="suno-tag-btn selected" onclick="toggleSunoTag(this)">Acoustic Fingerpicked Guitar</button>
+              <button class="suno-tag-btn selected" onclick="toggleSunoTag(this)">Warm Upright Bass</button>
+              <button class="suno-tag-btn selected" onclick="toggleSunoTag(this)">Brush Drums</button>
+              <button class="suno-tag-btn" onclick="toggleSunoTag(this)">Rhodes Electric Piano</button>
+              <button class="suno-tag-btn" onclick="toggleSunoTag(this)">FM Keytar Lead</button>
+              <button class="suno-tag-btn" onclick="toggleSunoTag(this)">Subtle Vinyl Crackle</button>
+              <button class="suno-tag-btn" onclick="toggleSunoTag(this)">Analog Arpeggiator Synth</button>
+              <button class="suno-tag-btn" onclick="toggleSunoTag(this)">Cello Melody</button>
+            </div>
+          </div>
+
+          <!-- Column 3: Song Structure Metatags -->
+          <div class="suno-card-box">
+            <label>🎼 Structural Arrangement Metatags:</label>
+            <div id="suno-structure-chips">
+              <button class="suno-tag-btn selected" onclick="toggleSunoTag(this)">[Intro]</button>
+              <button class="suno-tag-btn selected" onclick="toggleSunoTag(this)">[Acoustic Verse]</button>
+              <button class="suno-tag-btn selected" onclick="toggleSunoTag(this)">[Build]</button>
+              <button class="suno-tag-btn selected" onclick="toggleSunoTag(this)">[Full Chorus Groove]</button>
+              <button class="suno-tag-btn selected" onclick="toggleSunoTag(this)">[Guitar & Synth Solo]</button>
+              <button class="suno-tag-btn selected" onclick="toggleSunoTag(this)">[Breakdown]</button>
+              <button class="suno-tag-btn selected" onclick="toggleSunoTag(this)">[Outro Fade]</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- GENERATED PROMPT OUTPUT DISPLAY -->
+        <h4 style="color: #fff; font-size: 0.95rem; margin-bottom: 6px;">📋 Generated Suno / Udio Instrumental Style Prompt Box:</h4>
+        <div class="prompt-preview-screen" id="suno-style-output"></div>
+
+        <h4 style="color: #fff; font-size: 0.95rem; margin-bottom: 6px;">📝 Generated Lyric / Structure Box Metatags:</h4>
+        <div class="prompt-preview-screen" id="suno-structure-output" style="border-color: var(--accent-cyan); color: var(--accent-green);"></div>
+
+      </div>
+
+      <!-- HYBRID HUMAN AUTHORSHIP WORKSTATION -->
+      <div class="suggestion-box-panel" style="margin-bottom: 24px; border-color: var(--accent-purple);">
+        <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 6px;">🎹 Layer Human Solos & Stems (Securing Legal Copyright)</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+          Perform live solos over generated instrumental backing loops. Adding original human-authored melodies over AI tracks provides the necessary authorship required for full copyright registration.
+        </p>
+
+        <!-- LIVE WORKSTATION CONTROLS -->
+        <div style="background: rgba(15, 7, 28, 0.85); border: 1.5px solid var(--accent-purple); border-radius: 14px; padding: 16px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <label style="font-size: 0.88rem; font-weight: 800; color: var(--accent-gold);">🎹 Select Active Instrument Tone:</label>
-              <select id="synth-instrument-select" onchange="songArranger.setInstrument(this.value)" style="background: #030108; color: var(--accent-cyan); border: 1px solid var(--accent-pink); border-radius: 8px; padding: 8px 14px; font-weight: 800; outline: none; font-size: 0.88rem;">
+              <label style="font-size: 0.88rem; font-weight: 800; color: var(--accent-gold);">🎹 Active Instrument Tone:</label>
+              <select id="synth-instrument-select" onchange="songArranger.setInstrument(this.value)" style="background: #030108; color: var(--accent-cyan); border: 1px solid var(--accent-pink); border-radius: 8px; padding: 6px 12px; font-weight: 800; outline: none; font-size: 0.85rem;">
                 <option value="keytar">🎹 FM Keytar</option>
                 <option value="lead">🎸 Overdriven Guitar Lead</option>
                 <option value="bass">🎶 Slap Bass Synth</option>
@@ -1377,207 +1388,36 @@
                 <option value="brass">🎺 Cyberpunk Brass</option>
                 <option value="chiptune">👾 8-Bit Chiptune Square</option>
               </select>
-              <span style="font-size: 0.75rem; color: var(--accent-green); font-weight: 700;">(Applies to Solos, Chords & Scale Keys below)</span>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <label style="font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan);">Octave Shift:</label>
-                <button class="vote-btn" style="padding: 2px 10px;" onclick="songArranger.changeOctave(-1)">-</button>
-                <span id="octave-val" style="font-weight: 900; color: #fff; font-size: 0.9rem;">4</span>
-                <button class="vote-btn" style="padding: 2px 10px;" onclick="songArranger.changeOctave(1)">+</button>
-              </div>
-
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <label style="font-size: 0.82rem; font-weight: 800; color: var(--accent-pink); cursor: pointer;">
-                  <input type="checkbox" id="latch-mode-toggle" onchange="songArranger.toggleLatchMode(this.checked)"> 📌 Keep Notes Held Down (Latch Mode)
-                </label>
-              </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <button class="vote-btn" id="wav-rec-btn" style="background: var(--accent-pink); border-color: var(--accent-pink);" onclick="songArranger.toggleWavRecording()">🔴 Record Human Performance Layer</button>
             </div>
           </div>
         </div>
 
-        <!-- SECTION 2: RESTORED 16-STEP BEAT MAKER / SEQUENCER -->
-        <div class="daw-module">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
-            <div>
-              <h4 style="color: var(--accent-pink); font-size: 1rem; margin: 0;">🥁 16-Step Beat Maker & Pattern Sequencer</h4>
-              <p style="font-size: 0.78rem; color: var(--text-muted); margin: 2px 0 0;">Toggle beat steps below to create custom drum patterns synchronized with your BPM!</p>
-            </div>
-            <button class="vote-btn" id="seq-play-btn" style="background: var(--accent-pink); color: #fff;" onclick="songArranger.toggleSequencer()">▶ Play Sequencer Beat</button>
-          </div>
-
-          <div class="daw-grid-container" id="daw-step-grid">
-            <!-- Dynamically Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- SECTION 3: 10 CONTINUOUS FOUNDATION LOOPS GRID -->
-        <h4 style="color: #ffffff; font-size: 0.98rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-          🎸 Continuous Foundation Loops <span style="font-size: 0.78rem; color: var(--accent-green); font-weight: 700;">(10 Continuous Stackable Channels • Click to toggle)</span>
-        </h4>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px;">
-          
-          <div class="mixer-channel" id="loop-card-guitar" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🎸 J-Rock Power Chords</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Distorted rhythm strum.</div>
-            </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('guitar')">▶ Start Guitar</button>
-          </div>
-
-          <div class="mixer-channel" id="loop-card-bass" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🎶 Octaved Synth Bass</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">16th-note driving bassline.</div>
-            </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('bass')">▶ Start Bass</button>
-          </div>
-
-          <div class="mixer-channel" id="loop-card-arp" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">✨ Glittering Arpeggio</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Bright synth sequence.</div>
-            </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('arp')">▶ Start Synth Arp</button>
-          </div>
-
-          <div class="mixer-channel" id="loop-card-drums" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🥁 Driving Rock Drums</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Kick, snare & hi-hat beat.</div>
-            </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('drums')">▶ Start Rock Drums</button>
-          </div>
-
-          <div class="mixer-channel" id="loop-card-pad" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🌌 Ambient Sub Ambient Pad</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Warm atmospheric pad layer.</div>
-            </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('pad')">▶ Start Pad</button>
-          </div>
-
-          <div class="mixer-channel" id="loop-card-acid" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">⚡ Acid Synth Lead Loop</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">High-tempo resonant synth.</div>
-            </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('acid')">▶ Start Acid Lead</button>
-          </div>
-
-          <div class="mixer-channel" id="loop-card-rhodes" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🎹 Lo-Fi Chords</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Warm jazz-synth chord progression.</div>
-            </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('rhodes')">▶ Start Chords</button>
-          </div>
-
-          <div class="mixer-channel" id="loop-card-chime" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🔔 Chime Arpeggiator</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Sparkling bell-tone sequence.</div>
-            </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('chime')">▶ Start Chimes</button>
-          </div>
-
-          <div class="mixer-channel" id="loop-card-sub" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🔊 Sub Bass Drone</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Deep sub-bass foundation.</div>
-            </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('sub')">▶ Start Sub Drone</button>
-          </div>
-
-          <div class="mixer-channel" id="loop-card-cyberbeat" style="display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">💥 Cyberpunk Industrial Beat</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Punchy synth-percussion beat.</div>
-            </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('cyberbeat')">▶ Start Cyber Beat</button>
-          </div>
-
-        </div>
-
-        <!-- SECTION 4: LIVE PERFORMANCE PADS & SCALE KEYS -->
-        <h4 style="color: #ffffff; font-size: 0.98rem; margin-bottom: 8px;">⚡ Live Over-The-Top Solos, Chromatic Notes & Drum Fills</h4>
-        <p style="font-size: 0.78rem; color: var(--accent-cyan); margin-bottom: 10px;">
-          (Keyboard shortcuts shown in brackets. Active Instrument Tone & Octave apply to all solos and chromatic scale keys)
-        </p>
-        
+        <!-- SOUNDBOARD PADS -->
         <div class="soundboard-grid">
-          <button class="pad-btn" id="pad-keytar_solo" onmousedown="songArranger.noteOn('keytar_solo')" onmouseup="songArranger.noteOff('keytar_solo')" onmouseleave="songArranger.noteOff('keytar_solo')">🎹 Keytar Solo <span class="pad-key">[ Key A ]</span></button>
-          <button class="pad-btn" id="pad-lead_bend" onmousedown="songArranger.noteOn('lead_bend')" onmouseup="songArranger.noteOff('lead_bend')" onmouseleave="songArranger.noteOff('lead_bend')">🎸 Lead Bend <span class="pad-key">[ Key S ]</span></button>
-          <button class="pad-btn" id="pad-elec_chord" onmousedown="songArranger.noteOn('elec_chord')" onmouseup="songArranger.noteOff('elec_chord')" onmouseleave="songArranger.noteOff('elec_chord')">⚡ Elec Stabs <span class="pad-key">[ Key D ]</span></button>
-          <button class="pad-btn" id="pad-vocal_chop" onmousedown="songArranger.noteOn('vocal_chop')" onmouseup="songArranger.noteOff('vocal_chop')" onmouseleave="songArranger.noteOff('vocal_chop')">🎙️ Vocal Chop <span class="pad-key">[ Key F ]</span></button>
-          <button class="pad-btn" id="pad-synth_brass" onmousedown="songArranger.noteOn('synth_brass')" onmouseup="songArranger.noteOff('synth_brass')" onmouseleave="songArranger.noteOff('synth_brass')">🎺 Brass Stab <span class="pad-key">[ Key G ]</span></button>
-          <button class="pad-btn" id="pad-snare_fill" onmousedown="songArranger.noteOn('snare_fill')" onmouseup="songArranger.noteOff('snare_fill')" onmouseleave="songArranger.noteOff('snare_fill')">💥 Snare Fill <span class="pad-key">[ Key H ]</span></button>
-          <button class="pad-btn" id="pad-crash" onmousedown="songArranger.noteOn('crash')" onmouseup="songArranger.noteOff('crash')" onmouseleave="songArranger.noteOff('crash')">🔔 Crash Cymbal <span class="pad-key">[ Key J ]</span></button>
-          <button class="pad-btn" id="pad-piano_chord" onmousedown="songArranger.noteOn('piano_chord')" onmouseup="songArranger.noteOff('piano_chord')" onmouseleave="songArranger.noteOff('piano_chord')">🎹 Grand Piano <span class="pad-key">[ Key K ]</span></button>
-          
-          <!-- Extended Musical Scale Keys -->
-          <button class="pad-btn" id="pad-note_C" onmousedown="songArranger.noteOn('note_C')" onmouseup="songArranger.noteOff('note_C')" onmouseleave="songArranger.noteOff('note_C')">🎵 Note C <span class="pad-key">[ Key Z ]</span></button>
-          <button class="pad-btn" id="pad-note_D" onmousedown="songArranger.noteOn('note_D')" onmouseup="songArranger.noteOff('note_D')" onmouseleave="songArranger.noteOff('note_D')">🎵 Note D <span class="pad-key">[ Key X ]</span></button>
-          <button class="pad-btn" id="pad-note_E" onmousedown="songArranger.noteOn('note_E')" onmouseup="songArranger.noteOff('note_E')" onmouseleave="songArranger.noteOff('note_E')">🎵 Note E <span class="pad-key">[ Key C ]</span></button>
-          <button class="pad-btn" id="pad-note_F" onmousedown="songArranger.noteOn('note_F')" onmouseup="songArranger.noteOff('note_F')" onmouseleave="songArranger.noteOff('note_F')">🎵 Note F <span class="pad-key">[ Key V ]</span></button>
-          <button class="pad-btn" id="pad-note_G" onmousedown="songArranger.noteOn('note_G')" onmouseup="songArranger.noteOff('note_G')" onmouseleave="songArranger.noteOff('note_G')">🎵 Note G <span class="pad-key">[ Key B ]</span></button>
-          <button class="pad-btn" id="pad-note_A" onmousedown="songArranger.noteOn('note_A')" onmouseup="songArranger.noteOff('note_A')" onmouseleave="songArranger.noteOff('note_A')">🎵 Note A <span class="pad-key">[ Key N ]</span></button>
-          <button class="pad-btn" id="pad-note_B" onmousedown="songArranger.noteOn('note_B')" onmouseup="songArranger.noteOff('note_B')" onmouseleave="songArranger.noteOff('note_B')">🎵 Note B <span class="pad-key">[ Key M ]</span></button>
-          <button class="pad-btn" id="pad-note_C2" onmousedown="songArranger.noteOn('note_C2')" onmouseup="songArranger.noteOff('note_C2')" onmouseleave="songArranger.noteOff('note_C2')">🎵 High C <span class="pad-key">[ Key L ]</span></button>
+          <button class="pad-btn" id="pad-keytar_solo" onmousedown="songArranger.noteOn('keytar_solo')" onmouseup="songArranger.noteOff('keytar_solo')">🎹 Keytar Solo <span class="pad-key">[ Key A ]</span></button>
+          <button class="pad-btn" id="pad-lead_bend" onmousedown="songArranger.noteOn('lead_bend')" onmouseup="songArranger.noteOff('lead_bend')">🎸 Lead Bend <span class="pad-key">[ Key S ]</span></button>
+          <button class="pad-btn" id="pad-elec_chord" onmousedown="songArranger.noteOn('elec_chord')" onmouseup="songArranger.noteOff('elec_chord')">⚡ Elec Stabs <span class="pad-key">[ Key D ]</span></button>
+          <button class="pad-btn" id="pad-vocal_chop" onmousedown="songArranger.noteOn('vocal_chop')" onmouseup="songArranger.noteOff('vocal_chop')">🎙️ Vocal Chop <span class="pad-key">[ Key F ]</span></button>
+          <button class="pad-btn" id="pad-synth_brass" onmousedown="songArranger.noteOn('synth_brass')" onmouseup="songArranger.noteOff('synth_brass')">🎺 Brass Stab <span class="pad-key">[ Key G ]</span></button>
+          <button class="pad-btn" id="pad-snare_fill" onmousedown="songArranger.noteOn('snare_fill')" onmouseup="songArranger.noteOff('snare_fill')">💥 Snare Fill <span class="pad-key">[ Key H ]</span></button>
         </div>
       </div>
 
       <!-- MY CREATED & RECORDED ANIME TRACKS PLAYLIST -->
       <div class="suggestion-box-panel" style="margin-bottom: 24px; border-color: var(--accent-pink);">
-        <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 6px;">🎧 My Custom Created Anime Songs</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">Tracks you record in this workstation save directly to your studio playlist below!</p>
+        <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 6px;">🎧 My Commercial Hybrid Track Recordings</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">Human performances and live takes saved locally in your studio playlist below:</p>
         <div id="my-custom-playlist-container"></div>
-      </div>
-
-      <!-- CUSTOM CONCERT SETLIST CREATOR -->
-      <div class="suggestion-box-panel">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
-          <div>
-            <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 4px;">📝 Custom Concert Setlist Creator</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Build and play back your custom song setlist!</p>
-          </div>
-          
-          <div style="display: flex; gap: 8px;">
-            <button class="vote-btn" style="background: var(--accent-green); color: #000; border-color: var(--accent-green);" onclick="playConcertSetlist()">
-              ▶ Play Concert Setlist
-            </button>
-            <button class="vote-btn" onclick="copySetlistTicket()">
-              🎫 Share Ticket
-            </button>
-          </div>
-        </div>
-        
-        <div class="setlist-builder-container">
-          
-          <!-- LEFT: RECORDED TRACK POOL -->
-          <div>
-            <h4 style="color: var(--accent-cyan); margin-bottom: 8px;">Your Recorded Songs</h4>
-            <div id="pool-created-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
-          </div>
-
-          <!-- RIGHT: SETLIST DROP ZONE -->
-          <div>
-            <h4 style="color: var(--accent-pink); margin-bottom: 8px;">Concert Order (Drag tracks here)</h4>
-            <div class="drop-zone" id="setlist-drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-              <div id="empty-drop-placeholder" style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin: auto;">
-                Drag your created songs here to organize your live concert setlist...
-              </div>
-            </div>
-          </div>
-
-        </div>
       </div>
 
       <!-- TAB 4 STATUS FOOTER -->
       <div class="tab-status-footer">
-        <span>STATUS: WORKSTATION_ACTIVE</span>
-        <span>SYNTH_ENGINE: WEBAUDIO_ARRANGER</span>
+        <span>STATUS: COMMERCIAL_PROMPT_ENGINE_ACTIVE</span>
+        <span>RIGHTS_MODE: HYBRID_HUMAN_AUTHORSHIP</span>
       </div>
 
     </section>
@@ -1594,35 +1434,16 @@
         this.masterGain = null;
         this.bpm = 135;
         
-        // Expanded to 10 Continuous Foundation Loops
-        this.activeLoops = { 
-          guitar: false, bass: false, arp: false, drums: false, 
-          pad: false, acid: false, rhodes: false, chime: false, 
-          sub: false, cyberbeat: false 
-        };
+        this.activeLoops = { guitar: false, bass: false, arp: false, drums: false };
         this.loopIntervals = {};
         
-        // Step Sequencer State
-        this.isSequencerPlaying = false;
-        this.sequencerInterval = null;
-        this.currentStep = 0;
-        this.sequenceTracks = {
-          kick: [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
-          snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
-          hihat: [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
-          clap: [0,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,1,0],
-          stab: [0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,0]
-        };
-
         this.myCustomPlaylist = this.loadCustomPlaylist();
         this.mediaRecorder = null;
         this.audioChunks = [];
         this.isRecording = false;
 
-        // Expanded Polyphonic Engine State
         this.currentInstrument = 'keytar';
         this.currentOctave = 4;
-        this.isLatchMode = false;
         this.activeVoices = {};
         this.activePads = new Set();
       }
@@ -1636,384 +1457,8 @@
         this.masterGain.connect(this.audioCtx.destination);
       }
 
-      setBpm(val) {
-        this.bpm = parseInt(val);
-        document.getElementById('bpm-val').innerText = this.bpm;
-        Object.keys(this.activeLoops).forEach(type => {
-          if (this.activeLoops[type]) {
-            this.stopLoop(type);
-            this.startLoop(type);
-          }
-        });
-        if (this.isSequencerPlaying) {
-          this.stopSequencer();
-          this.startSequencer();
-        }
-      }
-
       setInstrument(inst) {
         this.currentInstrument = inst;
-      }
-
-      changeOctave(delta) {
-        this.currentOctave = Math.max(1, Math.min(7, this.currentOctave + delta));
-        const el = document.getElementById('octave-val');
-        if (el) el.innerText = this.currentOctave;
-      }
-
-      toggleLatchMode(val) {
-        this.isLatchMode = val;
-        if (!val) {
-          Object.keys(this.activeVoices).forEach(sound => this.releaseVoice(sound));
-        }
-      }
-
-      /* ---------------- STEP SEQUENCER BEAT MAKER ENGINE ---------------- */
-      renderSequencerUI() {
-        const grid = document.getElementById('daw-step-grid');
-        if (!grid) return;
-
-        const labels = { kick: '🥁 Kick Drum', snare: '💥 Snare', hihat: '🎩 Hi-Hat', clap: '👏 Clap', stab: '⚡ Synth Stab' };
-        grid.innerHTML = '';
-
-        Object.keys(this.sequenceTracks).forEach(trackKey => {
-          const row = document.createElement('div');
-          row.className = 'daw-track-row';
-          
-          let html = `<div class="daw-track-label">${labels[trackKey]}</div>`;
-          for (let i = 0; i < 16; i++) {
-            const active = this.sequenceTracks[trackKey][i] ? 'active' : '';
-            html += `<button class="step-btn ${active}" id="step-${trackKey}-${i}" onclick="songArranger.toggleStep('${trackKey}', ${i})"></button>`;
-          }
-          row.innerHTML = html;
-          grid.appendChild(row);
-        });
-      }
-
-      toggleStep(trackKey, stepIndex) {
-        this.sequenceTracks[trackKey][stepIndex] = this.sequenceTracks[trackKey][stepIndex] ? 0 : 1;
-        const btn = document.getElementById(`step-${trackKey}-${stepIndex}`);
-        if (btn) btn.classList.toggle('active');
-      }
-
-      toggleSequencer() {
-        this.init();
-        if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
-
-        if (this.isSequencerPlaying) {
-          this.stopSequencer();
-        } else {
-          this.startSequencer();
-        }
-      }
-
-      startSequencer() {
-        this.isSequencerPlaying = true;
-        const btn = document.getElementById('seq-play-btn');
-        if (btn) {
-          btn.innerText = '⏹ Stop Beat';
-          btn.style.background = 'var(--accent-green)';
-          btn.style.color = '#000';
-        }
-
-        const intervalMs = ((60 / this.bpm) * 1000) / 4;
-        this.currentStep = 0;
-        this.triggerSequencerStep(this.currentStep);
-
-        this.sequencerInterval = setInterval(() => {
-          this.currentStep = (this.currentStep + 1) % 16;
-          this.triggerSequencerStep(this.currentStep);
-        }, intervalMs);
-      }
-
-      stopSequencer() {
-        this.isSequencerPlaying = false;
-        if (this.sequencerInterval) {
-          clearInterval(this.sequencerInterval);
-          this.sequencerInterval = null;
-        }
-        document.querySelectorAll('.step-btn').forEach(btn => btn.classList.remove('current-step'));
-
-        const btn = document.getElementById('seq-play-btn');
-        if (btn) {
-          btn.innerText = '▶ Play Sequencer Beat';
-          btn.style.background = 'var(--accent-pink)';
-          btn.style.color = '#fff';
-        }
-      }
-
-      triggerSequencerStep(step) {
-        document.querySelectorAll('.step-btn').forEach(btn => btn.classList.remove('current-step'));
-        Object.keys(this.sequenceTracks).forEach(t => {
-          const btn = document.getElementById(`step-${t}-${step}`);
-          if (btn) btn.classList.add('current-step');
-        });
-
-        const now = this.audioCtx.currentTime;
-
-        if (this.sequenceTracks.kick[step]) {
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.frequency.setValueAtTime(140, now);
-          osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.22);
-          gain.gain.setValueAtTime(0.85, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-          osc.connect(gain); gain.connect(this.masterGain);
-          osc.start(now); osc.stop(now + 0.22);
-        }
-
-        if (this.sequenceTracks.snare[step]) {
-          const bufSize = this.audioCtx.sampleRate * 0.15;
-          const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
-          const data = buf.getChannelData(0);
-          for(let i=0; i<bufSize; i++) data[i] = Math.random() * 2 - 1;
-          const src = this.audioCtx.createBufferSource();
-          src.buffer = buf;
-          const gain = this.audioCtx.createGain();
-          gain.gain.setValueAtTime(0.5, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-          src.connect(gain); gain.connect(this.masterGain);
-          src.start(now);
-        }
-
-        if (this.sequenceTracks.hihat[step]) {
-          const bufSize = this.audioCtx.sampleRate * 0.05;
-          const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
-          const data = buf.getChannelData(0);
-          for(let i=0; i<bufSize; i++) data[i] = Math.random() * 2 - 1;
-          const src = this.audioCtx.createBufferSource();
-          src.buffer = buf;
-          const gain = this.audioCtx.createGain();
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-          src.connect(gain); gain.connect(this.masterGain);
-          src.start(now);
-        }
-
-        if (this.sequenceTracks.clap[step]) {
-          const bufSize = this.audioCtx.sampleRate * 0.12;
-          const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
-          const data = buf.getChannelData(0);
-          for(let i=0; i<bufSize; i++) data[i] = (Math.random() * 2 - 1) * (i % 1000 < 500 ? 1 : 0.2);
-          const src = this.audioCtx.createBufferSource();
-          src.buffer = buf;
-          const gain = this.audioCtx.createGain();
-          gain.gain.setValueAtTime(0.4, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-          src.connect(gain); gain.connect(this.masterGain);
-          src.start(now);
-        }
-
-        if (this.sequenceTracks.stab[step]) {
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(440, now);
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-          osc.connect(gain); gain.connect(this.masterGain);
-          osc.start(now); osc.stop(now + 0.18);
-        }
-      }
-
-      /* ---------------- 10 CONTINUOUS BACKGROUND LOOPS ---------------- */
-      toggleLoop(type) {
-        this.init();
-        if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
-
-        if (this.activeLoops[type]) {
-          this.stopLoop(type);
-        } else {
-          this.startLoop(type);
-        }
-      }
-
-      startLoop(type) {
-        this.activeLoops[type] = true;
-        const card = document.getElementById(`loop-card-${type}`);
-        if (card) {
-          card.style.borderColor = 'var(--accent-green)';
-          const btn = card.querySelector('.loop-toggle-btn');
-          if (btn) {
-            btn.innerText = '⏹ Stop Loop';
-            btn.style.background = 'var(--accent-green)';
-            btn.style.color = '#000';
-          }
-        }
-
-        const intervalMs = (60 / this.bpm) * 1000;
-        let step = 0;
-
-        this.triggerLoopStep(type, step);
-        this.loopIntervals[type] = setInterval(() => {
-          step = (step + 1) % 16;
-          this.triggerLoopStep(type, step);
-        }, intervalMs / 4);
-      }
-
-      stopLoop(type) {
-        this.activeLoops[type] = false;
-        if (this.loopIntervals[type]) {
-          clearInterval(this.loopIntervals[type]);
-          this.loopIntervals[type] = null;
-        }
-        const card = document.getElementById(`loop-card-${type}`);
-        if (card) {
-          card.style.borderColor = 'var(--border-cyan)';
-          const btn = card.querySelector('.loop-toggle-btn');
-          if (btn) {
-            btn.innerText = `▶ Start ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-            btn.style.background = 'rgba(157, 78, 221, 0.3)';
-            btn.style.color = '#fff';
-          }
-        }
-      }
-
-      triggerLoopStep(type, step) {
-        const now = this.audioCtx.currentTime;
-
-        if (type === 'guitar' && step % 4 === 0) {
-          [146.83, 220.00, 293.66].forEach(f => {
-            const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(f, now);
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-            osc.connect(gain); gain.connect(this.masterGain);
-            osc.start(now); osc.stop(now + 0.35);
-          });
-        }
-
-        if (type === 'bass' && step % 2 === 0) {
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(step % 8 === 0 ? 73.42 : 146.83, now);
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-          osc.connect(gain); gain.connect(this.masterGain);
-          osc.start(now); osc.stop(now + 0.18);
-        }
-
-        if (type === 'arp') {
-          const notes = [293.66, 369.99, 440.00, 587.33];
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(notes[step % notes.length], now);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-          osc.connect(gain); gain.connect(this.masterGain);
-          osc.start(now); osc.stop(now + 0.15);
-        }
-
-        if (type === 'drums') {
-          if (step % 4 === 0) {
-            const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
-            osc.frequency.setValueAtTime(130, now);
-            osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.2);
-            gain.gain.setValueAtTime(0.8, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-            osc.connect(gain); gain.connect(this.masterGain);
-            osc.start(now); osc.stop(now + 0.2);
-          } else if (step % 4 === 2) {
-            const bufSize = this.audioCtx.sampleRate * 0.15;
-            const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
-            const data = buf.getChannelData(0);
-            for(let i=0; i<bufSize; i++) data[i] = Math.random() * 2 - 1;
-            const src = this.audioCtx.createBufferSource();
-            src.buffer = buf;
-            const gain = this.audioCtx.createGain();
-            gain.gain.setValueAtTime(0.4, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-            src.connect(gain); gain.connect(this.masterGain);
-            src.start(now);
-          }
-        }
-
-        if (type === 'pad' && step % 8 === 0) {
-          [220.00, 277.18, 329.63, 440.00].forEach(f => {
-            const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(f, now);
-            gain.gain.setValueAtTime(0.12, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-            osc.connect(gain); gain.connect(this.masterGain);
-            osc.start(now); osc.stop(now + 1.2);
-          });
-        }
-
-        if (type === 'acid' && step % 2 === 0) {
-          const notes = [110.00, 130.81, 164.81, 220.00];
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(notes[step % notes.length], now);
-          gain.gain.setValueAtTime(0.25, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-          osc.connect(gain); gain.connect(this.masterGain);
-          osc.start(now); osc.stop(now + 0.12);
-        }
-
-        if (type === 'rhodes' && step % 4 === 0) {
-          [261.63, 329.63, 392.00, 493.88].forEach(f => {
-            const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(f, now);
-            gain.gain.setValueAtTime(0.18, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
-            osc.connect(gain); gain.connect(this.masterGain);
-            osc.start(now); osc.stop(now + 0.6);
-          });
-        }
-
-        if (type === 'chime') {
-          const notes = [523.25, 659.25, 783.99, 1046.50];
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(notes[step % notes.length], now);
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-          osc.connect(gain); gain.connect(this.masterGain);
-          osc.start(now); osc.stop(now + 0.2);
-        }
-
-        if (type === 'sub' && step % 8 === 0) {
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(55.00, now); // A1 Deep Sub
-          gain.gain.setValueAtTime(0.4, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
-          osc.connect(gain); gain.connect(this.masterGain);
-          osc.start(now); osc.stop(now + 1.4);
-        }
-
-        if (type === 'cyberbeat') {
-          if (step % 2 === 0) {
-            const osc = this.audioCtx.createOscillator();
-            const gain = this.audioCtx.createGain();
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(160, now);
-            osc.frequency.exponentialRampToValueAtTime(20, now + 0.1);
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-            osc.connect(gain); gain.connect(this.masterGain);
-            osc.start(now); osc.stop(now + 0.1);
-          }
-        }
-      }
-
-      /* ---------------- DYNAMIC POLYPHONIC LIVE INSTRUMENTS & SOLOS ---------------- */
-      getFrequencyForNote(noteName) {
-        const baseNotes = { C: 261.63, D: 293.66, E: 329.63, F: 349.23, G: 392.00, A: 440.00, B: 493.88, C2: 523.25 };
-        const baseFreq = baseNotes[noteName] || 440.00;
-        return baseFreq * Math.pow(2, this.currentOctave - 4);
       }
 
       getOscillatorTypeForPreset() {
@@ -2032,13 +1477,6 @@
         this.init();
         if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
 
-        if (this.isLatchMode && this.activePads.has(sound)) {
-          this.releaseVoice(sound);
-          this.activePads.delete(sound);
-          this.updatePadUI(sound, false);
-          return;
-        }
-
         this.updatePadUI(sound, true);
         this.activePads.add(sound);
 
@@ -2049,26 +1487,6 @@
         const now = this.audioCtx.currentTime;
         const oscType = this.getOscillatorTypeForPreset();
 
-        // 1. Scale Notes
-        if (sound.startsWith('note_')) {
-          const noteKey = sound.replace('note_', '');
-          const freq = this.getFrequencyForNote(noteKey);
-          
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-
-          osc.type = oscType;
-          osc.frequency.setValueAtTime(freq, now);
-          gain.gain.setValueAtTime(0.35, now);
-
-          osc.connect(gain); gain.connect(this.masterGain);
-          osc.start(now);
-
-          this.activeVoices[sound] = { oscs: [osc], gain: gain, isSustained: true };
-          return;
-        }
-
-        // 2. Dynamic Instrument Preset Affected Riffs & Chords
         if (sound === 'keytar_solo' || sound === 'lead_bend') {
           const baseFreq = sound === 'keytar_solo' ? 587.33 : 440.00;
           const targetFreq = sound === 'keytar_solo' ? 880.00 : 659.25;
@@ -2076,36 +1494,26 @@
           const osc = this.audioCtx.createOscillator();
           const gain = this.audioCtx.createGain();
           osc.type = oscType;
-          osc.frequency.setValueAtTime(baseFreq * Math.pow(2, this.currentOctave - 4), now);
-          osc.frequency.exponentialRampToValueAtTime(targetFreq * Math.pow(2, this.currentOctave - 4), now + 0.35);
+          osc.frequency.setValueAtTime(baseFreq, now);
+          osc.frequency.exponentialRampToValueAtTime(targetFreq, now + 0.35);
           gain.gain.setValueAtTime(0.4, now);
 
           osc.connect(gain); gain.connect(this.masterGain);
           osc.start(now);
-          this.activeVoices[sound] = { oscs: [osc], gain: gain, isSustained: true };
+          this.activeVoices[sound] = { oscs: [osc], gain: gain };
 
         } else if (sound === 'vocal_chop') {
           const osc1 = this.audioCtx.createOscillator();
-          const osc2 = this.audioCtx.createOscillator();
           const gain = this.audioCtx.createGain();
-          osc1.type = oscType; osc2.type = 'sine';
-          
-          const f1 = 523.25 * Math.pow(2, this.currentOctave - 4);
-          const f2 = 1046.50 * Math.pow(2, this.currentOctave - 4);
-          
-          osc1.frequency.setValueAtTime(f1, now);
-          osc2.frequency.setValueAtTime(f2, now);
+          osc1.type = oscType;
+          osc1.frequency.setValueAtTime(523.25, now);
           gain.gain.setValueAtTime(0.4, now);
+          osc1.connect(gain); gain.connect(this.masterGain);
+          osc1.start(now);
+          this.activeVoices[sound] = { oscs: [osc1], gain: gain };
 
-          osc1.connect(gain); osc2.connect(gain);
-          gain.connect(this.masterGain);
-          osc1.start(now); osc2.start(now);
-          this.activeVoices[sound] = { oscs: [osc1, osc2], gain: gain, isSustained: true };
-
-        } else if (sound === 'synth_brass' || sound === 'elec_chord' || sound === 'piano_chord') {
-          const freqs = sound === 'synth_brass' ? [220.00, 277.18, 329.63] :
-                        sound === 'elec_chord' ? [130.81, 196.00, 261.63] : [293.66, 369.99, 440.00];
-
+        } else if (sound === 'synth_brass' || sound === 'elec_chord') {
+          const freqs = [220.00, 277.18, 329.63];
           const oscs = [];
           const gain = this.audioCtx.createGain();
           gain.gain.setValueAtTime(0.3, now);
@@ -2113,14 +1521,14 @@
           freqs.forEach(f => {
             const osc = this.audioCtx.createOscillator();
             osc.type = oscType;
-            osc.frequency.setValueAtTime(f * Math.pow(2, this.currentOctave - 4), now);
+            osc.frequency.setValueAtTime(f, now);
             osc.connect(gain);
             osc.start(now);
             oscs.push(osc);
           });
 
           gain.connect(this.masterGain);
-          this.activeVoices[sound] = { oscs: oscs, gain: gain, isSustained: true };
+          this.activeVoices[sound] = { oscs: oscs, gain: gain };
 
         } else if (sound === 'snare_fill') {
           const bufSize = this.audioCtx.sampleRate * 0.15;
@@ -2134,24 +1542,10 @@
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
           src.connect(gain); gain.connect(this.masterGain);
           src.start(now);
-
-        } else if (sound === 'crash') {
-          const bufSize = this.audioCtx.sampleRate * 0.8;
-          const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
-          const data = buf.getChannelData(0);
-          for(let i=0; i<bufSize; i++) data[i] = Math.random() * 2 - 1;
-          const src = this.audioCtx.createBufferSource();
-          src.buffer = buf;
-          const gain = this.audioCtx.createGain();
-          gain.gain.setValueAtTime(0.6, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-          src.connect(gain); gain.connect(this.masterGain);
-          src.start(now);
         }
       }
 
       noteOff(sound) {
-        if (this.isLatchMode) return;
         this.releaseVoice(sound);
         this.activePads.delete(sound);
         this.updatePadUI(sound, false);
@@ -2187,7 +1581,6 @@
         }
       }
 
-      /* ---------------- WAV RECORDING ENGINE ---------------- */
       toggleWavRecording() {
         this.init();
         if (!this.isRecording) {
@@ -2205,43 +1598,40 @@
               const blob = new Blob(this.audioChunks, { type: 'audio/wav' });
               const audioUrl = URL.createObjectURL(blob);
               
-              const title = prompt("Enter a title for your recorded anime song:", "Anime Opening Jam");
+              const title = prompt("Enter a title for your custom commercial recording layer:", "Hybrid Commercial Take 1");
               if (title) {
                 const track = {
                   id: 'wav-' + Date.now(),
                   title: title,
                   date: new Date().toLocaleDateString(),
-                  url: audioUrl,
-                  isWavBlob: true
+                  url: audioUrl
                 };
                 this.myCustomPlaylist.push(track);
                 this.saveCustomPlaylist();
                 this.renderPlaylistUI();
-                renderTrackPools();
-                alert(`🎉 Saved "${title}" to your Custom Created Anime Songs!`);
+                alert(`🎉 Recorded layer "${title}" saved to studio playlist!`);
               }
             };
 
             this.mediaRecorder.start();
             this.isRecording = true;
             const btn = document.getElementById('wav-rec-btn');
-            btn.innerText = '⏹ Stop & Save Song';
+            btn.innerText = '⏹ Stop & Save Layer';
             btn.style.background = 'var(--accent-cyan)';
             btn.style.color = '#000';
           } catch(e) {
-            alert("Recording not supported in this browser environment.");
+            alert("Recording environment error.");
           }
         } else {
           this.mediaRecorder.stop();
           this.isRecording = false;
           const btn = document.getElementById('wav-rec-btn');
-          btn.innerText = '🔴 Start Recording Song';
+          btn.innerText = '🔴 Record Human Performance Layer';
           btn.style.background = 'var(--accent-pink)';
           btn.style.color = '#fff';
         }
       }
 
-      /* ---------------- PLAYLIST & LOCAL STORAGE ---------------- */
       loadCustomPlaylist() {
         try {
           const saved = localStorage.getItem('neko_custom_created_tracks');
@@ -2258,7 +1648,7 @@
         if (!container) return;
 
         if (this.myCustomPlaylist.length === 0) {
-          container.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">No custom songs saved yet. Turn on background loops or step beats and tap 'Start Recording Song' to create your first track!</p>`;
+          container.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">No custom recordings saved yet. Tap 'Record Human Performance Layer' to save your first track!</p>`;
           return;
         }
 
@@ -2271,7 +1661,7 @@
             <div class="vinyl-icon-box">🎹</div>
             <div style="flex: 1;">
               <div class="disco-title">${track.title}</div>
-              <div class="disco-meta">Recorded on ${track.date}</div>
+              <div class="disco-meta">Recorded on ${track.date} • Human Authored Layer</div>
             </div>
             <button class="vote-btn" onclick="songArranger.playCustomTrack('${track.id}')">▶ Play Track</button>
           `;
@@ -2290,21 +1680,42 @@
 
     const songArranger = new AnimeSongArrangerEngine();
 
-    function promptSaveCustomSong() {
-      const name = prompt("Enter a title for your anime song arrangement:", "My Anime Theme Song");
-      if (name) {
-        const track = {
-          id: 'song-' + Date.now(),
-          title: name,
-          date: new Date().toLocaleDateString(),
-          url: null
-        };
-        songArranger.myCustomPlaylist.push(track);
-        songArranger.saveCustomPlaylist();
-        songArranger.renderPlaylistUI();
-        renderTrackPools();
-        alert(`🎉 Saved "${name}" to your Custom Created Tracklist!`);
-      }
+    /* ==========================================================================
+       SUNO-INSPIRED COMMERCIAL PROMPT GENERATOR FUNCTIONS
+       ========================================================================== */
+    function toggleSunoTag(btn) {
+      btn.classList.toggle('selected');
+      updateSunoPrompt();
+    }
+
+    function updateSunoPrompt() {
+      const genre = document.getElementById('suno-genre-select').value;
+      const tempo = document.getElementById('suno-tempo-input').value;
+      
+      const activeInsts = Array.from(document.querySelectorAll('#suno-instruments-chips .suno-tag-btn.selected'))
+                              .map(b => b.innerText).join(', ');
+
+      const activeTags = Array.from(document.querySelectorAll('#suno-structure-chips .suno-tag-btn.selected'))
+                              .map(b => b.innerText);
+
+      const styleBoxText = `${genre}, ${activeInsts}, ${tempo}, instrumental, clean production, clear mix, no vocals`;
+      const structureBoxText = activeTags.join('\n\n');
+
+      const styleOut = document.getElementById('suno-style-output');
+      const structOut = document.getElementById('suno-structure-output');
+
+      if (styleOut) styleOut.innerText = styleBoxText;
+      if (structOut) structOut.innerText = structureBoxText;
+    }
+
+    function copyFullSunoPrompt() {
+      const styleText = document.getElementById('suno-style-output').innerText;
+      const structText = document.getElementById('suno-structure-output').innerText;
+
+      const fullPayload = `=== SUNO / UDIO STYLE PROMPT BOX ===\n${styleText}\n\n=== LYRICS / STRUCTURE BOX (INSTRUMENTAL MODE) ===\n${structText}`;
+
+      navigator.clipboard.writeText(fullPayload);
+      alert("📋 Copy successful! Paste the Style Box & Structural Metatags directly into Suno or Udio.");
     }
 
     const RADIO_STATIONS = {
@@ -2353,7 +1764,6 @@
     let trackRefreshTimer = null;
     const synthAudioPlayer = document.getElementById('synth-deck-audio');
 
-    // WEB AUDIO API VISUALIZER & MODE TOGGLE STATE
     let synthAudioCtx = null;
     let synthAnalyser = null;
     let synthSource = null;
@@ -3065,24 +2475,13 @@
       if (input) input.value = '';
     }
 
-    // EXPANDED KEYBOARD MAPS & EVENT LISTENERS
     const keyMap = {
       'a': 'keytar_solo',
       's': 'lead_bend',
       'd': 'elec_chord',
       'f': 'vocal_chop',
       'g': 'synth_brass',
-      'h': 'snare_fill',
-      'j': 'crash',
-      'k': 'piano_chord',
-      'z': 'note_C',
-      'x': 'note_D',
-      'c': 'note_E',
-      'v': 'note_F',
-      'b': 'note_G',
-      'n': 'note_A',
-      'm': 'note_B',
-      'l': 'note_C2'
+      'h': 'snare_fill'
     };
 
     window.addEventListener('keydown', (e) => {
@@ -3099,113 +2498,6 @@
         songArranger.noteOff(keyMap[key]);
       }
     });
-
-    /* ==========================================================================
-       DYNAMIC SETLIST BUILDER ENGINE & AUDIO PLAYBACK PIPELINE
-       ========================================================================== */
-    let setlistPlayIndex = 0;
-
-    function renderTrackPools() {
-      const createdContainer = document.getElementById('pool-created-container');
-
-      if (createdContainer) {
-        createdContainer.innerHTML = '';
-        const jams = songArranger.myCustomPlaylist || [];
-        if (jams.length === 0) {
-          createdContainer.innerHTML = `<p style="font-size: 0.78rem; color: var(--text-muted);">No recorded songs yet. Start recording above!</p>`;
-        } else {
-          jams.forEach((jam) => {
-            const item = document.createElement('div');
-            item.className = 'draggable-track';
-            item.style.display = 'flex';
-            item.style.justifyContent = 'space-between';
-            item.style.alignItems = 'center';
-            item.draggable = true;
-            item.ondragstart = (e) => e.dataTransfer.setData("text/plain", JSON.stringify({ id: jam.id, title: jam.title }));
-            
-            item.innerHTML = `
-              <span>🎙️ ${jam.title}</span>
-              <button style="background:transparent; border:none; color:var(--accent-pink); cursor:pointer; font-size:0.9rem;" onclick="deleteRecordedJam('${jam.id}')" title="Delete Recording">🗑</button>
-            `;
-            createdContainer.appendChild(item);
-          });
-        }
-      }
-    }
-
-    function deleteRecordedJam(id) {
-      if (confirm("Delete this custom recording from your workstation?")) {
-        songArranger.myCustomPlaylist = songArranger.myCustomPlaylist.filter(t => t.id !== id);
-        songArranger.saveCustomPlaylist();
-        renderTrackPools();
-        songArranger.renderPlaylistUI();
-      }
-    }
-
-    function handleDragOver(e) { e.preventDefault(); }
-
-    function handleDrop(e) {
-      e.preventDefault();
-      const rawData = e.dataTransfer.getData("text/plain");
-      if (!rawData) return;
-
-      let trackData = {};
-      try {
-        trackData = JSON.parse(rawData);
-      } catch (err) {
-        trackData = { title: rawData };
-      }
-
-      const dropZone = document.getElementById('setlist-drop-zone');
-      const placeholder = document.getElementById('empty-drop-placeholder');
-      if (placeholder) placeholder.style.display = 'none';
-
-      const item = document.createElement('div');
-      item.className = 'draggable-track';
-      item.style.display = 'flex';
-      item.style.justifyContent = 'space-between';
-      item.style.alignItems = 'center';
-      item.dataset.trackInfo = JSON.stringify(trackData);
-
-      item.innerHTML = `
-        <span>🎙️ ${trackData.title}</span>
-        <button style="background:transparent; border:none; color:var(--accent-pink); cursor:pointer; font-weight:bold;" onclick="removeFromSetlist(this)">✕</button>
-      `;
-
-      dropZone.appendChild(item);
-    }
-
-    function removeFromSetlist(btn) {
-      const item = btn.parentElement;
-      item.remove();
-      const dropZone = document.getElementById('setlist-drop-zone');
-      if (dropZone.children.length <= 1) {
-        const placeholder = document.getElementById('empty-drop-placeholder');
-        if (placeholder) placeholder.style.display = 'block';
-      }
-    }
-
-    function playConcertSetlist() {
-      const droppedTracks = document.querySelectorAll('#setlist-drop-zone .draggable-track');
-      if (droppedTracks.length === 0) return alert("Drag tracks into your concert setlist first!");
-
-      if (typeof isSynthPlaying !== 'undefined' && isSynthPlaying) {
-        toggleSynthPower();
-      }
-      if (typeof stopActivePreview === 'function') {
-        stopActivePreview();
-      }
-
-      alert("🎉 Starting your concert setlist performance!");
-    }
-
-    function copySetlistTicket() {
-      const tracks = Array.from(document.querySelectorAll('#setlist-drop-zone .draggable-track span')).map(el => el.innerText);
-      if (tracks.length === 0) return alert("Drag some tracks into your setlist first!");
-      const text = `🎫 Girls Dead Phantom Concert Setlist:\n` + tracks.join('\n');
-      navigator.clipboard.writeText(text);
-      alert("Setlist Ticket copied to clipboard!\n\n" + text);
-    }
 
     function switchTab(tabId, btnEl) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-content'));
@@ -3302,13 +2594,6 @@
       handleModeChange('backstage');
     }
 
-    window.addEventListener('beforeunload', () => {
-      if (synthAudioPlayer && !synthAudioPlayer.paused) {
-        localStorage.setItem('neko_fm_active', 'true');
-        localStorage.setItem('neko_fm_volume', synthAudioPlayer.volume.toString());
-      }
-    });
-
     document.addEventListener('DOMContentLoaded', () => {
       currentMode = getCurrentMode();
       applyThemeMode(currentMode);
@@ -3316,9 +2601,8 @@
       renderDiscography();
       initMasterTimers();
       renderSynthVisualizer();
-      songArranger.renderSequencerUI();
+      updateSunoPrompt();
       songArranger.renderPlaylistUI();
-      renderTrackPools();
 
       const wasFmPlaying = localStorage.getItem('neko_fm_active') === 'true';
       const savedVolume = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
@@ -3340,37 +2624,11 @@
           if (eqVisualizer) eqVisualizer.classList.add('playing');
           startTrackRefreshTimer();
         }).catch(() => {
-          console.log("Autoplay blocked by browser policy. Interaction needed.");
+          console.log("Autoplay blocked by browser policy.");
         });
       }
-
-      document.addEventListener('click', function(event) {
-        const navMenu = document.getElementById('nav-menu');
-        const isInsideNavbar = event.target.closest('.navbar');
-        if (!isInsideNavbar && navMenu && navMenu.classList.contains('open')) {
-          navMenu.classList.remove('open');
-        }
-      });
     });
   </script>
   <script src="music-player.js"></script>
-
-  <!-- AUTO-PAUSE SCRIPT FOR SECONDARY MEDIA -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const mediaElements = document.querySelectorAll('audio:not(#synth-deck-audio):not(#radio-audio-player), video');
-      mediaElements.forEach(media => {
-        media.addEventListener('play', () => {
-          if (typeof isSynthPlaying !== 'undefined' && isSynthPlaying) {
-            toggleSynthPower();
-          }
-          if (typeof audioPlayer !== 'undefined' && !audioPlayer.paused) {
-            audioPlayer.pause();
-          }
-          localStorage.setItem('neko_fm_active', 'false');
-        });
-      });
-    });
-  </script>
 </body>
 </html>
