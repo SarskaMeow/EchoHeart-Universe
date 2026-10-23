@@ -1350,33 +1350,51 @@
         </div>
       </div>
 
-      <!-- CUSTOM DREAM CONCERT SETLIST CREATOR -->
+      <!-- REFACTORED DYNAMIC SETLIST BUILDER & PLAYBACK ENGINE -->
       <div class="suggestion-box-panel">
-        <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 6px;">📝 Custom Dream Concert Setlist Creator</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Drag tracks from the pool into your 4-song dream concert setlist!</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+          <div>
+            <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 4px;">📝 Custom Dream Concert Setlist Creator</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Build, manage, and sequentially play back your custom 4-song concert setlist!</p>
+          </div>
+          
+          <div style="display: flex; gap: 8px;">
+            <button class="vote-btn" style="background: var(--accent-green); color: #000; border-color: var(--accent-green);" onclick="playConcertSetlist()">
+              ▶ Play Concert Setlist
+            </button>
+            <button class="vote-btn" onclick="copySetlistTicket()">
+              🎫 Share Ticket
+            </button>
+          </div>
+        </div>
         
         <div class="setlist-builder-container">
-          <!-- Track Pool -->
+          
+          <!-- LEFT: CATEGORIZED TRACK POOL -->
           <div>
-            <h4 style="color: var(--accent-cyan); margin-bottom: 8px;">Available Catalog Tracks</h4>
-            <div id="available-tracks-pool" style="display: flex; flex-direction: column; gap: 8px;">
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-1">1. Subterranean Resonance</div>
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-2">2. Keytar Midnight Run</div>
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-3">3. Sakuraoka Dusk Echoes</div>
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-4">4. Cavern Reverb Overdrive</div>
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-5">5. Phantom Echoes in Prep Room B</div>
-              <div class="draggable-track" draggable="true" ondragstart="handleDragStart(event)" id="track-6">6. 180 BPM Velocity</div>
+            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+              <button class="tab-btn active-tab" id="pool-tab-official" onclick="switchPoolTab('official')" style="padding: 6px 12px; font-size: 0.78rem;">
+                🛒 Unlocked Catalog
+              </button>
+              <button class="tab-btn" id="pool-tab-created" onclick="switchPoolTab('created')" style="padding: 6px 12px; font-size: 0.78rem;">
+                🎙️ Recorded Jams
+              </button>
             </div>
+
+            <div id="pool-official-container" class="pool-tab-content" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            <div id="pool-created-container" class="pool-tab-content" style="display: none; flex-direction: column; gap: 8px;"></div>
           </div>
 
-          <!-- Drop Slot -->
+          <!-- RIGHT: 4-SONG DROP ZONE -->
           <div>
             <h4 style="color: var(--accent-pink); margin-bottom: 8px;">Your 4-Song Concert Setlist</h4>
             <div class="drop-zone" id="setlist-drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-              <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin: auto;">Drop tracks here to build your setlist...</div>
+              <div id="empty-drop-placeholder" style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin: auto;">
+                Drag tracks here to build your setlist...
+              </div>
             </div>
-            <button class="vote-btn" style="width: 100%; margin-top: 10px;" onclick="copySetlistTicket()">🎫 Generate Shareable Setlist Ticket</button>
           </div>
+
         </div>
       </div>
 
@@ -1578,6 +1596,7 @@
         this.myCustomPlaylist.push(track);
         this.saveCustomPlaylist();
         this.renderPlaylistUI();
+        if (typeof renderTrackPools === 'function') renderTrackPools();
         alert(`🎉 Saved "${title}" to your Custom Created Tracklist!`);
       }
 
@@ -2406,22 +2425,169 @@
       if (key === 'h') jamStudio.playInstrument('count');
     });
 
-    function handleDragStart(e) {
-      e.dataTransfer.setData("text/plain", e.target.innerText);
+    /* ==========================================================================
+       DYNAMIC SETLIST BUILDER ENGINE & AUDIO PLAYBACK PIPELINE
+       ========================================================================== */
+    let userUnlockedCatalog = ['Subterranean Resonance', 'Keytar Midnight Run', 'Sakuraoka Dusk Echoes', 'Cavern Reverb Overdrive', 'Phantom Echoes in Prep Room B', '180 BPM Velocity'];
+    let setlistPlayIndex = 0;
+
+    function switchPoolTab(type) {
+      document.getElementById('pool-tab-official').classList.toggle('active-tab', type === 'official');
+      document.getElementById('pool-tab-created').classList.toggle('active-tab', type === 'created');
+      document.getElementById('pool-official-container').style.display = (type === 'official') ? 'flex' : 'none';
+      document.getElementById('pool-created-container').style.display = (type === 'created') ? 'flex' : 'none';
     }
+
+    function renderTrackPools() {
+      const officialContainer = document.getElementById('pool-official-container');
+      const createdContainer = document.getElementById('pool-created-container');
+
+      // 1. Render Unlocked Catalog Tracks
+      if (officialContainer) {
+        officialContainer.innerHTML = '';
+        userUnlockedCatalog.forEach((title, idx) => {
+          const item = document.createElement('div');
+          item.className = 'draggable-track';
+          item.draggable = true;
+          item.ondragstart = (e) => e.dataTransfer.setData("text/plain", JSON.stringify({ type: 'official', title: title }));
+          item.innerHTML = `🎵 ${idx + 1}. ${title}`;
+          officialContainer.appendChild(item);
+        });
+      }
+
+      // 2. Render User Recorded Jams with Delete Action
+      if (createdContainer) {
+        createdContainer.innerHTML = '';
+        const jams = jamStudio.myCustomPlaylist || [];
+        if (jams.length === 0) {
+          createdContainer.innerHTML = `<p style="font-size: 0.78rem; color: var(--text-muted);">No recorded jams yet. Tap 'Start Recording' on the soundboard to create one!</p>`;
+        } else {
+          jams.forEach((jam) => {
+            const item = document.createElement('div');
+            item.className = 'draggable-track';
+            item.style.display = 'flex';
+            item.style.justifyContent = 'space-between';
+            item.style.alignItems = 'center';
+            item.draggable = true;
+            item.ondragstart = (e) => e.dataTransfer.setData("text/plain", JSON.stringify({ type: 'created', id: jam.id, title: jam.title }));
+            
+            item.innerHTML = `
+              <span>🎙️ ${jam.title}</span>
+              <button style="background:transparent; border:none; color:var(--accent-pink); cursor:pointer; font-size:0.9rem;" onclick="deleteRecordedJam('${jam.id}')" title="Delete Recording">🗑</button>
+            `;
+            createdContainer.appendChild(item);
+          });
+        }
+      }
+    }
+
+    function deleteRecordedJam(id) {
+      if (confirm("Delete this custom recording from your studio library?")) {
+        jamStudio.myCustomPlaylist = jamStudio.myCustomPlaylist.filter(t => t.id !== id);
+        jamStudio.saveCustomPlaylist();
+        renderTrackPools();
+        jamStudio.renderPlaylistUI();
+      }
+    }
+
     function handleDragOver(e) { e.preventDefault(); }
+
     function handleDrop(e) {
       e.preventDefault();
-      const trackName = e.dataTransfer.getData("text/plain");
+      const rawData = e.dataTransfer.getData("text/plain");
+      if (!rawData) return;
+
+      let trackData = {};
+      try {
+        trackData = JSON.parse(rawData);
+      } catch (err) {
+        trackData = { type: 'official', title: rawData };
+      }
+
       const dropZone = document.getElementById('setlist-drop-zone');
+      const placeholder = document.getElementById('empty-drop-placeholder');
+      if (placeholder) placeholder.style.display = 'none';
+
       const item = document.createElement('div');
       item.className = 'draggable-track';
-      item.innerText = trackName;
+      item.style.display = 'flex';
+      item.style.justifyContent = 'space-between';
+      item.style.alignItems = 'center';
+      item.dataset.trackInfo = JSON.stringify(trackData);
+
+      item.innerHTML = `
+        <span>${trackData.type === 'created' ? '🎙️' : '🎵'} ${trackData.title}</span>
+        <button style="background:transparent; border:none; color:var(--accent-pink); cursor:pointer; font-weight:bold;" onclick="removeFromSetlist(this)">✕</button>
+      `;
+
       dropZone.appendChild(item);
     }
 
+    function removeFromSetlist(btn) {
+      const item = btn.parentElement;
+      item.remove();
+      const dropZone = document.getElementById('setlist-drop-zone');
+      if (dropZone.children.length <= 1) {
+        const placeholder = document.getElementById('empty-drop-placeholder');
+        if (placeholder) placeholder.style.display = 'block';
+      }
+    }
+
+    // CONCERT SETLIST PLAYBACK ENGINE (AUTOMATICALLY PAUSES RADIO)
+    function playConcertSetlist() {
+      const droppedTracks = document.querySelectorAll('#setlist-drop-zone .draggable-track');
+      if (droppedTracks.length === 0) return alert("Drag tracks into your setlist first!");
+
+      // Explicitly pause live radio and preview audio before starting playlist playback
+      if (typeof isSynthPlaying !== 'undefined' && isSynthPlaying) {
+        toggleSynthPower();
+      }
+      if (typeof stopActivePreview === 'function') {
+        stopActivePreview();
+      }
+
+      setlistPlayIndex = 0;
+      executeSetlistSequence(droppedTracks);
+    }
+
+    function executeSetlistSequence(elements) {
+      if (setlistPlayIndex >= elements.length) {
+        elements.forEach(el => el.style.borderColor = 'var(--border-cyan)');
+        alert("🎉 Custom Concert Setlist performance complete!");
+        return;
+      }
+
+      const currentEl = elements[setlistPlayIndex];
+      
+      // Visual active highlight
+      elements.forEach(el => el.style.borderColor = 'var(--border-cyan)');
+      currentEl.style.borderColor = 'var(--accent-green)';
+
+      const trackData = JSON.parse(currentEl.dataset.trackInfo || '{}');
+
+      if (trackData.type === 'created') {
+        jamStudio.playbackCustomTrack(trackData.id);
+        
+        const jam = jamStudio.myCustomPlaylist.find(t => t.id === trackData.id);
+        const durationMs = jam && jam.events.length > 0 ? (Math.max(...jam.events.map(e => e.time)) + 1) * 1000 : 3000;
+        
+        setTimeout(() => {
+          setlistPlayIndex++;
+          executeSetlistSequence(elements);
+        }, durationMs);
+
+      } else {
+        play20sTrackPreview('setlist-' + setlistPlayIndex, 'https://listen.moe/fallback', trackData.title);
+        
+        setTimeout(() => {
+          setlistPlayIndex++;
+          executeSetlistSequence(elements);
+        }, 20000);
+      }
+    }
+
     function copySetlistTicket() {
-      const tracks = Array.from(document.querySelectorAll('#setlist-drop-zone .draggable-track')).map(el => el.innerText);
+      const tracks = Array.from(document.querySelectorAll('#setlist-drop-zone .draggable-track span')).map(el => el.innerText);
       if (tracks.length === 0) return alert("Drag some tracks into your setlist first!");
       const text = `🎫 Girls Dead Phantom Dream Setlist:\n` + tracks.join('\n');
       navigator.clipboard.writeText(text);
@@ -2538,6 +2704,7 @@
       initMasterTimers();
       renderSynthVisualizer();
       jamStudio.renderPlaylistUI();
+      renderTrackPools();
 
       const wasFmPlaying = localStorage.getItem('neko_fm_active') === 'true';
       const savedVolume = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
