@@ -871,7 +871,7 @@
       border: 1px solid var(--border-cyan);
       border-radius: 14px;
       padding: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .daw-grid-container {
@@ -1353,8 +1353,8 @@
       <div class="suggestion-box-panel" style="margin-top: 0; margin-bottom: 24px; border-color: var(--accent-cyan);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 16px;">
           <div>
-            <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 4px;">🎹 Continuous Rhythm Loops & Live Solo Pads</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Stack continuous background rhythm loops and perform live solo riffs over top!</p>
+            <h3 class="glitch-header" style="font-size: 1.2rem; margin-bottom: 4px;">🎹 Continuous Rhythm Loops & Live Solo Workstation</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Stack up to 10 continuous background loops, compose beats in the 16-step sequencer, and perform live solos!</p>
           </div>
           <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <label style="font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan);">Master BPM: <span id="bpm-val">135</span></label>
@@ -1364,12 +1364,12 @@
           </div>
         </div>
 
-        <!-- INSTRUMENT SELECTION & PERFORMANCE CONTROLS -->
-        <div style="background: rgba(15, 7, 28, 0.8); border: 1px solid var(--accent-purple); border-radius: 12px; padding: 14px; margin-bottom: 18px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <!-- SECTION 1: INSTRUMENT SELECTION & PERFORMANCE CONTROLS -->
+        <div style="background: rgba(15, 7, 28, 0.85); border: 1.5px solid var(--accent-purple); border-radius: 14px; padding: 16px; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <label style="font-size: 0.85rem; font-weight: 800; color: var(--accent-gold);">🎹 Instrument Presets:</label>
-              <select id="synth-instrument-select" onchange="songArranger.setInstrument(this.value)" style="background: #030108; color: var(--accent-cyan); border: 1px solid var(--accent-pink); border-radius: 8px; padding: 6px 12px; font-weight: 800; outline: none;">
+              <label style="font-size: 0.88rem; font-weight: 800; color: var(--accent-gold);">🎹 Select Active Instrument Tone:</label>
+              <select id="synth-instrument-select" onchange="songArranger.setInstrument(this.value)" style="background: #030108; color: var(--accent-cyan); border: 1px solid var(--accent-pink); border-radius: 8px; padding: 8px 14px; font-weight: 800; outline: none; font-size: 0.88rem;">
                 <option value="keytar">🎹 FM Keytar</option>
                 <option value="lead">🎸 Overdriven Guitar Lead</option>
                 <option value="bass">🎶 Slap Bass Synth</option>
@@ -1377,65 +1377,135 @@
                 <option value="brass">🎺 Cyberpunk Brass</option>
                 <option value="chiptune">👾 8-Bit Chiptune Square</option>
               </select>
+              <span style="font-size: 0.75rem; color: var(--accent-green); font-weight: 700;">(Applies to Solos, Chords & Scale Keys below)</span>
             </div>
 
-            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
               <div style="display: flex; align-items: center; gap: 6px;">
-                <label style="font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan);">Octave:</label>
-                <button class="vote-btn" style="padding: 2px 8px;" onclick="songArranger.changeOctave(-1)">-</button>
-                <span id="octave-val" style="font-weight: 900; color: #fff; font-size: 0.85rem;">4</span>
-                <button class="vote-btn" style="padding: 2px 8px;" onclick="songArranger.changeOctave(1)">+</button>
+                <label style="font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan);">Octave Shift:</label>
+                <button class="vote-btn" style="padding: 2px 10px;" onclick="songArranger.changeOctave(-1)">-</button>
+                <span id="octave-val" style="font-weight: 900; color: #fff; font-size: 0.9rem;">4</span>
+                <button class="vote-btn" style="padding: 2px 10px;" onclick="songArranger.changeOctave(1)">+</button>
               </div>
 
               <div style="display: flex; align-items: center; gap: 6px;">
-                <label style="font-size: 0.8rem; font-weight: 800; color: var(--accent-pink); cursor: pointer;">
-                  <input type="checkbox" id="latch-mode-toggle" onchange="songArranger.toggleLatchMode(this.checked)"> 📌 Keep Held Down (Latch Mode)
+                <label style="font-size: 0.82rem; font-weight: 800; color: var(--accent-pink); cursor: pointer;">
+                  <input type="checkbox" id="latch-mode-toggle" onchange="songArranger.toggleLatchMode(this.checked)"> 📌 Keep Notes Held Down (Latch Mode)
                 </label>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- CONTINUOUS LOOPS GRID -->
-        <h4 style="color: #ffffff; font-size: 0.95rem; margin-bottom: 10px;">🎸 Continuous Foundation Loops <span style="font-size: 0.78rem; color: var(--accent-green); font-weight: 700;">(Toggle to run in background)</span></h4>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px;">
+        <!-- SECTION 2: RESTORED 16-STEP BEAT MAKER / SEQUENCER -->
+        <div class="daw-module">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h4 style="color: var(--accent-pink); font-size: 1rem; margin: 0;">🥁 16-Step Beat Maker & Pattern Sequencer</h4>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin: 2px 0 0;">Toggle beat steps below to create custom drum patterns synchronized with your BPM!</p>
+            </div>
+            <button class="vote-btn" id="seq-play-btn" style="background: var(--accent-pink); color: #fff;" onclick="songArranger.toggleSequencer()">▶ Play Sequencer Beat</button>
+          </div>
+
+          <div class="daw-grid-container" id="daw-step-grid">
+            <!-- Dynamically Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- SECTION 3: 10 CONTINUOUS FOUNDATION LOOPS GRID -->
+        <h4 style="color: #ffffff; font-size: 0.98rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+          🎸 Continuous Foundation Loops <span style="font-size: 0.78rem; color: var(--accent-green); font-weight: 700;">(10 Continuous Stackable Channels • Click to toggle)</span>
+        </h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px;">
           
           <div class="mixer-channel" id="loop-card-guitar" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.95rem;">🎸 Driving J-Rock Guitar</div>
-              <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">Distorted rhythm power-chords.</div>
+              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🎸 J-Rock Power Chords</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Distorted rhythm strum.</div>
             </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('guitar')">▶ Start Guitar Loop</button>
+            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('guitar')">▶ Start Guitar</button>
           </div>
 
           <div class="mixer-channel" id="loop-card-bass" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.95rem;">🎶 Anime Synth Bassline</div>
-              <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">Energetic 16th-note octaved bass.</div>
+              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🎶 Octaved Synth Bass</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">16th-note driving bassline.</div>
             </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('bass')">▶ Start Bass Loop</button>
+            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('bass')">▶ Start Bass</button>
           </div>
 
           <div class="mixer-channel" id="loop-card-arp" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.95rem;">✨ Bright Synth Arpeggios</div>
-              <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">Glittering melodic synth sequence.</div>
+              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">✨ Glittering Arpeggio</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Bright synth sequence.</div>
             </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('arp')">▶ Start Synth Loop</button>
+            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('arp')">▶ Start Synth Arp</button>
           </div>
 
           <div class="mixer-channel" id="loop-card-drums" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-              <div style="font-weight: 800; color: #fff; font-size: 0.95rem;">🥁 Full Driving Beat</div>
-              <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">Driving kick, snare & hi-hat.</div>
+              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🥁 Driving Rock Drums</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Kick, snare & hi-hat beat.</div>
             </div>
-            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('drums')">▶ Start Drum Loop</button>
+            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('drums')">▶ Start Rock Drums</button>
+          </div>
+
+          <div class="mixer-channel" id="loop-card-pad" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🌌 Ambient Sub Ambient Pad</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Warm atmospheric pad layer.</div>
+            </div>
+            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('pad')">▶ Start Pad</button>
+          </div>
+
+          <div class="mixer-channel" id="loop-card-acid" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">⚡ Acid Synth Lead Loop</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">High-tempo resonant synth.</div>
+            </div>
+            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('acid')">▶ Start Acid Lead</button>
+          </div>
+
+          <div class="mixer-channel" id="loop-card-rhodes" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🎹 Lo-Fi Chords</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Warm jazz-synth chord progression.</div>
+            </div>
+            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('rhodes')">▶ Start Chords</button>
+          </div>
+
+          <div class="mixer-channel" id="loop-card-chime" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🔔 Chime Arpeggiator</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Sparkling bell-tone sequence.</div>
+            </div>
+            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('chime')">▶ Start Chimes</button>
+          </div>
+
+          <div class="mixer-channel" id="loop-card-sub" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">🔊 Sub Bass Drone</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Deep sub-bass foundation.</div>
+            </div>
+            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('sub')">▶ Start Sub Drone</button>
+          </div>
+
+          <div class="mixer-channel" id="loop-card-cyberbeat" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 800; color: #fff; font-size: 0.92rem;">💥 Cyberpunk Industrial Beat</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Punchy synth-percussion beat.</div>
+            </div>
+            <button class="vote-btn loop-toggle-btn" style="width: 100%; font-size: 0.8rem;" onclick="songArranger.toggleLoop('cyberbeat')">▶ Start Cyber Beat</button>
           </div>
 
         </div>
 
-        <!-- LIVE OVER-THE-TOP SOLO PADS & FULL CHROMATIC KEYBOARD -->
-        <h4 style="color: #ffffff; font-size: 0.95rem; margin-bottom: 8px;">⚡ Live Over-The-Top Solos, Chromatic Notes & Drum Fills</h4>
+        <!-- SECTION 4: LIVE PERFORMANCE PADS & SCALE KEYS -->
+        <h4 style="color: #ffffff; font-size: 0.98rem; margin-bottom: 8px;">⚡ Live Over-The-Top Solos, Chromatic Notes & Drum Fills</h4>
+        <p style="font-size: 0.78rem; color: var(--accent-cyan); margin-bottom: 10px;">
+          (Keyboard shortcuts shown in brackets. Active Instrument Tone & Octave apply to all solos and chromatic scale keys)
+        </p>
+        
         <div class="soundboard-grid">
           <button class="pad-btn" id="pad-keytar_solo" onmousedown="songArranger.noteOn('keytar_solo')" onmouseup="songArranger.noteOff('keytar_solo')" onmouseleave="songArranger.noteOff('keytar_solo')">🎹 Keytar Solo <span class="pad-key">[ Key A ]</span></button>
           <button class="pad-btn" id="pad-lead_bend" onmousedown="songArranger.noteOn('lead_bend')" onmouseup="songArranger.noteOff('lead_bend')" onmouseleave="songArranger.noteOff('lead_bend')">🎸 Lead Bend <span class="pad-key">[ Key S ]</span></button>
@@ -1516,15 +1586,34 @@
   <script src="global-player.js"></script>
   <script>
     /* ==========================================================================
-       ANIME SONG CREATOR & LOOP ARRANGER ENGINE (EXPANDED SYNTHESIS)
+       ANIME SONG CREATOR & LOOP ARRANGER ENGINE (EXPANDED SYNTHESIS & SEQUENCER)
        ========================================================================== */
     class AnimeSongArrangerEngine {
       constructor() {
         this.audioCtx = null;
         this.masterGain = null;
         this.bpm = 135;
-        this.activeLoops = { guitar: false, bass: false, arp: false, drums: false };
-        this.loopIntervals = { guitar: null, bass: null, arp: null, drums: null };
+        
+        // Expanded to 10 Continuous Foundation Loops
+        this.activeLoops = { 
+          guitar: false, bass: false, arp: false, drums: false, 
+          pad: false, acid: false, rhodes: false, chime: false, 
+          sub: false, cyberbeat: false 
+        };
+        this.loopIntervals = {};
+        
+        // Step Sequencer State
+        this.isSequencerPlaying = false;
+        this.sequencerInterval = null;
+        this.currentStep = 0;
+        this.sequenceTracks = {
+          kick: [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0],
+          snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
+          hihat: [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+          clap: [0,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,1,0],
+          stab: [0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,0]
+        };
+
         this.myCustomPlaylist = this.loadCustomPlaylist();
         this.mediaRecorder = null;
         this.audioChunks = [];
@@ -1534,7 +1623,7 @@
         this.currentInstrument = 'keytar';
         this.currentOctave = 4;
         this.isLatchMode = false;
-        this.activeVoices = {}; // Active oscillator and gain nodes indexed by pad sound key
+        this.activeVoices = {};
         this.activePads = new Set();
       }
 
@@ -1556,6 +1645,10 @@
             this.startLoop(type);
           }
         });
+        if (this.isSequencerPlaying) {
+          this.stopSequencer();
+          this.startSequencer();
+        }
       }
 
       setInstrument(inst) {
@@ -1571,12 +1664,159 @@
       toggleLatchMode(val) {
         this.isLatchMode = val;
         if (!val) {
-          // Release all latched sustained sounds when latch mode is turned off
           Object.keys(this.activeVoices).forEach(sound => this.releaseVoice(sound));
         }
       }
 
-      /* ---------------- BACKGROUND LOOP STACKING ---------------- */
+      /* ---------------- STEP SEQUENCER BEAT MAKER ENGINE ---------------- */
+      renderSequencerUI() {
+        const grid = document.getElementById('daw-step-grid');
+        if (!grid) return;
+
+        const labels = { kick: '🥁 Kick Drum', snare: '💥 Snare', hihat: '🎩 Hi-Hat', clap: '👏 Clap', stab: '⚡ Synth Stab' };
+        grid.innerHTML = '';
+
+        Object.keys(this.sequenceTracks).forEach(trackKey => {
+          const row = document.createElement('div');
+          row.className = 'daw-track-row';
+          
+          let html = `<div class="daw-track-label">${labels[trackKey]}</div>`;
+          for (let i = 0; i < 16; i++) {
+            const active = this.sequenceTracks[trackKey][i] ? 'active' : '';
+            html += `<button class="step-btn ${active}" id="step-${trackKey}-${i}" onclick="songArranger.toggleStep('${trackKey}', ${i})"></button>`;
+          }
+          row.innerHTML = html;
+          grid.appendChild(row);
+        });
+      }
+
+      toggleStep(trackKey, stepIndex) {
+        this.sequenceTracks[trackKey][stepIndex] = this.sequenceTracks[trackKey][stepIndex] ? 0 : 1;
+        const btn = document.getElementById(`step-${trackKey}-${stepIndex}`);
+        if (btn) btn.classList.toggle('active');
+      }
+
+      toggleSequencer() {
+        this.init();
+        if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+
+        if (this.isSequencerPlaying) {
+          this.stopSequencer();
+        } else {
+          this.startSequencer();
+        }
+      }
+
+      startSequencer() {
+        this.isSequencerPlaying = true;
+        const btn = document.getElementById('seq-play-btn');
+        if (btn) {
+          btn.innerText = '⏹ Stop Beat';
+          btn.style.background = 'var(--accent-green)';
+          btn.style.color = '#000';
+        }
+
+        const intervalMs = ((60 / this.bpm) * 1000) / 4;
+        this.currentStep = 0;
+        this.triggerSequencerStep(this.currentStep);
+
+        this.sequencerInterval = setInterval(() => {
+          this.currentStep = (this.currentStep + 1) % 16;
+          this.triggerSequencerStep(this.currentStep);
+        }, intervalMs);
+      }
+
+      stopSequencer() {
+        this.isSequencerPlaying = false;
+        if (this.sequencerInterval) {
+          clearInterval(this.sequencerInterval);
+          this.sequencerInterval = null;
+        }
+        document.querySelectorAll('.step-btn').forEach(btn => btn.classList.remove('current-step'));
+
+        const btn = document.getElementById('seq-play-btn');
+        if (btn) {
+          btn.innerText = '▶ Play Sequencer Beat';
+          btn.style.background = 'var(--accent-pink)';
+          btn.style.color = '#fff';
+        }
+      }
+
+      triggerSequencerStep(step) {
+        document.querySelectorAll('.step-btn').forEach(btn => btn.classList.remove('current-step'));
+        Object.keys(this.sequenceTracks).forEach(t => {
+          const btn = document.getElementById(`step-${t}-${step}`);
+          if (btn) btn.classList.add('current-step');
+        });
+
+        const now = this.audioCtx.currentTime;
+
+        if (this.sequenceTracks.kick[step]) {
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.frequency.setValueAtTime(140, now);
+          osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.22);
+          gain.gain.setValueAtTime(0.85, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+          osc.connect(gain); gain.connect(this.masterGain);
+          osc.start(now); osc.stop(now + 0.22);
+        }
+
+        if (this.sequenceTracks.snare[step]) {
+          const bufSize = this.audioCtx.sampleRate * 0.15;
+          const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
+          const data = buf.getChannelData(0);
+          for(let i=0; i<bufSize; i++) data[i] = Math.random() * 2 - 1;
+          const src = this.audioCtx.createBufferSource();
+          src.buffer = buf;
+          const gain = this.audioCtx.createGain();
+          gain.gain.setValueAtTime(0.5, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          src.connect(gain); gain.connect(this.masterGain);
+          src.start(now);
+        }
+
+        if (this.sequenceTracks.hihat[step]) {
+          const bufSize = this.audioCtx.sampleRate * 0.05;
+          const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
+          const data = buf.getChannelData(0);
+          for(let i=0; i<bufSize; i++) data[i] = Math.random() * 2 - 1;
+          const src = this.audioCtx.createBufferSource();
+          src.buffer = buf;
+          const gain = this.audioCtx.createGain();
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          src.connect(gain); gain.connect(this.masterGain);
+          src.start(now);
+        }
+
+        if (this.sequenceTracks.clap[step]) {
+          const bufSize = this.audioCtx.sampleRate * 0.12;
+          const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
+          const data = buf.getChannelData(0);
+          for(let i=0; i<bufSize; i++) data[i] = (Math.random() * 2 - 1) * (i % 1000 < 500 ? 1 : 0.2);
+          const src = this.audioCtx.createBufferSource();
+          src.buffer = buf;
+          const gain = this.audioCtx.createGain();
+          gain.gain.setValueAtTime(0.4, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          src.connect(gain); gain.connect(this.masterGain);
+          src.start(now);
+        }
+
+        if (this.sequenceTracks.stab[step]) {
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(440, now);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+          osc.connect(gain); gain.connect(this.masterGain);
+          osc.start(now); osc.stop(now + 0.18);
+        }
+      }
+
+      /* ---------------- 10 CONTINUOUS BACKGROUND LOOPS ---------------- */
       toggleLoop(type) {
         this.init();
         if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
@@ -1622,7 +1862,7 @@
           card.style.borderColor = 'var(--border-cyan)';
           const btn = card.querySelector('.loop-toggle-btn');
           if (btn) {
-            btn.innerText = `▶ Start ${type.charAt(0).toUpperCase() + type.slice(1)} Loop`;
+            btn.innerText = `▶ Start ${type.charAt(0).toUpperCase() + type.slice(1)}`;
             btn.style.background = 'rgba(157, 78, 221, 0.3)';
             btn.style.color = '#fff';
           }
@@ -1631,69 +1871,54 @@
 
       triggerLoopStep(type, step) {
         const now = this.audioCtx.currentTime;
-        
+
         if (type === 'guitar' && step % 4 === 0) {
-          // Distorted J-Rock Power chord strum
-          const freqs = [146.83, 220.00, 293.66]; // D3 Power Chord
-          freqs.forEach(f => {
+          [146.83, 220.00, 293.66].forEach(f => {
             const osc = this.audioCtx.createOscillator();
             const gain = this.audioCtx.createGain();
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(f, now);
             gain.gain.setValueAtTime(0.2, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-            osc.connect(gain);
-            gain.connect(this.masterGain);
-            osc.start(now);
-            osc.stop(now + 0.35);
+            osc.connect(gain); gain.connect(this.masterGain);
+            osc.start(now); osc.stop(now + 0.35);
           });
         }
 
         if (type === 'bass' && step % 2 === 0) {
-          // Octaved Anime Synth Bass
           const osc = this.audioCtx.createOscillator();
           const gain = this.audioCtx.createGain();
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(step % 8 === 0 ? 73.42 : 146.83, now); // D2/D3
+          osc.frequency.setValueAtTime(step % 8 === 0 ? 73.42 : 146.83, now);
           gain.gain.setValueAtTime(0.3, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-          osc.connect(gain);
-          gain.connect(this.masterGain);
-          osc.start(now);
-          osc.stop(now + 0.18);
+          osc.connect(gain); gain.connect(this.masterGain);
+          osc.start(now); osc.stop(now + 0.18);
         }
 
         if (type === 'arp') {
-          // Bright glittering synth arpeggio
           const notes = [293.66, 369.99, 440.00, 587.33];
-          const f = notes[step % notes.length];
           const osc = this.audioCtx.createOscillator();
           const gain = this.audioCtx.createGain();
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(f, now);
+          osc.frequency.setValueAtTime(notes[step % notes.length], now);
           gain.gain.setValueAtTime(0.2, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-          osc.connect(gain);
-          gain.connect(this.masterGain);
-          osc.start(now);
-          osc.stop(now + 0.15);
+          osc.connect(gain); gain.connect(this.masterGain);
+          osc.start(now); osc.stop(now + 0.15);
         }
 
         if (type === 'drums') {
           if (step % 4 === 0) {
-            // Kick
             const osc = this.audioCtx.createOscillator();
             const gain = this.audioCtx.createGain();
             osc.frequency.setValueAtTime(130, now);
             osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.2);
             gain.gain.setValueAtTime(0.8, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-            osc.connect(gain);
-            gain.connect(this.masterGain);
-            osc.start(now);
-            osc.stop(now + 0.2);
+            osc.connect(gain); gain.connect(this.masterGain);
+            osc.start(now); osc.stop(now + 0.2);
           } else if (step % 4 === 2) {
-            // Snare
             const bufSize = this.audioCtx.sampleRate * 0.15;
             const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
             const data = buf.getChannelData(0);
@@ -1703,25 +1928,110 @@
             const gain = this.audioCtx.createGain();
             gain.gain.setValueAtTime(0.4, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-            src.connect(gain);
-            gain.connect(this.masterGain);
+            src.connect(gain); gain.connect(this.masterGain);
             src.start(now);
+          }
+        }
+
+        if (type === 'pad' && step % 8 === 0) {
+          [220.00, 277.18, 329.63, 440.00].forEach(f => {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(f, now);
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+            osc.connect(gain); gain.connect(this.masterGain);
+            osc.start(now); osc.stop(now + 1.2);
+          });
+        }
+
+        if (type === 'acid' && step % 2 === 0) {
+          const notes = [110.00, 130.81, 164.81, 220.00];
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(notes[step % notes.length], now);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.connect(gain); gain.connect(this.masterGain);
+          osc.start(now); osc.stop(now + 0.12);
+        }
+
+        if (type === 'rhodes' && step % 4 === 0) {
+          [261.63, 329.63, 392.00, 493.88].forEach(f => {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(f, now);
+            gain.gain.setValueAtTime(0.18, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+            osc.connect(gain); gain.connect(this.masterGain);
+            osc.start(now); osc.stop(now + 0.6);
+          });
+        }
+
+        if (type === 'chime') {
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(notes[step % notes.length], now);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+          osc.connect(gain); gain.connect(this.masterGain);
+          osc.start(now); osc.stop(now + 0.2);
+        }
+
+        if (type === 'sub' && step % 8 === 0) {
+          const osc = this.audioCtx.createOscillator();
+          const gain = this.audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(55.00, now); // A1 Deep Sub
+          gain.gain.setValueAtTime(0.4, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+          osc.connect(gain); gain.connect(this.masterGain);
+          osc.start(now); osc.stop(now + 1.4);
+        }
+
+        if (type === 'cyberbeat') {
+          if (step % 2 === 0) {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(160, now);
+            osc.frequency.exponentialRampToValueAtTime(20, now + 0.1);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+            osc.connect(gain); gain.connect(this.masterGain);
+            osc.start(now); osc.stop(now + 0.1);
           }
         }
       }
 
-      /* ---------------- ADVANCED POLYPHONIC LIVE INSTRUMENT & SOLO PADS ---------------- */
+      /* ---------------- DYNAMIC POLYPHONIC LIVE INSTRUMENTS & SOLOS ---------------- */
       getFrequencyForNote(noteName) {
         const baseNotes = { C: 261.63, D: 293.66, E: 329.63, F: 349.23, G: 392.00, A: 440.00, B: 493.88, C2: 523.25 };
         const baseFreq = baseNotes[noteName] || 440.00;
         return baseFreq * Math.pow(2, this.currentOctave - 4);
       }
 
+      getOscillatorTypeForPreset() {
+        switch(this.currentInstrument) {
+          case 'lead': return 'sawtooth';
+          case 'bass': return 'triangle';
+          case 'piano': return 'sine';
+          case 'brass': return 'sawtooth';
+          case 'chiptune': return 'square';
+          case 'keytar':
+          default: return 'sawtooth';
+        }
+      }
+
       noteOn(sound) {
         this.init();
         if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
 
-        // Latch toggle behavior: if latch is on and key is already playing, stop it on second press
         if (this.isLatchMode && this.activePads.has(sound)) {
           this.releaseVoice(sound);
           this.activePads.delete(sound);
@@ -1732,14 +2042,14 @@
         this.updatePadUI(sound, true);
         this.activePads.add(sound);
 
-        // If a voice exists, clear it before retriggering
         if (this.activeVoices[sound]) {
           this.releaseVoice(sound);
         }
 
         const now = this.audioCtx.currentTime;
+        const oscType = this.getOscillatorTypeForPreset();
 
-        // Custom note synthesis for musical scale buttons
+        // 1. Scale Notes
         if (sound.startsWith('note_')) {
           const noteKey = sound.replace('note_', '');
           const freq = this.getFrequencyForNote(noteKey);
@@ -1747,119 +2057,71 @@
           const osc = this.audioCtx.createOscillator();
           const gain = this.audioCtx.createGain();
 
-          // Instrument type sound shaping
-          switch(this.currentInstrument) {
-            case 'lead':
-              osc.type = 'sawtooth';
-              gain.gain.setValueAtTime(0.35, now);
-              break;
-            case 'bass':
-              osc.type = 'triangle';
-              gain.gain.setValueAtTime(0.5, now);
-              break;
-            case 'piano':
-              osc.type = 'sine';
-              gain.gain.setValueAtTime(0.4, now);
-              break;
-            case 'brass':
-              osc.type = 'sawtooth';
-              gain.gain.setValueAtTime(0.3, now);
-              break;
-            case 'chiptune':
-              osc.type = 'square';
-              gain.gain.setValueAtTime(0.2, now);
-              break;
-            case 'keytar':
-            default:
-              osc.type = 'sawtooth';
-              gain.gain.setValueAtTime(0.3, now);
-              break;
-          }
-
+          osc.type = oscType;
           osc.frequency.setValueAtTime(freq, now);
-          osc.connect(gain);
-          gain.connect(this.masterGain);
+          gain.gain.setValueAtTime(0.35, now);
+
+          osc.connect(gain); gain.connect(this.masterGain);
           osc.start(now);
 
           this.activeVoices[sound] = { oscs: [osc], gain: gain, isSustained: true };
           return;
         }
 
-        // Dedicated Solo Riffs & Drum One-Shots
-        if (sound === 'keytar_solo') {
+        // 2. Dynamic Instrument Preset Affected Riffs & Chords
+        if (sound === 'keytar_solo' || sound === 'lead_bend') {
+          const baseFreq = sound === 'keytar_solo' ? 587.33 : 440.00;
+          const targetFreq = sound === 'keytar_solo' ? 880.00 : 659.25;
+
           const osc = this.audioCtx.createOscillator();
           const gain = this.audioCtx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(587.33, now); // D5
-          osc.frequency.exponentialRampToValueAtTime(880.00, now + 0.35); // Bend to A5
+          osc.type = oscType;
+          osc.frequency.setValueAtTime(baseFreq * Math.pow(2, this.currentOctave - 4), now);
+          osc.frequency.exponentialRampToValueAtTime(targetFreq * Math.pow(2, this.currentOctave - 4), now + 0.35);
           gain.gain.setValueAtTime(0.4, now);
+
           osc.connect(gain); gain.connect(this.masterGain);
           osc.start(now);
           this.activeVoices[sound] = { oscs: [osc], gain: gain, isSustained: true };
-        } else if (sound === 'lead_bend') {
-          const osc = this.audioCtx.createOscillator();
-          const gain = this.audioCtx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(440.00, now);
-          osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.4);
-          gain.gain.setValueAtTime(0.5, now);
-          osc.connect(gain); gain.connect(this.masterGain);
-          osc.start(now);
-          this.activeVoices[sound] = { oscs: [osc], gain: gain, isSustained: true };
+
         } else if (sound === 'vocal_chop') {
           const osc1 = this.audioCtx.createOscillator();
           const osc2 = this.audioCtx.createOscillator();
           const gain = this.audioCtx.createGain();
-          osc1.type = 'sine'; osc2.type = 'triangle';
-          osc1.frequency.setValueAtTime(523.25, now);
-          osc2.frequency.setValueAtTime(1046.50, now);
-          gain.gain.setValueAtTime(0.5, now);
+          osc1.type = oscType; osc2.type = 'sine';
+          
+          const f1 = 523.25 * Math.pow(2, this.currentOctave - 4);
+          const f2 = 1046.50 * Math.pow(2, this.currentOctave - 4);
+          
+          osc1.frequency.setValueAtTime(f1, now);
+          osc2.frequency.setValueAtTime(f2, now);
+          gain.gain.setValueAtTime(0.4, now);
+
           osc1.connect(gain); osc2.connect(gain);
           gain.connect(this.masterGain);
           osc1.start(now); osc2.start(now);
           this.activeVoices[sound] = { oscs: [osc1, osc2], gain: gain, isSustained: true };
-        } else if (sound === 'synth_brass') {
-          const oscs = [];
-          const gain = this.audioCtx.createGain();
-          gain.gain.setValueAtTime(0.25, now);
-          [220.00, 277.18, 329.63].forEach(f => {
-            const osc = this.audioCtx.createOscillator();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(f, now);
-            osc.connect(gain);
-            osc.start(now);
-            oscs.push(osc);
-          });
-          gain.connect(this.masterGain);
-          this.activeVoices[sound] = { oscs: oscs, gain: gain, isSustained: true };
-        } else if (sound === 'elec_chord') {
+
+        } else if (sound === 'synth_brass' || sound === 'elec_chord' || sound === 'piano_chord') {
+          const freqs = sound === 'synth_brass' ? [220.00, 277.18, 329.63] :
+                        sound === 'elec_chord' ? [130.81, 196.00, 261.63] : [293.66, 369.99, 440.00];
+
           const oscs = [];
           const gain = this.audioCtx.createGain();
           gain.gain.setValueAtTime(0.3, now);
-          [130.81, 196.00, 261.63].forEach(f => {
+
+          freqs.forEach(f => {
             const osc = this.audioCtx.createOscillator();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(f, now);
+            osc.type = oscType;
+            osc.frequency.setValueAtTime(f * Math.pow(2, this.currentOctave - 4), now);
             osc.connect(gain);
             osc.start(now);
             oscs.push(osc);
           });
+
           gain.connect(this.masterGain);
           this.activeVoices[sound] = { oscs: oscs, gain: gain, isSustained: true };
-        } else if (sound === 'piano_chord') {
-          const oscs = [];
-          const gain = this.audioCtx.createGain();
-          gain.gain.setValueAtTime(0.3, now);
-          [293.66, 369.99, 440.00].forEach(f => {
-            const osc = this.audioCtx.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(f, now);
-            osc.connect(gain);
-            osc.start(now);
-            oscs.push(osc);
-          });
-          gain.connect(this.masterGain);
-          this.activeVoices[sound] = { oscs: oscs, gain: gain, isSustained: true };
+
         } else if (sound === 'snare_fill') {
           const bufSize = this.audioCtx.sampleRate * 0.15;
           const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
@@ -1870,9 +2132,9 @@
           const gain = this.audioCtx.createGain();
           gain.gain.setValueAtTime(0.5, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-          src.connect(gain);
-          gain.connect(this.masterGain);
+          src.connect(gain); gain.connect(this.masterGain);
           src.start(now);
+
         } else if (sound === 'crash') {
           const bufSize = this.audioCtx.sampleRate * 0.8;
           const buf = this.audioCtx.createBuffer(1, bufSize, this.audioCtx.sampleRate);
@@ -1883,14 +2145,13 @@
           const gain = this.audioCtx.createGain();
           gain.gain.setValueAtTime(0.6, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-          src.connect(gain);
-          gain.connect(this.masterGain);
+          src.connect(gain); gain.connect(this.masterGain);
           src.start(now);
         }
       }
 
       noteOff(sound) {
-        if (this.isLatchMode) return; // Do not release note on keyup if Latch Mode is enabled
+        if (this.isLatchMode) return;
         this.releaseVoice(sound);
         this.activePads.delete(sound);
         this.updatePadUI(sound, false);
@@ -1997,7 +2258,7 @@
         if (!container) return;
 
         if (this.myCustomPlaylist.length === 0) {
-          container.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">No custom songs saved yet. Turn on background loops and tap 'Start Recording Song' to create your first track!</p>`;
+          container.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted);">No custom songs saved yet. Turn on background loops or step beats and tap 'Start Recording Song' to create your first track!</p>`;
           return;
         }
 
@@ -2825,7 +3086,7 @@
     };
 
     window.addEventListener('keydown', (e) => {
-      if (e.repeat) return; // Prevent repeated retriggering while held
+      if (e.repeat) return;
       const key = e.key.toLowerCase();
       if (keyMap[key]) {
         songArranger.noteOn(keyMap[key]);
@@ -3055,6 +3316,7 @@
       renderDiscography();
       initMasterTimers();
       renderSynthVisualizer();
+      songArranger.renderSequencerUI();
       songArranger.renderPlaylistUI();
       renderTrackPools();
 
