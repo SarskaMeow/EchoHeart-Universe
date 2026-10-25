@@ -1379,7 +1379,7 @@
       <div class="generator-studio-layout">
         <!-- LEFT COLUMN: STUDIO CREATION CONTROLS -->
         <div class="studio-sidebar-panel">
-          <div style="display: flex; justify-content: space-between; align-align: center; margin-bottom: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
             <h3 class="glitch-header" style="font-size: 1.2rem;">✨ AI Music Studio</h3>
             <button class="vote-btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="clearStudioForm()">Clear</button>
           </div>
@@ -1410,6 +1410,17 @@
               <option value="ACE-Step v1.5">ACE-Step (v1.5) — Multi-Instrumental Studio Engine</option>
               <option value="Harmony v6.0">Harmony (v6.0) — Max 8 minutes</option>
               <option value="Suno v3.5">Suno V3.5 — High Energy J-Rock / Anime Engine</option>
+            </select>
+          </div>
+
+          <!-- Target Track Duration Selector -->
+          <div class="control-group">
+            <label>Track Duration:</label>
+            <select id="suno-duration" class="studio-select">
+              <option value="30">30 Seconds (Quick Teaser)</option>
+              <option value="60" selected>60 Seconds (Full Loop)</option>
+              <option value="120">2 Minutes (Full Song)</option>
+              <option value="180">3 Minutes (Extended Master)</option>
             </select>
           </div>
 
@@ -1552,8 +1563,7 @@
             this.currentlyPlayingId = track.id;
             syncRadioState(true, track.audioUrl, track.title, "AI Studio Track Stream");
           }).catch(err => {
-            console.error("Playback error:", err);
-            alert("Playback blocked by browser policy. Click Play again!");
+            console.warn("Playback prevented by browser interaction requirement:", err);
           });
         }
         this.renderPlaylist();
@@ -1595,6 +1605,7 @@
       const trackTitle = document.getElementById('suno-track-title').value.trim() || "AI Master Track";
       const lyrics = document.getElementById('suno-lyrics-input').value.trim();
       const hasVocals = document.getElementById('toggle-with-vocals').checked;
+      const targetDuration = parseInt(document.getElementById('suno-duration')?.value || '60', 10);
       const btn = document.getElementById('generate-ai-btn');
 
       if (!prompt) {
@@ -1604,7 +1615,7 @@
 
       if (btn) {
         btn.disabled = true;
-        btn.innerText = "⏳ Rendering Real AI Track (takes ~15-30s)...";
+        btn.innerText = `⏳ Rendering Real AI Track (~${targetDuration}s cut)...`;
       }
 
       try {
@@ -1612,7 +1623,7 @@
         const response = await fetch('http://localhost:5000/generate-music', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: fullPrompt, duration: 60, hasVocals: hasVocals })
+          body: JSON.stringify({ prompt: fullPrompt, duration: targetDuration, hasVocals: hasVocals })
         });
 
         if (!response.ok) {
@@ -1628,7 +1639,7 @@
           prompt: prompt,
           lyrics: lyrics,
           hasVocals: hasVocals,
-          duration: 60,
+          duration: targetDuration,
           audioUrl: audioUrl,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
         };
@@ -1636,7 +1647,7 @@
         // Add track to top of My Songs library
         sunoStudio.addTrackToLibrary(newTrack);
 
-        // Play cleanly without triggering browser autoplay policy alerts
+        // Queue audio in player cleanly without throwing browser alert popups
         const player = document.getElementById('radio-audio-player');
         if (player) {
           stopActivePreview();
@@ -1649,7 +1660,7 @@
           player.play().then(() => {
             syncRadioState(true, audioUrl, trackTitle, "AI Studio Track Stream");
           }).catch(err => {
-            console.log("Autoplay paused by browser policy. Track ready in library player.", err);
+            console.log("Autoplay paused by browser policy. Song ready in library player.", err);
           });
         }
 
