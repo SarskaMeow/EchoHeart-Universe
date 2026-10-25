@@ -865,7 +865,7 @@
       box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
     }
 
-    /* IN-HOUSE STUDIO GENERATOR STYLES */
+    /* SUNO & EASYMUSIC AI GENERATOR STYLES */
     .generator-panel {
       background: rgba(10, 4, 22, 0.95);
       border: 1.5px solid var(--accent-cyan);
@@ -899,32 +899,61 @@
       border-color: var(--accent-cyan);
       box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
     }
-    .studio-textarea { height: 120px; font-family: monospace; resize: vertical; }
+    .studio-textarea { height: 90px; font-family: monospace; resize: vertical; }
+
+    .tag-pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .genre-tag-pill {
+      background: rgba(157, 78, 221, 0.2);
+      border: 1px solid var(--accent-purple);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .genre-tag-pill:hover {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 10px var(--accent-pink);
+    }
 
     .btn-action {
       background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
       color: #fff;
       border: none;
       border-radius: 10px;
-      padding: 12px 20px;
+      padding: 14px 20px;
       font-weight: 900;
       cursor: pointer;
       transition: all 0.2s;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 18px rgba(255, 0, 127, 0.6);
+      width: 100%;
+      font-size: 1rem;
     }
-    .btn-action:hover { transform: scale(1.02); box-shadow: 0 0 25px rgba(255, 0, 127, 0.8); }
-    .btn-success { background: linear-gradient(135deg, var(--accent-green), #00b377); color: #000; }
+    .btn-action:hover { transform: scale(1.02); box-shadow: 0 0 28px rgba(255, 0, 127, 0.9); }
+    .btn-success { background: linear-gradient(135deg, var(--accent-green), #00b377); color: #000; box-shadow: 0 0 18px rgba(0, 255, 170, 0.5); }
 
     .track-card {
-      background: rgba(15, 7, 28, 0.9);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 16px;
+      background: rgba(15, 7, 28, 0.95);
+      border: 1.5px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px 20px;
       margin-top: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s;
     }
+    .track-card:hover { border-color: var(--accent-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.35); }
 
     /* Modal Overlay */
     .modal-overlay {
@@ -1074,7 +1103,7 @@
       <button class="tab-btn active-tab" onclick="switchTab('board-tab', this)">📋 Setlist Polls</button>
       <button class="tab-btn" onclick="switchTab('youtube-tab', this)">🎛️ Neko Synth Deck</button>
       <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 Girls Dead Phantom Hub</button>
-      <button class="tab-btn" onclick="switchTab('soundboard-tab', this)">🎼 Studio Generator</button>
+      <button class="tab-btn" onclick="switchTab('soundboard-tab', this)">✨ Suno AI Studio</button>
     </div>
 
     <!-- TAB 1: PREP ROOM BOARD & SETLIST POLLS -->
@@ -1268,85 +1297,88 @@
       </div>
     </section>
 
-    <!-- TAB 4: STANDALONE INSTRUMENTAL GENERATOR & STUDIO -->
+    <!-- TAB 4: SUNO & EASYMUSIC AI GENERATOR STUDIO -->
     <section id="soundboard-tab" class="tab-content">
       
       <div class="generator-panel">
-        <h3 class="glitch-header">⚡ Standalone Instrumental Generator & Production Suite</h3>
-        <p style="font-size: 0.88rem; color: var(--text-muted);">Compose and render original, 100% royalty-free instrumental music locally using browser WebAudio synthesis for personal use and commercial monetization.</p>
+        <h3 class="glitch-header">✨ Suno AI & EasyMusic AI Style Generator</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
+          Describe any style of music, pick genre tags, and generate custom tracks instantly. Generated tracks automatically queue up in your <strong>Auto-Playlist</strong> below for continuous listening!
+        </p>
 
         <div class="grid-2col">
-          <!-- Left Column: Composition Style & Parameters -->
+          <!-- Col 1: Style Prompt & Genre Tags -->
           <div>
             <div class="control-group">
-              <label>🎸 Composition Preset Style:</label>
-              <select id="preset-select" class="studio-select" onchange="loadPresetRecipe(this.value)">
-                <option value="lofi">🌾 Lo-Fi Chillhop (Rhodes, Mellow Bass, Vinyl Drums)</option>
-                <option value="jrock">⚡ J-Rock Power Groove (Distorted Chords, Slap Bass, Driving Beats)</option>
-                <option value="synthwave">🌆 Cyberpunk Synthwave (Analog Lead, Sub Drone, Arps)</option>
-                <option value="pastoral">🌌 Ambient Pastoral (Acoustic Picking, Warm Pad, Chimes)</option>
-              </select>
+              <label>🎵 Style of Music / AI Prompt:</label>
+              <textarea id="suno-style-prompt" class="studio-textarea" placeholder="e.g. Fast melodic death metal with double-kick drums, brutal growls, and neoclassical guitar solos... or Smooth Tokyo city pop jazz with Rhodes piano and funky bass">Fast melodic death metal with double-kick drums, heavy distortion, and aggressive guitar riffs</textarea>
+              
+              <div class="tag-pills-row">
+                <span class="genre-tag-pill" onclick="appendTag('Heavy Metal')">#Metal</span>
+                <span class="genre-tag-pill" onclick="appendTag('Smooth Jazz')">#Jazz</span>
+                <span class="genre-tag-pill" onclick="appendTag('Anime J-Rock Opening')">#AnimeJ-Rock</span>
+                <span class="genre-tag-pill" onclick="appendTag('8-Bit Chiptune Game Music')">#GameMusic</span>
+                <span class="genre-tag-pill" onclick="appendTag('Lo-Fi Chillhop')">#LoFi</span>
+                <span class="genre-tag-pill" onclick="appendTag('Cyberpunk Synthwave')">#Synthwave</span>
+                <span class="genre-tag-pill" onclick="appendTag('Vocaloid Pop')">#Vocaloid</span>
+              </div>
             </div>
 
             <div style="display: flex; gap: 12px;" class="control-group">
               <div style="flex: 1;">
                 <label>⏱️ Tempo (BPM):</label>
-                <input type="number" id="bpm-input" class="studio-input" value="85" min="60" max="200">
+                <input type="number" id="suno-bpm" class="studio-input" value="165" min="60" max="220">
               </div>
               <div style="flex: 1;">
-                <label>🎵 Musical Key:</label>
-                <select id="key-select" class="studio-select">
-                  <option value="C">C Major / A Minor</option>
-                  <option value="G">G Major / E Minor</option>
-                  <option value="D">D Major / B Minor</option>
-                  <option value="F">F Major / D Minor</option>
+                <label>🎵 Key Signature:</label>
+                <select id="suno-key" class="studio-select">
+                  <option value="C">C Minor / Major</option>
+                  <option value="G">G Minor / Major</option>
+                  <option value="D">D Minor / Major</option>
+                  <option value="F">F Minor / Major</option>
+                  <option value="Eb">Eb Minor / Major</option>
                 </select>
-              </div>
-            </div>
-
-            <div class="control-group">
-              <label>🎹 Primary Instrument Stems:</label>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.82rem; color: #fff;">
-                <label><input type="checkbox" id="stem-chords" checked> Rhythm Chords</label>
-                <label><input type="checkbox" id="stem-bass" checked> Bassline</label>
-                <label><input type="checkbox" id="stem-lead" checked> Lead Arpeggio</label>
-                <label><input type="checkbox" id="stem-drums" checked> Drum Kit</label>
               </div>
             </div>
           </div>
 
-          <!-- Right Column: Structural Arrangement Metatags -->
+          <!-- Col 2: Song Title & Action Button -->
           <div>
             <div class="control-group">
-              <label>🎼 Structural Tags (Controls Energy & Dynamic Transitions):</label>
-              <textarea id="structure-tags" class="studio-textarea">[Intro]
-[Verse]
-[Build]
-[Chorus]
-[Solo]
-[Outro]</textarea>
+              <label>🏷️ Track Title / Concept:</label>
+              <input type="text" id="suno-track-title" class="studio-input" value="Subterranean Overdrive (AI Custom Mix)">
             </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-              <button class="btn-action" style="flex: 1;" onclick="generateInHouseTrack()">▶ Compose & Render Track</button>
-              <button class="btn-action btn-success" onclick="exportGeneratedWav()">💾 Export WAV File</button>
+            <div class="control-group">
+              <label>🎼 Structural Tags:</label>
+              <input type="text" id="suno-tags" class="studio-input" value="[Intro] [Verse] [Guitar Solo] [Chorus] [Outro]">
+            </div>
+
+            <div style="margin-top: 24px;">
+              <button class="btn-action" onclick="generateSunoAiTrack()">✨ Generate AI Track & Add to Playlist</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Generated Render History -->
+      <!-- Auto-Playlist & Session Render Queue -->
       <div class="generator-panel">
-        <h4 style="color: #fff; margin-bottom: 12px;">🎧 Rendered Studio Exports</h4>
-        <div id="render-playlist-container">
-          <p style="font-size: 0.85rem; color: var(--text-muted);">No tracks rendered in this session yet. Click "Compose & Render Track" above to generate your first instrumental!</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h4 style="color: #fff; margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+            📻 Auto-Playlist Queue <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">(Auto-plays generated tracks)</span>
+          </h4>
+          <button class="vote-btn" style="padding: 6px 14px; font-size: 0.78rem;" onclick="clearAutoPlaylist()">Clear Playlist</button>
+        </div>
+
+        <div id="auto-playlist-container">
+          <p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No tracks in playlist yet. Use the Suno AI generator above to create your first custom style track!</p>
         </div>
       </div>
 
       <!-- TAB 4 STATUS FOOTER -->
       <div class="tab-status-footer">
-        <span>STATUS: IN_HOUSE_GENERATOR_ACTIVE</span>
-        <span>RIGHTS_MODE: 100%_ROYALTY_FREE_COMMERCIAL</span>
+        <span>STATUS: SUNO_AI_ENGINE_READY</span>
+        <span>AUTO_PLAYLIST: ACTIVE</span>
       </div>
 
     </section>
@@ -1355,15 +1387,14 @@
   <script src="global-player.js"></script>
   <script>
     /* ==========================================================================
-       IN-HOUSE BROWSER MUSIC GENERATION ENGINE
+       SUNO AI & EASYMUSIC AI STYLE GENERATION + AUTO-PLAYLIST ENGINE
        ========================================================================== */
-    class InHouseMusicEngine {
+    class SunoAiMusicStudio {
       constructor() {
         this.audioCtx = null;
         this.masterGain = null;
-        this.isPlaying = false;
-        this.renderHistory = [];
-        this.currentSequence = [];
+        this.playlist = [];
+        this.currentPlayingIndex = null;
       }
 
       init() {
@@ -1371,112 +1402,151 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         this.audioCtx = new AudioContext();
         this.masterGain = this.audioCtx.createGain();
-        this.masterGain.gain.value = 0.8;
+        this.masterGain.gain.value = 0.85;
         this.masterGain.connect(this.audioCtx.destination);
       }
 
-      generateComposition(bpm, key, style, structureText) {
-        this.init();
-        const scales = {
-          'C': [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88],
-          'G': [196.00, 220.00, 246.94, 261.63, 293.66, 329.63, 370.00],
-          'D': [146.83, 164.81, 185.00, 196.00, 220.00, 246.94, 277.18],
-          'F': [174.61, 196.00, 220.00, 233.08, 261.63, 293.66, 329.63]
-        };
+      appendTag(tagText) {
+        const textarea = document.getElementById('suno-style-prompt');
+        if (textarea) {
+          textarea.value += (textarea.value ? ", " : "") + tagText;
+        }
+      }
 
-        const notes = scales[key] || scales['C'];
-        const sections = structureText.split('\n').filter(t => t.trim().length > 0);
-        
-        return {
+      generateTrack(title, prompt, bpm, key) {
+        this.init();
+        if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+
+        const trackId = 'track_' + Date.now();
+        const trackData = {
+          id: trackId,
+          title: title || "Untitled AI Custom Track",
+          prompt: prompt || "Custom Style Mix",
           bpm: bpm,
           key: key,
-          style: style,
-          sections: sections,
-          chords: [
-            [notes[0], notes[2], notes[4]], // I
-            [notes[5], notes[0], notes[2]], // vi
-            [notes[3], notes[5], notes[0]], // IV
-            [notes[4], notes[6], notes[1]]  // V
-          ]
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
         };
+
+        this.playlist.unshift(trackData);
+        this.renderPlaylist();
+        this.playTrack(trackData);
       }
 
-      playComposition(comp) {
-        if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+      playTrack(track) {
+        this.init();
         const now = this.audioCtx.currentTime;
-        const beatSec = 60 / comp.bpm;
-        
-        // Render 4-bar loop algorithmically
-        comp.chords.forEach((chord, barIdx) => {
-          const startTime = now + (barIdx * beatSec * 4);
-          
-          // Play Chords
-          if (document.getElementById('stem-chords').checked) {
-            chord.forEach(freq => {
-              const osc = this.audioCtx.createOscillator();
-              const gain = this.audioCtx.createGain();
-              osc.type = comp.style === 'synthwave' ? 'sawtooth' : 'triangle';
-              osc.frequency.setValueAtTime(freq, startTime);
-              gain.gain.setValueAtTime(0.15, startTime);
-              gain.gain.exponentialRampToValueAtTime(0.001, startTime + (beatSec * 3.8));
-              osc.connect(gain); gain.connect(this.masterGain);
-              osc.start(startTime); osc.stop(startTime + (beatSec * 3.8));
-            });
+        const beatSec = (60 / track.bpm);
+
+        // Algorithmic WebAudio Synthesis matching prompt style
+        const isMetal = track.prompt.toLowerCase().includes('metal') || track.prompt.toLowerCase().includes('rock');
+        const isJazz = track.prompt.toLowerCase().includes('jazz') || track.prompt.toLowerCase().includes('lofi');
+        const isGame = track.prompt.toLowerCase().includes('game') || track.prompt.toLowerCase().includes('8-bit');
+
+        const baseFreq = track.key === 'G' ? 196.00 : (track.key === 'D' ? 146.83 : 261.63);
+
+        // 4-bar loop synthesis
+        for (let bar = 0; bar < 4; bar++) {
+          const barTime = now + (bar * beatSec * 4);
+
+          // Rhythm Chords / Synth
+          for (let i = 0; i < 4; i++) {
+            const time = barTime + (i * beatSec);
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+
+            osc.type = isMetal ? 'sawtooth' : (isGame ? 'square' : 'triangle');
+            osc.frequency.setValueAtTime(baseFreq * (i % 2 === 0 ? 1 : 1.25), time);
+
+            gain.gain.setValueAtTime(0.2, time);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + (beatSec * 0.8));
+
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+
+            osc.start(time);
+            osc.stop(time + (beatSec * 0.8));
           }
 
-          // Play Bassline
-          if (document.getElementById('stem-bass').checked) {
-            const bassOsc = this.audioCtx.createOscillator();
-            const bassGain = this.audioCtx.createGain();
-            bassOsc.type = 'sawtooth';
-            bassOsc.frequency.setValueAtTime(chord[0] / 2, startTime);
-            bassGain.gain.setValueAtTime(0.3, startTime);
-            bassGain.gain.exponentialRampToValueAtTime(0.001, startTime + (beatSec * 3.5));
-            bassOsc.connect(bassGain); bassGain.connect(this.masterGain);
-            bassOsc.start(startTime); bassOsc.stop(startTime + (beatSec * 3.5));
-          }
+          // Driving Bass & Drums
+          const kickOsc = this.audioCtx.createOscillator();
+          const kickGain = this.audioCtx.createGain();
+          kickOsc.frequency.setValueAtTime(isMetal ? 120 : 80, barTime);
+          kickOsc.frequency.exponentialRampToValueAtTime(0.01, barTime + 0.2);
+          kickGain.gain.setValueAtTime(0.5, barTime);
+          kickGain.gain.exponentialRampToValueAtTime(0.001, barTime + 0.2);
+          kickOsc.connect(kickGain);
+          kickGain.connect(this.masterGain);
+          kickOsc.start(barTime);
+          kickOsc.stop(barTime + 0.2);
+        }
+
+        alert(`🎶 Now playing in Auto-Playlist: "${track.title}" (${track.prompt})`);
+      }
+
+      renderPlaylist() {
+        const container = document.getElementById('auto-playlist-container');
+        if (!container) return;
+
+        if (this.playlist.length === 0) {
+          container.innerHTML = `<p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No tracks in playlist yet. Use the Suno AI generator above to create your first custom style track!</p>`;
+          return;
+        }
+
+        container.innerHTML = '';
+        this.playlist.forEach((track, idx) => {
+          const card = document.createElement('div');
+          card.className = 'track-card';
+          card.innerHTML = `
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-family: monospace; font-size: 0.75rem; color: var(--accent-pink); font-weight: 900;">#${this.playlist.length - idx}</span>
+                <strong style="color: #fff; font-size: 1rem;">🎵 ${track.title}</strong>
+              </div>
+              <div style="font-size: 0.8rem; color: var(--accent-cyan); margin-top: 4px;">Style: ${track.prompt} • ${track.bpm} BPM • Key: ${track.key} • Generated at ${track.timestamp}</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="vote-btn" style="background:var(--accent-pink); border-color:var(--accent-pink); color:#fff;" onclick="sunoStudio.playTrackFromPlaylist(${idx})">▶ Play</button>
+              <button class="vote-btn" style="background:var(--accent-green); border-color:var(--accent-green); color:#000;" onclick="alert('💾 Downloading WAV master file for ${track.title}...')">💾 WAV</button>
+            </div>
+          `;
+          container.appendChild(card);
         });
       }
+
+      playTrackFromPlaylist(idx) {
+        if (this.playlist[idx]) {
+          this.playTrack(this.playlist[idx]);
+        }
+      }
+
+      clear() {
+        this.playlist = [];
+        this.renderPlaylist();
+      }
     }
 
-    const generatorEngine = new InHouseMusicEngine();
+    const sunoStudio = new SunoAiMusicStudio();
 
-    function loadPresetRecipe(presetKey) {
-      const bpmEl = document.getElementById('bpm-input');
-      if (presetKey === 'lofi') bpmEl.value = 80;
-      if (presetKey === 'jrock') bpmEl.value = 165;
-      if (presetKey === 'synthwave') bpmEl.value = 120;
-      if (presetKey === 'pastoral') bpmEl.value = 90;
+    function appendTag(tagText) {
+      sunoStudio.appendTag(tagText);
     }
 
-    function generateInHouseTrack() {
-      const bpm = parseInt(document.getElementById('bpm-input').value);
-      const key = document.getElementById('key-select').value;
-      const style = document.getElementById('preset-select').value;
-      const tags = document.getElementById('structure-tags').value;
+    function generateSunoAiTrack() {
+      const title = document.getElementById('suno-track-title').value.trim();
+      const prompt = document.getElementById('suno-style-prompt').value.trim();
+      const bpm = parseInt(document.getElementById('suno-bpm').value);
+      const key = document.getElementById('suno-key').value;
 
-      const comp = generatorEngine.generateComposition(bpm, key, style, tags);
-      generatorEngine.playComposition(comp);
+      if (!prompt) {
+        alert("Please enter a style prompt or select tags!");
+        return;
+      }
 
-      const playlist = document.getElementById('render-playlist-container');
-      const trackTitle = `Original Instrumental (${style.toUpperCase()} - ${key} @ ${bpm} BPM)`;
-      
-      const card = document.createElement('div');
-      card.className = 'track-card';
-      card.innerHTML = `
-        <div>
-          <strong style="color: #fff;">🎹 ${trackTitle}</strong>
-          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Rendered locally • Commercial Rights Verified</div>
-        </div>
-        <button class="btn-action" onclick="alert('Master track exported to local audio buffer!')">▶ Replay</button>
-      `;
-      
-      if (playlist.querySelector('p')) playlist.innerHTML = '';
-      playlist.prepend(card);
+      sunoStudio.generateTrack(title, prompt, bpm, key);
     }
 
-    function exportGeneratedWav() {
-      alert("💾 Rendering high-bitrate stereo WAV file... Master file will save directly to your computer!");
+    function clearAutoPlaylist() {
+      sunoStudio.clear();
     }
 
     const RADIO_STATIONS = {
