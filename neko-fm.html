@@ -1633,8 +1633,25 @@
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
         };
 
+        // Add track to top of My Songs library
         sunoStudio.addTrackToLibrary(newTrack);
-        sunoStudio.togglePlayTrack(0);
+
+        // Play cleanly without triggering browser autoplay policy alerts
+        const player = document.getElementById('radio-audio-player');
+        if (player) {
+          stopActivePreview();
+          if (isSynthPlaying) toggleSynthPower();
+
+          player.src = audioUrl;
+          sunoStudio.currentlyPlayingId = newTrack.id;
+          sunoStudio.renderPlaylist();
+
+          player.play().then(() => {
+            syncRadioState(true, audioUrl, trackTitle, "AI Studio Track Stream");
+          }).catch(err => {
+            console.log("Autoplay paused by browser policy. Track ready in library player.", err);
+          });
+        }
 
       } catch (error) {
         console.error("Music generation error:", error);
