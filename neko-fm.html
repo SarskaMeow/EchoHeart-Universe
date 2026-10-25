@@ -175,7 +175,7 @@
 
     /* STUDIO DASHBOARD CONTAINER */
     .studio-dashboard {
-      max-width: 1240px;
+      max-width: 1340px;
       margin: 30px auto;
       background: var(--card-inner);
       border: 1.5px solid var(--accent-cyan);
@@ -865,47 +865,89 @@
       box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
     }
 
-    /* SUNO & EASYMUSIC AI GENERATOR STYLES */
-    .generator-panel {
-      background: rgba(10, 4, 22, 0.95);
-      border: 1.5px solid var(--accent-cyan);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
-    }
-
-    .grid-2col {
+    /* SUNO & ACE-STEP STUDIO UI STYLES */
+    .generator-studio-layout {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 16px;
+      grid-template-columns: 460px 1fr;
+      gap: 24px;
+      align-items: start;
     }
-    @media (max-width: 850px) { .grid-2col { grid-template-columns: 1fr; } }
+    @media (max-width: 1024px) {
+      .generator-studio-layout { grid-template-columns: 1fr; }
+    }
 
-    .control-group { margin-bottom: 14px; }
-    .control-group label { display: block; font-size: 0.85rem; font-weight: 800; color: var(--accent-cyan); margin-bottom: 6px; }
+    .studio-sidebar-panel {
+      background: rgba(8, 3, 16, 0.95);
+      border: 1.5px solid var(--accent-pink);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.25);
+    }
+
+    .studio-toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 7, 28, 0.9);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+    }
+
+    .toggle-switch-label {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .switch-ui {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .switch-ui input { opacity: 0; width: 0; height: 0; }
+    .slider-round {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #1a0c2e; border: 1px solid var(--card-border);
+      transition: .3s; border-radius: 24px;
+    }
+    .slider-round:before {
+      position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+      background-color: var(--accent-pink); transition: .3s; border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-pink);
+    }
+    input:checked + .slider-round { background-color: rgba(0, 240, 255, 0.25); border-color: var(--accent-cyan); }
+    input:checked + .slider-round:before { transform: translateX(20px); background-color: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); }
+
+    .control-group { margin-bottom: 16px; }
+    .control-group label { display: block; font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan); margin-bottom: 6px; }
     .studio-input, .studio-select, .studio-textarea {
       width: 100%;
       background: #030108;
       border: 1px solid var(--card-border);
       border-radius: 10px;
-      padding: 10px;
+      padding: 12px;
       color: #fff;
       outline: none;
       font-size: 0.9rem;
     }
     .studio-input:focus, .studio-select:focus, .studio-textarea:focus {
       border-color: var(--accent-cyan);
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.4);
     }
-    .studio-textarea { height: 90px; font-family: monospace; resize: vertical; }
+    .studio-textarea { font-family: 'Segoe UI', sans-serif; resize: vertical; }
 
     .tag-pills-row {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-top: 6px;
+      margin-top: 8px;
     }
     .genre-tag-pill {
       background: rgba(157, 78, 221, 0.2);
@@ -928,35 +970,33 @@
       background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
       color: #fff;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 14px 20px;
       font-weight: 900;
       cursor: pointer;
       transition: all 0.2s;
-      box-shadow: 0 0 18px rgba(255, 0, 127, 0.6);
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
       width: 100%;
       font-size: 1rem;
     }
     .btn-action:hover { transform: scale(1.02); box-shadow: 0 0 28px rgba(255, 0, 127, 0.9); }
     .btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-success { background: linear-gradient(135deg, var(--accent-green), #00b377); color: #000; box-shadow: 0 0 18px rgba(0, 255, 170, 0.5); }
 
     /* CUSTOM LIBRARY PLAYER STYLES */
     .library-panel {
-      background: rgba(8, 3, 16, 0.95);
-      border: 1.5px solid var(--accent-pink);
+      background: rgba(10, 4, 22, 0.95);
+      border: 1.5px solid var(--border-cyan);
       border-radius: 18px;
-      padding: 24px;
-      margin-top: 24px;
-      box-shadow: 0 0 30px rgba(255, 0, 127, 0.3);
+      padding: 22px;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
     }
 
     .track-card {
       background: rgba(15, 7, 28, 0.95);
       border: 1.5px solid var(--card-border);
       border-radius: 14px;
-      padding: 18px 20px;
-      margin-top: 14px;
+      padding: 16px 18px;
+      margin-top: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -1336,78 +1376,90 @@
     <!-- TAB 4: SUNO & EASYMUSIC AI GENERATOR STUDIO -->
     <section id="soundboard-tab" class="tab-content">
       
-      <div class="generator-panel">
-        <h3 class="glitch-header">✨ Suno AI & Meta MusicGen AI Studio</h3>
-        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">
-          Describe any style of music, pick genre tags, and render real multi-instrument audio files via Hugging Face MusicGen AI. Every generated song goes directly to your <strong>Personal AI Track Library</strong> below!
-        </p>
+      <div class="generator-studio-layout">
+        <!-- LEFT COLUMN: STUDIO CREATION CONTROLS -->
+        <div class="studio-sidebar-panel">
+          <div style="display: flex; justify-content: space-between; align-align: center; margin-bottom: 18px;">
+            <h3 class="glitch-header" style="font-size: 1.2rem;">✨ AI Music Studio</h3>
+            <button class="vote-btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="clearStudioForm()">Clear</button>
+          </div>
 
-        <div class="grid-2col">
-          <!-- Col 1: Style Prompt & Genre Tags -->
-          <div>
-            <div class="control-group">
-              <label>🎵 Style of Music / AI Prompt:</label>
-              <textarea id="suno-style-prompt" class="studio-textarea" placeholder="e.g. Fast melodic death metal with double-kick drums, brutal growls, and neoclassical guitar solos... or Smooth Tokyo city pop jazz with Rhodes piano and funky bass">Fast melodic death metal with double-kick drums, heavy distortion, and aggressive guitar riffs</textarea>
-              
-              <div class="tag-pills-row">
-                <span class="genre-tag-pill" onclick="appendTag('Heavy Metal')">#Metal</span>
-                <span class="genre-tag-pill" onclick="appendTag('Smooth Jazz')">#Jazz</span>
-                <span class="genre-tag-pill" onclick="appendTag('Anime J-Rock Opening')">#AnimeJ-Rock</span>
-                <span class="genre-tag-pill" onclick="appendTag('8-Bit Chiptune Game Music')">#GameMusic</span>
-                <span class="genre-tag-pill" onclick="appendTag('Lo-Fi Chillhop')">#LoFi</span>
-                <span class="genre-tag-pill" onclick="appendTag('Cyberpunk Synthwave')">#Synthwave</span>
-                <span class="genre-tag-pill" onclick="appendTag('Vocaloid Pop')">#Vocaloid</span>
-              </div>
+          <!-- Toggles Row: Advanced Mode & Vocals Toggle -->
+          <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+            <div class="studio-toggle-row" style="flex: 1; margin-bottom: 0;">
+              <span class="toggle-switch-label">Advanced Mode</span>
+              <label class="switch-ui">
+                <input type="checkbox" id="toggle-advanced-mode" checked>
+                <span class="slider-round"></span>
+              </label>
             </div>
-
-            <div style="display: flex; gap: 12px;" class="control-group">
-              <div style="flex: 1;">
-                <label>⏱️ Tempo (BPM):</label>
-                <input type="number" id="suno-bpm" class="studio-input" value="165" min="60" max="220">
-              </div>
-              <div style="flex: 1;">
-                <label>🎵 Key Signature:</label>
-                <select id="suno-key" class="studio-select">
-                  <option value="C">C Minor / Major</option>
-                  <option value="G">G Minor / Major</option>
-                  <option value="D">D Minor / Major</option>
-                  <option value="F">F Minor / Major</option>
-                  <option value="Eb">Eb Minor / Major</option>
-                </select>
-              </div>
+            
+            <div class="studio-toggle-row" style="flex: 1; margin-bottom: 0;">
+              <span class="toggle-switch-label">With Vocals</span>
+              <label class="switch-ui">
+                <input type="checkbox" id="toggle-with-vocals" onchange="toggleVocalsMode(this.checked)">
+                <span class="slider-round"></span>
+              </label>
             </div>
           </div>
 
-          <!-- Col 2: Song Title & Action Button -->
-          <div>
-            <div class="control-group">
-              <label>🏷️ Track Title / Concept:</label>
-              <input type="text" id="suno-track-title" class="studio-input" value="Subterranean Overdrive (AI Master Cut)">
-            </div>
+          <!-- Model Version -->
+          <div class="control-group">
+            <label>AI Model Version:</label>
+            <select id="suno-model-version" class="studio-select">
+              <option value="ACE-Step v1.5">ACE-Step (v1.5) — Multi-Instrumental Studio Engine</option>
+              <option value="Harmony v6.0">Harmony (v6.0) — Max 8 minutes</option>
+              <option value="Suno v3.5">Suno V3.5 — High Energy J-Rock / Anime Engine</option>
+            </select>
+          </div>
 
-            <div class="control-group">
-              <label>🎼 Structural Tags:</label>
-              <input type="text" id="suno-tags" class="studio-input" value="[Intro] [Verse] [Guitar Solo] [Chorus] [Outro]">
-            </div>
+          <!-- Title Field -->
+          <div class="control-group">
+            <label>Title:</label>
+            <input type="text" id="suno-track-title" class="studio-input" value="Find My Groove" placeholder="Enter song title...">
+          </div>
 
-            <div style="margin-top: 24px;">
-              <button class="btn-action" id="generate-ai-btn" onclick="generateSunoAiTrack()">✨ Generate Real AI Track & Save to Library</button>
+          <!-- Style Prompt Field & Tag Pills -->
+          <div class="control-group">
+            <label>Style of Music / Prompt:</label>
+            <textarea id="suno-style-prompt" class="studio-textarea" style="height: 85px;" placeholder="Describe style, instruments, BPM, beat tempo...">Fast anime J-Rock, groovy bassline, syncopated rhythm, heavy distorted guitar riffs, keytar solo, 180 BPM, modern production</textarea>
+            
+            <div class="tag-pills-row">
+              <span class="genre-tag-pill" onclick="appendTag('Heavy Metal')">#Metal</span>
+              <span class="genre-tag-pill" onclick="appendTag('Smooth Jazz')">#Jazz</span>
+              <span class="genre-tag-pill" onclick="appendTag('Anime J-Rock')">#AnimeJ-Rock</span>
+              <span class="genre-tag-pill" onclick="appendTag('Game Music')">#GameMusic</span>
+              <span class="genre-tag-pill" onclick="appendTag('Lo-Fi Chill')">#LoFi</span>
+              <span class="genre-tag-pill" onclick="appendTag('Synthwave')">#Synthwave</span>
+              <span class="genre-tag-pill" onclick="appendTag('Vocaloid Pop')">#Vocaloid</span>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Personal AI Track Library & Player -->
-      <div class="library-panel">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
-          <h4 style="color: #fff; margin: 0; font-size: 1.15rem; display: flex; align-items: center; gap: 8px;">
-            🎧 Personal AI Track Library <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">(Real Instrument Stems)</span>
-          </h4>
-          <button class="vote-btn" style="padding: 6px 14px; font-size: 0.78rem;" onclick="clearAutoPlaylist()">Clear Library</button>
+          <!-- Lyrics or Structural Section Tags -->
+          <div class="control-group">
+            <label id="lyrics-field-label">Structural Tags / Arrangements:</label>
+            <textarea id="suno-lyrics-input" class="studio-textarea" style="height: 110px;" placeholder="Enter section tags e.g. [Intro] [Verse] [Guitar Solo] [Outro]...">[Fast Drum Fill Intro]
+[Heavy Guitar Riff]
+[Verse]
+[Melodic Keytar & Guitar Solo]
+[Outro Fade]</textarea>
+          </div>
+
+          <button class="btn-action" id="generate-ai-btn" onclick="generateSunoAiTrack()">✨ Create Track</button>
         </div>
 
-        <div id="auto-playlist-container">
-          <p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Type a style prompt above and click generate to build your studio library!</p>
+        <!-- RIGHT COLUMN: MY SONGS / PERSONAL TRACK LIBRARY -->
+        <div class="library-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(0, 240, 255, 0.2); padding-bottom: 12px;">
+            <h4 style="color: #fff; margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+              🎧 My Songs Library <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">(Real Stems & Rendered Cuts)</span>
+            </h4>
+            <button class="vote-btn" style="padding: 6px 14px; font-size: 0.78rem;" onclick="clearAutoPlaylist()">Clear Library</button>
+          </div>
+
+          <div id="auto-playlist-container">
+            <p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Track' to render multi-instrument tracks into your studio library!</p>
+          </div>
         </div>
       </div>
 
@@ -1448,7 +1500,7 @@
         if (!container) return;
 
         if (this.playlist.length === 0) {
-          container.innerHTML = `<p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Type a style prompt above and click generate to build your studio library!</p>`;
+          container.innerHTML = `<p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Track' to render multi-instrument tracks into your studio library!</p>`;
           return;
         }
 
@@ -1470,7 +1522,7 @@
                 <strong style="color: #fff; font-size: 1.05rem;">🎵 ${track.title}</strong>
               </div>
               <div style="font-size: 0.8rem; color: var(--accent-cyan); margin-top: 4px;">
-                Style: ${track.prompt} • ${track.bpm} BPM • Key: ${track.key} • Rendered at ${track.timestamp}
+                Style: ${track.prompt} • ${track.hasVocals ? 'Vocals' : 'Instrumental'} • ${track.duration}s Cut • ${track.timestamp}
               </div>
             </div>
             <div style="display: flex; gap: 8px;">
@@ -1498,7 +1550,7 @@
           player.src = track.audioUrl;
           player.play().then(() => {
             this.currentlyPlayingId = track.id;
-            syncRadioState(true, track.audioUrl, track.title, "AI Real Instrument Stream");
+            syncRadioState(true, track.audioUrl, track.title, "AI Studio Track Stream");
           }).catch(err => {
             console.error("Playback error:", err);
             alert("Playback blocked by browser policy. Click Play again!");
@@ -1520,11 +1572,29 @@
       sunoStudio.appendTag(tagText);
     }
 
+    function toggleVocalsMode(isVocalsOn) {
+      const lyricsLabel = document.getElementById('lyrics-field-label');
+      const lyricsInput = document.getElementById('suno-lyrics-input');
+      if (isVocalsOn) {
+        if (lyricsLabel) lyricsLabel.innerText = "Custom Lyrics / Verses:";
+        if (lyricsInput) lyricsInput.placeholder = "Wake up to the morning light...\nCoffee brewing, feeling right...\nGot that rhythm in my soul...";
+      } else {
+        if (lyricsLabel) lyricsLabel.innerText = "Structural Tags / Arrangements:";
+        if (lyricsInput) lyricsInput.placeholder = "Enter section tags e.g. [Intro] [Verse] [Guitar Solo] [Outro]...";
+      }
+    }
+
+    function clearStudioForm() {
+      document.getElementById('suno-track-title').value = '';
+      document.getElementById('suno-style-prompt').value = '';
+      document.getElementById('suno-lyrics-input').value = '';
+    }
+
     async function generateSunoAiTrack() {
       const prompt = document.getElementById('suno-style-prompt').value.trim();
       const trackTitle = document.getElementById('suno-track-title').value.trim() || "AI Master Track";
-      const bpm = document.getElementById('suno-bpm').value;
-      const key = document.getElementById('suno-key').value;
+      const lyrics = document.getElementById('suno-lyrics-input').value.trim();
+      const hasVocals = document.getElementById('toggle-with-vocals').checked;
       const btn = document.getElementById('generate-ai-btn');
 
       if (!prompt) {
@@ -1534,14 +1604,15 @@
 
       if (btn) {
         btn.disabled = true;
-        btn.innerText = "⏳ Rendering Real AI Music via Hugging Face (takes ~15-30s)...";
+        btn.innerText = "⏳ Rendering Real AI Track (takes ~15-30s)...";
       }
 
       try {
+        const fullPrompt = lyrics ? `${prompt}. Arrangement: ${lyrics}` : prompt;
         const response = await fetch('http://localhost:5000/generate-music', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: prompt, duration: 60 })
+          body: JSON.stringify({ prompt: fullPrompt, duration: 60, hasVocals: hasVocals })
         });
 
         if (!response.ok) {
@@ -1555,8 +1626,9 @@
           id: 'track_' + Date.now(),
           title: trackTitle,
           prompt: prompt,
-          bpm: bpm,
-          key: key,
+          lyrics: lyrics,
+          hasVocals: hasVocals,
+          duration: 60,
           audioUrl: audioUrl,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
         };
@@ -1570,7 +1642,7 @@
       } finally {
         if (btn) {
           btn.disabled = false;
-          btn.innerText = "✨ Generate Real AI Track & Save to Library";
+          btn.innerText = "✨ Create Track";
         }
       }
     }
