@@ -868,7 +868,7 @@
     /* SUNO & MUSICGEN STUDIO UI STYLES */
     .generator-studio-layout {
       display: grid;
-      grid-template-columns: 460px 1fr;
+      grid-template-columns: 520px 1fr;
       gap: 24px;
       align-items: start;
     }
@@ -943,26 +943,93 @@
     }
     .studio-textarea { font-family: 'Segoe UI', sans-serif; resize: vertical; }
 
-    .tag-pills-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 8px;
+    /* EXPANDED STYLE PRESETS & SINGLE LINE TAG EXPLORER */
+    .style-preset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
     }
-    .genre-tag-pill {
-      background: rgba(157, 78, 221, 0.2);
-      border: 1px solid var(--accent-purple);
-      color: #fff;
+
+    .preset-card-btn {
+      background: rgba(22, 10, 36, 0.85);
+      border: 1px solid rgba(157, 78, 221, 0.4);
+      border-radius: 10px;
+      padding: 8px 10px;
+      color: #ffffff;
+      font-size: 0.76rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .preset-card-btn:hover {
+      background: rgba(255, 0, 127, 0.25);
+      border-color: var(--accent-pink);
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .tag-category-tabs {
+      display: flex;
+      gap: 6px;
+      margin: 10px 0 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .tag-cat-btn {
+      background: rgba(10, 4, 22, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
       font-size: 0.72rem;
       font-weight: 800;
       padding: 4px 10px;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.2s;
+      white-space: nowrap;
+      transition: all 0.2s ease;
     }
+
+    .tag-cat-btn.active-cat {
+      background: var(--accent-cyan);
+      color: #000;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    }
+
+    .tag-pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+      max-height: 140px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .genre-tag-pill {
+      background: rgba(157, 78, 221, 0.18);
+      border: 1px solid rgba(157, 78, 221, 0.45);
+      color: #e8dff5;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
     .genre-tag-pill:hover {
       background: var(--accent-pink);
       border-color: var(--accent-pink);
+      color: #ffffff;
       box-shadow: 0 0 10px var(--accent-pink);
     }
 
@@ -1379,9 +1446,9 @@
       <div class="generator-studio-layout">
         <!-- LEFT COLUMN: STUDIO CREATION CONTROLS -->
         <div class="studio-sidebar-panel">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-            <h3 class="glitch-header" style="font-size: 1.2rem;">✨ AI Music Studio</h3>
-            <button class="vote-btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="clearStudioForm()">Clear</button>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 class="glitch-header" style="font-size: 1.25rem;">✨ AI Instrumental Studio</h3>
+            <button class="vote-btn" style="padding: 4px 12px; font-size: 0.75rem;" onclick="clearStudioForm()">Clear All</button>
           </div>
 
           <!-- Toggles Row: Advanced Mode & Vocals Toggle (Vocals disabled for MusicGen) -->
@@ -1403,50 +1470,108 @@
             </div>
           </div>
 
-          <!-- Model Version -->
-          <div class="control-group">
-            <label>AI Model Version:</label>
-            <select id="suno-model-version" class="studio-select">
-              <option value="Meta MusicGen (Stereo-Large)">Meta MusicGen (Stereo-Large) — Studio Instrumental Engine</option>
-            </select>
-          </div>
+          <!-- Model Version & Duration Row -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+            <div class="control-group" style="margin-bottom: 0;">
+              <label>AI Model Engine:</label>
+              <select id="suno-model-version" class="studio-select">
+                <option value="Meta MusicGen (Stereo-Large)">Meta MusicGen (Stereo-Large)</option>
+              </select>
+            </div>
 
-          <!-- Target Track Duration Selector (MusicGen generates up to 30s) -->
-          <div class="control-group">
-            <label>Track Duration:</label>
-            <select id="suno-duration" class="studio-select">
-              <option value="15">15 Seconds (Quick Riff / Teaser)</option>
-              <option value="30" selected>30 Seconds (Max Single Pass)</option>
-            </select>
+            <div class="control-group" style="margin-bottom: 0;">
+              <label>Duration:</label>
+              <select id="suno-duration" class="studio-select">
+                <option value="15">15s Cut (Quick Teaser)</option>
+                <option value="30" selected>30s Cut (Max Single Pass)</option>
+              </select>
+            </div>
           </div>
 
           <!-- Title Field -->
           <div class="control-group">
-            <label>Title:</label>
+            <label>Song Title:</label>
             <input type="text" id="suno-track-title" class="studio-input" value="Subterranean Riff" placeholder="Enter song title...">
           </div>
 
-          <!-- Style Prompt Field & Tag Pills -->
+          <!-- QUICK STYLE PRESETS -->
           <div class="control-group">
-            <label>Style of Music / Prompt:</label>
-            <textarea id="suno-style-prompt" class="studio-textarea" style="height: 110px;" placeholder="Describe style, instruments, BPM, chord feel...">Fast anime J-Rock instrumental, heavy distorted electric guitar lead, keytar solo, energetic drum fills, 180 BPM, clean studio mix</textarea>
-            
-            <div class="tag-pills-row">
-              <span class="genre-tag-pill" onclick="appendTag('Fast anime J-Rock, electric guitar lead, fast drums, 180 BPM')">#AnimeJ-Rock</span>
-              <span class="genre-tag-pill" onclick="appendTag('16-bit RPG boss battle theme, fast synth arpeggios, retro chiptune, 160 BPM')">#GameMusic</span>
-              <span class="genre-tag-pill" onclick="appendTag('Chill lofi hip hop beat, warm Rhodes piano chord progression, vinyl crackle, 85 BPM')">#LoFi</span>
-              <span class="genre-tag-pill" onclick="appendTag('Heavy thrash metal instrumental, aggressive guitar riffs, double-bass drum')">#Metal</span>
-              <span class="genre-tag-pill" onclick="appendTag('Retro 80s synthwave, driving analog bass, neon synth lead, 120 BPM')">#Synthwave</span>
+            <label>⚡ Quick Style Presets:</label>
+            <div class="style-preset-grid">
+              <button class="preset-card-btn" onclick="applyFullPreset('anime_jrock')">
+                <span>🎸 J-Rock</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">180 BPM • Fast</span>
+              </button>
+              <button class="preset-card-btn" onclick="applyFullPreset('chiptune_boss')">
+                <span>👾 16-Bit RPG</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">160 BPM • Retro</span>
+              </button>
+              <button class="preset-card-btn" onclick="applyFullPreset('lofi_hiphop')">
+                <span>☕ Lofi Beats</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">85 BPM • Chill</span>
+              </button>
+              <button class="preset-card-btn" onclick="applyFullPreset('cyberpunk_synth')">
+                <span>🏙️ Synthwave</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">120 BPM • Neon</span>
+              </button>
+              <button class="preset-card-btn" onclick="applyFullPreset('heavy_metal')">
+                <span>⚡ Metal</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">175 BPM • Heavy</span>
+              </button>
+              <button class="preset-card-btn" onclick="applyFullPreset('city_pop')">
+                <span>🌆 City Pop</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">115 BPM • Funk</span>
+              </button>
+              <button class="preset-card-btn" onclick="applyFullPreset('kawaii_future')">
+                <span>🌸 Kawaii Bass</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">150 BPM • Bright</span>
+              </button>
+              <button class="preset-card-btn" onclick="applyFullPreset('ambient_postrock')">
+                <span>🌌 Post-Rock</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">100 BPM • Spacey</span>
+              </button>
             </div>
           </div>
 
-          <!-- Arrangement / Dynamic Tags Field -->
+          <!-- MAIN PROMPT TEXTAREA (Supports Paragraphs & Comma Lists) -->
           <div class="control-group">
-            <label id="lyrics-field-label">Arrangement & Performance Tags:</label>
-            <textarea id="suno-lyrics-input" class="studio-textarea" style="height: 85px;" placeholder="Enter instrument tags e.g. Syncopated rhythm, keytar solo, energetic outro...">Fast drum fill intro, distorted electric guitar lead, keytar solo, energetic outro</textarea>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label style="margin-bottom: 0;">Style Prompt / Paragraph Description:</label>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Commas or full prose text</span>
+            </div>
+            <textarea id="suno-style-prompt" class="studio-textarea" style="height: 110px;" placeholder="Describe your style using commas or write a full detailed paragraph (e.g., 'A fast-paced energetic anime opening instrumental with heavy distorted electric guitar leads, keytar solos, hyperactive drum fills, 180 BPM, clean studio mix')...">Fast anime J-Rock instrumental, heavy distorted electric guitar lead, keytar solo, energetic drum fills, 180 BPM, clean studio mix</textarea>
           </div>
 
-          <button class="btn-action" id="generate-ai-btn" onclick="generateSunoAiTrack()">✨ Create Track</button>
+          <!-- SUNO / EASYMUSIC STYLE TAG EXPLORER CATEGORY FILTER -->
+          <div class="control-group">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <label style="margin-bottom: 0;">🏷️ Multi-Tag Picker (Click to add):</label>
+              <span style="font-size: 0.7rem; color: var(--accent-pink);">Single-line tags</span>
+            </div>
+
+            <!-- Tag Category Tabs -->
+            <div class="tag-category-tabs">
+              <button class="tag-cat-btn active-cat" onclick="switchTagCategory('all', this)">All Tags</button>
+              <button class="tag-cat-btn" onclick="switchTagCategory('genres', this)">Genres</button>
+              <button class="tag-cat-btn" onclick="switchTagCategory('subgenres', this)">Sub-Genres</button>
+              <button class="tag-cat-btn" onclick="switchTagCategory('instruments', this)">Instruments</button>
+              <button class="tag-cat-btn" onclick="switchTagCategory('tempo', this)">BPM & Tempo</button>
+              <button class="tag-cat-btn" onclick="switchTagCategory('moods', this)">Moods & Feel</button>
+            </div>
+
+            <!-- Tag Pills Display Container -->
+            <div class="tag-pills-row" id="tag-picker-container">
+              <!-- Dynamically Populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Dynamic Arrangement & Performance Tags -->
+          <div class="control-group">
+            <label id="lyrics-field-label">Arrangement & Transition Tags:</label>
+            <textarea id="suno-lyrics-input" class="studio-textarea" style="height: 70px;" placeholder="Enter arrangement tags e.g. Syncopated rhythm, keytar solo, energetic outro, breakdown...">Fast drum fill intro, distorted electric guitar lead, keytar solo, energetic outro</textarea>
+          </div>
+
+          <button class="btn-action" id="generate-ai-btn" onclick="generateSunoAiTrack()">✨ Create Instrumental Track</button>
         </div>
 
         <!-- RIGHT COLUMN: MY SONGS / PERSONAL TRACK LIBRARY -->
@@ -1459,7 +1584,7 @@
           </div>
 
           <div id="auto-playlist-container">
-            <p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Track' to render multi-instrument tracks into your studio library!</p>
+            <p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Instrumental Track' to render multi-instrument tracks into your studio library!</p>
           </div>
         </div>
       </div>
@@ -1476,6 +1601,120 @@
   <script src="global-player.js"></script>
   <script>
     /* ==========================================================================
+       TAG DATABASE & PRESET DEFINITIONS FOR AI INSTRUMENTAL STUDIO
+       ========================================================================== */
+    const MUSIC_TAG_DATABASE = {
+      genres: [
+        "J-Rock", "Anison", "Vocaloid Rock", "Chiptune", "8-Bit RPG", "Lofi Hip Hop", 
+        "Synthwave", "Cyberpunk", "City Pop", "Heavy Metal", "Future Bass", "J-Pop", 
+        "Post-Rock", "Ambient", "Jazz Fusion", "Math Rock", "Eurobeat", "EDM"
+      ],
+      subgenres: [
+        "Melodic Speed Metal", "Kawaii Future Bass", "Shibuya-kei", "Darksynth", "Retrowave", 
+        "Boom Bap Lofi", "Denpa Music", "Visual Kei", "Electro Swing", "Symphonic Rock", 
+        "Acoustic Folk", "80s Pop", "Industrial Cyber", "Hardcore Chiptune", "Downtempo"
+      ],
+      instruments: [
+        "Distorted Electric Guitar", "Keytar Lead", "Rapid Drum Fills", "FM Synth Arpeggios", 
+        "Slap Bass Guitar", "Rhodes Piano", "Acoustic Guitar", "Double Bass Drum", 
+        "Analog Synthesizer", "Violin Lead", "Saxophone Solo", "808 Bass Kick", "Chiptune Squarewave"
+      ],
+      tempo: [
+        "180 BPM", "160 BPM", "140 BPM", "120 BPM", "90 BPM", "85 BPM", "200 BPM Hyper", 
+        "Fast Tempo", "Mid-tempo Groove", "Slow Chill Pace", "Syncopated Rhythm", "Polyrhythmic"
+      ],
+      moods: [
+        "Energetic Opening", "Melancholic Nostalgia", "Heroic Boss Battle", "Uplifting", 
+        "Dark Cyberpunk", "Chill & Relaxing", "Aggressive Overdrive", "Dreamy Atmosphere", 
+        "Bright & Kawaii", "Emotional Climax", "Mysterious Night"
+      ]
+    };
+
+    const FULL_STYLE_PRESETS = {
+      anime_jrock: {
+        title: "Subterranean Overdrive",
+        prompt: "Fast anime J-Rock instrumental, hyperactive drum fills, heavy distorted guitar riff lead, keytar solo, tight electric slap bass, 180 BPM, clean studio mix",
+        lyrics: "Dynamic drum fill intro, dual guitar breakdown, keytar duel, climax outro"
+      },
+      chiptune_boss: {
+        title: "Pixel Boss Confrontation",
+        prompt: "16-bit RPG boss battle theme, rapid NES synth arpeggios, retro chiptune squarewave lead, energetic 8-bit drum beats, 160 BPM, arcade video game soundtrack",
+        lyrics: "Retro start bell, fast pulse synth loop, intense boss phase transition, victory lock"
+      },
+      lofi_hiphop: {
+        title: "Sakura Dusk Coffee",
+        prompt: "Chill lofi hip hop beat, warm vintage Rhodes piano chords, vinyl crackle atmosphere, smooth acoustic bassline, subtle jazz snare, 85 BPM, relaxing study vibe",
+        lyrics: "Muffled intro, soft kick snare entrance, gentle piano melody swell, fade out"
+      },
+      cyberpunk_synth: {
+        title: "Neon District Highway",
+        prompt: "Retro 80s synthwave, driving analog sawtooth bass, neon synth lead, gated reverb drums, cyberpunk cityscape atmosphere, 120 BPM, synthpop instrumental",
+        lyrics: "Pulsing synth bass start, synth arpeggio build, energetic chorus synth drop"
+      },
+      heavy_metal: {
+        title: "Thunderbolt Shredder",
+        prompt: "Heavy thrash metal instrumental, fast double-bass drum pedal, aggressive distorted guitar shredding, heavy bass riff, 175 BPM, high intensity",
+        lyrics: "Aggressive drum roll intro, guitar shredding solo, thunderous rhythm section"
+      },
+      city_pop: {
+        title: "Tokyo Midnight Cruise",
+        prompt: "80s Japanese City Pop instrumental, funky slap bassline, brass horns section, clean rhythm electric guitar, glossy chorus synth, 115 BPM, retro funk",
+        lyrics: "Brass section fanfare, groovy funk bassline entrance, smooth saxophone bridge"
+      },
+      kawaii_future: {
+        title: "Sparkle Pop Rainbow",
+        prompt: "Kawaii Future Bass instrumental, bright sidechained synth chords, cute pitched synth melody, energetic electro drum bounce, 150 BPM, anime club mix",
+        lyrics: "Cute synth melody start, build-up snare roll, massive colorful synth chord drop"
+      },
+      ambient_postrock: {
+        title: "Echoes Above Clouds",
+        prompt: "Atmospheric post-rock instrumental, shimmering delay acoustic guitars, swell ambient pads, slow building dynamic drums, 100 BPM, emotional soundscape",
+        lyrics: "Gentle acoustic guitar picking, ambient pad swell, crescendo drum entrance"
+      }
+    };
+
+    function populateTagExplorer(category = 'all') {
+      const container = document.getElementById('tag-picker-container');
+      if (!container) return;
+
+      container.innerHTML = '';
+      let tagsToDisplay = [];
+
+      if (category === 'all') {
+        Object.values(MUSIC_TAG_DATABASE).forEach(list => tagsToDisplay.push(...list));
+      } else if (MUSIC_TAG_DATABASE[category]) {
+        tagsToDisplay = MUSIC_TAG_DATABASE[category];
+      }
+
+      tagsToDisplay.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'genre-tag-pill';
+        span.innerText = tag;
+        span.onclick = () => appendTag(tag);
+        container.appendChild(span);
+      });
+    }
+
+    function switchTagCategory(category, btnEl) {
+      document.querySelectorAll('.tag-cat-btn').forEach(b => b.classList.remove('active-cat'));
+      if (btnEl) btnEl.classList.add('active-cat');
+      populateTagExplorer(category);
+    }
+
+    function applyFullPreset(presetKey) {
+      const preset = FULL_STYLE_PRESETS[presetKey];
+      if (!preset) return;
+
+      const titleInput = document.getElementById('suno-track-title');
+      const promptInput = document.getElementById('suno-style-prompt');
+      const lyricsInput = document.getElementById('suno-lyrics-input');
+
+      if (titleInput) titleInput.value = preset.title;
+      if (promptInput) promptInput.value = preset.prompt;
+      if (lyricsInput) lyricsInput.value = preset.lyrics;
+    }
+
+    /* ==========================================================================
        SUNO AI & REAL MUSIC GENERATOR + PERSONAL LIBRARY PLAYER
        ========================================================================== */
     class SunoAiMusicStudio {
@@ -1487,7 +1726,14 @@
       appendTag(tagText) {
         const textarea = document.getElementById('suno-style-prompt');
         if (textarea) {
-          textarea.value += (textarea.value ? ", " : "") + tagText;
+          const currentVal = textarea.value.trim();
+          if (!currentVal) {
+            textarea.value = tagText;
+          } else if (currentVal.endsWith(',')) {
+            textarea.value = `${currentVal} ${tagText}`;
+          } else {
+            textarea.value = `${currentVal}, ${tagText}`;
+          }
         }
       }
 
@@ -1501,7 +1747,7 @@
         if (!container) return;
 
         if (this.playlist.length === 0) {
-          container.innerHTML = `<p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Track' to render multi-instrument tracks into your studio library!</p>`;
+          container.innerHTML = `<p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Instrumental Track' to render multi-instrument tracks into your studio library!</p>`;
           return;
         }
 
@@ -1655,7 +1901,7 @@
       } finally {
         if (btn) {
           btn.disabled = false;
-          btn.innerText = "✨ Create Track";
+          btn.innerText = "✨ Create Instrumental Track";
         }
       }
     }
@@ -2525,6 +2771,7 @@
       renderDiscography();
       initMasterTimers();
       renderSynthVisualizer();
+      populateTagExplorer('all');
 
       const wasFmPlaying = localStorage.getItem('neko_fm_active') === 'true';
       const savedVolume = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
