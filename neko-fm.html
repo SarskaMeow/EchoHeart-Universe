@@ -1541,7 +1541,7 @@
         const response = await fetch('http://localhost:5000/generate-music', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: prompt, duration: 10 })
+          body: JSON.stringify({ prompt: prompt, duration: 60 })
         });
 
         if (!response.ok) {
