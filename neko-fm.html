@@ -865,7 +865,7 @@
       box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
     }
 
-    /* SUNO & ACE-STEP STUDIO UI STYLES */
+    /* SUNO & MUSICGEN STUDIO UI STYLES */
     .generator-studio-layout {
       display: grid;
       grid-template-columns: 460px 1fr;
@@ -1179,7 +1179,7 @@
       <button class="tab-btn active-tab" onclick="switchTab('board-tab', this)">📋 Setlist Polls</button>
       <button class="tab-btn" onclick="switchTab('youtube-tab', this)">🎛️ Neko Synth Deck</button>
       <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 Girls Dead Phantom Hub</button>
-      <button class="tab-btn" onclick="switchTab('soundboard-tab', this)">✨ Suno AI Studio</button>
+      <button class="tab-btn" onclick="switchTab('soundboard-tab', this)">✨ AI Studio</button>
     </div>
 
     <!-- TAB 1: PREP ROOM BOARD & SETLIST POLLS -->
@@ -1373,7 +1373,7 @@
       </div>
     </section>
 
-    <!-- TAB 4: SUNO & EASYMUSIC AI GENERATOR STUDIO -->
+    <!-- TAB 4: REPLICATE & MUSICGEN AI INSTRUMENTAL STUDIO -->
     <section id="soundboard-tab" class="tab-content">
       
       <div class="generator-studio-layout">
@@ -1384,7 +1384,7 @@
             <button class="vote-btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="clearStudioForm()">Clear</button>
           </div>
 
-          <!-- Toggles Row: Advanced Mode & Vocals Toggle -->
+          <!-- Toggles Row: Advanced Mode & Vocals Toggle (Vocals disabled for MusicGen) -->
           <div style="display: flex; gap: 10px; margin-bottom: 16px;">
             <div class="studio-toggle-row" style="flex: 1; margin-bottom: 0;">
               <span class="toggle-switch-label">Advanced Mode</span>
@@ -1394,11 +1394,11 @@
               </label>
             </div>
             
-            <div class="studio-toggle-row" style="flex: 1; margin-bottom: 0;">
-              <span class="toggle-switch-label">With Vocals</span>
+            <div class="studio-toggle-row" style="flex: 1; margin-bottom: 0; opacity: 0.55;">
+              <span class="toggle-switch-label" title="Meta MusicGen produces pure high-fidelity instrumentals">With Vocals</span>
               <label class="switch-ui">
-                <input type="checkbox" id="toggle-with-vocals" onchange="toggleVocalsMode(this.checked)">
-                <span class="slider-round"></span>
+                <input type="checkbox" id="toggle-with-vocals" disabled>
+                <span class="slider-round" style="cursor: not-allowed;"></span>
               </label>
             </div>
           </div>
@@ -1407,53 +1407,43 @@
           <div class="control-group">
             <label>AI Model Version:</label>
             <select id="suno-model-version" class="studio-select">
-              <option value="ACE-Step v1.5">ACE-Step (v1.5) — Multi-Instrumental Studio Engine</option>
-              <option value="Harmony v6.0">Harmony (v6.0) — Max 8 minutes</option>
-              <option value="Suno v3.5">Suno V3.5 — High Energy J-Rock / Anime Engine</option>
+              <option value="Meta MusicGen (Stereo-Large)">Meta MusicGen (Stereo-Large) — Studio Instrumental Engine</option>
             </select>
           </div>
 
-          <!-- Target Track Duration Selector -->
+          <!-- Target Track Duration Selector (MusicGen generates up to 30s) -->
           <div class="control-group">
             <label>Track Duration:</label>
             <select id="suno-duration" class="studio-select">
-              <option value="30">30 Seconds (Quick Teaser)</option>
-              <option value="60" selected>60 Seconds (Full Loop)</option>
-              <option value="120">2 Minutes (Full Song)</option>
-              <option value="180">3 Minutes (Extended Master)</option>
+              <option value="15">15 Seconds (Quick Riff / Teaser)</option>
+              <option value="30" selected>30 Seconds (Max Single Pass)</option>
             </select>
           </div>
 
           <!-- Title Field -->
           <div class="control-group">
             <label>Title:</label>
-            <input type="text" id="suno-track-title" class="studio-input" value="Find My Groove" placeholder="Enter song title...">
+            <input type="text" id="suno-track-title" class="studio-input" value="Subterranean Riff" placeholder="Enter song title...">
           </div>
 
           <!-- Style Prompt Field & Tag Pills -->
           <div class="control-group">
             <label>Style of Music / Prompt:</label>
-            <textarea id="suno-style-prompt" class="studio-textarea" style="height: 85px;" placeholder="Describe style, instruments, BPM, beat tempo...">Fast anime J-Rock, groovy bassline, syncopated rhythm, heavy distorted guitar riffs, keytar solo, 180 BPM, modern production</textarea>
+            <textarea id="suno-style-prompt" class="studio-textarea" style="height: 110px;" placeholder="Describe style, instruments, BPM, chord feel...">Fast anime J-Rock instrumental, heavy distorted electric guitar lead, keytar solo, energetic drum fills, 180 BPM, clean studio mix</textarea>
             
             <div class="tag-pills-row">
-              <span class="genre-tag-pill" onclick="appendTag('Heavy Metal')">#Metal</span>
-              <span class="genre-tag-pill" onclick="appendTag('Smooth Jazz')">#Jazz</span>
-              <span class="genre-tag-pill" onclick="appendTag('Anime J-Rock')">#AnimeJ-Rock</span>
-              <span class="genre-tag-pill" onclick="appendTag('Game Music')">#GameMusic</span>
-              <span class="genre-tag-pill" onclick="appendTag('Lo-Fi Chill')">#LoFi</span>
-              <span class="genre-tag-pill" onclick="appendTag('Synthwave')">#Synthwave</span>
-              <span class="genre-tag-pill" onclick="appendTag('Vocaloid Pop')">#Vocaloid</span>
+              <span class="genre-tag-pill" onclick="appendTag('Fast anime J-Rock, electric guitar lead, fast drums, 180 BPM')">#AnimeJ-Rock</span>
+              <span class="genre-tag-pill" onclick="appendTag('16-bit RPG boss battle theme, fast synth arpeggios, retro chiptune, 160 BPM')">#GameMusic</span>
+              <span class="genre-tag-pill" onclick="appendTag('Chill lofi hip hop beat, warm Rhodes piano chord progression, vinyl crackle, 85 BPM')">#LoFi</span>
+              <span class="genre-tag-pill" onclick="appendTag('Heavy thrash metal instrumental, aggressive guitar riffs, double-bass drum')">#Metal</span>
+              <span class="genre-tag-pill" onclick="appendTag('Retro 80s synthwave, driving analog bass, neon synth lead, 120 BPM')">#Synthwave</span>
             </div>
           </div>
 
-          <!-- Lyrics or Structural Section Tags -->
+          <!-- Arrangement / Dynamic Tags Field -->
           <div class="control-group">
-            <label id="lyrics-field-label">Structural Tags / Arrangements:</label>
-            <textarea id="suno-lyrics-input" class="studio-textarea" style="height: 110px;" placeholder="Enter section tags e.g. [Intro] [Verse] [Guitar Solo] [Outro]...">[Fast Drum Fill Intro]
-[Heavy Guitar Riff]
-[Verse]
-[Melodic Keytar & Guitar Solo]
-[Outro Fade]</textarea>
+            <label id="lyrics-field-label">Arrangement & Performance Tags:</label>
+            <textarea id="suno-lyrics-input" class="studio-textarea" style="height: 85px;" placeholder="Enter instrument tags e.g. Syncopated rhythm, keytar solo, energetic outro...">Fast drum fill intro, distorted electric guitar lead, keytar solo, energetic outro</textarea>
           </div>
 
           <button class="btn-action" id="generate-ai-btn" onclick="generateSunoAiTrack()">✨ Create Track</button>
@@ -1463,7 +1453,7 @@
         <div class="library-panel">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(0, 240, 255, 0.2); padding-bottom: 12px;">
             <h4 style="color: #fff; margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-              🎧 My Songs Library <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">(Real Stems & Rendered Cuts)</span>
+              🎧 My Songs Library <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">(Real Cloud Renders)</span>
             </h4>
             <button class="vote-btn" style="padding: 6px 14px; font-size: 0.78rem;" onclick="clearAutoPlaylist()">Clear Library</button>
           </div>
@@ -1476,7 +1466,7 @@
 
       <!-- TAB 4 STATUS FOOTER -->
       <div class="tab-status-footer">
-        <span>STATUS: SUNO_AI_ENGINE_READY</span>
+        <span>STATUS: MUSICGEN_ENGINE_READY</span>
         <span>LIBRARY_PLAYER: ACTIVE</span>
       </div>
 
@@ -1533,7 +1523,7 @@
                 <strong style="color: #fff; font-size: 1.05rem;">🎵 ${track.title}</strong>
               </div>
               <div style="font-size: 0.8rem; color: var(--accent-cyan); margin-top: 4px;">
-                Style: ${track.prompt} • ${track.hasVocals ? 'Vocals' : 'Instrumental'} • ${track.duration}s Cut • ${track.timestamp}
+                Style: ${track.prompt} • Instrumental • ${track.duration}s Cut • ${track.timestamp}
               </div>
             </div>
             <div style="display: flex; gap: 8px;">
@@ -1585,13 +1575,8 @@
     function toggleVocalsMode(isVocalsOn) {
       const lyricsLabel = document.getElementById('lyrics-field-label');
       const lyricsInput = document.getElementById('suno-lyrics-input');
-      if (isVocalsOn) {
-        if (lyricsLabel) lyricsLabel.innerText = "Custom Lyrics / Verses:";
-        if (lyricsInput) lyricsInput.placeholder = "Wake up to the morning light...\nCoffee brewing, feeling right...\nGot that rhythm in my soul...";
-      } else {
-        if (lyricsLabel) lyricsLabel.innerText = "Structural Tags / Arrangements:";
-        if (lyricsInput) lyricsInput.placeholder = "Enter section tags e.g. [Intro] [Verse] [Guitar Solo] [Outro]...";
-      }
+      if (lyricsLabel) lyricsLabel.innerText = "Arrangement & Performance Tags:";
+      if (lyricsInput) lyricsInput.placeholder = "Enter instrument tags e.g. Syncopated rhythm, keytar solo, energetic outro...";
     }
 
     function clearStudioForm() {
@@ -1602,10 +1587,10 @@
 
     async function generateSunoAiTrack() {
       const prompt = document.getElementById('suno-style-prompt').value.trim();
-      const trackTitle = document.getElementById('suno-track-title').value.trim() || "AI Master Track";
+      const trackTitle = document.getElementById('suno-track-title').value.trim() || "AI Instrumental Master";
       const lyrics = document.getElementById('suno-lyrics-input').value.trim();
-      const hasVocals = document.getElementById('toggle-with-vocals').checked;
-      const targetDuration = parseInt(document.getElementById('suno-duration')?.value || '60', 10);
+      const hasVocals = false;
+      const targetDuration = parseInt(document.getElementById('suno-duration')?.value || '30', 10);
       const btn = document.getElementById('generate-ai-btn');
 
       if (!prompt) {
@@ -1619,7 +1604,7 @@
       }
 
       try {
-        const fullPrompt = lyrics ? `${prompt}. Arrangement: ${lyrics}` : prompt;
+        const fullPrompt = lyrics ? `${prompt}, ${lyrics}` : prompt;
         const response = await fetch('http://localhost:5000/generate-music', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1638,7 +1623,7 @@
           title: trackTitle,
           prompt: prompt,
           lyrics: lyrics,
-          hasVocals: hasVocals,
+          hasVocals: false,
           duration: targetDuration,
           audioUrl: audioUrl,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
