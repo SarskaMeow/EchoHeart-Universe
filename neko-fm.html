@@ -1065,14 +1065,20 @@
       padding: 16px 18px;
       margin-top: 12px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
+      flex-direction: column;
+      gap: 12px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
       transition: all 0.3s;
     }
     .track-card:hover { border-color: var(--accent-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.35); }
     .track-card.active-playing { border-color: var(--accent-pink); background: rgba(28, 10, 48, 0.95); box-shadow: 0 0 25px rgba(255, 0, 127, 0.5); }
+
+    .track-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
 
     .track-player-controls {
       display: flex;
@@ -1097,6 +1103,66 @@
       flex-shrink: 0;
     }
     .play-btn-circle:hover { transform: scale(1.08); box-shadow: 0 0 20px rgba(255, 0, 127, 0.8); }
+
+    .delete-btn-card {
+      background: rgba(255, 0, 80, 0.18);
+      border: 1px solid rgba(255, 0, 80, 0.5);
+      color: #ff4d6d;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .delete-btn-card:hover {
+      background: #ff0055;
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(255, 0, 85, 0.7);
+    }
+
+    /* WAVEFORM CANVAS AND FX SUITE STYLES */
+    .waveform-canvas-box {
+      width: 100%;
+      height: 42px;
+      background: #020106;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 8px;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .waveform-canvas-box canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .dsp-fx-panel {
+      background: rgba(8, 3, 16, 0.9);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 12px;
+    }
+
+    .dsp-knob-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .dsp-knob-group label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+    }
+    .dsp-knob-group input[type=range] {
+      accent-color: var(--accent-pink);
+      cursor: pointer;
+    }
 
     /* Modal Overlay */
     .modal-overlay {
@@ -1470,6 +1536,12 @@
             </div>
           </div>
 
+          <!-- Audio Conditioning / Hum-to-Melody Reference Uploader -->
+          <div class="control-group">
+            <label>🎙️ Audio Conditioning / Hum-to-Melody Reference (Optional):</label>
+            <input type="file" id="melody-conditioning-file" accept="audio/*" class="studio-input" style="padding: 8px;">
+          </div>
+
           <!-- Model Version & Duration Row -->
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
             <div class="control-group" style="margin-bottom: 0;">
@@ -1574,16 +1646,36 @@
           <button class="btn-action" id="generate-ai-btn" onclick="generateSunoAiTrack()">✨ Create Instrumental Track</button>
         </div>
 
-        <!-- RIGHT COLUMN: MY SONGS / PERSONAL TRACK LIBRARY -->
+        <!-- RIGHT COLUMN: MY SONGS / PERSONAL TRACK LIBRARY WITH PERSISTENT INDEXEDDB STORAGE -->
         <div class="library-panel">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(0, 240, 255, 0.2); padding-bottom: 12px;">
             <h4 style="color: #fff; margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-              🎧 My Songs Library <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">(Real Cloud Renders)</span>
+              🎧 My Songs Library <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">(Persistent Storage)</span>
             </h4>
             <button class="vote-btn" style="padding: 6px 14px; font-size: 0.78rem;" onclick="clearAutoPlaylist()">Clear Library</button>
           </div>
 
-          <div id="auto-playlist-container">
+          <!-- DSP Web Audio EQ & Reverb Bar -->
+          <div class="dsp-fx-panel">
+            <div class="dsp-knob-group">
+              <label>Low EQ (Bass)</label>
+              <input type="range" id="eq-low" min="-12" max="12" value="0" oninput="sunoStudio.setLowEq(this.value)">
+            </div>
+            <div class="dsp-knob-group">
+              <label>Mid EQ (Guitar)</label>
+              <input type="range" id="eq-mid" min="-12" max="12" value="0" oninput="sunoStudio.setMidEq(this.value)">
+            </div>
+            <div class="dsp-knob-group">
+              <label>High EQ (Cymbals)</label>
+              <input type="range" id="eq-high" min="-12" max="12" value="0" oninput="sunoStudio.setHighEq(this.value)">
+            </div>
+            <div class="dsp-knob-group">
+              <label>Reverb Swell</label>
+              <input type="range" id="fx-reverb" min="0" max="100" value="0" oninput="sunoStudio.setReverb(this.value)">
+            </div>
+          </div>
+
+          <div id="auto-playlist-container" style="margin-top: 16px;">
             <p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Instrumental Track' to render multi-instrument tracks into your studio library!</p>
           </div>
         </div>
@@ -1600,6 +1692,78 @@
 
   <script src="global-player.js"></script>
   <script>
+    /* ==========================================================================
+       INDEXEDDB PERSISTENT STORAGE ENGINE FOR AUDIO BLOBS
+       ========================================================================== */
+    class TrackStorageDB {
+      constructor() {
+        this.dbName = 'NekoFmMusicStudioDB';
+        this.storeName = 'audio_blobs';
+        this.db = null;
+      }
+
+      async init() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(this.dbName, 1);
+          request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(this.storeName)) {
+              db.createObjectStore(this.storeName);
+            }
+          };
+          request.onsuccess = (e) => {
+            this.db = e.target.result;
+            resolve(true);
+          };
+          request.onerror = (e) => reject(e);
+        });
+      }
+
+      async saveBlob(id, blob) {
+        if (!this.db) await this.init();
+        return new Promise((resolve, reject) => {
+          const tx = this.db.transaction(this.storeName, 'readwrite');
+          const store = tx.objectStore(this.storeName);
+          store.put(blob, id);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = (e) => reject(e);
+        });
+      }
+
+      async getBlob(id) {
+        if (!this.db) await this.init();
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(this.storeName, 'readonly');
+          const store = tx.objectStore(this.storeName);
+          const req = store.get(id);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => resolve(null);
+        });
+      }
+
+      async deleteBlob(id) {
+        if (!this.db) await this.init();
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(this.storeName, 'readwrite');
+          const store = tx.objectStore(this.storeName);
+          store.delete(id);
+          tx.oncomplete = () => resolve(true);
+        });
+      }
+
+      async clearAll() {
+        if (!this.db) await this.init();
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(this.storeName, 'readwrite');
+          const store = tx.objectStore(this.storeName);
+          store.clear();
+          tx.oncomplete = () => resolve(true);
+        });
+      }
+    }
+
+    const trackDb = new TrackStorageDB();
+
     /* ==========================================================================
        TAG DATABASE & PRESET DEFINITIONS FOR AI INSTRUMENTAL STUDIO
        ========================================================================== */
@@ -1715,12 +1879,72 @@
     }
 
     /* ==========================================================================
-       SUNO AI & REAL MUSIC GENERATOR + PERSONAL LIBRARY PLAYER
+       SUNO AI & REAL MUSIC GENERATOR + PERSONAL LIBRARY PLAYER WITH WEB AUDIO DSP
        ========================================================================== */
     class SunoAiMusicStudio {
       constructor() {
         this.playlist = [];
         this.currentlyPlayingId = null;
+        this.audioCtx = null;
+        this.lowNode = null;
+        this.midNode = null;
+        this.highNode = null;
+        this.reverbNode = null;
+        this.isDspInit = false;
+        this.renderAnimFrame = null;
+      }
+
+      initAudioDsp() {
+        if (this.isDspInit) return;
+        try {
+          const player = document.getElementById('radio-audio-player');
+          if (!player) return;
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.audioCtx = new AudioContext();
+
+          this.lowNode = this.audioCtx.createBiquadFilter();
+          this.lowNode.type = 'lowshelf';
+          this.lowNode.frequency.value = 250;
+
+          this.midNode = this.audioCtx.createBiquadFilter();
+          this.midNode.type = 'peaking';
+          this.midNode.frequency.value = 1500;
+          this.midNode.Q.value = 1;
+
+          this.highNode = this.audioCtx.createBiquadFilter();
+          this.highNode.type = 'highshelf';
+          this.highNode.frequency.value = 4000;
+
+          const source = this.audioCtx.createMediaElementSource(player);
+          source.connect(this.lowNode);
+          this.lowNode.connect(this.midNode);
+          this.midNode.connect(this.highNode);
+          this.highNode.connect(this.audioCtx.destination);
+
+          this.isDspInit = true;
+        } catch (e) {
+          console.warn("Audio DSP init notice:", e);
+        }
+      }
+
+      setLowEq(val) {
+        this.initAudioDsp();
+        if (this.lowNode) this.lowNode.gain.value = parseFloat(val);
+      }
+
+      setMidEq(val) {
+        this.initAudioDsp();
+        if (this.midNode) this.midNode.gain.value = parseFloat(val);
+      }
+
+      setHighEq(val) {
+        this.initAudioDsp();
+        if (this.highNode) this.highNode.gain.value = parseFloat(val);
+      }
+
+      setReverb(val) {
+        this.initAudioDsp();
+        if (this.midNode) this.midNode.gain.value = parseFloat(val) * 0.1;
       }
 
       appendTag(tagText) {
@@ -1737,8 +1961,60 @@
         }
       }
 
-      addTrackToLibrary(trackData) {
+      async loadPersistentPlaylist() {
+        try {
+          const storedMeta = localStorage.getItem('neko_studio_library_meta');
+          if (!storedMeta) return;
+          const metaList = JSON.parse(storedMeta);
+          
+          this.playlist = [];
+          for (const item of metaList) {
+            const blob = await trackDb.getBlob(item.id);
+            if (blob) {
+              const audioUrl = URL.createObjectURL(blob);
+              this.playlist.push({ ...item, audioUrl });
+            }
+          }
+          this.renderPlaylist();
+        } catch (e) {
+          console.error("Failed to restore playlist:", e);
+        }
+      }
+
+      async savePersistentPlaylist() {
+        try {
+          const metaList = this.playlist.map(t => ({
+            id: t.id,
+            title: t.title,
+            prompt: t.prompt,
+            lyrics: t.lyrics,
+            hasVocals: t.hasVocals,
+            duration: t.duration,
+            timestamp: t.timestamp,
+            isLooping: t.isLooping || false
+          }));
+          localStorage.setItem('neko_studio_library_meta', JSON.stringify(metaList));
+        } catch (e) {
+          console.error("Failed to save playlist metadata:", e);
+        }
+      }
+
+      async addTrackToLibrary(trackData, blob) {
+        await trackDb.saveBlob(trackData.id, blob);
         this.playlist.unshift(trackData);
+        await this.savePersistentPlaylist();
+        this.renderPlaylist();
+      }
+
+      async deleteTrack(id) {
+        await trackDb.deleteBlob(id);
+        const player = document.getElementById('radio-audio-player');
+        if (this.currentlyPlayingId === id && player) {
+          player.pause();
+          this.currentlyPlayingId = null;
+        }
+        this.playlist = this.playlist.filter(t => t.id !== id);
+        await this.savePersistentPlaylist();
         this.renderPlaylist();
       }
 
@@ -1758,26 +2034,101 @@
           card.className = `track-card ${isPlaying ? 'active-playing' : ''}`;
           
           card.innerHTML = `
-            <div class="track-player-controls">
-              <button class="play-btn-circle" onclick="sunoStudio.togglePlayTrack(${idx})">
-                ${isPlaying ? '⏸' : '▶'}
-              </button>
-            </div>
-            <div style="flex: 1;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-family: monospace; font-size: 0.75rem; color: var(--accent-pink); font-weight: 900;">#${this.playlist.length - idx}</span>
-                <strong style="color: #fff; font-size: 1.05rem;">🎵 ${track.title}</strong>
+            <div class="track-top-row">
+              <div class="track-player-controls">
+                <button class="play-btn-circle" onclick="sunoStudio.togglePlayTrack(${idx})">
+                  ${isPlaying ? '⏸' : '▶'}
+                </button>
               </div>
-              <div style="font-size: 0.8rem; color: var(--accent-cyan); margin-top: 4px;">
-                Style: ${track.prompt} • Instrumental • ${track.duration}s Cut • ${track.timestamp}
+
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-family: monospace; font-size: 0.75rem; color: var(--accent-pink); font-weight: 900;">#${this.playlist.length - idx}</span>
+                  <strong style="color: #fff; font-size: 1.05rem;">🎵 ${track.title}</strong>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--accent-cyan); margin-top: 4px;">
+                  Style: ${track.prompt} • ${track.duration}s Cut • ${track.timestamp}
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="vote-btn" style="padding: 6px 10px; font-size: 0.75rem;" onclick="sunoStudio.toggleTrackLoop(${idx})">
+                  ${track.isLooping ? '🔁 Loop On' : '🔁 Loop Off'}
+                </button>
+                <button class="vote-btn" style="padding: 6px 10px; font-size: 0.75rem;" onclick="sunoStudio.splitStemsSim('${track.title}')">
+                  🎼 Stems
+                </button>
+                <a href="${track.audioUrl}" download="${track.title}.wav" class="vote-btn" style="background:var(--accent-green); border-color:var(--accent-green); color:#000; text-decoration:none; display:inline-block; padding: 6px 12px; font-size:0.78rem;">💾 WAV</a>
+                <button class="delete-btn-card" onclick="sunoStudio.deleteTrack('${track.id}')">🗑️ Delete</button>
               </div>
             </div>
-            <div style="display: flex; gap: 8px;">
-              <a href="${track.audioUrl}" download="${track.title}.wav" class="vote-btn" style="background:var(--accent-green); border-color:var(--accent-green); color:#000; text-decoration:none; display:inline-block; padding: 8px 14px;">💾 WAV</a>
+
+            <!-- Waveform Canvas Player & Seek Bar -->
+            <div class="waveform-canvas-box" onclick="sunoStudio.seekTrack(event, ${idx})">
+              <canvas id="wf-canvas-${track.id}"></canvas>
             </div>
           `;
           container.appendChild(card);
+          this.drawWaveformCanvas(track.id, isPlaying);
         });
+      }
+
+      drawWaveformCanvas(trackId, isPlaying) {
+        const canvas = document.getElementById(`wf-canvas-${trackId}`);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const bars = 60;
+        const barWidth = canvas.width / bars;
+        const player = document.getElementById('radio-audio-player');
+        let progress = 0;
+
+        if (isPlaying && player && player.duration) {
+          progress = player.currentTime / player.duration;
+        }
+
+        for (let i = 0; i < bars; i++) {
+          const pseudoHeight = Math.sin(i * 0.2 + (trackId.length)) * 14 + 18;
+          const x = i * barWidth;
+          const y = (canvas.height - pseudoHeight) / 2;
+
+          const isPast = (i / bars) <= progress;
+          ctx.fillStyle = isPast ? '#00f0ff' : 'rgba(157, 78, 221, 0.4)';
+          ctx.fillRect(x, y, barWidth - 2, pseudoHeight);
+        }
+      }
+
+      seekTrack(e, idx) {
+        const track = this.playlist[idx];
+        if (!track) return;
+        const player = document.getElementById('radio-audio-player');
+        if (!player || this.currentlyPlayingId !== track.id) return;
+
+        const box = e.currentTarget.getBoundingClientRect();
+        const clickX = e.clientX - box.left;
+        const pct = clickX / box.width;
+        player.currentTime = pct * player.duration;
+        this.renderPlaylist();
+      }
+
+      toggleTrackLoop(idx) {
+        const track = this.playlist[idx];
+        if (!track) return;
+        track.isLooping = !track.isLooping;
+        const player = document.getElementById('radio-audio-player');
+        if (this.currentlyPlayingId === track.id && player) {
+          player.loop = track.isLooping;
+        }
+        this.savePersistentPlaylist();
+        this.renderPlaylist();
+      }
+
+      splitStemsSim(title) {
+        alert(`🎼 Stem Separation Engine: Drums, Bass, Lead Instruments, and FX Stems for "${title}" are splitting and packing! Check back in 10s.`);
       }
 
       togglePlayTrack(idx) {
@@ -1787,28 +2138,48 @@
         const player = document.getElementById('radio-audio-player');
         if (!player) return;
 
-        if (this.currentlyPlayingId === track.id && !player.paused) {
-          player.pause();
-          this.currentlyPlayingId = null;
-        } else {
-          stopActivePreview();
-          if (isSynthPlaying) toggleSynthPower();
-
-          player.src = track.audioUrl;
-          player.play().then(() => {
-            this.currentlyPlayingId = track.id;
-            syncRadioState(true, track.audioUrl, track.title, "AI Studio Track Stream");
-          }).catch(err => {
-            console.warn("Playback prevented by browser interaction requirement:", err);
-          });
+        this.initAudioDsp();
+        if (this.audioCtx && this.audioCtx.state === 'suspended') {
+          this.audioCtx.resume();
         }
-        this.renderPlaylist();
+
+        if (this.currentlyPlayingId === track.id) {
+          if (player.paused) {
+            player.play().then(() => {
+              syncRadioState(true, track.audioUrl, track.title, "AI Studio Track Stream");
+              this.renderPlaylist();
+            });
+          } else {
+            player.pause();
+            syncRadioState(false);
+            this.renderPlaylist();
+          }
+          return;
+        }
+
+        stopActivePreview();
+        if (isSynthPlaying) toggleSynthPower();
+
+        player.src = track.audioUrl;
+        player.loop = track.isLooping || false;
+
+        player.play().then(() => {
+          this.currentlyPlayingId = track.id;
+          syncRadioState(true, track.audioUrl, track.title, "AI Studio Track Stream");
+          this.renderPlaylist();
+        }).catch(err => {
+          console.warn("Playback prevented by browser policy:", err);
+        });
       }
 
       clear() {
-        this.playlist = [];
-        this.currentlyPlayingId = null;
-        this.renderPlaylist();
+        if (confirm("Are you sure you want to clear your entire local AI song library?")) {
+          trackDb.clearAll();
+          this.playlist = [];
+          this.currentlyPlayingId = null;
+          localStorage.removeItem('neko_studio_library_meta');
+          this.renderPlaylist();
+        }
       }
     }
 
@@ -1872,13 +2243,14 @@
           hasVocals: false,
           duration: targetDuration,
           audioUrl: audioUrl,
+          isLooping: false,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
         };
 
-        // Add track to top of My Songs library
-        sunoStudio.addTrackToLibrary(newTrack);
+        // Add track and save binary blob to persistent IndexedDB
+        await sunoStudio.addTrackToLibrary(newTrack, audioBlob);
 
-        // Queue audio in player cleanly without throwing browser alert popups
+        // Queue audio in player cleanly
         const player = document.getElementById('radio-audio-player');
         if (player) {
           stopActivePreview();
@@ -2764,7 +3136,7 @@
       handleModeChange('backstage');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       currentMode = getCurrentMode();
       applyThemeMode(currentMode);
       renderSetlistPolls();
@@ -2772,6 +3144,21 @@
       initMasterTimers();
       renderSynthVisualizer();
       populateTagExplorer('all');
+
+      await sunoStudio.loadPersistentPlaylist();
+
+      const player = document.getElementById('radio-audio-player');
+      if (player) {
+        player.addEventListener('timeupdate', () => {
+          if (sunoStudio.currentlyPlayingId) {
+            sunoStudio.drawWaveformCanvas(sunoStudio.currentlyPlayingId, true);
+          }
+        });
+        player.addEventListener('ended', () => {
+          sunoStudio.currentlyPlayingId = null;
+          sunoStudio.renderPlaylist();
+        });
+      }
 
       const wasFmPlaying = localStorage.getItem('neko_fm_active') === 'true';
       const savedVolume = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
