@@ -397,6 +397,57 @@
       94% { transform: translate(2px, -1px); text-shadow: 2px 0 var(--accent-cyan), -2px 0 var(--accent-pink); }
       95% { transform: translate(0, 0); text-shadow: none; }
     }
+    /* Footer Styling */
+    .site-footer {
+      width: 100%;
+      background: rgba(8, 3, 16, 0.95);
+      border-top: 1px solid rgba(0, 240, 255, 0.25);
+      padding: 24px 16px;
+      margin-top: 40px;
+      text-align: center;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .copyright-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--accent-cyan);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent-pink);
+      text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
+    }
+
+    .footer-divider {
+      color: rgba(184, 167, 212, 0.4);
+      font-size: 0.8rem;
+    }
   </style>
 </head>
 <body class="twilight-mode">
