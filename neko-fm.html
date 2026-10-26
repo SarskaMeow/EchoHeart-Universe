@@ -943,6 +943,41 @@
     }
     .studio-textarea { font-family: 'Segoe UI', sans-serif; resize: vertical; }
 
+    /* VOCAL OPTIONS & LYRICS GENERATOR CONTAINER */
+    .vocals-options-container {
+      display: none;
+      background: rgba(18, 8, 36, 0.9);
+      border: 1px solid var(--accent-pink);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+      box-shadow: inset 0 0 12px rgba(255, 0, 127, 0.2);
+    }
+
+    .vocal-genre-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .vocal-genre-btn {
+      background: rgba(255, 0, 127, 0.15);
+      border: 1px solid var(--accent-pink);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .vocal-genre-btn:hover {
+      background: var(--accent-pink);
+      box-shadow: 0 0 10px var(--accent-pink);
+    }
+
     /* EXPANDED STYLE PRESETS & SINGLE LINE TAG EXPLORER */
     .style-preset-grid {
       display: grid;
@@ -1547,6 +1582,7 @@
             <div class="control-group" style="margin-bottom: 0;">
               <label>AI Model Engine:</label>
               <select id="suno-model-version" class="studio-select">
+                <option value="Suno v3.5 (Stereo)">Suno v3.5 (Stereo / High-Fidelity)</option>
                 <option value="Meta MusicGen (Stereo-Large)">Meta MusicGen + Suno Bark Mix</option>
               </select>
             </div>
@@ -1569,6 +1605,21 @@
           <div class="control-group">
             <label>Song Title:</label>
             <input type="text" id="suno-track-title" class="studio-input" value="Subterranean Riff" placeholder="Enter song title...">
+          </div>
+
+          <!-- DYNAMIC VOCALS & LYRIC GENERATOR SECTION (SHOWS WHEN TOGGLE IS ON) -->
+          <div id="vocals-options-panel" class="vocals-options-container">
+            <label style="display: block; font-size: 0.82rem; font-weight: 800; color: var(--accent-pink); margin-bottom: 6px;">🎤 Lyric Generator & Vocal Options:</label>
+            <div style="margin-bottom: 8px;">
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Generate Lyrics from Picked Genre:</span>
+              <div class="vocal-genre-pills">
+                <button class="vocal-genre-btn" onclick="generateLyricsByGenre('J-Rock')">🎸 J-Rock</button>
+                <button class="vocal-genre-btn" onclick="generateLyricsByGenre('Cyberpunk')">🏙️ Cyberpunk</button>
+                <button class="vocal-genre-btn" onclick="generateLyricsByGenre('Kawaii Pop')">🌸 Kawaii Pop</button>
+                <button class="vocal-genre-btn" onclick="generateLyricsByGenre('Lofi')">☕ Lofi Vibe</button>
+                <button class="vocal-genre-btn" onclick="generateLyricsByGenre('Metal')">⚡ Heavy Metal</button>
+              </div>
+            </div>
           </div>
 
           <!-- QUICK STYLE PRESETS -->
@@ -1841,6 +1892,21 @@
         lyrics: "Gentle acoustic guitar picking, ambient pad swell, crescendo drum entrance"
       }
     };
+
+    const GENRE_LYRIC_TEMPLATES = {
+      'J-Rock': "[Verse]\nHaruka kanata e hashiritsuzukeru\nKimi no koe ga mune ni響ku\n\n[Chorus]\nFly away! Phantom in the night\nKagayaku mirai wo tsukame!",
+      'Cyberpunk': "[Verse]\nNeon lights glaring in the rain\nDigital shadows calling my name\n\n[Chorus]\nCircuit overload, pulse in my veins\nBreak the system, break the chains!",
+      'Kawaii Pop': "[Verse]\nFuwa fuwa doki doki, no stop!\nSparkling stars on the rooftop\n\n[Chorus]\nSuki suki daisuki, kawaii dream\nLet's shine together in the beam!",
+      'Lofi': "[Verse]\nLate night coffee, ambient rain\nQuiet thoughts wash away the pain\n\n[Chorus]\nSoft beats looping till the morning dawn\nMemories lingering on and on...",
+      'Metal': "[Verse]\nThunder striking through the dark steel sky\nUnbroken spirits that will never die\n\n[Chorus]\nShredding through the fire and chaos ahead\nUnleash the power of the phantom thread!"
+    };
+
+    function generateLyricsByGenre(genre) {
+      const input = document.getElementById('suno-lyrics-input');
+      if (input && GENRE_LYRIC_TEMPLATES[genre]) {
+        input.value = GENRE_LYRIC_TEMPLATES[genre];
+      }
+    }
 
     function populateTagExplorer(category = 'all') {
       const container = document.getElementById('tag-picker-container');
@@ -2199,11 +2265,14 @@
       const isChecked = e.target.checked;
       const lyricsLabel = document.getElementById('lyrics-field-label');
       const lyricsInput = document.getElementById('suno-lyrics-input');
+      const vocalsPanel = document.getElementById('vocals-options-panel');
 
       if (isChecked) {
+        if (vocalsPanel) vocalsPanel.style.display = 'block';
         if (lyricsLabel) lyricsLabel.innerText = "🎤 Lyrics & Singer Prompt:";
         if (lyricsInput) lyricsInput.placeholder = "Enter song lyrics for voice synthesis (e.g., 'Kimi no koe ga kikoeru, phantom in the night...')...";
       } else {
+        if (vocalsPanel) vocalsPanel.style.display = 'none';
         if (lyricsLabel) lyricsLabel.innerText = "Arrangement & Transition Tags:";
         if (lyricsInput) lyricsInput.placeholder = "Fast drum fill intro, distorted electric guitar lead, keytar solo, energetic outro...";
       }
