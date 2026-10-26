@@ -529,6 +529,23 @@
       color: var(--accent-pink);
     }
 
+    .scene-image-frame {
+      position: relative;
+      background: #030108;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .scene-fallback-art {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
     /* CHARACTER CARDS GRID */
     .character-grid {
       display: grid;
@@ -813,12 +830,12 @@
       <button class="lore-tab-btn" onclick="switchLoreSubtab('future')">🛒 Books & Future Releases</button>
     </div>
 
-    <!-- SUB-TAB 1: WORLD & BAND LORE (LIVING BREATHING WORLD EXPANSION) -->
+    <!-- SUB-TAB 1: WORLD & BAND LORE (FULL EXPANDED CODEX) -->
     <div id="tab-dossier" class="tab-content active">
       <section>
         <h2>The Living World of EchoHeart</h2>
-        
-        <!-- Atmosphere & Time Control Engine -->
+
+        <!-- Atmosphere Control Bar -->
         <div class="atmosphere-bar">
           <div class="time-picker-group">
             <span style="font-size: 0.85rem; font-weight: 800; color: var(--accent-cyan);">🌇 Atmosphere Mode:</span>
@@ -839,7 +856,7 @@
           <p><strong>Setting:</strong> EchoHeart Senior Academy / Sakuraoka High School (Class 3-A, Music Division), Tokyo, Japan.</p>
         </div>
 
-        <!-- Interactive Location Guide -->
+        <!-- Interactive Quick Location Inspector Bar -->
         <h3 class="sub-heading">🗺️ Key World Locations & Sector Map</h3>
         <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.92rem;">Select a location card below to inspect environmental details, hidden acoustics, and active student rumors:</p>
         
@@ -899,6 +916,132 @@
           <div class="field-log-box" id="inspector-log">
             <strong>[SERA'S AUDIO MONITOR LOG #042]:</strong> "Nekomi was leaning against the window frame tuning her electric guitar... when the ambient humidity dropped 4 degrees. The familiar hum behind Locker 102 vibrated in G-minor."
           </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SECTION 1: INSIDE SAKURAOKA HIGH          -->
+        <!-- ========================================== -->
+        <h3 class="sub-heading">🏫 Section 1: Inside Sakuraoka Senior Academy</h3>
+        
+        <!-- 1. Classroom 3-A -->
+        <div class="dossier-card">
+          <span class="badge-pill">Academic Hub</span>
+          <h3>Classroom 3-A (Music Division)</h3>
+          <div class="scene-image-frame" style="margin: 1rem 0; height: 340px; border-radius: 12px; overflow: hidden; border: 1px solid var(--accent-cyan);">
+            <img src="assets/class3a-sunset.jpg" alt="Classroom 3-A Sunset View" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="scene-fallback-art" style="display:none; width:100%; height:100%; background: #120624; align-items:center; justify-content:center; color:var(--accent-cyan); font-weight:bold;">
+              📷 [IMAGE PLACEHOLDER: assets/class3a-sunset.jpg]
+            </div>
+          </div>
+          <p><strong>Location:</strong> Main Building, 3rd Floor West Row.</p>
+          <p>The academic home for Akari, Nekomi, Sera, and Aoi. During early morning commutes and lunch breaks, Class 3-A is a bustling hub filled with the chatter of Music Division students, acoustic theory sheets pinned to corkboards, and golden sunlight filtering across wooden desks.</p>
+          <p>It is here that Aoi balances budget sheets and club permits before joining the rest of the band, while Sera and Nekomi sit near the window rows where Nekomi keeps up her cool, aloof persona.</p>
+        </div>
+
+        <!-- 2. Corridors & Lockers -->
+        <div class="dossier-card">
+          <span class="badge-pill">Operational Ground</span>
+          <h3>Corridors & Shoe Locker Bays (Getabako)</h3>
+          <div class="scene-image-frame" style="margin: 1rem 0; height: 340px; border-radius: 12px; overflow: hidden; border: 1px solid var(--accent-pink);">
+            <img src="assets/lockers-morning.jpg" alt="Shoe Locker Bays" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="scene-fallback-art" style="display:none; width:100%; height:100%; background: #120624; align-items:center; justify-content:center; color:var(--accent-pink); font-weight:bold;">
+              📷 [IMAGE PLACEHOLDER: assets/lockers-morning.jpg]
+            </div>
+          </div>
+          <p>The primary entrance atrium where everyday school routine meets secret operations. This is where the band executes their critical <strong>Ticket Slip Interception</strong>—slipping heavy cardstock concert tickets into targets' shoe lockers to guide them underground without raising faculty suspicion.</p>
+        </div>
+
+        <!-- 3. Music Prep Room B -->
+        <div class="dossier-card">
+          <span class="badge-pill">The Sanctuary</span>
+          <h3>Music Prep Room B ("The Sanctuary")</h3>
+          <div class="scene-image-frame" style="margin: 1rem 0; height: 340px; border-radius: 12px; overflow: hidden; border: 1px solid var(--accent-purple);">
+            <img src="assets/preproom-twilight.jpg" alt="Music Prep Room B" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="scene-fallback-art" style="display:none; width:100%; height:100%; background: #120624; align-items:center; justify-content:center; color:var(--accent-purple); font-weight:bold;">
+              📷 [IMAGE PLACEHOLDER: assets/preproom-twilight.jpg]
+            </div>
+          </div>
+          <p>An officially abandoned practice space on the West Wing second floor. Smelling of old wood varnish and warm vacuum tubes, it holds the evidence board where Aoi maps student Dissonance reports. Positioned behind <strong>Locker 102</strong> is a concealed mechanical latch opening directly down into the subterranean caverns.</p>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SECTION 2: SCHOOL GROUNDS & UNDERGROUND   -->
+        <!-- ========================================== -->
+        <h3 class="sub-heading">🌳 Section 2: School Grounds & Underground Secrets</h3>
+
+        <!-- 4. Front Gate -->
+        <div class="dossier-card">
+          <span class="badge-pill">Campus Boundary</span>
+          <h3>The Front Gate & Cherry Blossom Courtyard</h3>
+          <div class="scene-image-frame" style="margin: 1rem 0; height: 340px; border-radius: 12px; overflow: hidden; border: 1px solid var(--accent-gold);">
+            <img src="assets/sakuraoka-gate.jpg" alt="Sakuraoka High Front Gate" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="scene-fallback-art" style="display:none; width:100%; height:100%; background: #120624; align-items:center; justify-content:center; color:var(--accent-gold); font-weight:bold;">
+              📷 [IMAGE PLACEHOLDER: assets/sakuraoka-gate.jpg]
+            </div>
+          </div>
+          <p>The iconic brick-and-stone entrance gates of Sakuraoka High, framed by blooming sakura trees and boundary walls bearing the official academy plaque (桜岡高校). Represents the physical threshold between everyday civilian life in Tokyo and the strict academic routine inside campus grounds.</p>
+        </div>
+
+        <!-- 5. The Sub-Stage -->
+        <div class="dossier-card">
+          <span class="badge-pill">Underground Arena</span>
+          <h3>The Sub-Stage ("The Basement Concert Stage")</h3>
+          <div class="scene-image-frame" style="margin: 1rem 0; height: 340px; border-radius: 12px; overflow: hidden; border: 1px solid var(--accent-cyan);">
+            <img src="assets/substage-cavern.jpg" alt="The Sub-Stage Cavern" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="scene-fallback-art" style="display:none; width:100%; height:100%; background: #120624; align-items:center; justify-content:center; color:var(--accent-cyan); font-weight:bold;">
+              📷 [IMAGE PLACEHOLDER: assets/substage-cavern.jpg]
+            </div>
+          </div>
+          <p>Situated 40 feet directly underneath the West Wing, this secret stone cathedral features vaulted arches, amber fairy lights, and heavy stage monitor stacks. Here, far from faculty rules, the band steps up as <strong>Girls of Phantom</strong>, plugging in weaponized instruments to deploy color-coded <strong>Resonance Barriers</strong> that shatter real-world Dissonance static.</p>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SECTION 3: AROUND TOWN                    -->
+        <!-- ========================================== -->
+        <h3 class="sub-heading">🏙️ Section 3: Around Town & Commercial Districts</h3>
+
+        <!-- 6. Shopping District -->
+        <div class="dossier-card">
+          <span class="badge-pill">After-School Life</span>
+          <h3>Sakuraoka Shopping District</h3>
+          <div class="scene-image-frame" style="margin: 1rem 0; height: 340px; border-radius: 12px; overflow: hidden; border: 1px solid var(--accent-pink);">
+            <img src="assets/shopping-district.jpg" alt="Sakuraoka Shopping District" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="scene-fallback-art" style="display:none; width:100%; height:100%; background: #120624; align-items:center; justify-content:center; color:var(--accent-pink); font-weight:bold;">
+              📷 [IMAGE PLACEHOLDER: assets/shopping-district.jpg]
+            </div>
+          </div>
+          <p>The vibrant pedestrian avenue just outside campus gates. Lined with crepe stands, music shops, and outdoor cafes where the girls grab strawberry shortcake parfaits after rehearsals and monitor cold spots of emotional static among fellow students under the twilight glow.</p>
+        </div>
+
+        <!-- 7. Shibuya Mall & Arcades -->
+        <div class="dossier-card">
+          <span class="badge-pill">High-Dissonance Zone</span>
+          <h3>Shibuya Commercial Edge & Plazas</h3>
+          <div class="scene-image-frame" style="margin: 1rem 0; height: 340px; border-radius: 12px; overflow: hidden; border: 1px solid var(--accent-purple);">
+            <img src="assets/shibuya-mall.jpg" alt="Shibuya Commercial Edge" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="scene-fallback-art" style="display:none; width:100%; height:100%; background: #120624; align-items:center; justify-content:center; color:var(--accent-purple); font-weight:bold;">
+              📷 [IMAGE PLACEHOLDER: assets/shibuya-mall.jpg]
+            </div>
+          </div>
+          <p>A crowded labyrinth of rooftop walkways, indoor-outdoor mall plazas, and neon arcade halls. Because it attracts heavy youth crowds dealing with academic pressure, it acts as a primary hotbed for sudden, severe atmospheric static drops.</p>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SECTION 4: ANCIENT TOWN HISTORY           -->
+        <!-- ========================================== -->
+        <h3 class="sub-heading">🌌 Section 4: Town History & Valley Lore</h3>
+
+        <!-- 8. Skyview Valley -->
+        <div class="dossier-card">
+          <span class="badge-pill">Geographical History</span>
+          <h3>Sprawling Skyview & Ancient Valley Lore</h3>
+          <div class="scene-image-frame" style="margin: 1rem 0; height: 340px; border-radius: 12px; overflow: hidden; border: 1px solid var(--accent-gold);">
+            <img src="assets/town-skyview.jpg" alt="Sakuraoka Skyview POV" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="scene-fallback-art" style="display:none; width:100%; height:100%; background: #120624; align-items:center; justify-content:center; color:var(--accent-gold); font-weight:bold;">
+              📷 [IMAGE PLACEHOLDER: assets/town-skyview.jpg]
+            </div>
+          </div>
+          <p>Sakuraoka sits in a natural valley basin surrounded by hills, which geographically traps emotional "humidity" (stress, grief, loneliness). Centuries ago, local shrine maidens used sacred acoustic bells to clear the air—a tradition that EchoHeart's modern band carries forward through high-gain J-Rock and custom amplification gear today.</p>
         </div>
 
         <div class="dossier-card">
