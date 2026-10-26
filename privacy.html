@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy - Otaku Overload</title>
+  <title>Privacy Policy - Otaku Overload & 24/7 Neko FM</title>
   <style>
     :root {
       --bg: #0d0b18;
       --card-bg: #160f2a;
       --accent: #a88beb;
+      --accent-cyan: #00f0ff;
+      --accent-pink: #ff007f;
+      --accent-gold: #ffd166;
       --text: #e2d9f3;
       --muted: #a092c0;
     }
@@ -21,7 +24,7 @@
       line-height: 1.6;
     }
     .container {
-      max-width: 800px;
+      max-width: 850px;
       margin: 0 auto;
       background: var(--card-bg);
       padding: 40px;
@@ -31,57 +34,86 @@
     }
     h1, h2, h3 { color: var(--accent); }
     h1 { margin-top: 0; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
-    a { color: var(--accent); }
+    a { color: var(--accent-cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; color: var(--accent-pink); }
     ul { padding-left: 20px; }
     li { margin-bottom: 8px; }
+    .highlight-box {
+      background: rgba(0, 240, 255, 0.08);
+      border-left: 4px solid var(--accent-cyan);
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin: 18px 0;
+    }
     .footer { margin-top: 40px; border-top: 1px solid rgba(168, 139, 235, 0.1); padding-top: 20px; font-size: 0.85rem; color: var(--muted); }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Privacy Policy</h1>
-    <p>Last updated: October 13, 2026</p>
+    <p>Last updated: October 25, 2026</p>
     
-    <p>Welcome to <strong>Otaku Overload</strong> ("we", "our", or "us"). We respect your privacy and are committed to protecting the personal data you share with us. This Privacy Policy explains how we collect, use, and protect your information when you visit <strong>otakuoverload.com</strong>.</p>
+    <p>Welcome to <strong>Otaku Overload</strong> and <strong>24/7 Neko FM</strong> ("we", "our", or "us"). We respect your privacy and are committed to protecting the personal data you share with us. This Privacy Policy explains how we collect, use, store, and protect your information when you visit <strong>otakuoverload.com</strong>, interact with our community chatrooms, comment on podcasts, vote in setlist polls, listen to radio streams, or generate custom tracks in our AI Studio.</p>
 
     <h2>1. Information We Collect</h2>
-    <p>When you use Otaku Overload, we collect minimal information required to provide user accounts, live community chat, virtual currency tracking, and customized avatar experiences:</p>
+    <p>We collect minimal data required to deliver user accounts, community features, virtual currency balances, live radio streams, and browser-based audio tools:</p>
     <ul>
-      <li><strong>Account & Authentication Information:</strong> When you sign in using Google OAuth, Firebase Auth collects your Google Unique Identifier (UID), display name, email address, and profile picture URL.</li>
-      <li><strong>Profile & Virtual Economy Data:</strong> We store your virtual currency balance (Orbs), equipped avatar frames, name glows, cosmetics inventory, and age verification status flags in Google Cloud Firestore.</li>
-      <li><strong>Security & Bot Defense Data:</strong> We use Google reCAPTCHA Enterprise to detect automated bots and fraudulent traffic. This service may evaluate device software and network characteristics.</li>
+      <li><strong>Account & Authentication Information:</strong> When you sign in using Google OAuth, Firebase Auth processes your Google Unique Identifier (UID), display name, email address, and profile picture URL.</li>
+      <li><strong>Live Community Chat & Podcast Comments:</strong> Messages sent in public chat rooms, comments left on podcast episodes, and song cover suggestions submitted to Prep Room B are stored in Google Cloud Firestore. These submissions are publicly viewable by other community members alongside your display name, avatar, and equipped cosmetic cosmetics (such as gold name glows or avatar frames).</li>
+      <li><strong>Setlist Poll Voting Data:</strong> We log votes cast in hourly setlist polls to determine upcoming broadcast premieres for Girls Dead Phantom.</li>
+      <li><strong>Virtual Economy & Cosmetics:</strong> We track your Orb virtual credit balance, earned/spent history, inventory items, and age-gate verification flags (13+ Twilight Mode / 17+ Basement Mode) in Firestore.</li>
+      <li><strong>24/7 Radio Streams & Track Identification:</strong> We ingest third-party audio streams (e.g., LISTEN.moe, Gensokyo Radio, Nightwave Plaza, Asia DREAM Radio) and process audio stream metadata via external identification APIs to display currently playing track titles and artists on the Neko-88 Synth Deck.</li>
+      <li><strong>Local Studio Audio & Browser Storage (IndexedDB):</strong> Custom audio tracks generated via the AI Studio (Meta MusicGen / Suno models), equalizer DSP presets, and local playlist data are saved directly to your device via browser IndexedDB and LocalStorage. Generated audio files are not stored on our permanent cloud servers.</li>
+      <li><strong>Security & Bot Defense:</strong> We use Google reCAPTCHA Enterprise to detect automated bots and protect server endpoints. This service evaluates device and browser interactions.</li>
     </ul>
 
-    <h2>2. How We Use Your Information</h2>
-    <p>We use the collected information exclusively for the following purposes:</p>
+    <h2>2. Google AdSense, Cookies & Advertising Disclosures</h2>
+    <div class="highlight-box">
+      <strong>Important AdSense Notice:</strong> Third-party vendors, including Google, use cookies to serve ads based on your prior visits to our website or other websites on the Internet.
+    </div>
     <ul>
-      <li>To authenticate your identity and maintain your persistent session across site visits.</li>
-      <li>To display your public display name, avatar, and equipped cosmetics in community chatrooms.</li>
-      <li>To track your earned and spent virtual Orbs.</li>
-      <li>To enforce age access boundaries (13+ Twilight Mode and 17+ Basement Mode).</li>
-      <li>To protect our infrastructure from automated spam, abuse, and security threats.</li>
+      <li><strong>Personalized Advertising:</strong> Google's use of advertising cookies enables it and its partners to serve ads to users based on visits to our site and other properties across the Web.</li>
+      <li><strong>Opting Out of Personalized Ads:</strong> You may opt out of personalized advertising at any time by visiting <a href="https://www.google.com/settings/ads" target="_blank">Google Ads Settings</a> or <a href="https://www.aboutads.info/choices/" target="_blank">aboutads.info</a>.</li>
+      <li><strong>Rewarded Ads ("Watch for Orbs"):</strong> If you watch optional sponsor video ads to earn free virtual credits (+5 Orbs), third-party ad networks may log ad completion data to grant your reward.</li>
     </ul>
 
-    <h2>3. Third-Party Services</h2>
-    <p>We rely on trusted enterprise infrastructure providers to operate the platform:</p>
+    <h2>3. Public Community Guidelines & Comment Moderation</h2>
+    <p>Please remember that live chatrooms, podcast comment sections, and song suggestion boxes are public spaces. Any information disclosed in these areas becomes visible to other users. Do not share sensitive personal information (such as passwords, financial info, or real addresses) in public messages.</p>
+
+    <h2>4. How We Use Your Information</h2>
+    <p>We use the collected information exclusively to maintain and protect the platform:</p>
     <ul>
-      <li><strong>Firebase / Google Cloud Platform:</strong> Handles user authentication, database management (Firestore), and bot protection (reCAPTCHA Enterprise).</li>
-      <li><strong>Advertising Networks (AdSense / Rewarded Ads):</strong> We may serve non-intrusive banner ads or optional rewarded video ads ("Watch for Orbs"). Third-party ad vendors may use cookies or device identifiers to serve ads based on prior visits to our website.</li>
+      <li>To authenticate identity and maintain persistent user sessions.</li>
+      <li>To display public usernames, cosmetic frames, live chat messages, and podcast comments.</li>
+      <li>To calculate setlist poll totals and queue broadcast premieres.</li>
+      <li>To track virtual Orb balances and validate audio generation permissions.</li>
+      <li>To provide local audio playback, DSP equalizer processing, and stem exports for game engines (GDevelop, RPG Maker MZ/Bakin, Roblox Studio).</li>
+      <li>To enforce age boundaries (13+ Twilight Mode and 17+ Basement Mode).</li>
     </ul>
 
-    <h2>4. Children's Privacy & COPPA Compliance</h2>
-    <p>Otaku Overload is strictly intended for individuals aged <strong>13 and older</strong>. We do not knowingly collect or solicit personal information from children under 13 years of age in accordance with the Children's Online Privacy Protection Act (COPPA). If we learn that a user under 13 has created an account, we will immediately terminate the account and purge their profile data from our databases.</p>
+    <h2>5. Third-Party Services & Infrastructure</h2>
+    <p>We rely on trusted third-party services to operate the site:</p>
+    <ul>
+      <li><strong>Firebase / Google Cloud Platform:</strong> Authentication, database management (Firestore), and bot protection (reCAPTCHA Enterprise).</li>
+      <li><strong>Replicate & Cloud AI Endpoints:</strong> Processes prompt requests for Meta MusicGen (Stereo-Large) and Suno audio generation models.</li>
+      <li><strong>Google AdSense & Video Sponsors:</strong> Serves banner advertisements and rewarded video ads.</li>
+      <li><strong>Radio Stream Networks:</strong> Third-party audio streams including LISTEN.moe, Gensokyo Radio, Nightwave Plaza, and Asia DREAM Radio.</li>
+    </ul>
 
-    <h2>5. Data Retention & Account Deletion</h2>
-    <p>Your profile data remains active for as long as your account exists. You may request full deletion of your account, stored profile documents, and associated chat history at any time by contacting us at <strong>support@otakuoverload.com</strong>.</p>
+    <h2>6. Children's Privacy & COPPA Compliance</h2>
+    <p>Otaku Overload is strictly intended for individuals aged <strong>13 and older</strong>. We do not knowingly collect personal information from children under 13 in compliance with the Children's Online Privacy Protection Act (COPPA). If we discover an account belongs to a child under 13, we will immediately terminate the account and purge their stored data.</p>
 
-    <h2>6. Contact Us</h2>
-    <p>If you have any questions or concerns regarding this Privacy Policy, please reach out to us at:</p>
+    <h2>7. Data Retention & Account Deletion</h2>
+    <p>Your profile data remains stored while your account is active. You can clear your locally generated audio tracks at any time via the "Clear Library" button in the AI Studio. To request complete deletion of your account, Firestore profile, and chat history, contact us at <strong>support@otakuoverload.com</strong>.</p>
+
+    <h2>8. Contact Us</h2>
+    <p>If you have any questions regarding this Privacy Policy, please reach out:</p>
     <p>Email: <a href="mailto:support@otakuoverload.com">support@otakuoverload.com</a><br>
     Website: <a href="https://otakuoverload.com">https://otakuoverload.com</a></p>
 
     <div class="footer">
-      &copy; 2026 Otaku Overload. All rights reserved.
+      <p>&copy; 2026 Otaku Overload & 24/7 Neko FM. All rights reserved.</p>
+      <p><a href="index.html">← Return to Neko FM Studio</a></p>
     </div>
   </div>
 </body>
