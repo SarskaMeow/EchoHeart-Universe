@@ -1506,18 +1506,18 @@
       </div>
     </section>
 
-    <!-- TAB 4: REPLICATE & MUSICGEN AI INSTRUMENTAL STUDIO -->
+    <!-- TAB 4: REPLICATE & MUSICGEN AI INSTRUMENTAL / VOCAL STUDIO -->
     <section id="soundboard-tab" class="tab-content">
       
       <div class="generator-studio-layout">
         <!-- LEFT COLUMN: STUDIO CREATION CONTROLS -->
         <div class="studio-sidebar-panel">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <h3 class="glitch-header" style="font-size: 1.25rem;">✨ AI Instrumental Studio</h3>
+            <h3 class="glitch-header" style="font-size: 1.25rem;">✨ AI Music & Vocal Studio</h3>
             <button class="vote-btn" style="padding: 4px 12px; font-size: 0.75rem;" onclick="clearStudioForm()">Clear All</button>
           </div>
 
-          <!-- Toggles Row: Advanced Mode & Vocals Toggle (Vocals disabled for MusicGen) -->
+          <!-- Toggles Row: Advanced Mode & Vocals Toggle -->
           <div style="display: flex; gap: 10px; margin-bottom: 16px;">
             <div class="studio-toggle-row" style="flex: 1; margin-bottom: 0;">
               <span class="toggle-switch-label">Advanced Mode</span>
@@ -1527,11 +1527,11 @@
               </label>
             </div>
             
-            <div class="studio-toggle-row" style="flex: 1; margin-bottom: 0; opacity: 0.55;">
-              <span class="toggle-switch-label" title="Meta MusicGen produces pure high-fidelity instrumentals">With Vocals</span>
+            <div class="studio-toggle-row" style="flex: 1; margin-bottom: 0;">
+              <span class="toggle-switch-label" title="Enable Suno Bark vocal synthesis layered over instrumental">With Vocals</span>
               <label class="switch-ui">
-                <input type="checkbox" id="toggle-with-vocals" disabled>
-                <span class="slider-round" style="cursor: not-allowed;"></span>
+                <input type="checkbox" id="toggle-with-vocals">
+                <span class="slider-round"></span>
               </label>
             </div>
           </div>
@@ -1547,15 +1547,20 @@
             <div class="control-group" style="margin-bottom: 0;">
               <label>AI Model Engine:</label>
               <select id="suno-model-version" class="studio-select">
-                <option value="Meta MusicGen (Stereo-Large)">Meta MusicGen (Stereo-Large)</option>
+                <option value="Meta MusicGen (Stereo-Large)">Meta MusicGen + Suno Bark Mix</option>
               </select>
             </div>
 
             <div class="control-group" style="margin-bottom: 0;">
-              <label>Duration:</label>
+              <label>Duration Target:</label>
               <select id="suno-duration" class="studio-select">
                 <option value="15">15s Cut (Quick Teaser)</option>
-                <option value="30" selected>30s Cut (Max Single Pass)</option>
+                <option value="30" selected>30s Cut (Standard)</option>
+                <option value="60">60s (1 Minute Track)</option>
+                <option value="120">120s (2 Minute Track)</option>
+                <option value="180">180s (3 Minute Song)</option>
+                <option value="240">240s (4 Minute Full Track)</option>
+                <option value="300">300s (5+ Minute Extended Cut)</option>
               </select>
             </div>
           </div>
@@ -1637,13 +1642,13 @@
             </div>
           </div>
 
-          <!-- Dynamic Arrangement & Performance Tags -->
+          <!-- Dynamic Arrangement & Performance Tags / Lyrics Field -->
           <div class="control-group">
             <label id="lyrics-field-label">Arrangement & Transition Tags:</label>
             <textarea id="suno-lyrics-input" class="studio-textarea" style="height: 70px;" placeholder="Enter arrangement tags e.g. Syncopated rhythm, keytar solo, energetic outro, breakdown...">Fast drum fill intro, distorted electric guitar lead, keytar solo, energetic outro</textarea>
           </div>
 
-          <button class="btn-action" id="generate-ai-btn" onclick="generateSunoAiTrack()">✨ Create Instrumental Track</button>
+          <button class="btn-action" id="generate-ai-btn" onclick="generateSunoAiTrack()">✨ Create Track</button>
         </div>
 
         <!-- RIGHT COLUMN: MY SONGS / PERSONAL TRACK LIBRARY WITH PERSISTENT INDEXEDDB STORAGE -->
@@ -1676,14 +1681,14 @@
           </div>
 
           <div id="auto-playlist-container" style="margin-top: 16px;">
-            <p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Instrumental Track' to render multi-instrument tracks into your studio library!</p>
+            <p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Track' to render multi-instrument tracks into your studio library!</p>
           </div>
         </div>
       </div>
 
       <!-- TAB 4 STATUS FOOTER -->
       <div class="tab-status-footer">
-        <span>STATUS: MUSICGEN_ENGINE_READY</span>
+        <span>STATUS: AI_ENGINE_READY</span>
         <span>LIBRARY_PLAYER: ACTIVE</span>
       </div>
 
@@ -2023,7 +2028,7 @@
         if (!container) return;
 
         if (this.playlist.length === 0) {
-          container.innerHTML = `<p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Instrumental Track' to render multi-instrument tracks into your studio library!</p>`;
+          container.innerHTML = `<p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No custom tracks generated yet. Click 'Create Track' to render multi-instrument tracks into your studio library!</p>`;
           return;
         }
 
@@ -2047,7 +2052,7 @@
                   <strong style="color: #fff; font-size: 1.05rem;">🎵 ${track.title}</strong>
                 </div>
                 <div style="font-size: 0.8rem; color: var(--accent-cyan); margin-top: 4px;">
-                  Style: ${track.prompt} • ${track.duration}s Cut • ${track.timestamp}
+                  Style: ${track.prompt} • ${track.hasVocals ? '🎤 With Vocals' : '🎸 Instrumental'} • ${track.duration}s Cut • ${track.timestamp}
                 </div>
               </div>
 
@@ -2189,12 +2194,20 @@
       sunoStudio.appendTag(tagText);
     }
 
-    function toggleVocalsMode(isVocalsOn) {
+    // Toggle Vocals & UI Switching Event Listener
+    document.getElementById('toggle-with-vocals')?.addEventListener('change', (e) => {
+      const isChecked = e.target.checked;
       const lyricsLabel = document.getElementById('lyrics-field-label');
       const lyricsInput = document.getElementById('suno-lyrics-input');
-      if (lyricsLabel) lyricsLabel.innerText = "Arrangement & Performance Tags:";
-      if (lyricsInput) lyricsInput.placeholder = "Enter instrument tags e.g. Syncopated rhythm, keytar solo, energetic outro...";
-    }
+
+      if (isChecked) {
+        if (lyricsLabel) lyricsLabel.innerText = "🎤 Lyrics & Singer Prompt:";
+        if (lyricsInput) lyricsInput.placeholder = "Enter song lyrics for voice synthesis (e.g., 'Kimi no koe ga kikoeru, phantom in the night...')...";
+      } else {
+        if (lyricsLabel) lyricsLabel.innerText = "Arrangement & Transition Tags:";
+        if (lyricsInput) lyricsInput.placeholder = "Fast drum fill intro, distorted electric guitar lead, keytar solo, energetic outro...";
+      }
+    });
 
     function clearStudioForm() {
       document.getElementById('suno-track-title').value = '';
@@ -2204,9 +2217,9 @@
 
     async function generateSunoAiTrack() {
       const prompt = document.getElementById('suno-style-prompt').value.trim();
-      const trackTitle = document.getElementById('suno-track-title').value.trim() || "AI Instrumental Master";
+      const trackTitle = document.getElementById('suno-track-title').value.trim() || "AI Music Master";
       const lyrics = document.getElementById('suno-lyrics-input').value.trim();
-      const hasVocals = false;
+      const hasVocals = document.getElementById('toggle-with-vocals')?.checked || false;
       const targetDuration = parseInt(document.getElementById('suno-duration')?.value || '30', 10);
       const btn = document.getElementById('generate-ai-btn');
 
@@ -2217,15 +2230,21 @@
 
       if (btn) {
         btn.disabled = true;
-        btn.innerText = `⏳ Rendering Real AI Track (~${targetDuration}s cut)...`;
+        btn.innerText = hasVocals 
+          ? `🎤 Rendering AI Vocals & Instrumental Mix (~${targetDuration}s)...` 
+          : `⏳ Rendering Real AI Track (~${targetDuration}s cut)...`;
       }
 
       try {
-        const fullPrompt = lyrics ? `${prompt}, ${lyrics}` : prompt;
         const response = await fetch('http://localhost:5000/generate-music', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: fullPrompt, duration: targetDuration, hasVocals: hasVocals })
+          body: JSON.stringify({
+            prompt: prompt,
+            lyrics: lyrics,
+            hasVocals: hasVocals,
+            duration: targetDuration
+          })
         });
 
         if (!response.ok) {
@@ -2237,10 +2256,10 @@
 
         const newTrack = {
           id: 'track_' + Date.now(),
-          title: trackTitle,
+          title: hasVocals ? `${trackTitle} (Vocals)` : trackTitle,
           prompt: prompt,
           lyrics: lyrics,
-          hasVocals: false,
+          hasVocals: hasVocals,
           duration: targetDuration,
           audioUrl: audioUrl,
           isLooping: false,
@@ -2261,7 +2280,7 @@
           sunoStudio.renderPlaylist();
 
           player.play().then(() => {
-            syncRadioState(true, audioUrl, trackTitle, "AI Studio Track Stream");
+            syncRadioState(true, audioUrl, newTrack.title, "AI Studio Track Stream");
           }).catch(err => {
             console.log("Autoplay paused by browser policy. Song ready in library player.", err);
           });
@@ -2273,7 +2292,7 @@
       } finally {
         if (btn) {
           btn.disabled = false;
-          btn.innerText = "✨ Create Instrumental Track";
+          btn.innerText = "✨ Create Track";
         }
       }
     }
