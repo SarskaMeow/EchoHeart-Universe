@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>24/7 Neko FM — Girls Dead Phantom Radio Lounge & Discography Hub</title>
+  <title>24/7 Neko FM — Girls Dead Phantom Radio Lounge & Game Audio Studio</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="firebase-config.js?v=2"></script>
   <script type="module" src="age-gate.js"></script>
   <style>
     :root {
-      /* Deep Dark Cyberpunk Palette */
+      /* Deep Cyberpunk & Game Studio Palette */
       --bg-dark: #040209;
       --card-bg: rgba(15, 7, 28, 0.94);
       --card-inner: rgba(8, 3, 16, 0.94);
@@ -19,6 +19,7 @@
       --accent-cyan: #00f0ff;
       --accent-gold: #ffd166;
       --accent-green: #00ffaa;
+      --accent-orange: #ff9100;
       --accent-glow: rgba(255, 0, 127, 0.55);
       --cyan-glow: rgba(0, 240, 255, 0.55);
       --gold-glow: rgba(255, 209, 102, 0.55);
@@ -28,6 +29,24 @@
       --card-border: rgba(255, 0, 127, 0.45);
       --border-cyan: rgba(0, 240, 255, 0.45);
       --nav-border-twilight: rgba(0, 240, 255, 0.4);
+    }
+
+    /* Alternative Game Dev Mode Palette */
+    body.gamedev-mode {
+      --bg-dark: #020b14;
+      --card-bg: rgba(6, 20, 38, 0.94);
+      --card-inner: rgba(3, 12, 24, 0.94);
+      --nav-bg: rgba(4, 16, 30, 0.96);
+      --accent-purple: #7b2cbf;
+      --accent-pink: #ff2a85;
+      --accent-cyan: #00f0ff;
+      --accent-gold: #ffbe0b;
+      --accent-green: #39ff14;
+      --card-border: rgba(0, 240, 255, 0.45);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 85% 85%, rgba(57, 255, 20, 0.18) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(123, 44, 191, 0.15) 0%, transparent 60%);
     }
 
     * {
@@ -48,6 +67,7 @@
         radial-gradient(circle at 15% 15%, rgba(157, 78, 221, 0.25) 0%, transparent 50%),
         radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.22) 0%, transparent 50%),
         radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12) 0%, transparent 60%);
+      transition: background 0.4s ease, color 0.4s ease;
     }
 
     /* UNIVERSAL NAVBAR */
@@ -173,10 +193,46 @@
       .nav-item-pill { width: 100%; justify-content: center; }
     }
 
+    /* MODE TOGGLE BANNER */
+    .app-mode-switch-bar {
+      max-width: 1340px;
+      margin: 18px auto 0;
+      padding: 10px 20px;
+      background: rgba(10, 4, 22, 0.85);
+      border: 1.5px solid var(--accent-purple);
+      border-radius: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 0 20px rgba(157, 78, 221, 0.25);
+    }
+
+    .mode-switch-btn {
+      background: rgba(255, 0, 127, 0.2);
+      border: 1px solid var(--accent-pink);
+      color: #ffffff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mode-switch-btn:hover {
+      background: var(--accent-pink);
+      box-shadow: 0 0 16px var(--accent-pink);
+    }
+
     /* STUDIO DASHBOARD CONTAINER */
     .studio-dashboard {
       max-width: 1340px;
-      margin: 30px auto;
+      margin: 20px auto 30px;
       background: var(--card-inner);
       border: 1.5px solid var(--accent-cyan);
       border-radius: 20px;
@@ -950,6 +1006,18 @@
     .studio-textarea { font-family: 'Segoe UI', sans-serif; resize: vertical; }
 
     /* EXPANDED STYLE PRESETS & SINGLE LINE TAG EXPLORER */
+    .preset-section-header {
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      margin: 10px 0 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .style-preset-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
@@ -972,6 +1040,11 @@
       flex-direction: column;
       align-items: center;
       gap: 3px;
+    }
+
+    .preset-card-btn.game-preset-card {
+      border-color: rgba(0, 240, 255, 0.45);
+      background: rgba(10, 25, 45, 0.85);
     }
 
     .preset-card-btn:hover {
@@ -1395,7 +1468,7 @@
 
       <div class="nav-status-badge">
         <span class="status-dot"></span>
-        📻 NEKO FM: LIVE BROADCAST
+        <span id="nav-status-label">📻 NEKO FM: LIVE BROADCAST</span>
       </div>
 
       <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" onclick="toggleMobileMenu()">
@@ -1407,6 +1480,19 @@
     </div>
   </header>
 
+  <!-- APP CREATIVE MODE SWITCHER BAR -->
+  <div class="app-mode-switch-bar">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="font-weight: 900; font-size: 0.85rem; color: var(--accent-cyan);">🎛️ STUDIO MODE:</span>
+      <span id="current-mode-label" style="font-weight: 800; font-size: 0.85rem; color: #ffffff;">🎧 24/7 Neko FM Radio Lounge</span>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <button class="mode-switch-btn" onclick="toggleAppCreativeMode()">
+        🔄 Switch to Game Audio & SFX Lab
+      </button>
+    </div>
+  </div>
+
   <!-- HTML5 Audio Engines -->
   <audio id="radio-audio-player" crossorigin="anonymous"></audio>
   <audio id="synth-deck-audio" crossorigin="anonymous"></audio>
@@ -1417,7 +1503,7 @@
       <button class="tab-btn active-tab" onclick="switchTab('board-tab', this)">📋 Setlist Polls</button>
       <button class="tab-btn" onclick="switchTab('youtube-tab', this)">🎛️ Neko Synth Deck</button>
       <button class="tab-btn" onclick="switchTab('discography-tab', this)">🎵 Girls Dead Phantom Hub</button>
-      <button class="tab-btn" onclick="switchTab('soundboard-tab', this)">✨ AI Studio</button>
+      <button class="tab-btn" onclick="switchTab('soundboard-tab', this)">✨ Game & Music AI Studio</button>
     </div>
 
     <!-- TAB 1: PREP ROOM BOARD & SETLIST POLLS -->
@@ -1611,29 +1697,29 @@
       </div>
     </section>
 
-    <!-- TAB 4: REPLICATE & MUSICGEN HIGH-FIDELITY INSTRUMENTAL STUDIO -->
+    <!-- TAB 4: REPLICATE & MUSICGEN HIGH-FIDELITY INSTRUMENTAL & GAME AUDIO STUDIO -->
     <section id="soundboard-tab" class="tab-content">
       
       <!-- USER INSTRUCTION GUIDE BANNER -->
       <div class="user-guide-box">
         <h4 style="color: var(--accent-cyan); margin: 0 0 6px; font-size: 1.1rem; text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);">
-          📖 How to Use the AI Instrumental Studio
+          📖 How to Use the AI Instrumental & Game Audio Studio
         </h4>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">
-          Create high-fidelity instrumental background tracks and game soundtracks using Meta’s MusicGen Stereo-Large AI model.
+          Create high-fidelity instrumental tracks, game soundtracks, and audio loops using Meta’s MusicGen Stereo-Large model.
         </p>
         <div class="user-guide-steps">
           <div class="guide-step-card">
-            <strong>1. Pick / Stack Style Presets</strong>
-            Click any preset button (or hold Shift / click multiple to Stack Genres) to auto-blend multi-instrument prompts.
+            <strong>1. Pick Music or Game Presets</strong>
+            Choose between Lofi, Synth EDM, or Game Soundtrack presets (8-bit, RPG boss battle, town background, or racing)!
           </div>
           <div class="guide-step-card">
-            <strong>2. Customize Prompt & Looper</strong>
-            Enable <strong>Seamless 0.5s Loop Trim</strong> for background music in GDevelop, RPG Maker MZ, or Roblox Studio!
+            <strong>2. Configure Seamless Looper</strong>
+            Enable <strong>Seamless Loop Trim</strong> for background music loops in GDevelop, RPG Maker, or Roblox Studio!
           </div>
           <div class="guide-step-card">
-            <strong>3. Generate & Export Stems/Metadata</strong>
-            Click <strong>✨ Create Track</strong>. Use real-time DSP, extract stems, export `.JSON` metadata, and paginate 10 tracks per page.
+            <strong>3. Generate, Fine-Tune & Export</strong>
+            Render tracks, shape audio with real-time Web Audio DSP, split stems, and export metadata JSON for game projects.
           </div>
         </div>
       </div>
@@ -1642,8 +1728,19 @@
         <!-- LEFT COLUMN: STUDIO CREATION CONTROLS -->
         <div class="studio-sidebar-panel" id="studio-sidebar-panel">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <h3 class="glitch-header" style="font-size: 1.25rem;">✨ High-Fidelity AI Instrumental Studio</h3>
+            <h3 class="glitch-header" style="font-size: 1.25rem;">✨ AI Music & Game Audio Generator</h3>
             <button class="vote-btn" style="padding: 4px 12px; font-size: 0.75rem;" onclick="clearStudioForm()">Clear All</button>
+          </div>
+
+          <!-- Target Game Engine Export Selector -->
+          <div class="control-group">
+            <label>🎮 Target Game Engine / Format Preset:</label>
+            <select id="game-engine-preset" class="studio-select" onchange="applyGameEnginePreset(this.value)">
+              <option value="none" selected>General Music / Listening Track</option>
+              <option value="gdevelop">GDevelop (Seamless 16-Bit / Electro Looper)</option>
+              <option value="rpgmaker">RPG Maker MZ / Bakin (RPG Dungeon & Boss BGM)</option>
+              <option value="roblox">Roblox Studio (Tower Defense & Action BGMs)</option>
+            </select>
           </div>
 
           <!-- Audio Conditioning / Hum-to-Melody Reference Uploader -->
@@ -1664,8 +1761,8 @@
             <div class="control-group" style="margin-bottom: 0;">
               <label>Duration Target:</label>
               <select id="suno-duration" class="studio-select">
-                <option value="15">15s Cut (Quick Teaser)</option>
-                <option value="30" selected>30s Cut (Standard)</option>
+                <option value="15">15s Cut (Quick SFX / Teaser)</option>
+                <option value="30" selected>30s Cut (Standard Loop)</option>
                 <option value="60">60s (1 Minute Track)</option>
                 <option value="120">120s (2 Minute Track)</option>
                 <option value="180">180s (3 Minute Song)</option>
@@ -1673,15 +1770,13 @@
             </div>
           </div>
 
-          <!-- Title Field & Seamless Looper Trim Option -->
-          <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; margin-bottom: 16px;">
-            <div class="control-group" style="margin-bottom: 0;">
-              <label>Song Title:</label>
-              <input type="text" id="suno-track-title" class="studio-input" value="Subterranean Riff" placeholder="Enter song title...">
-            </div>
-            <div class="control-group" style="margin-bottom: 0;">
-              <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: rgba(0,240,255,0.12); border: 1px solid var(--accent-cyan); border-radius: 10px;">
-                <input type="checkbox" id="seamless-loop-toggle" style="accent-color: var(--accent-pink);">
+          <!-- Title Field, Loop Type & Seamless Looper Trim Option -->
+          <div class="control-group">
+            <label>Track Title & Loop Settings:</label>
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
+              <input type="text" id="suno-track-title" class="studio-input" value="Subterranean Riff" placeholder="Enter song or game track title...">
+              <label style="cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: rgba(0,240,255,0.12); border: 1px solid var(--accent-cyan); border-radius: 10px; white-space: nowrap;">
+                <input type="checkbox" id="seamless-loop-toggle" style="accent-color: var(--accent-pink);" checked>
                 <span style="font-size: 0.78rem; font-weight: 800; color: #fff;">🔁 0.5s Seamless Loop</span>
               </label>
             </div>
@@ -1690,7 +1785,7 @@
           <!-- QUICK STYLE PRESETS WITH MULTI-PRESET LAYER / MIX STACKING -->
           <div class="control-group">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-              <label style="margin-bottom: 0;">⚡ Quick Style Presets (Click or Stack Multiple):</label>
+              <label style="margin-bottom: 0;">⚡ Music Presets (Listening & Personal Beats):</label>
               <span style="font-size: 0.7rem; color: var(--accent-pink); font-weight: 800;" id="stack-counter-badge">Single Preset</span>
             </div>
             <div class="style-preset-grid">
@@ -1698,50 +1793,56 @@
                 <span>🌸 Kawaii Bass</span>
                 <span style="font-size:0.65rem; color:var(--accent-cyan);">150 BPM • Bright</span>
               </button>
-              <button class="preset-card-btn" data-preset="chiptune_boss" onclick="handlePresetClick('chiptune_boss', this)">
-                <span>👾 16-Bit RPG</span>
-                <span style="font-size:0.65rem; color:var(--accent-cyan);">160 BPM • Retro</span>
+              <button class="preset-card-btn" data-preset="lofi_hiphop" onclick="handlePresetClick('lofi_hiphop', this)">
+                <span>☕ Lofi Beats</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">85 BPM • Chill</span>
               </button>
               <button class="preset-card-btn" data-preset="anime_jrock" onclick="handlePresetClick('anime_jrock', this)">
                 <span>🎸 J-Rock</span>
                 <span style="font-size:0.65rem; color:var(--accent-cyan);">180 BPM • Fast</span>
               </button>
-              <button class="preset-card-btn" data-preset="lofi_hiphop" onclick="handlePresetClick('lofi_hiphop', this)">
-                <span>☕ Lofi Beats</span>
-                <span style="font-size:0.65rem; color:var(--accent-cyan);">85 BPM • Chill</span>
+              <button class="preset-card-btn" data-preset="cyberpunk_synth" onclick="handlePresetClick('cyberpunk_synth', this)">
+                <span>🏙️ Synthwave</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">120 BPM • Neon</span>
               </button>
               <button class="preset-card-btn" data-preset="city_pop" onclick="handlePresetClick('city_pop', this)">
                 <span>🌆 City Pop</span>
                 <span style="font-size:0.65rem; color:var(--accent-cyan);">115 BPM • Funk</span>
               </button>
-              <button class="preset-card-btn" data-preset="heavy_metal" onclick="handlePresetClick('heavy_metal', this)">
-                <span>⚡ Heavy Metal</span>
-                <span style="font-size:0.65rem; color:var(--accent-cyan);">175 BPM • Heavy</span>
-              </button>
-              <button class="preset-card-btn" data-preset="cyberpunk_synth" onclick="handlePresetClick('cyberpunk_synth', this)">
-                <span>🏙️ Synthwave</span>
-                <span style="font-size:0.65rem; color:var(--accent-cyan);">120 BPM • Neon</span>
-              </button>
-              <button class="preset-card-btn" data-preset="ambient_postrock" onclick="handlePresetClick('ambient_postrock', this)">
-                <span>🌌 Post-Rock</span>
-                <span style="font-size:0.65rem; color:var(--accent-cyan);">100 BPM • Spacey</span>
-              </button>
-              <!-- NEW ADDITIONAL PRESETS -->
               <button class="preset-card-btn" data-preset="eurobeat_speed" onclick="handlePresetClick('eurobeat_speed', this)">
                 <span>🏎️ Eurobeat</span>
                 <span style="font-size:0.65rem; color:var(--accent-cyan);">165 BPM • Intense</span>
               </button>
-              <button class="preset-card-btn" data-preset="hardstyle_dance" onclick="handlePresetClick('hardstyle_dance', this)">
-                <span>🔊 Hardstyle</span>
-                <span style="font-size:0.65rem; color:var(--accent-cyan);">155 BPM • Bouncing</span>
+            </div>
+
+            <!-- GAME & SOUNDTRACK PRESETS SECTION -->
+            <div class="preset-section-header">
+              🎮 Game Developer & Soundtrack Presets
+            </div>
+            <div class="style-preset-grid">
+              <button class="preset-card-btn game-preset-card" data-preset="chiptune_boss" onclick="handlePresetClick('chiptune_boss', this)">
+                <span>👾 16-Bit RPG</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">160 BPM • Retro</span>
               </button>
-              <button class="preset-card-btn" data-preset="outrun_synth" onclick="handlePresetClick('outrun_synth', this)">
-                <span>🌅 Outrun</span>
-                <span style="font-size:0.65rem; color:var(--accent-cyan);">128 BPM • Retro</span>
+              <button class="preset-card-btn game-preset-card" data-preset="rpg_boss_epic" onclick="handlePresetClick('rpg_boss_epic', this)">
+                <span>⚔️ RPG Boss</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">170 BPM • Epic</span>
               </button>
-              <button class="preset-card-btn" data-preset="acoustic_unplugged" onclick="handlePresetClick('acoustic_unplugged', this)">
-                <span>🎸 Acoustic</span>
-                <span style="font-size:0.65rem; color:var(--accent-cyan);">95 BPM • Pure</span>
+              <button class="preset-card-btn game-preset-card" data-preset="cozy_town_bgm" onclick="handlePresetClick('cozy_town_bgm', this)">
+                <span>🏰 Cozy Town</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">90 BPM • Peaceful</span>
+              </button>
+              <button class="preset-card-btn game-preset-card" data-preset="scifi_space_ambient" onclick="handlePresetClick('scifi_space_ambient', this)">
+                <span>🌌 Sci-Fi Space</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">100 BPM • Floating</span>
+              </button>
+              <button class="preset-card-btn game-preset-card" data-preset="arcade_racing_loop" onclick="handlePresetClick('arcade_racing_loop', this)">
+                <span>🏁 Arcade Drift</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">168 BPM • Fast</span>
+              </button>
+              <button class="preset-card-btn game-preset-card" data-preset="stealth_horror_pulse" onclick="handlePresetClick('stealth_horror_pulse', this)">
+                <span>👻 Stealth Pulse</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">110 BPM • Dark</span>
               </button>
             </div>
           </div>
@@ -1749,8 +1850,8 @@
           <!-- MAIN PROMPT TEXTAREA -->
           <div class="control-group">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-              <label style="margin-bottom: 0;">Style Prompt / Paragraph Description:</label>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">Commas or full prose text</span>
+              <label style="margin-bottom: 0;">Style Prompt / Detailed Audio Description:</label>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Commas or paragraph prose</span>
             </div>
             <textarea id="suno-style-prompt" class="studio-textarea" style="height: 110px;" placeholder="Describe your style using commas or write a full detailed paragraph (e.g., '150 BPM, Kawaii Future Bass instrumental, bright sidechained synth chords, cute pitched synth melody, bouncy electro drum bounce, clean wide studio mix')...">150 BPM, Kawaii Future Bass instrumental, bright sidechained synth chords, cute pitched synth chop lead, bouncy electro drum pattern, sparkle arpeggios, ultra-clean wide studio mix</textarea>
           </div>
@@ -1765,8 +1866,8 @@
             <!-- Tag Category Tabs -->
             <div class="tag-category-tabs">
               <button class="tag-cat-btn active-cat" onclick="switchTagCategory('all', this)">All Tags</button>
+              <button class="tag-cat-btn" onclick="switchTagCategory('game_audio', this)">🎮 Game BGM</button>
               <button class="tag-cat-btn" onclick="switchTagCategory('genres', this)">Genres</button>
-              <button class="tag-cat-btn" onclick="switchTagCategory('subgenres', this)">Sub-Genres</button>
               <button class="tag-cat-btn" onclick="switchTagCategory('instruments', this)">Instruments</button>
               <button class="tag-cat-btn" onclick="switchTagCategory('tempo', this)">BPM & Tempo</button>
               <button class="tag-cat-btn" onclick="switchTagCategory('moods', this)">Moods & Feel</button>
@@ -1791,7 +1892,7 @@
         <div class="library-panel">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(0, 240, 255, 0.2); padding-bottom: 10px;">
             <h4 style="color: #fff; margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-              🎧 My Songs Library <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">(Persistent Storage)</span>
+              🎧 My Songs & Game Audio Library <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700;">(IndexedDB Storage)</span>
             </h4>
             <button class="vote-btn" style="padding: 6px 14px; font-size: 0.78rem;" onclick="clearAutoPlaylist()">Clear Library</button>
           </div>
@@ -1841,7 +1942,7 @@
 
       <!-- TAB 4 STATUS FOOTER -->
       <div class="tab-status-footer">
-        <span>STATUS: AI_INSTRUMENTAL_ENGINE_READY</span>
+        <span>STATUS: AI_AUDIO_ENGINE_READY</span>
         <span>LIBRARY_PLAYER: ACTIVE</span>
       </div>
 
@@ -1923,9 +2024,14 @@
     const trackDb = new TrackStorageDB();
 
     /* ==========================================================================
-       TAG DATABASE & PRESET DEFINITIONS FOR AI INSTRUMENTAL STUDIO
+       TAG DATABASE & PRESET DEFINITIONS FOR AI INSTRUMENTAL & GAME AUDIO STUDIO
        ========================================================================== */
     const MUSIC_TAG_DATABASE = {
+      game_audio: [
+        "Seamless BGM Loop", "RPG Battle Theme", "8-Bit Arcade", "Level Select Music", 
+        "Cozy Town BGM", "Boss Encounter", "Cyberpunk Chase", "Victory Fanfare", 
+        "Dungeon Ambience", "Chiptune Jump SFX", "Sci-Fi Space Flight", "Action Platformer"
+      ],
       genres: [
         "Kawaii Future Bass", "J-Rock", "Anison", "Vocaloid Rock", "Chiptune", "8-Bit RPG", "Lofi Hip Hop", 
         "Synthwave", "Cyberpunk", "City Pop", "Heavy Metal", "Future Bass", "J-Pop", 
@@ -1959,14 +2065,6 @@
           {
             prompt: "150 BPM, Kawaii Future Bass instrumental, bright sidechained synth chords, cute pitched synth chop lead, bouncy electro drum pattern, sparkle arpeggios, ultra-clean wide studio mix",
             lyrics: "Cute synth chord start, build-up snare roll, massive colorful synth chord drop, sparkle outro"
-          },
-          {
-            prompt: "152 BPM, Sparkle Kawaii Bass, playful pitched vocal chop melodies, sidechained supersaw synth chords, hyper energetic electro kick and snare, chiptune bell accents, anime club mix",
-            lyrics: "High pitched synth riff intro, fast riser, explosive kawaii future bass drop, soft synth decay"
-          },
-          {
-            prompt: "148 BPM, Glittering Kawaii Electronic, uplifting sidechained chord progression, bubbly synth stabs, fast 16th note hi-hats, wide stereo reverb, vibrant game soundtrack",
-            lyrics: "Sparkle chime intro, bass drum swell, euphoric synth lead breakdown, quiet chime end"
           }
         ]
       },
@@ -1976,14 +2074,51 @@
           {
             prompt: "160 BPM, 16-bit RPG boss battle theme, rapid NES synth arpeggios, retro chiptune squarewave lead, energetic 8-bit drum beats, arcade video game soundtrack",
             lyrics: "Retro start bell, fast pulse synth loop, intense boss phase transition, victory lock"
-          },
+          }
+        ]
+      },
+      rpg_boss_epic: {
+        title: "Symphonic RPG Boss Battle",
+        variations: [
           {
-            prompt: "165 BPM, Fast-paced 8-bit action soundtrack, heavy retro bass synth, dual square wave leads, frantic arcade drum fills, FM synth battle motif",
-            lyrics: "Arcade coin sound intro, hyper pulse bassline, dramatic boss phase shift, final hit victory flourish"
-          },
+            prompt: "170 BPM, Epic Orchestral RPG Boss Theme, heavy distorted electric guitar riffs, dramatic brass fanfare, fast double-bass drums, choir vocals background, high tension game background music",
+            lyrics: "Intense orchestral strings intro, drum blast roll, heavy guitar and brass chorus drop, climactic battle loop end"
+          }
+        ]
+      },
+      cozy_town_bgm: {
+        title: "RPG Starter Village Theme",
+        variations: [
           {
-            prompt: "158 BPM, Chiptune speed metal boss theme, distorted 8-bit synth guitar solo, fast double-bass retro percussion, Game Boy pulse generator, high tension",
-            lyrics: "Glitched pulse intro, rapid fire chiptune arpeggios, intense synth solo breakdown, boss defeat fade"
+            prompt: "90 BPM, Cozy RPG town theme background music, peaceful acoustic guitar picking, gentle flute melody, soft accordion pad, calm field village soundtrack, wholesome video game BGM",
+            lyrics: "Soft acoustic strum start, flute melody enters, relaxing town loop theme"
+          }
+        ]
+      },
+      scifi_space_ambient: {
+        title: "Zero-G Space Station",
+        variations: [
+          {
+            prompt: "100 BPM, Sci-Fi Space Exploration soundtrack, ambient floating synthesizer pads, glowing glass bell arpeggios, gentle pulsing bassline, ethereal zero-gravity game music",
+            lyrics: "Ethereal synth chime intro, deep space bass pulse swell, smooth sci-fi loop tail"
+          }
+        ]
+      },
+      arcade_racing_loop: {
+        title: "High-Speed Highway Drift",
+        variations: [
+          {
+            prompt: "168 BPM, Arcade Racing Game BGM, fast synthwave Eurobeat energy, aggressive synth lead, punchy kick drum bounce, energetic arcade driving sound",
+            lyrics: "Rev synth intro, fast driving hi-hats, high speed lead synth chorus"
+          }
+        ]
+      },
+      stealth_horror_pulse: {
+        title: "Dark Stealth & Suspense",
+        variations: [
+          {
+            prompt: "110 BPM, Stealth action horror ambience, dark sub bass pulse, ticking clock percussion, dissonant synth drone, high tension video game soundscape",
+            lyrics: "Low bass pulse start, subtle ticking sound, sudden suspense riser, dark ambient decay"
           }
         ]
       },
@@ -1993,14 +2128,6 @@
           {
             prompt: "180 BPM, fast anime J-Rock instrumental, hyperactive drum fills, heavy distorted guitar riff lead, keytar solo, tight electric slap bass, clean studio mix",
             lyrics: "Dynamic drum fill intro, dual guitar breakdown, keytar duel, climax outro"
-          },
-          {
-            prompt: "185 BPM, High-energy Anison opening theme, twin guitar harmony lead, driving double-bass drum beat, energetic slap bass solo, aggressive keytar accents",
-            lyrics: "Explosive guitar feedback start, fast verse drum groove, anthemic guitar lead chorus, sudden power stop"
-          },
-          {
-            prompt: "176 BPM, Melodic Japanese rock instrumental, soaring electric lead guitar, intricate basslines, rapid snare rolls, emotional anime climax sound",
-            lyrics: "Melodic guitar picking intro, crash cymbal hit, soaring lead guitar bridge, heavy distortion finale"
           }
         ]
       },
@@ -2010,14 +2137,6 @@
           {
             prompt: "85 BPM, chill lofi hip hop beat, warm vintage Rhodes piano chords, vinyl crackle atmosphere, smooth acoustic bassline, subtle jazz snare, relaxing study vibe",
             lyrics: "Muffled intro, soft kick snare entrance, gentle piano melody swell, fade out"
-          },
-          {
-            prompt: "88 BPM, Rain night lofi instrumental, dusty sp1200 drum bounce, muted electric piano, tape hiss texture, jazzy saxophone motif, nostalgic night atmosphere",
-            lyrics: "Vinyl needle drop, gentle rain ambience, relaxing piano chords, soft tape stop"
-          },
-          {
-            prompt: "82 BPM, Cozy sunset lofi beat, warm synth pad swell, clean jazz guitar arpeggio, subtle rimshot drums, calm study beat, peaceful mood",
-            lyrics: "Soft acoustic guitar intro, subtle boom-bap drum entry, dreamy pad breakdown, slow fade out"
           }
         ]
       },
@@ -2027,31 +2146,6 @@
           {
             prompt: "115 BPM, 80s Japanese City Pop instrumental, funky slap bassline, brass horns section, clean rhythm electric guitar, glossy chorus synth, retro funk",
             lyrics: "Brass section fanfare, groovy funk bassline entrance, smooth saxophone bridge"
-          },
-          {
-            prompt: "118 BPM, Sparkling Tokyo night city pop, driving funk bass, disco drum groove, bright synthesizer chords, retro electric guitar strumming, nostalgic 1980s vibe",
-            lyrics: "Groovy bass riff start, clean guitar rhythm hit, synth horn section drop, extended bass funk outro"
-          },
-          {
-            prompt: "112 BPM, Late night Japanese funk fusion, prominent slap bass, smooth Fender Rhodes, brass accents, tight disco snare, driving expressway soundtrack",
-            lyrics: "Engine rev soundscape, tight drum groove, saxophone and synth duel, smooth groove fade"
-          }
-        ]
-      },
-      heavy_metal: {
-        title: "Thunderbolt Shredder",
-        variations: [
-          {
-            prompt: "175 BPM, heavy thrash metal instrumental, fast double-bass drum pedal, aggressive distorted guitar shredding, heavy bass riff, high intensity",
-            lyrics: "Aggressive drum roll intro, guitar shredding solo, thunderous rhythm section"
-          },
-          {
-            prompt: "180 BPM, Speed metal frenzy, dual guitar sweep picking solo, thunderous kick drum barrage, heavy drop-tuned rhythm guitars, adrenaline pumping",
-            lyrics: "Guitar feedback swell, rapid fire double bass blast, neoclassical guitar solo, heavy power chord hit"
-          },
-          {
-            prompt: "170 BPM, Symphonic heavy metal, distorted rhythm guitars, epic orchestral brass and string backing, aggressive drum breakdown, dark cinematic metal",
-            lyrics: "Dramatic orchestral strings start, explosive guitar riff entry, heavy breakdown beat, epic crescendo end"
           }
         ]
       },
@@ -2061,31 +2155,6 @@
           {
             prompt: "120 BPM, retro 80s synthwave, driving analog sawtooth bass, neon synth lead, gated reverb drums, cyberpunk cityscape atmosphere, synthpop instrumental",
             lyrics: "Pulsing synth bass start, synth arpeggio build, energetic chorus synth drop"
-          },
-          {
-            prompt: "124 BPM, Dark cyberpunk outrun, heavy darksynth bassline, industrial cyber drums, glowing neon synth lead, cinematic futuristic chase theme",
-            lyrics: "Distorted bass pulse intro, rising cyber synth riser, aggressive synthwave drop, glitchy cyber fade"
-          },
-          {
-            prompt: "118 BPM, Chill synthwave retrowave, warm analog synth pads, nostalgic lead synth melody, gated snare drum pattern, 80s sci-fi atmosphere",
-            lyrics: "Ambient synth pad swell, retro drum machine entrance, nostalgic synth melody breakdown, slow fade out"
-          }
-        ]
-      },
-      ambient_postrock: {
-        title: "Echoes Above Clouds",
-        variations: [
-          {
-            prompt: "100 BPM, atmospheric post-rock instrumental, shimmering delay acoustic guitars, swell ambient pads, slow building dynamic drums, emotional soundscape",
-            lyrics: "Gentle acoustic guitar picking, ambient pad swell, crescendo drum entrance"
-          },
-          {
-            prompt: "105 BPM, Cinematic post-rock crescendo, layered tremolo electric guitars, deep resonant bass, thunderous drum climax, spacey delay effects",
-            lyrics: "Soft delay guitar intro, gradual drum swelling, wall-of-sound guitar explosion, quiet ambient reverb tail"
-          },
-          {
-            prompt: "95 BPM, Ethereal ambient post-rock, shimmering guitar swells, soft acoustic piano, subtle brush drum pattern, emotional and reflective soundscape",
-            lyrics: "Piano note intro, atmospheric reverb swell, emotional guitar arc, lingering piano decay"
           }
         ]
       },
@@ -2094,50 +2163,7 @@
         variations: [
           {
             prompt: "165 BPM, High-energy Eurobeat instrumental, fast brassy synth leads, driving 4-on-the-floor Eurobeat drums, aggressive synth bassline, Japanese anime racing soundtrack",
-            lyrics: "Brassy synth riff intro, fast hi-hat roll, explosive Eurobeat chorus synth drop, tire squeal outro"
-          },
-          {
-            prompt: "168 BPM, Hyper Eurobeat speed, rapid synth lead arpeggios, heavy Eurobeat kick drum, energetic octave synth bass, intense mountain drift vibe",
-            lyrics: "Fast synth sequence start, rising snare roll, intense Eurobeat drop, energetic synth bridge"
-          }
-        ]
-      },
-      hardstyle_dance: {
-        title: "Neon Hardstyle Bounce",
-        variations: [
-          {
-            prompt: "155 BPM, Fast Hardstyle instrumental, heavy distorted reverse bass kick, soaring euphoric hardstyle synth lead, epic festival build-up and breakdown",
-            lyrics: "Euphoric melody lead intro, tick-tock build up riser, massive distorted hardstyle kick drop, melodic outro"
-          },
-          {
-            prompt: "158 BPM, Raw hardstyle bounce, heavy crunchy kick bass, screaming screecher synths, hyper energetic rhythm, festival rave soundtrack",
-            lyrics: "Gated kick intro, screech synth build, explosive raw hardstyle kick barrage, quick reverb fade"
-          }
-        ]
-      },
-      outrun_synth: {
-        title: "Synthwave Sunset Drive",
-        variations: [
-          {
-            prompt: "128 BPM, Retro Outrun synthwave, driving octave synth bass, glossy 80s lead synth, LinnDrum snare, nostalgic sunset highway drive",
-            lyrics: "Pulsing octave bass intro, drum fill hit, soaring outrun lead synth melody, retro fade out"
-          },
-          {
-            prompt: "125 BPM, Neon Outrun electronic, heavy analog synth bass, shimmering arp sequences, 80s drum machine groove, cyberpunk coastal vibe",
-            lyrics: "Synth arpeggio start, punchy kick snare entry, vibrant synth lead hook, slow tape stop"
-          }
-        ]
-      },
-      acoustic_unplugged: {
-        title: "Sakura Acoustic Unplugged",
-        variations: [
-          {
-            prompt: "95 BPM, Intimate unplugged acoustic guitar duo, warm wood body resonance, soft fingerstyle picking, subtle cajon percussion, gentle acoustic bass",
-            lyrics: "Soft fingerpicking guitar intro, gentle cajon entry, expressive acoustic guitar solo breakdown, quiet harmonic strum end"
-          },
-          {
-            prompt: "90 BPM, Pure acoustic folk instrumental, dual acoustic guitars, warm string strums, clean acoustic bass, relaxed organic sound",
-            lyrics: "Warm acoustic guitar strum intro, subtle bass entrance, melodic acoustic lead bridge, soft guitar fade"
+            lyrics: "Brassy synth riff intro, fast hi-hat roll, explosive Eurobeat chorus synth drop"
           }
         ]
       }
@@ -2145,6 +2171,42 @@
 
     let selectedStackPresets = new Set();
     const presetVariationIndices = {};
+
+    function applyGameEnginePreset(engineKey) {
+      const titleInput = document.getElementById('suno-track-title');
+      const promptInput = document.getElementById('suno-style-prompt');
+      const loopToggle = document.getElementById('seamless-loop-toggle');
+
+      if (engineKey === 'gdevelop') {
+        if (titleInput) titleInput.value = "Pixel Level BGM";
+        if (promptInput) promptInput.value = "150 BPM, 16-bit GDevelop platformer soundtrack, bright chiptune squarewave lead, bouncy synth bass, seamless loop video game background music";
+        if (loopToggle) loopToggle.checked = true;
+      } else if (engineKey === 'rpgmaker') {
+        if (titleInput) titleInput.value = "RPG Dungeon Exploration";
+        if (promptInput) promptInput.value = "120 BPM, RPG Maker MZ fantasy dungeon exploration BGM, misterious atmospheric acoustic strings, low woodwind instruments, dark RPG game loop";
+        if (loopToggle) loopToggle.checked = true;
+      } else if (engineKey === 'roblox') {
+        if (titleInput) titleInput.value = "Roblox Action Wave Theme";
+        if (promptInput) promptInput.value = "160 BPM, Energetic Roblox tower defense action track, driving electro synth chords, fast drum beat, epic battle soundtrack";
+        if (loopToggle) loopToggle.checked = true;
+      }
+    }
+
+    function toggleAppCreativeMode() {
+      const body = document.body;
+      const label = document.getElementById('current-mode-label');
+      const statusLabel = document.getElementById('nav-status-label');
+
+      body.classList.toggle('gamedev-mode');
+
+      if (body.classList.contains('gamedev-mode')) {
+        if (label) label.innerText = "🎮 Game Audio & Sound Design Lab";
+        if (statusLabel) statusLabel.innerText = "🎮 NEKO FM: GAME SOUNDTRACK & SFX ENGINE";
+      } else {
+        if (label) label.innerText = "🎧 24/7 Neko FM Radio Lounge";
+        if (statusLabel) statusLabel.innerText = "📻 NEKO FM: LIVE BROADCAST";
+      }
+    }
 
     function handlePresetClick(presetKey, btnEl) {
       if (selectedStackPresets.has(presetKey)) {
@@ -2190,7 +2252,7 @@
       const promptInput = document.getElementById('suno-style-prompt');
       const lyricsInput = document.getElementById('suno-lyrics-input');
 
-      if (titleInput) titleInput.value = selectedStackPresets.size > 1 ? `Hybrid Fusion Riff` : lastTitle;
+      if (titleInput) titleInput.value = selectedStackPresets.size > 1 ? `Hybrid Game & Music Loop` : lastTitle;
       if (promptInput) promptInput.value = combinedPrompts.join(', ');
       if (lyricsInput) lyricsInput.value = combinedArrangements.join(' -> ');
     }
@@ -2781,7 +2843,7 @@
       } catch (error) {
         console.error("Music generation error:", error);
         alert("Generation failed. Make sure 'python server.py' is actively running in your terminal!");
-      } finally {
+      } font-weight: 800; finally {
         if (btn) {
           btn.disabled = false;
           btn.innerText = "✨ Create Track";
