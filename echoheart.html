@@ -51,7 +51,28 @@
         radial-gradient(circle at 20% 20%, rgba(157, 78, 221, 0.28) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.25) 0%, transparent 50%),
         radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.15) 0%, transparent 60%);
-      transition: background-color 0.4s ease, color 0.4s ease;
+      transition: background-color 0.4s ease, color 0.4s ease, background-image 0.4s ease;
+    }
+
+    /* Ambient Atmosphere Mode Overrides */
+    body.time-sunset {
+      --bg-dark: #120516;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(255, 153, 0, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 127, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(157, 78, 221, 0.2) 0%, transparent 60%);
+    }
+
+    body.time-twilight {
+      --bg-dark: #040209;
+    }
+
+    body.time-midnight {
+      --bg-dark: #020105;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(0, 240, 255, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(114, 9, 183, 0.35) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(5, 2, 12, 0.9) 0%, transparent 60%);
     }
 
     /* ============================================================ */
@@ -346,6 +367,168 @@
       box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
     }
 
+    /* ATMOSPHERIC WORLD ENGINE & MAP STYLING (TAB 1) */
+    .atmosphere-bar {
+      background: var(--card-inner);
+      border: 1.5px solid var(--accent-purple);
+      border-radius: 16px;
+      padding: 18px 22px;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+    }
+
+    .time-picker-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .time-picker-btn {
+      background: rgba(22, 10, 36, 0.85);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .time-picker-btn.active, .time-picker-btn:hover {
+      background: rgba(0, 240, 255, 0.2);
+      color: #ffffff;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.5);
+    }
+
+    .audio-ambient-btn {
+      background: linear-gradient(135deg, rgba(255, 0, 127, 0.2), rgba(157, 78, 221, 0.2));
+      border: 1px solid var(--accent-pink);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.35);
+      transition: all 0.25s ease;
+    }
+
+    .audio-ambient-btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+    }
+
+    .location-guide-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 18px;
+      margin-bottom: 2rem;
+    }
+
+    .location-card {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .location-card:hover, .location-card.active {
+      transform: translateY(-4px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+    }
+
+    .location-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .location-icon-badge {
+      font-size: 1.8rem;
+    }
+
+    .location-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .location-sub {
+      font-size: 0.75rem;
+      color: var(--accent-pink);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .location-preview-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .location-detail-inspector {
+      background: rgba(8, 4, 18, 0.95);
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
+      animation: fadeInTab 0.3s ease-out forwards;
+    }
+
+    .inspector-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      margin-bottom: 6px;
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+    }
+
+    .inspector-meta {
+      font-size: 0.82rem;
+      color: var(--accent-gold);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    .inspector-body {
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--text-main);
+    }
+
+    .field-log-box {
+      background: #030108;
+      border: 1px solid var(--card-border);
+      border-left: 4px solid var(--accent-pink);
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin-top: 16px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.88rem;
+      color: var(--accent-pink);
+    }
+
     /* CHARACTER CARDS GRID */
     .character-grid {
       display: grid;
@@ -581,7 +764,7 @@
     <div class="nav-container-single">
       <nav class="nav-links-row">
         <a href="index.html" class="nav-item-pill">🏠 Home</a>
-        <a href="podcaast.html" class="nav-item-pill active">Podcast</a>
+        <a href="podcast.html" class="nav-item-pill active">Podcast</a>
         <a href="neko-fm.html" class="nav-item-pill">📻 24/7 Neko FM</a>
         <a href="chat.html" class="nav-item-pill">💬 Live Chat</a>
       </nav>
@@ -630,11 +813,25 @@
       <button class="lore-tab-btn" onclick="switchLoreSubtab('future')">🛒 Books & Future Releases</button>
     </div>
 
-    <!-- SUB-TAB 1: WORLD & BAND LORE -->
+    <!-- SUB-TAB 1: WORLD & BAND LORE (LIVING BREATHING WORLD EXPANSION) -->
     <div id="tab-dossier" class="tab-content active">
       <section>
-        <h2>Project Overview & World Lore</h2>
+        <h2>The Living World of EchoHeart</h2>
         
+        <!-- Atmosphere & Time Control Engine -->
+        <div class="atmosphere-bar">
+          <div class="time-picker-group">
+            <span style="font-size: 0.85rem; font-weight: 800; color: var(--accent-cyan);">🌇 Atmosphere Mode:</span>
+            <button class="time-picker-btn" id="time-btn-sunset" onclick="setAtmosphere('sunset')">Sunset 🌅</button>
+            <button class="time-picker-btn active" id="time-btn-twilight" onclick="setAtmosphere('twilight')">Twilight 🌆</button>
+            <button class="time-picker-btn" id="time-btn-midnight" onclick="setAtmosphere('midnight')">Subterranean Midnight 🌌</button>
+          </div>
+          <button class="audio-ambient-btn" onclick="playAmbientSoundscape()">
+            <span id="ambient-audio-icon">🔊</span>
+            <span id="ambient-audio-text">Listen: Prep Room B Rain & Humming Amps</span>
+          </button>
+        </div>
+
         <div class="dossier-card">
           <span class="badge-pill">Overview</span>
           <p><strong>Series Title:</strong> EchoHeart (Girls of Phantom Series)</p>
@@ -642,10 +839,66 @@
           <p><strong>Setting:</strong> EchoHeart Senior Academy / Sakuraoka High School (Class 3-A, Music Division), Tokyo, Japan.</p>
         </div>
 
-        <div class="dossier-card">
-          <span class="badge-pill">Bases of Operation</span>
-          <p><strong>1. Music Prep Room B ("The Sanctuary"):</strong> Abandoned West Wing room used for official club registration, evidence board tracking, and confidential acoustic rehearsals.</p>
-          <p><strong>2. The Sub-Stage ("The Underground Arena"):</strong> A secret subterranean concrete amphitheater forty feet beneath the West Wing. Features vaulted stone arches, acoustic damping walls, amber fairy lights, and vintage stage lighting.</p>
+        <!-- Interactive Location Guide -->
+        <h3 class="sub-heading">🗺️ Key World Locations & Sector Map</h3>
+        <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.92rem;">Select a location card below to inspect environmental details, hidden acoustics, and active student rumors:</p>
+        
+        <div class="location-guide-grid">
+          <div class="location-card active" id="loc-card-preproom" onclick="inspectLocation('preproom')">
+            <div class="location-card-header">
+              <span class="location-icon-badge">🎻</span>
+              <div>
+                <div class="location-title">Music Prep Room B</div>
+                <div class="location-sub">The Sanctuary • West Wing</div>
+              </div>
+            </div>
+            <p class="location-preview-text">Abandoned practice space lined with acoustic foam, instrument cases, and green chalkboards.</p>
+          </div>
+
+          <div class="location-card" id="loc-card-substage" onclick="inspectLocation('substage')">
+            <div class="location-card-header">
+              <span class="location-icon-badge">🏟️</span>
+              <div>
+                <div class="location-title">The Sub-Stage</div>
+                <div class="location-sub">Underground Arena • -40 Feet</div>
+              </div>
+            </div>
+            <p class="location-preview-text">Secret subterranean concrete amphitheater with vaulted stone arches and amber fairy lights.</p>
+          </div>
+
+          <div class="location-card" id="loc-card-academy" onclick="inspectLocation('academy')">
+            <div class="location-card-header">
+              <span class="location-icon-badge">🏫</span>
+              <div>
+                <div class="location-title">Class 3-A & Campus</div>
+                <div class="location-sub">Sakuraoka High • Music Division</div>
+              </div>
+            </div>
+            <p class="location-preview-text">Chalkboard schedules, shoe lockers, and sunlight filtering through tall academy windows.</p>
+          </div>
+
+          <div class="location-card" id="loc-card-shopping" onclick="inspectLocation('shopping')">
+            <div class="location-card-header">
+              <span class="location-icon-badge">🍰</span>
+              <div>
+                <div class="location-title">Sakuraoka Shopping District</div>
+                <div class="location-sub">After-School District & Cafes</div>
+              </div>
+            </div>
+            <p class="location-preview-text">Neon storefronts, crepe stands, and the cafeteria line where strawberry parfaits vanish in seconds.</p>
+          </div>
+        </div>
+
+        <!-- Location Inspector Panel -->
+        <div class="location-detail-inspector" id="location-inspector">
+          <div class="inspector-title" id="inspector-title">🎻 Music Prep Room B ("The Sanctuary")</div>
+          <div class="inspector-meta" id="inspector-meta">Primary Base of Operations • West Wing Second Floor</div>
+          <div class="inspector-body" id="inspector-body">
+            Prep Room B is the band's official haven. Smelling faintly of old wood varnish, polished keytar plastic, and warm tube amplifiers, this room holds the official evidence board where Aoi maps student Dissonance reports. Behind Locker 102 lies a hidden acoustic resonance seam that leads straight down into the subterranean caverns.
+          </div>
+          <div class="field-log-box" id="inspector-log">
+            <strong>[SERA'S AUDIO MONITOR LOG #042]:</strong> "Nekomi was leaning against the window frame tuning her electric guitar... when the ambient humidity dropped 4 degrees. The familiar hum behind Locker 102 vibrated in G-minor."
+          </div>
         </div>
 
         <div class="dossier-card">
@@ -785,7 +1038,7 @@
             <em>"That's right!"</em> shouts Akari, slamming her drumsticks together. <em>"No more hiding behind school rules or secret audio feeds. Our official OELN (Original English Light Novel) is dropping real soon on Amazon and KDP! Paperbacks and hardcovers are heading straight to print!"</em>
           </p>
           <p class="store-desc">
-            Sera adjusts her keytar strap with a bright, blushing smile, adding, <em>"We put our whole hearts into these pages—every melody, every spark with our familiars, and all the quiet moments in between. We can't wait for you to add it to your bookshelf!"</em>
+            <em>"We put our whole hearts into these pages—every melody, every spark with our familiars, and all the quiet moments in between. We can't wait for you to add it to your bookshelf!"</em>
           </p>
           <p class="store-desc">
             Aoi nods calmly, adjusting her glasses over her blueprints. <em>"Logistics are locked in. Distribution via Amazon Kindle Direct Publishing (KDP) is being finalized. Keep your frequencies tuned and watch this space for the official drop date."</em>
@@ -817,6 +1070,107 @@
   </div>
 
   <script>
+    /* ATMOSPHERE & TIME-OF-DAY ENGINE */
+    function setAtmosphere(mode) {
+      document.body.classList.remove('time-sunset', 'time-twilight', 'time-midnight');
+      document.body.classList.add(`time-${mode}`);
+
+      document.querySelectorAll('.time-picker-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`time-btn-${mode}`);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    /* WEB AUDIO SYNTHESIZED SOUNDSCAPE SIMULATOR */
+    let synthAudioCtx = null;
+    let synthOsc = null;
+    let synthGain = null;
+    let isAmbientPlaying = false;
+
+    function playAmbientSoundscape() {
+      const textSpan = document.getElementById('ambient-audio-text');
+      const iconSpan = document.getElementById('ambient-audio-icon');
+
+      if (isAmbientPlaying) {
+        if (synthGain && synthAudioCtx) {
+          synthGain.gain.exponentialRampToValueAtTime(0.0001, synthAudioCtx.currentTime + 0.5);
+          setTimeout(() => { if (synthOsc) synthOsc.stop(); isAmbientPlaying = false; }, 500);
+        } else {
+          isAmbientPlaying = false;
+        }
+        textSpan.textContent = "Listen: Prep Room B Rain & Humming Amps";
+        iconSpan.textContent = "🔊";
+        return;
+      }
+
+      try {
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        synthAudioCtx = new AudioCtxClass();
+
+        synthOsc = synthAudioCtx.createOscillator();
+        synthGain = synthAudioCtx.createGain();
+
+        // Warm 55Hz tube amp drone
+        synthOsc.type = 'triangle';
+        synthOsc.frequency.setValueAtTime(55, synthAudioCtx.currentTime);
+
+        synthGain.gain.setValueAtTime(0.001, synthAudioCtx.currentTime);
+        synthGain.gain.exponentialRampToValueAtTime(0.08, synthAudioCtx.currentTime + 1);
+
+        synthOsc.connect(synthGain);
+        synthGain.connect(synthAudioCtx.destination);
+
+        synthOsc.start();
+        isAmbientPlaying = true;
+        textSpan.textContent = "Playing: Prep Room B Rain & Amp Resonance";
+        iconSpan.textContent = "⏹";
+      } catch (e) {
+        console.warn("Web Audio ambient warning:", e);
+        textSpan.textContent = "Audio active (Rain & Resonance)";
+      }
+    }
+
+    /* LOCATION INSPECTOR INTERACTIVE LOGIC */
+    const LOCATION_DATA = {
+      preproom: {
+        title: "🎻 Music Prep Room B (\"The Sanctuary\")",
+        meta: "Primary Base of Operations • West Wing Second Floor",
+        body: "Prep Room B is the band's official haven. Smelling faintly of old wood varnish, polished keytar plastic, and warm tube amplifiers, this room holds the official evidence board where Aoi maps student Dissonance reports. Behind Locker 102 lies a hidden acoustic resonance seam that leads straight down into the subterranean caverns.",
+        log: "<strong>[SERA'S AUDIO MONITOR LOG #042]:</strong> \"Nekomi was leaning against the window frame tuning her electric guitar... when the ambient humidity dropped 4 degrees. The familiar hum behind Locker 102 vibrated in G-minor.\""
+      },
+      substage: {
+        title: "🏟️ The Sub-Stage (\"The Underground Arena\")",
+        meta: "Subterranean Amphitheater • -40 Feet Beneath Prep Room B",
+        body: "A forgotten stone cathedral built beneath the school decades ago. Features vaulted stone arches, acoustic damping panels, string fairy lights, and vintage stage monitors. Here, the band sheds their quiet academic personas to perform high-decibel 180 BPM J-Rock.",
+        log: "<strong>[AKARI'S DRUM LOG #019]:</strong> \"The acoustic echo in this cavern is insane! When I hit the crash cymbal, the resonance stays suspended in the air for five full seconds before shattering Dissonance static!\""
+      },
+      academy: {
+        title: "🏫 Class 3-A & Sakuraoka High Campus",
+        meta: "Surface World • Music Division Grounds",
+        body: "On the surface, Sakuraoka High is a prestigious arts academy with cherry blossom courtyards and sunlit classrooms. Here, the four girls maintain their polite 'Light Music Research Group' cover, turning in acoustic homework arrangements to keep faculty off their trail.",
+        log: "<strong>[AOI'S LOGISTICS NOTEBOOK]:</strong> \"Classroom 3-A's afternoon sunlight is perfect for keeping up appearances. Faculty advisor confirmed our soft acoustic showcase for next Tuesday.\""
+      },
+      shopping: {
+        title: "🍰 Sakuraoka Shopping District & Cafes",
+        meta: "After-School Commercial District & Crepe Stands",
+        body: "The vibrant neon-lit shopping avenue just outside campus gates. The band gathers here after rehearsals to eat strawberry shortcake parfaits, buy replacement guitar picks, and keep an eye out for sudden emotional static corruption among fellow students.",
+        log: "<strong>[NEKOMIS NOTEBOOK]:</strong> \"Sera got strawberry cream on her cheek again while we were discussing the setlist. I looked away fast so she wouldn't see me panic.\""
+      }
+    };
+
+    function inspectLocation(locKey) {
+      const data = LOCATION_DATA[locKey];
+      if (!data) return;
+
+      document.querySelectorAll('.location-card').forEach(card => card.classList.remove('active'));
+      const activeCard = document.getElementById(`loc-card-${locKey}`);
+      if (activeCard) activeCard.classList.add('active');
+
+      document.getElementById('inspector-title').innerHTML = data.title;
+      document.getElementById('inspector-meta').innerText = data.meta;
+      document.getElementById('inspector-body').innerText = data.body;
+      document.getElementById('inspector-log').innerHTML = data.log;
+    }
+
     /* INTERACTIVE HUD CYCLING LOGIC */
     const echoStates = [
       { text: "[Echo Resonance: 15%]", mode: "" },
