@@ -1061,7 +1061,7 @@
     .btn-action:hover { transform: scale(1.02); box-shadow: 0 0 28px rgba(255, 0, 127, 0.9); }
     .btn-action:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* CUSTOM LIBRARY PLAYER STYLES */
+    /* CUSTOM LIBRARY PLAYER STYLES - CLEAN & RESPONSIVE LAYOUT */
     .library-panel {
       background: rgba(10, 4, 22, 0.95);
       border: 1.5px solid var(--border-cyan);
@@ -1092,28 +1092,60 @@
       background: rgba(15, 7, 28, 0.95);
       border: 1.5px solid var(--card-border);
       border-radius: 14px;
-      padding: 16px 18px;
-      margin-top: 12px;
+      padding: 18px;
+      margin-top: 14px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
       transition: all 0.3s;
     }
     .track-card:hover { border-color: var(--accent-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.35); }
     .track-card.active-playing { border-color: var(--accent-pink); background: rgba(28, 10, 48, 0.95); box-shadow: 0 0 25px rgba(255, 0, 127, 0.5); }
 
-    .track-top-row {
+    .track-header-row {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
+      align-items: flex-start;
+      gap: 14px;
+      width: 100%;
     }
 
-    .track-player-controls {
+    .track-title-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .track-title-line {
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .track-title-text {
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .track-meta-details {
+      font-size: 0.82rem;
+      color: var(--accent-cyan);
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .track-actions-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 4px;
     }
 
     .play-btn-circle {
@@ -1694,6 +1726,23 @@
                 <span>🌌 Post-Rock</span>
                 <span style="font-size:0.65rem; color:var(--accent-cyan);">100 BPM • Spacey</span>
               </button>
+              <!-- NEW ADDITIONAL PRESETS -->
+              <button class="preset-card-btn" data-preset="eurobeat_speed" onclick="handlePresetClick('eurobeat_speed', this)">
+                <span>🏎️ Eurobeat</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">165 BPM • Intense</span>
+              </button>
+              <button class="preset-card-btn" data-preset="hardstyle_dance" onclick="handlePresetClick('hardstyle_dance', this)">
+                <span>🔊 Hardstyle</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">155 BPM • Bouncing</span>
+              </button>
+              <button class="preset-card-btn" data-preset="outrun_synth" onclick="handlePresetClick('outrun_synth', this)">
+                <span>🌅 Outrun</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">128 BPM • Retro</span>
+              </button>
+              <button class="preset-card-btn" data-preset="acoustic_unplugged" onclick="handlePresetClick('acoustic_unplugged', this)">
+                <span>🎸 Acoustic</span>
+                <span style="font-size:0.65rem; color:var(--accent-cyan);">95 BPM • Pure</span>
+              </button>
             </div>
           </div>
 
@@ -1906,47 +1955,196 @@
     const FULL_STYLE_PRESETS = {
       kawaii_future: {
         title: "Sparkle Pop Rainbow",
-        prompt: "150 BPM, Kawaii Future Bass instrumental, bright sidechained synth chords, cute pitched synth chop lead, bouncy electro drum pattern, sparkle arpeggios, ultra-clean wide studio mix",
-        lyrics: "Cute synth chord start, build-up snare roll, massive colorful synth chord drop, sparkle outro"
+        variations: [
+          {
+            prompt: "150 BPM, Kawaii Future Bass instrumental, bright sidechained synth chords, cute pitched synth chop lead, bouncy electro drum pattern, sparkle arpeggios, ultra-clean wide studio mix",
+            lyrics: "Cute synth chord start, build-up snare roll, massive colorful synth chord drop, sparkle outro"
+          },
+          {
+            prompt: "152 BPM, Sparkle Kawaii Bass, playful pitched vocal chop melodies, sidechained supersaw synth chords, hyper energetic electro kick and snare, chiptune bell accents, anime club mix",
+            lyrics: "High pitched synth riff intro, fast riser, explosive kawaii future bass drop, soft synth decay"
+          },
+          {
+            prompt: "148 BPM, Glittering Kawaii Electronic, uplifting sidechained chord progression, bubbly synth stabs, fast 16th note hi-hats, wide stereo reverb, vibrant game soundtrack",
+            lyrics: "Sparkle chime intro, bass drum swell, euphoric synth lead breakdown, quiet chime end"
+          }
+        ]
       },
       chiptune_boss: {
         title: "Pixel Boss Confrontation",
-        prompt: "160 BPM, 16-bit RPG boss battle theme, rapid NES synth arpeggios, retro chiptune squarewave lead, energetic 8-bit drum beats, arcade video game soundtrack",
-        lyrics: "Retro start bell, fast pulse synth loop, intense boss phase transition, victory lock"
+        variations: [
+          {
+            prompt: "160 BPM, 16-bit RPG boss battle theme, rapid NES synth arpeggios, retro chiptune squarewave lead, energetic 8-bit drum beats, arcade video game soundtrack",
+            lyrics: "Retro start bell, fast pulse synth loop, intense boss phase transition, victory lock"
+          },
+          {
+            prompt: "165 BPM, Fast-paced 8-bit action soundtrack, heavy retro bass synth, dual square wave leads, frantic arcade drum fills, FM synth battle motif",
+            lyrics: "Arcade coin sound intro, hyper pulse bassline, dramatic boss phase shift, final hit victory flourish"
+          },
+          {
+            prompt: "158 BPM, Chiptune speed metal boss theme, distorted 8-bit synth guitar solo, fast double-bass retro percussion, Game Boy pulse generator, high tension",
+            lyrics: "Glitched pulse intro, rapid fire chiptune arpeggios, intense synth solo breakdown, boss defeat fade"
+          }
+        ]
       },
       anime_jrock: {
         title: "Subterranean Overdrive",
-        prompt: "180 BPM, fast anime J-Rock instrumental, hyperactive drum fills, heavy distorted guitar riff lead, keytar solo, tight electric slap bass, clean studio mix",
-        lyrics: "Dynamic drum fill intro, dual guitar breakdown, keytar duel, climax outro"
+        variations: [
+          {
+            prompt: "180 BPM, fast anime J-Rock instrumental, hyperactive drum fills, heavy distorted guitar riff lead, keytar solo, tight electric slap bass, clean studio mix",
+            lyrics: "Dynamic drum fill intro, dual guitar breakdown, keytar duel, climax outro"
+          },
+          {
+            prompt: "185 BPM, High-energy Anison opening theme, twin guitar harmony lead, driving double-bass drum beat, energetic slap bass solo, aggressive keytar accents",
+            lyrics: "Explosive guitar feedback start, fast verse drum groove, anthemic guitar lead chorus, sudden power stop"
+          },
+          {
+            prompt: "176 BPM, Melodic Japanese rock instrumental, soaring electric lead guitar, intricate basslines, rapid snare rolls, emotional anime climax sound",
+            lyrics: "Melodic guitar picking intro, crash cymbal hit, soaring lead guitar bridge, heavy distortion finale"
+          }
+        ]
       },
       lofi_hiphop: {
         title: "Sakura Dusk Coffee",
-        prompt: "85 BPM, chill lofi hip hop beat, warm vintage Rhodes piano chords, vinyl crackle atmosphere, smooth acoustic bassline, subtle jazz snare, relaxing study vibe",
-        lyrics: "Muffled intro, soft kick snare entrance, gentle piano melody swell, fade out"
+        variations: [
+          {
+            prompt: "85 BPM, chill lofi hip hop beat, warm vintage Rhodes piano chords, vinyl crackle atmosphere, smooth acoustic bassline, subtle jazz snare, relaxing study vibe",
+            lyrics: "Muffled intro, soft kick snare entrance, gentle piano melody swell, fade out"
+          },
+          {
+            prompt: "88 BPM, Rain night lofi instrumental, dusty sp1200 drum bounce, muted electric piano, tape hiss texture, jazzy saxophone motif, nostalgic night atmosphere",
+            lyrics: "Vinyl needle drop, gentle rain ambience, relaxing piano chords, soft tape stop"
+          },
+          {
+            prompt: "82 BPM, Cozy sunset lofi beat, warm synth pad swell, clean jazz guitar arpeggio, subtle rimshot drums, calm study beat, peaceful mood",
+            lyrics: "Soft acoustic guitar intro, subtle boom-bap drum entry, dreamy pad breakdown, slow fade out"
+          }
+        ]
       },
       city_pop: {
         title: "Tokyo Midnight Cruise",
-        prompt: "115 BPM, 80s Japanese City Pop instrumental, funky slap bassline, brass horns section, clean rhythm electric guitar, glossy chorus synth, retro funk",
-        lyrics: "Brass section fanfare, groovy funk bassline entrance, smooth saxophone bridge"
+        variations: [
+          {
+            prompt: "115 BPM, 80s Japanese City Pop instrumental, funky slap bassline, brass horns section, clean rhythm electric guitar, glossy chorus synth, retro funk",
+            lyrics: "Brass section fanfare, groovy funk bassline entrance, smooth saxophone bridge"
+          },
+          {
+            prompt: "118 BPM, Sparkling Tokyo night city pop, driving funk bass, disco drum groove, bright synthesizer chords, retro electric guitar strumming, nostalgic 1980s vibe",
+            lyrics: "Groovy bass riff start, clean guitar rhythm hit, synth horn section drop, extended bass funk outro"
+          },
+          {
+            prompt: "112 BPM, Late night Japanese funk fusion, prominent slap bass, smooth Fender Rhodes, brass accents, tight disco snare, driving expressway soundtrack",
+            lyrics: "Engine rev soundscape, tight drum groove, saxophone and synth duel, smooth groove fade"
+          }
+        ]
       },
       heavy_metal: {
         title: "Thunderbolt Shredder",
-        prompt: "175 BPM, heavy thrash metal instrumental, fast double-bass drum pedal, aggressive distorted guitar shredding, heavy bass riff, high intensity",
-        lyrics: "Aggressive drum roll intro, guitar shredding solo, thunderous rhythm section"
+        variations: [
+          {
+            prompt: "175 BPM, heavy thrash metal instrumental, fast double-bass drum pedal, aggressive distorted guitar shredding, heavy bass riff, high intensity",
+            lyrics: "Aggressive drum roll intro, guitar shredding solo, thunderous rhythm section"
+          },
+          {
+            prompt: "180 BPM, Speed metal frenzy, dual guitar sweep picking solo, thunderous kick drum barrage, heavy drop-tuned rhythm guitars, adrenaline pumping",
+            lyrics: "Guitar feedback swell, rapid fire double bass blast, neoclassical guitar solo, heavy power chord hit"
+          },
+          {
+            prompt: "170 BPM, Symphonic heavy metal, distorted rhythm guitars, epic orchestral brass and string backing, aggressive drum breakdown, dark cinematic metal",
+            lyrics: "Dramatic orchestral strings start, explosive guitar riff entry, heavy breakdown beat, epic crescendo end"
+          }
+        ]
       },
       cyberpunk_synth: {
         title: "Neon District Highway",
-        prompt: "120 BPM, retro 80s synthwave, driving analog sawtooth bass, neon synth lead, gated reverb drums, cyberpunk cityscape atmosphere, synthpop instrumental",
-        lyrics: "Pulsing synth bass start, synth arpeggio build, energetic chorus synth drop"
+        variations: [
+          {
+            prompt: "120 BPM, retro 80s synthwave, driving analog sawtooth bass, neon synth lead, gated reverb drums, cyberpunk cityscape atmosphere, synthpop instrumental",
+            lyrics: "Pulsing synth bass start, synth arpeggio build, energetic chorus synth drop"
+          },
+          {
+            prompt: "124 BPM, Dark cyberpunk outrun, heavy darksynth bassline, industrial cyber drums, glowing neon synth lead, cinematic futuristic chase theme",
+            lyrics: "Distorted bass pulse intro, rising cyber synth riser, aggressive synthwave drop, glitchy cyber fade"
+          },
+          {
+            prompt: "118 BPM, Chill synthwave retrowave, warm analog synth pads, nostalgic lead synth melody, gated snare drum pattern, 80s sci-fi atmosphere",
+            lyrics: "Ambient synth pad swell, retro drum machine entrance, nostalgic synth melody breakdown, slow fade out"
+          }
+        ]
       },
       ambient_postrock: {
         title: "Echoes Above Clouds",
-        prompt: "100 BPM, atmospheric post-rock instrumental, shimmering delay acoustic guitars, swell ambient pads, slow building dynamic drums, emotional soundscape",
-        lyrics: "Gentle acoustic guitar picking, ambient pad swell, crescendo drum entrance"
+        variations: [
+          {
+            prompt: "100 BPM, atmospheric post-rock instrumental, shimmering delay acoustic guitars, swell ambient pads, slow building dynamic drums, emotional soundscape",
+            lyrics: "Gentle acoustic guitar picking, ambient pad swell, crescendo drum entrance"
+          },
+          {
+            prompt: "105 BPM, Cinematic post-rock crescendo, layered tremolo electric guitars, deep resonant bass, thunderous drum climax, spacey delay effects",
+            lyrics: "Soft delay guitar intro, gradual drum swelling, wall-of-sound guitar explosion, quiet ambient reverb tail"
+          },
+          {
+            prompt: "95 BPM, Ethereal ambient post-rock, shimmering guitar swells, soft acoustic piano, subtle brush drum pattern, emotional and reflective soundscape",
+            lyrics: "Piano note intro, atmospheric reverb swell, emotional guitar arc, lingering piano decay"
+          }
+        ]
+      },
+      eurobeat_speed: {
+        title: "Super Euro Initial Drift",
+        variations: [
+          {
+            prompt: "165 BPM, High-energy Eurobeat instrumental, fast brassy synth leads, driving 4-on-the-floor Eurobeat drums, aggressive synth bassline, Japanese anime racing soundtrack",
+            lyrics: "Brassy synth riff intro, fast hi-hat roll, explosive Eurobeat chorus synth drop, tire squeal outro"
+          },
+          {
+            prompt: "168 BPM, Hyper Eurobeat speed, rapid synth lead arpeggios, heavy Eurobeat kick drum, energetic octave synth bass, intense mountain drift vibe",
+            lyrics: "Fast synth sequence start, rising snare roll, intense Eurobeat drop, energetic synth bridge"
+          }
+        ]
+      },
+      hardstyle_dance: {
+        title: "Neon Hardstyle Bounce",
+        variations: [
+          {
+            prompt: "155 BPM, Fast Hardstyle instrumental, heavy distorted reverse bass kick, soaring euphoric hardstyle synth lead, epic festival build-up and breakdown",
+            lyrics: "Euphoric melody lead intro, tick-tock build up riser, massive distorted hardstyle kick drop, melodic outro"
+          },
+          {
+            prompt: "158 BPM, Raw hardstyle bounce, heavy crunchy kick bass, screaming screecher synths, hyper energetic rhythm, festival rave soundtrack",
+            lyrics: "Gated kick intro, screech synth build, explosive raw hardstyle kick barrage, quick reverb fade"
+          }
+        ]
+      },
+      outrun_synth: {
+        title: "Synthwave Sunset Drive",
+        variations: [
+          {
+            prompt: "128 BPM, Retro Outrun synthwave, driving octave synth bass, glossy 80s lead synth, LinnDrum snare, nostalgic sunset highway drive",
+            lyrics: "Pulsing octave bass intro, drum fill hit, soaring outrun lead synth melody, retro fade out"
+          },
+          {
+            prompt: "125 BPM, Neon Outrun electronic, heavy analog synth bass, shimmering arp sequences, 80s drum machine groove, cyberpunk coastal vibe",
+            lyrics: "Synth arpeggio start, punchy kick snare entry, vibrant synth lead hook, slow tape stop"
+          }
+        ]
+      },
+      acoustic_unplugged: {
+        title: "Sakura Acoustic Unplugged",
+        variations: [
+          {
+            prompt: "95 BPM, Intimate unplugged acoustic guitar duo, warm wood body resonance, soft fingerstyle picking, subtle cajon percussion, gentle acoustic bass",
+            lyrics: "Soft fingerpicking guitar intro, gentle cajon entry, expressive acoustic guitar solo breakdown, quiet harmonic strum end"
+          },
+          {
+            prompt: "90 BPM, Pure acoustic folk instrumental, dual acoustic guitars, warm string strums, clean acoustic bass, relaxed organic sound",
+            lyrics: "Warm acoustic guitar strum intro, subtle bass entrance, melodic acoustic lead bridge, soft guitar fade"
+          }
+        ]
       }
     };
 
     let selectedStackPresets = new Set();
+    const presetVariationIndices = {};
 
     function handlePresetClick(presetKey, btnEl) {
       if (selectedStackPresets.has(presetKey)) {
@@ -1971,11 +2169,20 @@
       let lastTitle = "Hybrid Composition";
 
       selectedStackPresets.forEach(key => {
-        const p = FULL_STYLE_PRESETS[key];
-        if (p) {
-          combinedPrompts.push(p.prompt);
-          combinedArrangements.push(p.lyrics);
-          lastTitle = p.title;
+        const presetObj = FULL_STYLE_PRESETS[key];
+        if (presetObj) {
+          const variations = presetObj.variations || [presetObj];
+          
+          if (presetVariationIndices[key] === undefined) {
+            presetVariationIndices[key] = 0;
+          } else {
+            presetVariationIndices[key] = (presetVariationIndices[key] + 1) % variations.length;
+          }
+          
+          const currentVar = variations[presetVariationIndices[key]];
+          combinedPrompts.push(currentVar.prompt);
+          combinedArrangements.push(currentVar.lyrics);
+          lastTitle = presetObj.title || currentVar.title;
         }
       });
 
@@ -2241,37 +2448,35 @@
           card.className = `track-card ${isPlaying ? 'active-playing' : ''}`;
           
           card.innerHTML = `
-            <div class="track-top-row">
-              <div class="track-player-controls">
-                <button class="play-btn-circle" onclick="sunoStudio.togglePlayTrack(${globalIdx})">
-                  ${isPlaying ? '⏸' : '▶'}
-                </button>
-              </div>
+            <div class="track-header-row">
+              <button class="play-btn-circle" onclick="sunoStudio.togglePlayTrack(${globalIdx})">
+                ${isPlaying ? '⏸' : '▶'}
+              </button>
 
-              <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="track-title-info">
+                <div class="track-title-line">
                   <span style="font-family: monospace; font-size: 0.75rem; color: var(--accent-pink); font-weight: 900;">#${this.playlist.length - globalIdx}</span>
-                  <strong style="color: #fff; font-size: 1.05rem;">🎵 ${track.title}</strong>
-                  ${track.isSeamlessTrimmed ? '<span style="font-size:0.68rem; background:rgba(0,240,255,0.2); color:var(--accent-cyan); border:1px solid var(--accent-cyan); padding:2px 6px; border-radius:6px; font-weight:800;">🔁 0.5s Seamless Loop</span>' : ''}
+                  <span class="track-title-text">🎵 ${track.title}</span>
+                  ${track.isSeamlessTrimmed ? '<span style="font-size:0.68rem; background:rgba(0,240,255,0.2); color:var(--accent-cyan); border:1px solid var(--accent-cyan); padding:2px 6px; border-radius:6px; font-weight:800; white-space:nowrap;">🔁 0.5s Seamless Loop</span>' : ''}
                 </div>
-                <div style="font-size: 0.8rem; color: var(--accent-cyan); margin-top: 4px;">
+                <div class="track-meta-details">
                   Style: ${track.prompt} • 🎸 Hi-Fi Instrumental • ${track.duration}s Cut • ${track.timestamp}
                 </div>
               </div>
+            </div>
 
-              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <button class="vote-btn" style="padding: 6px 10px; font-size: 0.75rem;" onclick="sunoStudio.toggleTrackLoop(${globalIdx})">
-                  ${track.isLooping ? '🔁 Loop On' : '🔁 Loop Off'}
-                </button>
-                <button class="vote-btn" style="padding: 6px 10px; font-size: 0.75rem;" onclick="sunoStudio.downloadTrackStems('${track.id}', '${track.title}')">
-                  🎼 Stems
-                </button>
-                <button class="vote-btn" style="padding: 6px 10px; font-size: 0.75rem;" onclick="sunoStudio.exportTrackMetadata(${globalIdx})">
-                  📄 Export .JSON
-                </button>
-                <a href="${track.audioUrl}" download="${track.title}.wav" class="vote-btn" style="background:var(--accent-green); border-color:var(--accent-green); color:#000; text-decoration:none; display:inline-block; padding: 6px 12px; font-size:0.78rem;">💾 WAV</a>
-                <button class="delete-btn-card" onclick="sunoStudio.deleteTrack('${track.id}')">🗑️ Delete</button>
-              </div>
+            <div class="track-actions-row">
+              <button class="vote-btn" style="padding: 6px 10px; font-size: 0.75rem;" onclick="sunoStudio.toggleTrackLoop(${globalIdx})">
+                ${track.isLooping ? '🔁 Loop On' : '🔁 Loop Off'}
+              </button>
+              <button class="vote-btn" style="padding: 6px 10px; font-size: 0.75rem;" onclick="sunoStudio.downloadTrackStems('${track.id}', '${track.title}')">
+                🎼 Stems
+              </button>
+              <button class="vote-btn" style="padding: 6px 10px; font-size: 0.75rem;" onclick="sunoStudio.exportTrackMetadata(${globalIdx})">
+                📄 Export .JSON
+              </button>
+              <a href="${track.audioUrl}" download="${track.title}.wav" class="vote-btn" style="background:var(--accent-green); border-color:var(--accent-green); color:#000; text-decoration:none; display:inline-block; padding: 6px 12px; font-size:0.78rem;">💾 WAV</a>
+              <button class="delete-btn-card" onclick="sunoStudio.deleteTrack('${track.id}')">🗑️ Delete</button>
             </div>
 
             <!-- Waveform Canvas Player with Hover Time Tooltip -->
