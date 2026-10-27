@@ -1152,441 +1152,450 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- 🎸 SUB-TAB 2: CORE FOUR, FAMILIARS & RELATIONSHIP MATRIX     -->
+<!-- 🎸 SUB-TAB 2: CORE FOUR, FAMILIARS & RELATIONSHIP MATRIX     -->
+<!-- ============================================================ -->
+<div id="tab-characters" class="tab-content">
+  <section>
+    <h2>The People, Familiars & Ancestral Lineages</h2>
+    <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">
+      Operational dossiers, spirit bond mechanics, human lineages, and ancient familiar species records across centuries of Valley history:
+    </p>
+
     <!-- ============================================================ -->
-    <div id="tab-characters" class="tab-content">
-      <section>
-        <h2>The People, Familiars & Ancestral Lineages</h2>
-        <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">
-          Operational dossiers, spirit bond mechanics, human lineages, and ancient familiar species records across centuries of Valley history:
-        </p>
-
-        <!-- ============================================================ -->
-        <!-- 📜 MULTI-CHART INTERACTIVE HUD GALLERY & ZOOM VIEWPORT       -->
-        <!-- ============================================================ -->
-        <div style="background: var(--card-bg); border: 1.5px solid var(--accent-cyan); border-radius: 18px; padding: 22px; margin-bottom: 2.5rem; box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);">
-          
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem;">
-            <div>
-              <h3 style="color: var(--accent-cyan); font-size: 1.3rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);">
-                📜 Interactive Lore HUD Charts & Ancestral Archives
-              </h3>
-              <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
-                Select a tactical HUD chart below to inspect lineage webs, primordial beasts, and relationship matrices:
-              </p>
-            </div>
-            
-            <!-- Zoom Controls -->
-            <div style="display: flex; gap: 8px;">
-              <button onclick="zoomLoreChart(1.2)" style="background: rgba(0, 240, 255, 0.15); border: 1px solid var(--accent-cyan); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔍 Zoom In (+)</button>
-              <button onclick="zoomLoreChart(0.8)" style="background: rgba(0, 240, 255, 0.15); border: 1px solid var(--accent-cyan); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔍 Zoom Out (-)</button>
-              <button onclick="resetLoreChartZoom()" style="background: rgba(255, 0, 127, 0.2); border: 1px solid var(--accent-pink); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔄 Reset</button>
-            </div>
-          </div>
-
-          <!-- Chart Selector Buttons -->
-          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.2rem;">
-            <button class="chart-select-btn active" id="chart-btn-matrix" onclick="selectLoreChart('matrix')" style="background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); color: #fff; border: 1px solid var(--accent-pink); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; box-shadow: 0 0 12px var(--accent-glow);">
-              💖 Modern Relationship Matrix
-            </button>
-            <button class="chart-select-btn" id="chart-btn-ancestry" onclick="selectLoreChart('ancestry')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
-              ⛩️ Ancient Human Ancestry Tree
-            </button>
-            <button class="chart-select-btn" id="chart-btn-familiars" onclick="selectLoreChart('familiars')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
-              🐾 Ancient Familiars Spirit Lineage
-            </button>
-            <button class="chart-select-btn" id="chart-btn-bestiary" onclick="selectLoreChart('bestiary')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
-              📜 Ancient Familiars Bestiary Showcase
-            </button>
-          </div>
-
-          <!-- Active Viewport Canvas Box -->
-          <div style="position: relative; background: #030108; border-radius: 14px; border: 1px solid var(--accent-cyan); overflow: hidden; height: 520px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);">
-            
-            <div id="chart-image-viewport" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; transition: transform 0.25s ease; transform-origin: center center;">
-              <img id="lore-chart-img" src="assets/matrix-tree.jpg" alt="Active Lore Chart" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="handleChartImageError(this)">
-              
-              <!-- Fallback Notice -->
-              <div id="chart-fallback-notice" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center;">
-                <span style="font-size: 2rem; margin-bottom: 8px;">📷</span>
-                <span id="fallback-img-name" style="font-size: 0.95rem; font-weight: bold; color: var(--accent-pink);">[IMAGE PLACEHOLDER: assets/matrix-tree.jpg]</span>
-                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;">
-                  Place your generated high-resolution Leonardo artwork into the <strong>assets/</strong> folder to display the full HD visual chart!
-                </p>
-              </div>
-            </div>
-
-            <!-- Floating Overlay Tag -->
-            <div id="chart-info-tag" style="position: absolute; bottom: 12px; left: 12px; background: rgba(4, 2, 9, 0.88); border: 1px solid var(--accent-cyan); padding: 6px 14px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.78rem; color: var(--accent-cyan); backdrop-filter: blur(8px);">
-              ACTIVE HUD: MASTER RELATIONSHIP MATRIX // FREQ: 528Hz
-            </div>
-
-          </div>
-        </div>
-
-        <!-- SECTION A: CORE FOUR DOSSIERS & 3D FLIP CARDS -->
-        <h3 class="sub-heading">🎸 The Core Four & Present Celestial Familiars</h3>
-        <p style="margin-bottom: 1rem; color: var(--accent-pink); font-size: 0.85rem; font-weight: bold;">
-          ⚡ [Click any character card below to flip over and reveal their artwork portrait!]
-        </p>
-
-        <style>
-          /* 3D FLIP CARD CONTAINER STYLES */
-          .flip-card-container {
-            perspective: 1000px;
-            min-height: 480px;
-            cursor: pointer;
-          }
-
-          .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-            transform-style: preserve-3d;
-          }
-
-          .flip-card-container.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-          }
-
-          .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 16px;
-            overflow: hidden;
-          }
-
-          .flip-card-front {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-          }
-
-          .flip-card-back {
-            background: #030108;
-            border: 1.5px solid var(--accent-cyan);
-            transform: rotateY(180deg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-          }
-
-          .portrait-crop-frame {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            position: relative;
-          }
-
-          .portrait-crop-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-
-          .flip-overlay-btn {
-            position: absolute;
-            bottom: 12px;
-            background: rgba(4, 2, 9, 0.88);
-            border: 1px solid var(--accent-pink);
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 800;
-            box-shadow: 0 0 12px var(--accent-glow);
-            pointer-events: none;
-          }
-        </style>
-
-        <div class="character-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
-          
-          <!-- SERA HANIBARA (FLIP CARD) -->
-          <div class="flip-card-container" onclick="toggleCardFlip(this)">
-            <div class="flip-card-inner">
-              <!-- Front Side -->
-              <div class="flip-card-front" style="border-top: 4px solid var(--accent-pink);">
-                <div>
-                  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div class="char-name" style="color: var(--accent-pink);">Sera Hanibara</div>
-                    <span style="font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0,240,255,0.1); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--accent-cyan);">🔄 Flip</span>
-                  </div>
-                  <div class="char-role">The Sun Voice • Lead Synth & Keytar</div>
-                  <div class="familiar-tag" style="background: rgba(255, 183, 197, 0.2); border-color: var(--accent-pink); color: #fff;">
-                    ✦ Familiar: Byakko (White Celestial Fox)
-                  </div>
-                  <p class="char-desc"><strong>Title:</strong> The Blushing Sunlight / Light Harmony • Class 3-A</p>
-                  <p class="char-desc"><strong>Aura Wavelength:</strong> Shimmering Rose-Gold Morning Light (440Hz / #FFB7C5)</p>
-                  <p class="char-desc"><strong>Visuals:</strong> Short pastel-pink hair with white tip highlights, warm pink eyes, expressive cat-eared hair-ribbons.</p>
-                  <p class="char-desc"><strong>Personality & Arc:</strong> Gentle, deeply empathetic, and polite. Prefers staying unnoticed, yet her raw musical vulnerability triggers the first unbound resonance bloom.</p>
-                </div>
-                <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.85rem; border-left: 3px solid var(--accent-pink);">
-                  <strong>Familiar Synergy (Byakko):</strong> A compact celestial white fox spirit that manifests in soft light bursts.
-                </div>
-              </div>
-              <!-- Back Side (Cropped Portrait) -->
-              <div class="flip-card-back" style="border-color: var(--accent-pink);">
-                <div class="portrait-crop-frame">
-                  <img src="assets/matrix-tree.jpg" alt="Sera & Byakko Portrait" style="object-position: 25% 25%; scale: 2.2;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div style="display:none; width:100%; height:100%; align-items:center; justify-content:center; color:var(--accent-pink); font-weight:bold; padding:20px; text-align:center;">
-                    📷 [PORTRAIT: Sera & Byakko]
-                  </div>
-                </div>
-                <div class="flip-overlay-btn">🔄 Click to Flip Back</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- NEKOMI AOYAMA (FLIP CARD) -->
-          <div class="flip-card-container" onclick="toggleCardFlip(this)">
-            <div class="flip-card-inner">
-              <!-- Front Side -->
-              <div class="flip-card-front" style="border-top: 4px solid var(--accent-purple);">
-                <div>
-                  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div class="char-name" style="color: #b57edc;">Nekomi Aoyama</div>
-                    <span style="font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0,240,255,0.1); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--accent-cyan);">🔄 Flip</span>
-                  </div>
-                  <div class="char-role">The Moon Voice • Lead Electric Guitar</div>
-                  <div class="familiar-tag" style="background: rgba(138, 43, 226, 0.25); border-color: var(--accent-purple); color: var(--accent-gold);">
-                    ✦ Familiar: Yozora (Crescent Black Cat)
-                  </div>
-                  <p class="char-desc"><strong>Title:</strong> The Moonlit Echo / Emotional Anchor • Class 3-A</p>
-                  <p class="char-desc"><strong>Aura Wavelength:</strong> Reflective Violet Moonlight (320Hz / #8A2BE2)</p>
-                  <p class="char-desc"><strong>Visuals:</strong> Long flowing lavender hair with electric-blue bangs, dark violet eyes, cool rockstar uniform.</p>
-                  <p class="char-desc"><strong>Personality & Arc:</strong> Projects a sharp-tongued, detached rockstar persona, but harbors internal panic whenever Sera smiles directly at her.</p>
-                </div>
-                <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.85rem; border-left: 3px solid var(--accent-purple);">
-                  <strong>Familiar Synergy (Yozora):</strong> Sleek black cat spirit with glowing sapphire eyes and shadow cloak fields.
-                </div>
-              </div>
-              <!-- Back Side (Cropped Portrait) -->
-              <div class="flip-card-back" style="border-color: var(--accent-purple);">
-                <div class="portrait-crop-frame">
-                  <img src="assets/matrix-tree.jpg" alt="Nekomi & Yozora Portrait" style="object-position: 65% 25%; scale: 2.2;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div style="display:none; width:100%; height:100%; align-items:center; justify-content:center; color:var(--accent-purple); font-weight:bold; padding:20px; text-align:center;">
-                    📷 [PORTRAIT: Nekomi & Yozora]
-                  </div>
-                </div>
-                <div class="flip-overlay-btn">🔄 Click to Flip Back</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- AKARI MINASE (FLIP CARD) -->
-          <div class="flip-card-container" onclick="toggleCardFlip(this)">
-            <div class="flip-card-inner">
-              <!-- Front Side -->
-              <div class="flip-card-front" style="border-top: 4px solid #ff4500;">
-                <div>
-                  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div class="char-name" style="color: #ff6b4a;">Akari Minase</div>
-                    <span style="font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0,240,255,0.1); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--accent-cyan);">🔄 Flip</span>
-                  </div>
-                  <div class="char-role">The Flame Pulse • Vocal Anchor & Drums</div>
-                  <div class="familiar-tag" style="background: rgba(255, 69, 0, 0.25); border-color: #ff4500; color: #fff;">
-                    ✦ Familiar: Kagerou (Ember Marten)
-                  </div>
-                  <p class="char-desc"><strong>Title:</strong> The Scarlet Tempest / Tempo Ignition • Class 3-A</p>
-                  <p class="char-desc"><strong>Aura Wavelength:</strong> Roaring Crimson Fire (180 BPM / #FF4500)</p>
-                  <p class="char-desc"><strong>Visuals:</strong> High-energy red ponytail, flaming red eyes, iconic red cardigan slouched off shoulder.</p>
-                  <p class="char-desc"><strong>Personality & Arc:</strong> Hyperactive, chaotic, and fiercely loyal. Treats every practice like a sold-out stadium tour.</p>
-                </div>
-                <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.85rem; border-left: 3px solid #ff4500;">
-                  <strong>Familiar Synergy (Kagerou):</strong> Hyperkinetic ember marten infusing drum strikes with explosive shockwaves.
-                </div>
-              </div>
-              <!-- Back Side (Cropped Portrait) -->
-              <div class="flip-card-back" style="border-color: #ff4500;">
-                <div class="portrait-crop-frame">
-                  <img src="assets/matrix-tree.jpg" alt="Akari & Kagerou Portrait" style="object-position: 25% 70%; scale: 2.2;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div style="display:none; width:100%; height:100%; align-items:center; justify-content:center; color:#ff4500; font-weight:bold; padding:20px; text-align:center;">
-                    📷 [PORTRAIT: Akari & Kagerou]
-                  </div>
-                </div>
-                <div class="flip-overlay-btn">🔄 Click to Flip Back</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- AOI MIZUHARA (FLIP CARD) -->
-          <div class="flip-card-container" onclick="toggleCardFlip(this)">
-            <div class="flip-card-inner">
-              <!-- Front Side -->
-              <div class="flip-card-front" style="border-top: 4px solid var(--accent-cyan);">
-                <div>
-                  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div class="char-name" style="color: var(--accent-cyan);">Aoi Mizuhara</div>
-                    <span style="font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0,240,255,0.1); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--accent-cyan);">🔄 Flip</span>
-                  </div>
-                  <div class="char-role">The Grounding Voice • Bass & Master Strategist</div>
-                  <div class="familiar-tag" style="background: rgba(0, 240, 255, 0.2); border-color: var(--accent-cyan); color: #fff;">
-                    ✦ Familiar: Komorebi (Tanuki Spirit)
-                  </div>
-                  <p class="char-desc"><strong>Title:</strong> The Celestial Grounding / Earth Heart • Class 3-A</p>
-                  <p class="char-desc"><strong>Aura Wavelength:</strong> Deep Mossy Teal & Indigo Field (528Hz / #008080)</p>
-                  <p class="char-desc"><strong>Visuals:</strong> Neat dark navy hair with star clips, wire-rimmed glasses, pristine uniform fold.</p>
-                  <p class="char-desc"><strong>Personality & Arc:</strong> Parent figure of the band. Manages budgets, ticket slip drops, and tactical spreadsheets.</p>
-                </div>
-                <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.85rem; border-left: 3px solid var(--accent-cyan);">
-                  <strong>Familiar Synergy (Komorebi):</strong> Tanuki spirit with a brass lantern anchoring low bass notes into soil.
-                </div>
-              </div>
-              <!-- Back Side (Cropped Portrait) -->
-              <div class="flip-card-back" style="border-color: var(--accent-cyan);">
-                <div class="portrait-crop-frame">
-                  <img src="assets/matrix-tree.jpg" alt="Aoi & Komorebi Portrait" style="object-position: 65% 70%; scale: 2.2;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div style="display:none; width:100%; height:100%; align-items:center; justify-content:center; color:var(--accent-cyan); font-weight:bold; padding:20px; text-align:center;">
-                    📷 [PORTRAIT: Aoi & Komorebi]
-                  </div>
-                </div>
-                <div class="flip-overlay-btn">🔄 Click to Flip Back</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- SECTION B: ANCIENT HUMAN LINEAGE & SHRINE MAIDENS -->
-        <h3 class="sub-heading">⛩️ Section B: Ancient Human Lineage & Sacred Bell Keepers</h3>
-        <div style="background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 16px; padding: 22px; margin-bottom: 2.5rem;">
-          <p style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 1.2rem;">
-            Long before modern amplifiers and keytars existed, Sakuraoka Valley was guarded by generations of shrine maidens (miko) and acoustic bell caretakers who used ancient bronze bells to disperse emotional Dissonance:
+    <!-- 📜 MULTI-CHART INTERACTIVE HUD GALLERY & ZOOM VIEWPORT       -->
+    <!-- ============================================================ -->
+    <div style="background: var(--card-bg); border: 1.5px solid var(--accent-cyan); border-radius: 18px; padding: 22px; margin-bottom: 2.5rem; box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);">
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem;">
+        <div>
+          <h3 style="color: var(--accent-cyan); font-size: 1.3rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);">
+            📜 Interactive Lore HUD Charts & Ancestral Archives
+          </h3>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+            Select a tactical HUD chart below to inspect lineage webs, primordial beasts, and relationship matrices:
           </p>
+        </div>
+        
+        <!-- Zoom Controls -->
+        <div style="display: flex; gap: 8px;">
+          <button onclick="zoomLoreChart(1.2)" style="background: rgba(0, 240, 255, 0.15); border: 1px solid var(--accent-cyan); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔍 Zoom In (+)</button>
+          <button onclick="zoomLoreChart(0.8)" style="background: rgba(0, 240, 255, 0.15); border: 1px solid var(--accent-cyan); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔍 Zoom Out (-)</button>
+          <button onclick="resetLoreChartZoom()" style="background: rgba(255, 0, 127, 0.2); border: 1px solid var(--accent-pink); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔄 Reset</button>
+        </div>
+      </div>
+
+      <!-- Chart Selector Buttons -->
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.2rem;">
+        <button class="chart-select-btn active" id="chart-btn-matrix" onclick="selectLoreChart('matrix')" style="background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); color: #fff; border: 1px solid var(--accent-pink); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; box-shadow: 0 0 12px var(--accent-glow);">
+          💖 Modern Relationship Matrix
+        </button>
+        <button class="chart-select-btn" id="chart-btn-ancestry" onclick="selectLoreChart('ancestry')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
+          ⛩️ Ancient Human Ancestry Tree
+        </button>
+        <button class="chart-select-btn" id="chart-btn-familiars" onclick="selectLoreChart('familiars')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
+          🐾 Ancient Familiars Spirit Lineage
+        </button>
+        <button class="chart-select-btn" id="chart-btn-bestiary" onclick="selectLoreChart('bestiary')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
+          📜 Ancient Familiars Bestiary Showcase
+        </button>
+      </div>
+
+      <!-- Active Viewport Canvas Box -->
+      <div style="position: relative; background: #030108; border-radius: 14px; border: 1px solid var(--accent-cyan); overflow: hidden; height: 520px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);">
+        
+        <div id="chart-image-viewport" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; transition: transform 0.25s ease; transform-origin: center center;">
+          <img id="lore-chart-img" src="assets/matrix-tree.jpg" alt="Active Lore Chart" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="handleChartImageError(this)">
           
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
-            
-            <div style="background: #030108; border-left: 4px solid var(--accent-gold); padding: 14px; border-radius: 8px;">
-              <strong style="color: var(--accent-gold); font-size: 1rem;">🌸 Hime no Miya (First Voice of the Valley)</strong>
-              <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-main);">
-                <strong>Era:</strong> Ancient Mythic Origin Era.<br>
-                The legendary maiden who first bound the primordial spirit beasts to human hearts. Her sacred chants created the original acoustic barrier around Sakuraoka Valley.
-              </p>
-            </div>
-
-            <div style="background: #030108; border-left: 4px solid var(--accent-pink); padding: 14px; border-radius: 8px;">
-              <strong style="color: var(--accent-pink); font-size: 1rem;">🔔 Kagura Hime (Keeper of the Bronze Bells)</strong>
-              <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-main);">
-                <strong>Era:</strong> Heian / Kamakura Era Custodian.<br>
-                Forged the ancient Bronze Bells of Harmony. Her ritual dances converted human sorrow into pure acoustic waves, keeping the valley's soil fertile and static-free.
-              </p>
-            </div>
-
-            <div style="background: #030108; border-left: 4px solid var(--accent-purple); padding: 14px; border-radius: 8px;">
-              <strong style="color: var(--accent-purple); font-size: 1rem;">📚 Historical Custodians & Eras</strong>
-              <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-main);">
-                <strong>Timeline:</strong> Muromachi, Edo, Meiji, Taisho & Showa Eras.<br>
-                Scribes, bell-smiths, and spiritual mediums who maintained the acoustic resonance logs across centuries, eventually passing the lineage down to modern institutions like the Sakuraoka Academy Music Division and Mrs. Hanibara (City Library Archives).
-              </p>
-            </div>
-
+          <!-- Fallback Notice -->
+          <div id="chart-fallback-notice" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center;">
+            <span style="font-size: 2rem; margin-bottom: 8px;">📷</span>
+            <span id="fallback-img-name" style="font-size: 0.95rem; font-weight: bold; color: var(--accent-pink);">[IMAGE PLACEHOLDER: assets/matrix-tree.jpg]</span>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;">
+              Place your generated high-resolution artwork into the <strong>assets/</strong> folder to display the full HD visual chart!
+            </p>
           </div>
         </div>
 
-        <!-- SECTION C: ANCIENT PRIMORDIAL FAMILIARS & VARIETY TAXONOMY -->
-        <h3 class="sub-heading">🐾 Section C: Primordial Beast Gods & Familiar Species Taxonomy</h3>
-        <div style="background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 16px; padding: 22px; margin-bottom: 2.5rem;">
-          <p style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 1.2rem;">
-            The four familiars accompanying EchoHeart are actually compact spirit manifestations of ancient primordial god-beasts that have existed since the valley's formation:
-          </p>
-
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 1.5rem;">
-            
-            <!-- BYAKKO PRIMARCH -->
-            <div style="background: #030108; border-top: 3px solid #ffb7c5; padding: 14px; border-radius: 8px;">
-              <strong style="color: #ffb7c5; font-size: 1rem;">🦊 Ancient Byakko Primarch</strong>
-              <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
-                <strong>Form:</strong> Celestial Nine-Tailed White Fox God.<br>
-                Engulfed in rose-gold morning light flames and sacred shimenawa ropes. Sub-species variations include dual-tailed ethereal foxes, ember-red fox spirits, and stellar void fox cubs.
-              </p>
-            </div>
-
-            <!-- YOZORA PRIMARCH -->
-            <div style="background: #030108; border-top: 3px solid #8a2be2; padding: 14px; border-radius: 8px;">
-              <strong style="color: #8a2be2; font-size: 1rem;">🐈‍⬛ Ancient Yozora Primarch</strong>
-              <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
-                <strong>Form:</strong> Shadow Eclipse Panther Deity.<br>
-                Features glowing sapphire eyes and a brilliant crescent moon crest. Sub-species include crescent-marked shadow lynxes, spectral blue flame cats, and twin-tailed nekomata spirits.
-              </p>
-            </div>
-
-            <!-- KAGEROU PRIMARCH -->
-            <div style="background: #030108; border-top: 3px solid #ff4500; padding: 14px; border-radius: 8px;">
-              <strong style="color: #ff4500; font-size: 1rem;">🔥 Ancient Kagerou Primarch</strong>
-              <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
-                <strong>Form:</strong> Primordial Infernal Phoenix-Marten.<br>
-                Wrapped in solar crimson flames and crackling ember shockwaves. Sub-species include solar blaze ferrets, lightning-infused polecats, and magma-core ember runners.
-              </p>
-            </div>
-
-            <!-- KOMOREBI PRIMARCH -->
-            <div style="background: #030108; border-top: 3px solid #008080; padding: 14px; border-radius: 8px;">
-              <strong style="color: #00f0ff; font-size: 1rem;">🍃 Ancient Komorebi Primarch</strong>
-              <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
-                <strong>Form:</strong> Great Earth Guardian Tanuki Sage.<br>
-                Moss-covered giant spirit carrying a glowing bronze acoustic lantern. Sub-species include forest moss tanukis, bronze bell guardians, and stone-shield spirit cubs.
-              </p>
-            </div>
-
-          </div>
+        <!-- Floating Overlay Tag -->
+        <div id="chart-info-tag" style="position: absolute; bottom: 12px; left: 12px; background: rgba(4, 2, 9, 0.88); border: 1px solid var(--accent-cyan); padding: 6px 14px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.78rem; color: var(--accent-cyan); backdrop-filter: blur(8px);">
+          ACTIVE HUD: MASTER RELATIONSHIP MATRIX // FREQ: 528Hz
         </div>
 
-        <!-- SECTION D: COMPLETE SIDE CHARACTERS & FAMILY REGISTRY -->
-        <h3 class="sub-heading">👥 Complete Side Character, Student & Family Registry</h3>
-        <p style="margin-bottom: 1.2rem; color: var(--text-muted); font-size: 0.92rem;">
-          Comprehensive index of all students, faculty, targets, and family members mentioned across Book 1, story notes, and lore logs:
-        </p>
+      </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 2rem;">
-          
-          <!-- Target: Yumi -->
-          <div class="codex-item" style="border-left: 4px solid var(--accent-gold);">
-            <div class="codex-title" style="color: var(--accent-gold);">Yumi (Class 3-B)</div>
-            <div style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold; margin-bottom: 6px;">FIRST SAVED DISSONANCE TARGET</div>
-            <p style="font-size: 0.88rem; color: var(--text-main);">
-              The first student rescued by the band in the Sub-Stage basement. Her emotional recovery inspired the founding name <strong>EchoHeart</strong>.
-            </p>
-          </div>
+      <!-- Dedicated Hidden Containers for Image Preloading -->
+      <div style="display: none;">
+        <img src="assets/matrix-tree.jpg" alt="Master Relationship Matrix">
+        <img src="assets/ancestry-tree.jpg" alt="Ancient Human Ancestry Tree">
+        <img src="assets/familiars-genealogy.jpg" alt="Ancient Familiars Spirit Lineage">
+        <img src="assets/familiars-bestiary.jpg" alt="Ancient Familiars Bestiary Showcase">
+      </div>
 
-          <!-- Target: Maya Chiba -->
-          <div class="codex-item" style="border-left: 4px solid var(--accent-pink);">
-            <div class="codex-title" style="color: var(--accent-pink);">Maya Chiba (Class 3-C)</div>
-            <div style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold; margin-bottom: 6px;">CHAPTER 19 DISSONANCE TARGET</div>
-            <p style="font-size: 0.88rem; color: var(--text-main);">
-              Student council officer suffering from "Bureaucratic Freeze" Dissonance. Target of EchoHeart's 32% Resonance deployment in Chapter 19.
-            </p>
-          </div>
-
-          <!-- Relatives: Sera's Mother -->
-          <div class="codex-item" style="border-left: 4px solid var(--accent-cyan);">
-            <div class="codex-title" style="color: var(--accent-cyan);">Mrs. Hanibara (Sera's Mom)</div>
-            <div style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: bold; margin-bottom: 6px;">FAMILY / MORNING ROUTINE</div>
-            <p style="font-size: 0.88rem; color: var(--text-main);">
-              Caring but busy mother who runs Sera's forgotten bento box out to the front gate before rushing off to work at the library in Chapter 1.
-            </p>
-          </div>
-
-          <!-- Faculty / Advisors -->
-          <div class="codex-item" style="border-left: 4px solid var(--accent-purple);">
-            <div class="codex-title" style="color: var(--accent-purple);">Faculty Music Advisor</div>
-            <div style="font-size: 0.75rem; color: var(--accent-purple); font-weight: bold; margin-bottom: 6px;">SAKURAOKA ACADEMY STAFF</div>
-            <p style="font-size: 0.88rem; color: var(--text-main);">
-              Oversees the official Light Music Research Group. Kept completely in the dark regarding the Sub-Stage operations via Aoi's soft acoustic showcase filings.
-            </p>
-          </div>
-
-        </div>
-      </section>
     </div>
+
+    <!-- SECTION A: CORE FOUR DOSSIERS & 3D FLIP CARDS -->
+    <h3 class="sub-heading">🎸 The Core Four & Present Celestial Familiars</h3>
+    <p style="margin-bottom: 1rem; color: var(--accent-pink); font-size: 0.85rem; font-weight: bold;">
+      ⚡ [Click any character card below to flip over and reveal their artwork portrait!]
+    </p>
+
+    <style>
+      /* 3D FLIP CARD CONTAINER STYLES */
+      .flip-card-container {
+        perspective: 1000px;
+        min-height: 480px;
+        cursor: pointer;
+      }
+
+      .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        transform-style: preserve-3d;
+      }
+
+      .flip-card-container.flipped .flip-card-inner {
+        transform: rotateY(180deg);
+      }
+
+      .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .flip-card-front {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .flip-card-back {
+        background: #030108;
+        border: 1.5px solid var(--accent-cyan);
+        transform: rotateY(180deg);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .portrait-crop-frame {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .portrait-crop-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .flip-overlay-btn {
+        position: absolute;
+        bottom: 12px;
+        background: rgba(4, 2, 9, 0.88);
+        border: 1px solid var(--accent-pink);
+        color: #fff;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        box-shadow: 0 0 12px var(--accent-glow);
+        pointer-events: none;
+      }
+    </style>
+
+    <div class="character-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+      
+      <!-- SERA HANIBARA (FLIP CARD) -->
+      <div class="flip-card-container" onclick="toggleCardFlip(this)">
+        <div class="flip-card-inner">
+          <!-- Front Side -->
+          <div class="flip-card-front" style="border-top: 4px solid var(--accent-pink);">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="char-name" style="color: var(--accent-pink);">Sera Hanibara</div>
+                <span style="font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0,240,255,0.1); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--accent-cyan);">🔄 Flip</span>
+              </div>
+              <div class="char-role">The Sun Voice • Lead Synth & Keytar</div>
+              <div class="familiar-tag" style="background: rgba(255, 183, 197, 0.2); border-color: var(--accent-pink); color: #fff;">
+                ✦ Familiar: Byakko (White Celestial Fox)
+              </div>
+              <p class="char-desc"><strong>Title:</strong> The Blushing Sunlight / Light Harmony • Class 3-A</p>
+              <p class="char-desc"><strong>Aura Wavelength:</strong> Shimmering Rose-Gold Morning Light (440Hz / #FFB7C5)</p>
+              <p class="char-desc"><strong>Visuals:</strong> Short pastel-pink hair with white tip highlights, warm pink eyes, expressive cat-eared hair-ribbons.</p>
+              <p class="char-desc"><strong>Personality & Arc:</strong> Gentle, deeply empathetic, and polite. Prefers staying unnoticed, yet her raw musical vulnerability triggers the first unbound resonance bloom.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.85rem; border-left: 3px solid var(--accent-pink);">
+              <strong>Familiar Synergy (Byakko):</strong> A compact celestial white fox spirit that manifests in soft light bursts.
+            </div>
+          </div>
+          <!-- Back Side (Cropped Portrait) -->
+          <div class="flip-card-back" style="border-color: var(--accent-pink);">
+            <div class="portrait-crop-frame">
+              <img src="assets/matrix-tree.jpg" alt="Sera & Byakko Portrait" style="object-position: 25% 25%; scale: 2.2;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none; width:100%; height:100%; align-items:center; justify-content:center; color:var(--accent-pink); font-weight:bold; padding:20px; text-align:center;">
+                📷 [PORTRAIT: Sera & Byakko]
+              </div>
+            </div>
+            <div class="flip-overlay-btn">🔄 Click to Flip Back</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEKOMI AOYAMA (FLIP CARD) -->
+      <div class="flip-card-container" onclick="toggleCardFlip(this)">
+        <div class="flip-card-inner">
+          <!-- Front Side -->
+          <div class="flip-card-front" style="border-top: 4px solid var(--accent-purple);">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="char-name" style="color: #b57edc;">Nekomi Aoyama</div>
+                <span style="font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0,240,255,0.1); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--accent-cyan);">🔄 Flip</span>
+              </div>
+              <div class="char-role">The Moon Voice • Lead Electric Guitar</div>
+              <div class="familiar-tag" style="background: rgba(138, 43, 226, 0.25); border-color: var(--accent-purple); color: var(--accent-gold);">
+                ✦ Familiar: Yozora (Crescent Black Cat)
+              </div>
+              <p class="char-desc"><strong>Title:</strong> The Moonlit Echo / Emotional Anchor • Class 3-A</p>
+              <p class="char-desc"><strong>Aura Wavelength:</strong> Reflective Violet Moonlight (320Hz / #8A2BE2)</p>
+              <p class="char-desc"><strong>Visuals:</strong> Long flowing lavender hair with electric-blue bangs, dark violet eyes, cool rockstar uniform.</p>
+              <p class="char-desc"><strong>Personality & Arc:</strong> Projects a sharp-tongued, detached rockstar persona, but harbors internal panic whenever Sera smiles directly at her.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.85rem; border-left: 3px solid var(--accent-purple);">
+              <strong>Familiar Synergy (Yozora):</strong> Sleek black cat spirit with glowing sapphire eyes and shadow cloak fields.
+            </div>
+          </div>
+          <!-- Back Side (Cropped Portrait) -->
+          <div class="flip-card-back" style="border-color: var(--accent-purple);">
+            <div class="portrait-crop-frame">
+              <img src="assets/matrix-tree.jpg" alt="Nekomi & Yozora Portrait" style="object-position: 65% 25%; scale: 2.2;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none; width:100%; height:100%; align-items:center; justify-content:center; color:var(--accent-purple); font-weight:bold; padding:20px; text-align:center;">
+                📷 [PORTRAIT: Nekomi & Yozora]
+              </div>
+            </div>
+            <div class="flip-overlay-btn">🔄 Click to Flip Back</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AKARI MINASE (FLIP CARD) -->
+      <div class="flip-card-container" onclick="toggleCardFlip(this)">
+        <div class="flip-card-inner">
+          <!-- Front Side -->
+          <div class="flip-card-front" style="border-top: 4px solid #ff4500;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="char-name" style="color: #ff6b4a;">Akari Minase</div>
+                <span style="font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0,240,255,0.1); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--accent-cyan);">🔄 Flip</span>
+              </div>
+              <div class="char-role">The Flame Pulse • Vocal Anchor & Drums</div>
+              <div class="familiar-tag" style="background: rgba(255, 69, 0, 0.25); border-color: #ff4500; color: #fff;">
+                ✦ Familiar: Kagerou (Ember Marten)
+              </div>
+              <p class="char-desc"><strong>Title:</strong> The Scarlet Tempest / Tempo Ignition • Class 3-A</p>
+              <p class="char-desc"><strong>Aura Wavelength:</strong> Roaring Crimson Fire (180 BPM / #FF4500)</p>
+              <p class="char-desc"><strong>Visuals:</strong> High-energy red ponytail, flaming red eyes, iconic red cardigan slouched off shoulder.</p>
+              <p class="char-desc"><strong>Personality & Arc:</strong> Hyperactive, chaotic, and fiercely loyal. Treats every practice like a sold-out stadium tour.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.85rem; border-left: 3px solid #ff4500;">
+              <strong>Familiar Synergy (Kagerou):</strong> Hyperkinetic ember marten infusing drum strikes with explosive shockwaves.
+            </div>
+          </div>
+          <!-- Back Side (Cropped Portrait) -->
+          <div class="flip-card-back" style="border-color: #ff4500;">
+            <div class="portrait-crop-frame">
+              <img src="assets/matrix-tree.jpg" alt="Akari & Kagerou Portrait" style="object-position: 25% 70%; scale: 2.2;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none; width:100%; height:100%; align-items:center; justify-content:center; color:#ff4500; font-weight:bold; padding:20px; text-align:center;">
+                📷 [PORTRAIT: Akari & Kagerou]
+              </div>
+            </div>
+            <div class="flip-overlay-btn">🔄 Click to Flip Back</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AOI MIZUHARA (FLIP CARD) -->
+      <div class="flip-card-container" onclick="toggleCardFlip(this)">
+        <div class="flip-card-inner">
+          <!-- Front Side -->
+          <div class="flip-card-front" style="border-top: 4px solid var(--accent-cyan);">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="char-name" style="color: var(--accent-cyan);">Aoi Mizuhara</div>
+                <span style="font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0,240,255,0.1); padding: 2px 8px; border-radius: 10px; border: 1px solid var(--accent-cyan);">🔄 Flip</span>
+              </div>
+              <div class="char-role">The Grounding Voice • Bass & Master Strategist</div>
+              <div class="familiar-tag" style="background: rgba(0, 240, 255, 0.2); border-color: var(--accent-cyan); color: #fff;">
+                ✦ Familiar: Komorebi (Tanuki Spirit)
+              </div>
+              <p class="char-desc"><strong>Title:</strong> The Celestial Grounding / Earth Heart • Class 3-A</p>
+              <p class="char-desc"><strong>Aura Wavelength:</strong> Deep Mossy Teal & Indigo Field (528Hz / #008080)</p>
+              <p class="char-desc"><strong>Visuals:</strong> Neat dark navy hair with star clips, wire-rimmed glasses, pristine uniform fold.</p>
+              <p class="char-desc"><strong>Personality & Arc:</strong> Parent figure of the band. Manages budgets, ticket slip drops, and tactical spreadsheets.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.85rem; border-left: 3px solid var(--accent-cyan);">
+              <strong>Familiar Synergy (Komorebi):</strong> Tanuki spirit with a brass lantern anchoring low bass notes into soil.
+            </div>
+          </div>
+          <!-- Back Side (Cropped Portrait) -->
+          <div class="flip-card-back" style="border-color: var(--accent-cyan);">
+            <div class="portrait-crop-frame">
+              <img src="assets/matrix-tree.jpg" alt="Aoi & Komorebi Portrait" style="object-position: 65% 70%; scale: 2.2;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none; width:100%; height:100%; align-items:center; justify-content:center; color:var(--accent-cyan); font-weight:bold; padding:20px; text-align:center;">
+                📷 [PORTRAIT: Aoi & Komorebi]
+              </div>
+            </div>
+            <div class="flip-overlay-btn">🔄 Click to Flip Back</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SECTION B: ANCIENT HUMAN LINEAGE & SHRINE MAIDENS -->
+    <h3 class="sub-heading">⛩️ Section B: Ancient Human Lineage & Sacred Bell Keepers</h3>
+    <div style="background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 16px; padding: 22px; margin-bottom: 2.5rem;">
+      <p style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 1.2rem;">
+        Long before modern amplifiers and keytars existed, Sakuraoka Valley was guarded by generations of shrine maidens (miko) and acoustic bell caretakers who used ancient bronze bells to disperse emotional Dissonance:
+      </p>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+        
+        <div style="background: #030108; border-left: 4px solid var(--accent-gold); padding: 14px; border-radius: 8px;">
+          <strong style="color: var(--accent-gold); font-size: 1rem;">🌸 Hime no Miya (First Voice of the Valley)</strong>
+          <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-main);">
+            <strong>Era:</strong> Ancient Mythic Origin Era.<br>
+            The legendary maiden who first bound the primordial spirit beasts to human hearts. Her sacred chants created the original acoustic barrier around Sakuraoka Valley.
+          </p>
+        </div>
+
+        <div style="background: #030108; border-left: 4px solid var(--accent-pink); padding: 14px; border-radius: 8px;">
+          <strong style="color: var(--accent-pink); font-size: 1rem;">🔔 Kagura Hime (Keeper of the Bronze Bells)</strong>
+          <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-main);">
+            <strong>Era:</strong> Heian / Kamakura Era Custodian.<br>
+            Forged the ancient Bronze Bells of Harmony. Her ritual dances converted human sorrow into pure acoustic waves, keeping the valley's soil fertile and static-free.
+          </p>
+        </div>
+
+        <div style="background: #030108; border-left: 4px solid var(--accent-purple); padding: 14px; border-radius: 8px;">
+          <strong style="color: var(--accent-purple); font-size: 1rem;">📚 Historical Custodians & Eras</strong>
+          <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-main);">
+            <strong>Timeline:</strong> Muromachi, Edo, Meiji, Taisho & Showa Eras.<br>
+            Scribes, bell-smiths, and spiritual mediums who maintained the acoustic resonance logs across centuries, eventually passing the lineage down to modern institutions like the Sakuraoka Academy Music Division and Mrs. Hanibara (City Library Archives).
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION C: ANCIENT PRIMORDIAL FAMILIARS & VARIETY TAXONOMY -->
+    <h3 class="sub-heading">🐾 Section C: Primordial Beast Gods & Familiar Species Taxonomy</h3>
+    <div style="background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 16px; padding: 22px; margin-bottom: 2.5rem;">
+      <p style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 1.2rem;">
+        The four familiars accompanying EchoHeart are actually compact spirit manifestations of ancient primordial god-beasts that have existed since the valley's formation:
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 1.5rem;">
+        
+        <!-- BYAKKO PRIMARCH -->
+        <div style="background: #030108; border-top: 3px solid #ffb7c5; padding: 14px; border-radius: 8px;">
+          <strong style="color: #ffb7c5; font-size: 1rem;">🦊 Ancient Byakko Primarch</strong>
+          <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
+            <strong>Form:</strong> Celestial Nine-Tailed White Fox God.<br>
+            Engulfed in rose-gold morning light flames and sacred shimenawa ropes. Sub-species variations include dual-tailed ethereal foxes, ember-red fox spirits, and stellar void fox cubs.
+          </p>
+        </div>
+
+        <!-- YOZORA PRIMARCH -->
+        <div style="background: #030108; border-top: 3px solid #8a2be2; padding: 14px; border-radius: 8px;">
+          <strong style="color: #8a2be2; font-size: 1rem;">🐈‍⬛ Ancient Yozora Primarch</strong>
+          <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
+            <strong>Form:</strong> Shadow Eclipse Panther Deity.<br>
+            Features glowing sapphire eyes and a brilliant crescent moon crest. Sub-species include crescent-marked shadow lynxes, spectral blue flame cats, and twin-tailed nekomata spirits.
+          </p>
+        </div>
+
+        <!-- KAGEROU PRIMARCH -->
+        <div style="background: #030108; border-top: 3px solid #ff4500; padding: 14px; border-radius: 8px;">
+          <strong style="color: #ff4500; font-size: 1rem;">🔥 Ancient Kagerou Primarch</strong>
+          <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
+            <strong>Form:</strong> Primordial Infernal Phoenix-Marten.<br>
+            Wrapped in solar crimson flames and crackling ember shockwaves. Sub-species include solar blaze ferrets, lightning-infused polecats, and magma-core ember runners.
+          </p>
+        </div>
+
+        <!-- KOMOREBI PRIMARCH -->
+        <div style="background: #030108; border-top: 3px solid #008080; padding: 14px; border-radius: 8px;">
+          <strong style="color: #00f0ff; font-size: 1rem;">🍃 Ancient Komorebi Primarch</strong>
+          <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
+            <strong>Form:</strong> Great Earth Guardian Tanuki Sage.<br>
+            Moss-covered giant spirit carrying a glowing bronze acoustic lantern. Sub-species include forest moss tanukis, bronze bell guardians, and stone-shield spirit cubs.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION D: COMPLETE SIDE CHARACTERS & FAMILY REGISTRY -->
+    <h3 class="sub-heading">👥 Complete Side Character, Student & Family Registry</h3>
+    <p style="margin-bottom: 1.2rem; color: var(--text-muted); font-size: 0.92rem;">
+      Comprehensive index of all students, faculty, targets, and family members mentioned across Book 1, story notes, and lore logs:
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 2rem;">
+      
+      <!-- Target: Yumi -->
+      <div class="codex-item" style="border-left: 4px solid var(--accent-gold);">
+        <div class="codex-title" style="color: var(--accent-gold);">Yumi (Class 3-B)</div>
+        <div style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold; margin-bottom: 6px;">FIRST SAVED DISSONANCE TARGET</div>
+        <p style="font-size: 0.88rem; color: var(--text-main);">
+          The first student rescued by the band in the Sub-Stage basement. Her emotional recovery inspired the founding name <strong>EchoHeart</strong>.
+        </p>
+      </div>
+
+      <!-- Target: Maya Chiba -->
+      <div class="codex-item" style="border-left: 4px solid var(--accent-pink);">
+        <div class="codex-title" style="color: var(--accent-pink);">Maya Chiba (Class 3-C)</div>
+        <div style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold; margin-bottom: 6px;">CHAPTER 19 DISSONANCE TARGET</div>
+        <p style="font-size: 0.88rem; color: var(--text-main);">
+          Student council officer suffering from "Bureaucratic Freeze" Dissonance. Target of EchoHeart's 32% Resonance deployment in Chapter 19.
+        </p>
+      </div>
+
+      <!-- Relatives: Sera's Mother -->
+      <div class="codex-item" style="border-left: 4px solid var(--accent-cyan);">
+        <div class="codex-title" style="color: var(--accent-cyan);">Mrs. Hanibara (Sera's Mom)</div>
+        <div style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: bold; margin-bottom: 6px;">FAMILY / MORNING ROUTINE</div>
+        <p style="font-size: 0.88rem; color: var(--text-main);">
+          Caring but busy mother who runs Sera's forgotten bento box out to the front gate before rushing off to work at the library in Chapter 1.
+        </p>
+      </div>
+
+      <!-- Faculty / Advisors -->
+      <div class="codex-item" style="border-left: 4px solid var(--accent-purple);">
+        <div class="codex-title" style="color: var(--accent-purple);">Faculty Music Advisor</div>
+        <div style="font-size: 0.75rem; color: var(--accent-purple); font-weight: bold; margin-bottom: 6px;">SAKURAOKA ACADEMY STAFF</div>
+        <p style="font-size: 0.88rem; color: var(--text-main);">
+          Oversees the official Light Music Research Group. Kept completely in the dark regarding the Sub-Stage operations via Aoi's soft acoustic showcase filings.
+        </p>
+      </div>
+
+    </div>
+  </section>
+</div>
 
     <!-- SUB-TAB 3: SYSTEM MECHANICS -->
     <div id="tab-mechanics" class="tab-content">
