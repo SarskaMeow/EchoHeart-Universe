@@ -1151,7 +1151,7 @@
       </section>
     </div>
 
-   <!-- ============================================================ -->
+    <!-- ============================================================ -->
     <!-- 🎸 SUB-TAB 2: CORE FOUR, FAMILIARS & RELATIONSHIP MATRIX     -->
     <!-- ============================================================ -->
     <div id="tab-characters" class="tab-content">
@@ -1762,7 +1762,7 @@
         log: "<strong>[NEKOMI'S NOTEBOOK]:</strong> \"Sera got strawberry cream on her cheek while we were going over the setlist. I looked away fast toward the neon lights so she wouldn't see me completely lose my cool.\""
       },
       rooftop: {
-        title: "🌇 Academy Rooftop Observation Deck",
+        title: "LO Academy Rooftop Observation Deck",
         meta: "SECTOR 05 • High-Altitude Perimeter • Tower Roof",
         telemetry: "FREQ: 610Hz // RISK: 22% (WIND TURBULENCE)",
         body: "An isolated rooftop terrace surrounded by rusted chain-link fencing and heavy HVAC units. It offers an unobstructed view of the entire valley skyline. The girls retreat here when subterranean pressure gets too intense, and it serves as the primary roost for their familiars, Byakko and Yozora.",
@@ -1922,7 +1922,7 @@
         selectedBtn.style.boxShadow = "0 0 12px var(--accent-glow)";
       }
 
-      // Reset image visibility before changing src
+      // Reset image & error elements state
       const imgElem = document.getElementById('lore-chart-img');
       const fallbackElem = document.getElementById('chart-fallback-notice');
       const fallbackText = document.getElementById('fallback-img-name');
@@ -1930,6 +1930,7 @@
 
       if (imgElem) {
         imgElem.style.display = "block";
+        imgElem.onerror = function() { handleChartImageError(this); };
         imgElem.src = chartData.src;
       }
 
@@ -1965,55 +1966,6 @@
       cardContainer.classList.toggle('flipped');
     }
 
-    let currentZoom = 1;
-
-    function selectLoreChart(chartKey) {
-      const chartData = LORE_CHARTS[chartKey];
-      if (!chartData) return;
-
-      // Update button styling
-      document.querySelectorAll('.chart-select-btn').forEach(btn => {
-        btn.style.background = "rgba(22, 10, 36, 0.85)";
-        btn.style.color = "var(--text-muted)";
-        btn.style.borderColor = "var(--card-border)";
-        btn.style.boxShadow = "none";
-      });
-
-      const selectedBtn = document.getElementById(`chart-btn-${chartKey}`);
-      if (selectedBtn) {
-        selectedBtn.style.background = "linear-gradient(135deg, var(--accent-pink), var(--accent-purple))";
-        selectedBtn.style.color = "#fff";
-        selectedBtn.style.borderColor = "var(--accent-pink)";
-        selectedBtn.style.boxShadow = "0 0 12px var(--accent-glow)";
-      }
-
-      // Swap image & tag
-      const imgElem = document.getElementById('lore-chart-img');
-      const fallbackElem = document.getElementById('chart-fallback-notice');
-      const fallbackText = document.getElementById('fallback-img-name');
-      const tagElem = document.getElementById('chart-info-tag');
-
-      imgElem.style.display = "block";
-      fallbackElem.style.display = "none";
-      imgElem.src = chartData.src;
-      fallbackText.innerText = `[IMAGE PLACEHOLDER: ${chartData.src}]`;
-      if (tagElem) tagElem.innerText = chartData.tag;
-
-      resetLoreChartZoom();
-    }
-
-    function zoomLoreChart(factor) {
-      currentZoom = Math.min(Math.max(currentZoom * factor, 0.6), 3.0);
-      const viewport = document.getElementById('chart-image-viewport');
-      if (viewport) viewport.style.transform = `scale(${currentZoom})`;
-    }
-
-    function resetLoreChartZoom() {
-      currentZoom = 1;
-      const viewport = document.getElementById('chart-image-viewport');
-      if (viewport) viewport.style.transform = `scale(1)`;
-    }
-
     /* SUB-TAB SWITCHING LOGIC */
     function switchLoreSubtab(subtabName) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -2022,8 +1974,8 @@
       const targetTab = document.getElementById(`tab-${subtabName}`);
       if (targetTab) targetTab.classList.add('active');
 
-      if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
+      if (window.event && window.event.currentTarget) {
+        window.event.currentTarget.classList.add('active');
       }
     }
   </script>
