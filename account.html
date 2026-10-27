@@ -928,7 +928,7 @@
   <!-- Single Unified Script for Account Page -->
   <script type="module">
     import { auth, db } from './firebase-config.js?v=3';
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { onAuthStateChanged, signOut, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     window.currentUser = null;
@@ -1100,10 +1100,17 @@
       }
     };
 
-    // 1. Auth Listener & Firestore Sync
+    // 1. Check for Redirect Result First to prevent Google Auth Loop
+    getRedirectResult(auth).catch((err) => {
+      console.warn("Redirect auth check complete or skipped:", err);
+    });
+
+    // 2. Auth Listener & Firestore Sync (With Graceful Redirect Loop Guard)
+    let authCheckCompleted = false;
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         window.currentUser = user;
+        localStorage.setItem('neko_logged_in', 'true');
         try {
           const userRef = doc(db, "users", user.uid);
           const snap = await getDoc(userRef);
@@ -1135,11 +1142,15 @@
         window.updatePageUI();
         window.renderProfileBadges();
       } else {
-        window.location.href = "index.html";
+        // Only redirect if session is genuinely unauthenticated after initial check
+        if (localStorage.getItem('neko_logged_in') !== 'true') {
+          window.location.href = "index.html";
+        }
       }
+      authCheckCompleted = true;
     });
 
-    // 2. Tab Switcher
+    // 3. Tab Switcher
     window.switchDashboardTab = function(tabName, evt) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1163,7 +1174,7 @@
       }
     };
 
-    // 3. Render Badges from LocalStorage
+    // 4. Render Badges from LocalStorage
     window.renderProfileBadges = function() {
       const container = document.getElementById('account-badges-container');
       if (!container) return;
@@ -1203,7 +1214,7 @@
       }
     });
 
-    // 4. Save Profile Details
+    // 5. Save Profile Details
     window.saveProfileDetails = async function() {
       if (!window.currentUser) return;
 
@@ -1243,7 +1254,7 @@
       }
     };
 
-    // 5. Equip Cosmetic Item
+    // 6. Equip Cosmetic Item
     window.equipSelectedItem = async function(type, value) {
       if (!window.currentUser) return;
 
