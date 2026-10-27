@@ -1156,12 +1156,76 @@
     <!-- ============================================================ -->
     <div id="tab-characters" class="tab-content">
       <section>
-        <h2>The Core Four Dossiers & Celestial Familiars</h2>
+        <h2>The People, Familiars & Ancestral Lineages</h2>
         <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">
-          Detailed operational dossiers, spirit bond mechanics, emotional frequencies, and familiar dynamics for EchoHeart's founding lineup:
+          Operational dossiers, spirit bond mechanics, human lineages, and ancient familiar species records across centuries of Valley history:
         </p>
 
-        <!-- CORE FOUR & FAMILIAR GRID -->
+        <!-- ============================================================ -->
+        <!-- 📜 MULTI-CHART INTERACTIVE HUD GALLERY & ZOOM VIEWPORT       -->
+        <!-- ============================================================ -->
+        <div style="background: var(--card-bg); border: 1.5px solid var(--accent-cyan); border-radius: 18px; padding: 22px; margin-bottom: 2.5rem; box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);">
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem;">
+            <div>
+              <h3 style="color: var(--accent-cyan); font-size: 1.3rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);">
+                📜 Interactive Lore HUD Charts & Ancestral Archives
+              </h3>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
+                Select a tactical HUD chart below to inspect lineage webs, primordial beasts, and relationship matrices:
+              </p>
+            </div>
+            
+            <!-- Zoom Controls -->
+            <div style="display: flex; gap: 8px;">
+              <button onclick="zoomLoreChart(1.2)" style="background: rgba(0, 240, 255, 0.15); border: 1px solid var(--accent-cyan); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔍 Zoom In (+)</button>
+              <button onclick="zoomLoreChart(0.8)" style="background: rgba(0, 240, 255, 0.15); border: 1px solid var(--accent-cyan); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔍 Zoom Out (-)</button>
+              <button onclick="resetLoreChartZoom()" style="background: rgba(255, 0, 127, 0.2); border: 1px solid var(--accent-pink); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔄 Reset</button>
+            </div>
+          </div>
+
+          <!-- Chart Selector Buttons -->
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.2rem;">
+            <button class="chart-select-btn active" id="chart-btn-matrix" onclick="selectLoreChart('matrix')" style="background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); color: #fff; border: 1px solid var(--accent-pink); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; box-shadow: 0 0 12px var(--accent-glow);">
+              💖 Modern Relationship Matrix
+            </button>
+            <button class="chart-select-btn" id="chart-btn-ancestry" onclick="selectLoreChart('ancestry')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
+              ⛩️ Ancient Human Ancestry Tree
+            </button>
+            <button class="chart-select-btn" id="chart-btn-familiars" onclick="selectLoreChart('familiars')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
+              🐾 Ancient Familiars Spirit Lineage
+            </button>
+            <button class="chart-select-btn" id="chart-btn-bestiary" onclick="selectLoreChart('bestiary')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
+              📜 Ancient Familiars Bestiary Showcase
+            </button>
+          </div>
+
+          <!-- Active Viewport Canvas Box -->
+          <div style="position: relative; background: #030108; border-radius: 14px; border: 1px solid var(--accent-cyan); overflow: hidden; height: 520px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);">
+            
+            <div id="chart-image-viewport" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; transition: transform 0.25s ease; transform-origin: center center;">
+              <img id="lore-chart-img" src="assets/matrix-tree.jpg" alt="Active Lore Chart" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="this.style.display='none'; document.getElementById('chart-fallback-notice').style.display='flex';">
+              
+              <!-- Fallback Notice -->
+              <div id="chart-fallback-notice" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center;">
+                <span style="font-size: 2rem; margin-bottom: 8px;">📷</span>
+                <span id="fallback-img-name" style="font-size: 0.95rem; font-weight: bold; color: var(--accent-pink);">[IMAGE PLACEHOLDER: assets/matrix-tree.jpg]</span>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;">
+                  Place your generated high-resolution Leonardo artwork into the <strong>assets/</strong> folder to display the full HD visual chart!
+                </p>
+              </div>
+            </div>
+
+            <!-- Floating Overlay Tag -->
+            <div id="chart-info-tag" style="position: absolute; bottom: 12px; left: 12px; background: rgba(4, 2, 9, 0.88); border: 1px solid var(--accent-cyan); padding: 6px 14px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.78rem; color: var(--accent-cyan); backdrop-filter: blur(8px);">
+              ACTIVE HUD: MASTER RELATIONSHIP MATRIX // FREQ: 528Hz
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SECTION A: CORE FOUR DOSSIERS -->
+        <h3 class="sub-heading">🎸 The Core Four & Present Celestial Familiars</h3>
         <div class="character-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
           
           <!-- SERA HANIBARA -->
@@ -1178,7 +1242,7 @@
             <p class="char-desc"><strong>Visuals:</strong> Short pastel-pink hair with white tip highlights, warm pink eyes, expressive cat-eared hair-ribbons.</p>
             <p class="char-desc"><strong>Personality & Arc:</strong> Gentle, deeply empathetic, and polite. Prefers staying unnoticed, yet her raw musical vulnerability triggers the first unbound resonance bloom. Struggles with sudden flustered heart-rate spikes whenever Nekomi leans in close.</p>
             <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-top: 10px; font-size: 0.85rem; border-left: 3px solid var(--accent-pink);">
-              <strong>Familiar Synergy (Byakko):</strong> A nine-tailed white fox spirit that manifests in soft light bursts. Byakko's tail flames charge Sera's keytar sustain pedals and sense emotional static in a 500m radius.
+              <strong>Familiar Synergy (Byakko):</strong> A compact celestial white fox spirit that manifests in soft light bursts. Byakko's tail flames charge Sera's keytar sustain pedals and sense emotional static in a 500m radius.
             </div>
           </div>
 
@@ -1238,39 +1302,91 @@
 
         </div>
 
-        <!-- INTERACTIVE RELATIONSHIP & RESONANCE MATRIX -->
-        <h3 class="sub-heading">💖 Interpersonal Relationship Web & Emotional Dynamics</h3>
-        <div style="background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 16px; padding: 22px; margin-bottom: 2.5rem; box-shadow: 0 0 25px rgba(255, 0, 127, 0.25);">
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+        <!-- SECTION B: ANCIENT HUMAN LINEAGE & SHRINE MAIDENS -->
+        <h3 class="sub-heading">⛩️ Section B: Ancient Human Lineage & Sacred Bell Keepers</h3>
+        <div style="background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 16px; padding: 22px; margin-bottom: 2.5rem;">
+          <p style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 1.2rem;">
+            Long before modern amplifiers and keytars existed, Sakuraoka Valley was guarded by generations of shrine maidens (miko) and acoustic bell caretakers who used ancient bronze bells to disperse emotional Dissonance:
+          </p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
             
-            <div style="background: #030108; border-left: 4px solid var(--accent-pink); padding: 14px; border-radius: 8px;">
-              <strong style="color: var(--accent-pink); font-size: 1rem;">🌸 Sera ↔ Nekomi ("The Sun & Moon Resonance")</strong>
+            <div style="background: #030108; border-left: 4px solid var(--accent-gold); padding: 14px; border-radius: 8px;">
+              <strong style="color: var(--accent-gold); font-size: 1rem;">🌸 Hime no Miya (First Voice of the Valley)</strong>
               <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-main);">
-                <strong>Dynamic:</strong> Romantic Tension / Harmonic Lock (52% Heart Sync).<br>
-                Sera's gentle vulnerability bypasses Nekomi's guarded rockstar walls. Sera gets flustered by accidental hand brushes, while Nekomi suffers internal panic gremlin attacks whenever Sera smiles directly at her.
+                <strong>Era:</strong> Ancient Mythic Origin Era.<br>
+                The legendary maiden who first bound the primordial spirit beasts to human hearts. Her sacred chants created the original acoustic barrier around Sakuraoka Valley.
               </p>
             </div>
 
-            <div style="background: #030108; border-left: 4px solid var(--accent-cyan); padding: 14px; border-radius: 8px;">
-              <strong style="color: var(--accent-cyan); font-size: 1rem;">📊 Aoi ↔ Akari ("The Blueprint & The Ignition")</strong>
+            <div style="background: #030108; border-left: 4px solid var(--accent-pink); padding: 14px; border-radius: 8px;">
+              <strong style="color: var(--accent-pink); font-size: 1rem;">🔔 Kagura Hime (Keeper of the Bronze Bells)</strong>
               <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-main);">
-                <strong>Dynamic:</strong> Chaos Management / Odd-Couple Anchor.<br>
-                Akari tests Aoi's ironclad schedules with paper airplanes and drum solos, while Aoi acts as the grounded older-sister figure keeping Akari focused during high-tension tactical deployments.
+                <strong>Era:</strong> Heian / Kamakura Era Custodian.<br>
+                Forged the ancient Bronze Bells of Harmony. Her ritual dances converted human sorrow into pure acoustic waves, keeping the valley's soil fertile and static-free.
               </p>
             </div>
 
             <div style="background: #030108; border-left: 4px solid var(--accent-purple); padding: 14px; border-radius: 8px;">
-              <strong style="color: var(--accent-purple); font-size: 1rem;">✨ The Core Four Group Resonance</strong>
+              <strong style="color: var(--accent-purple); font-size: 1rem;">📚 Historical Custodians & Eras</strong>
               <p style="font-size: 0.88rem; margin-top: 6px; color: var(--text-main);">
-                <strong>Dynamic:</strong> Emotional Sanctuary.<br>
-                Together in Music Prep Room B, their four distinct emotional frequencies synchronize into a 4-element barrier that heals student Dissonance and shatters real-world static.
+                <strong>Timeline:</strong> Muromachi, Edo, Meiji, Taisho & Showa Eras.<br>
+                Scribes, bell-smiths, and spiritual mediums who maintained the acoustic resonance logs across centuries, eventually passing the lineage down to modern institutions like the Sakuraoka Academy Music Division and Mrs. Hanibara (City Library Archives).
               </p>
             </div>
 
           </div>
         </div>
 
-        <!-- COMPLETE SIDE CHARACTERS & RELATIVES DIRECTORY -->
+        <!-- SECTION C: ANCIENT PRIMORDIAL FAMILIARS & VARIETY TAXONOMY -->
+        <h3 class="sub-heading">🐾 Section C: Primordial Beast Gods & Familiar Species Taxonomy</h3>
+        <div style="background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 16px; padding: 22px; margin-bottom: 2.5rem;">
+          <p style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 1.2rem;">
+            The four familiars accompanying EchoHeart are actually compact spirit manifestations of ancient primordial god-beasts that have existed since the valley's formation:
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 1.5rem;">
+            
+            <!-- BYAKKO PRIMARCH -->
+            <div style="background: #030108; border-top: 3px solid #ffb7c5; padding: 14px; border-radius: 8px;">
+              <strong style="color: #ffb7c5; font-size: 1rem;">🦊 Ancient Byakko Primarch</strong>
+              <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
+                <strong>Form:</strong> Celestial Nine-Tailed White Fox God.<br>
+                Engulfed in rose-gold morning light flames and sacred shimenawa ropes. Sub-species variations include dual-tailed ethereal foxes, ember-red fox spirits, and stellar void fox cubs.
+              </p>
+            </div>
+
+            <!-- YOZORA PRIMARCH -->
+            <div style="background: #030108; border-top: 3px solid #8a2be2; padding: 14px; border-radius: 8px;">
+              <strong style="color: #8a2be2; font-size: 1rem;">🐈‍⬛ Ancient Yozora Primarch</strong>
+              <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
+                <strong>Form:</strong> Shadow Eclipse Panther Deity.<br>
+                Features glowing sapphire eyes and a brilliant crescent moon crest. Sub-species include crescent-marked shadow lynxes, spectral blue flame cats, and twin-tailed nekomata spirits.
+              </p>
+            </div>
+
+            <!-- KAGEROU PRIMARCH -->
+            <div style="background: #030108; border-top: 3px solid #ff4500; padding: 14px; border-radius: 8px;">
+              <strong style="color: #ff4500; font-size: 1rem;">🔥 Ancient Kagerou Primarch</strong>
+              <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
+                <strong>Form:</strong> Primordial Infernal Phoenix-Marten.<br>
+                Wrapped in solar crimson flames and crackling ember shockwaves. Sub-species include solar blaze ferrets, lightning-infused polecats, and magma-core ember runners.
+              </p>
+            </div>
+
+            <!-- KOMOREBI PRIMARCH -->
+            <div style="background: #030108; border-top: 3px solid #008080; padding: 14px; border-radius: 8px;">
+              <strong style="color: #00f0ff; font-size: 1rem;">🍃 Ancient Komorebi Primarch</strong>
+              <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-main);">
+                <strong>Form:</strong> Great Earth Guardian Tanuki Sage.<br>
+                Moss-covered giant spirit carrying a glowing bronze acoustic lantern. Sub-species include forest moss tanukis, bronze bell guardians, and stone-shield spirit cubs.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SECTION D: COMPLETE SIDE CHARACTERS & FAMILY REGISTRY -->
         <h3 class="sub-heading">👥 Complete Side Character, Student & Family Registry</h3>
         <p style="margin-bottom: 1.2rem; color: var(--text-muted); font-size: 0.92rem;">
           Comprehensive index of all students, faculty, targets, and family members mentioned across Book 1, story notes, and lore logs:
@@ -1311,24 +1427,6 @@
             <div style="font-size: 0.75rem; color: var(--accent-purple); font-weight: bold; margin-bottom: 6px;">SAKURAOKA ACADEMY STAFF</div>
             <p style="font-size: 0.88rem; color: var(--text-main);">
               Oversees the official Light Music Research Group. Kept completely in the dark regarding the Sub-Stage operations via Aoi's soft acoustic showcase filings.
-            </p>
-          </div>
-
-          <!-- Ancient Lineage / Shrine Maidens -->
-          <div class="codex-item" style="border-left: 4px solid var(--accent-gold);">
-            <div class="codex-title" style="color: var(--accent-gold);">Ancient Valley Shrine Maidens</div>
-            <div style="font-size: 0.75rem; color: var(--accent-gold); font-weight: bold; margin-bottom: 6px;">HISTORICAL ANCESTORS / LEGACY</div>
-            <p style="font-size: 0.88rem; color: var(--text-main);">
-              Centuries-old guardians who cleared valley static using sacred bronze acoustic bells prior to modern electric amplification.
-            </p>
-          </div>
-
-          <!-- Unspoken Student Relatives -->
-          <div class="codex-item" style="border-left: 4px solid var(--text-muted);">
-            <div class="codex-title" style="color: var(--text-light);">Sakuraoka Student Body</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: bold; margin-bottom: 6px;">COMMUNITY & RELATIVES</div>
-            <p style="font-size: 0.88rem; color: var(--text-main);">
-              The broader student population whose unspoken family expectations, academic stress, and hidden grief generate the town's background static.
             </p>
           </div>
 
@@ -1620,6 +1718,75 @@
     function cycleMagicalPressure() {
       idxPressure = (idxPressure + 1) % pressureStates.length;
       updateHudBtn('btn-pressure', 'text-pressure', pressureStates, idxPressure);
+    }
+
+    /* TAB 2 MULTI-CHART GALLERY & ZOOM ENGINE */
+    const LORE_CHARTS = {
+      matrix: {
+        src: "assets/matrix-tree.jpg",
+        tag: "ACTIVE HUD: MASTER RELATIONSHIP MATRIX // FREQ: 528Hz"
+      },
+      ancestry: {
+        src: "assets/ancestry-tree.jpg",
+        tag: "ACTIVE HUD: ANCIENT HUMAN ANCESTRY & SHRINE MAIDENS LINEAGE // ERA: ANCIENT - MODERN"
+      },
+      familiars: {
+        src: "assets/familiars-genealogy.jpg",
+        tag: "ACTIVE HUD: ANCIENT FAMILIARS SPIRIT LINEAGE & PRIMARCHS // BEAST CODE: ANCIENT - MODERN"
+      },
+      bestiary: {
+        src: "assets/familiars-bestiary.jpg",
+        tag: "ACTIVE HUD: ANCIENT FAMILIARS BESTIARY SHOWCASE & SPECIES TAXONOMY // CATALOG VER: 8.0"
+      }
+    };
+
+    let currentZoom = 1;
+
+    function selectLoreChart(chartKey) {
+      const chartData = LORE_CHARTS[chartKey];
+      if (!chartData) return;
+
+      // Update button styling
+      document.querySelectorAll('.chart-select-btn').forEach(btn => {
+        btn.style.background = "rgba(22, 10, 36, 0.85)";
+        btn.style.color = "var(--text-muted)";
+        btn.style.borderColor = "var(--card-border)";
+        btn.style.boxShadow = "none";
+      });
+
+      const selectedBtn = document.getElementById(`chart-btn-${chartKey}`);
+      if (selectedBtn) {
+        selectedBtn.style.background = "linear-gradient(135deg, var(--accent-pink), var(--accent-purple))";
+        selectedBtn.style.color = "#fff";
+        selectedBtn.style.borderColor = "var(--accent-pink)";
+        selectedBtn.style.boxShadow = "0 0 12px var(--accent-glow)";
+      }
+
+      // Swap image & tag
+      const imgElem = document.getElementById('lore-chart-img');
+      const fallbackElem = document.getElementById('chart-fallback-notice');
+      const fallbackText = document.getElementById('fallback-img-name');
+      const tagElem = document.getElementById('chart-info-tag');
+
+      imgElem.style.display = "block";
+      fallbackElem.style.display = "none";
+      imgElem.src = chartData.src;
+      fallbackText.innerText = `[IMAGE PLACEHOLDER: ${chartData.src}]`;
+      if (tagElem) tagElem.innerText = chartData.tag;
+
+      resetLoreChartZoom();
+    }
+
+    function zoomLoreChart(factor) {
+      currentZoom = Math.min(Math.max(currentZoom * factor, 0.6), 3.0);
+      const viewport = document.getElementById('chart-image-viewport');
+      if (viewport) viewport.style.transform = `scale(${currentZoom})`;
+    }
+
+    function resetLoreChartZoom() {
+      currentZoom = 1;
+      const viewport = document.getElementById('chart-image-viewport');
+      if (viewport) viewport.style.transform = `scale(1)`;
     }
 
     /* SUB-TAB SWITCHING LOGIC */
