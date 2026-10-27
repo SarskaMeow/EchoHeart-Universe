@@ -1161,77 +1161,180 @@
       Operational dossiers, spirit bond mechanics, human lineages, and ancient familiar species records across centuries of Valley history:
     </p>
 
-    <!-- ============================================================ -->
-    <!-- 📜 MULTI-CHART INTERACTIVE HUD GALLERY & ZOOM VIEWPORT       -->
-    <!-- ============================================================ -->
-    <div style="background: var(--card-bg); border: 1.5px solid var(--accent-cyan); border-radius: 18px; padding: 22px; margin-bottom: 2.5rem; box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);">
-      
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem;">
-        <div>
-          <h3 style="color: var(--accent-cyan); font-size: 1.3rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);">
-            📜 Interactive Lore HUD Charts & Ancestral Archives
-          </h3>
-          <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">
-            Select a tactical HUD chart below to inspect lineage webs, primordial beasts, and relationship matrices:
-          </p>
-        </div>
-        
-        <!-- Zoom Controls -->
-        <div style="display: flex; gap: 8px;">
-          <button onclick="zoomLoreChart(1.2)" style="background: rgba(0, 240, 255, 0.15); border: 1px solid var(--accent-cyan); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔍 Zoom In (+)</button>
-          <button onclick="zoomLoreChart(0.8)" style="background: rgba(0, 240, 255, 0.15); border: 1px solid var(--accent-cyan); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔍 Zoom Out (-)</button>
-          <button onclick="resetLoreChartZoom()" style="background: rgba(255, 0, 127, 0.2); border: 1px solid var(--accent-pink); color: #fff; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s ease;">🔄 Reset</button>
+    <!-- 📜 RELIABLE 4-CHART HUD GALLERY WITH PAN & DRAG ZOOM -->
+<div style="background: var(--card-bg); border: 1.5px solid var(--accent-cyan); border-radius: 18px; padding: 22px; margin-bottom: 2.5rem; box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);">
+  
+  <div style="margin-bottom: 1.5rem;">
+    <h3 style="color: var(--accent-cyan); font-size: 1.3rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);">
+      📜 Interactive Lore HUD Charts & Ancestral Archives
+    </h3>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+      Tactical HUD charts showing modern relationship matrices, ancient lineages, and spirit beast taxonomy. Use the controls to zoom, or drag with your mouse/finger to move around close up!
+    </p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
+    <!-- Chart 1: Relationship Matrix -->
+    <div style="background: #030108; border: 1px solid var(--accent-pink); border-radius: 12px; padding: 12px; text-align: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div style="font-weight: 800; color: var(--accent-pink); font-size: 0.85rem;">💖 Relationship Matrix</div>
+        <div style="display: flex; gap: 4px;">
+          <button onclick="zoomCard('matrix', 1.25)" style="background: rgba(255,0,127,0.2); border: 1px solid var(--accent-pink); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">+</button>
+          <button onclick="zoomCard('matrix', 0.8)" style="background: rgba(255,0,127,0.2); border: 1px solid var(--accent-pink); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">-</button>
+          <button onclick="resetCardZoom('matrix')" style="background: rgba(255,0,127,0.2); border: 1px solid var(--accent-pink); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">🔄</button>
         </div>
       </div>
-
-      <!-- Chart Selector Buttons -->
-      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.2rem;">
-        <button class="chart-select-btn active" id="chart-btn-matrix" onclick="selectLoreChart('matrix')" style="background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple)); color: #fff; border: 1px solid var(--accent-pink); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; box-shadow: 0 0 12px var(--accent-glow);">
-          💖 Modern Relationship Matrix
-        </button>
-        <button class="chart-select-btn" id="chart-btn-ancestry" onclick="selectLoreChart('ancestry')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
-          ⛩️ Ancient Human Ancestry Tree
-        </button>
-        <button class="chart-select-btn" id="chart-btn-familiars" onclick="selectLoreChart('familiars')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
-          🐾 Ancient Familiars Spirit Lineage
-        </button>
-        <button class="chart-select-btn" id="chart-btn-bestiary" onclick="selectLoreChart('bestiary')" style="background: rgba(22, 10, 36, 0.85); color: var(--text-muted); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 0.85rem; transition: all 0.25s ease;">
-          📜 Ancient Familiars Bestiary Showcase
-        </button>
+      <div id="wrapper-matrix" class="pan-zoom-container" style="position: relative; width: 100%; height: 320px; overflow: hidden; border-radius: 8px; background: #000; touch-action: none; cursor: default;">
+        <img id="img-matrix" src="assets/matrix-tree.jpg" alt="Modern Relationship Matrix" style="position: absolute; top: 0; left: 0; max-width: 100%; max-height: 100%; object-fit: contain; transform-origin: 0 0; transition: transform 0.05s ease-out;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div style="display:none; padding: 20px; color: var(--accent-pink); font-size: 0.8rem; font-weight: bold;">📷 [assets/matrix-tree.jpg]</div>
       </div>
-
-      <!-- Active Viewport Canvas Box -->
-      <div style="position: relative; background: #030108; border-radius: 14px; border: 1px solid var(--accent-cyan); overflow: hidden; height: 520px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);">
-        
-        <div id="chart-image-viewport" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; transition: transform 0.25s ease; transform-origin: center center;">
-          <img id="lore-chart-img" src="assets/matrix-tree.jpg" alt="Active Lore Chart" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="handleChartImageError(this)">
-          
-          <!-- Fallback Notice -->
-          <div id="chart-fallback-notice" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center;">
-            <span style="font-size: 2rem; margin-bottom: 8px;">📷</span>
-            <span id="fallback-img-name" style="font-size: 0.95rem; font-weight: bold; color: var(--accent-pink);">[IMAGE PLACEHOLDER: assets/matrix-tree.jpg]</span>
-            <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;">
-              Place your generated high-resolution artwork into the <strong>assets/</strong> folder to display the full HD visual chart!
-            </p>
-          </div>
-        </div>
-
-        <!-- Floating Overlay Tag -->
-        <div id="chart-info-tag" style="position: absolute; bottom: 12px; left: 12px; background: rgba(4, 2, 9, 0.88); border: 1px solid var(--accent-cyan); padding: 6px 14px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.78rem; color: var(--accent-cyan); backdrop-filter: blur(8px);">
-          ACTIVE HUD: MASTER RELATIONSHIP MATRIX // FREQ: 528Hz
-        </div>
-
-      </div>
-
-      <!-- Dedicated Hidden Containers for Image Preloading -->
-      <div style="display: none;">
-        <img src="assets/matrix-tree.jpg" alt="Master Relationship Matrix">
-        <img src="assets/ancestry-tree.jpg" alt="Ancient Human Ancestry Tree">
-        <img src="assets/familiars-genealogy.jpg" alt="Ancient Familiars Spirit Lineage">
-        <img src="assets/familiars-bestiary.jpg" alt="Ancient Familiars Bestiary Showcase">
-      </div>
-
     </div>
+
+    <!-- Chart 2: Human Ancestry -->
+    <div style="background: #030108; border: 1px solid var(--accent-cyan); border-radius: 12px; padding: 12px; text-align: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div style="font-weight: 800; color: var(--accent-cyan); font-size: 0.85rem;">⛩️ Ancestry Tree</div>
+        <div style="display: flex; gap: 4px;">
+          <button onclick="zoomCard('ancestry', 1.25)" style="background: rgba(0,240,255,0.2); border: 1px solid var(--accent-cyan); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">+</button>
+          <button onclick="zoomCard('ancestry', 0.8)" style="background: rgba(0,240,255,0.2); border: 1px solid var(--accent-cyan); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">-</button>
+          <button onclick="resetCardZoom('ancestry')" style="background: rgba(0,240,255,0.2); border: 1px solid var(--accent-cyan); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">🔄</button>
+        </div>
+      </div>
+      <div id="wrapper-ancestry" class="pan-zoom-container" style="position: relative; width: 100%; height: 320px; overflow: hidden; border-radius: 8px; background: #000; touch-action: none; cursor: default;">
+        <img id="img-ancestry" src="assets/ancestry-tree.jpg" alt="Ancient Human Ancestry Tree" style="position: absolute; top: 0; left: 0; max-width: 100%; max-height: 100%; object-fit: contain; transform-origin: 0 0; transition: transform 0.05s ease-out;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div style="display:none; padding: 20px; color: var(--accent-cyan); font-size: 0.8rem; font-weight: bold;">📷 [assets/ancestry-tree.jpg]</div>
+      </div>
+    </div>
+
+    <!-- Chart 3: Familiars Spirit Lineage -->
+    <div style="background: #030108; border: 1px solid var(--accent-purple); border-radius: 12px; padding: 12px; text-align: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div style="font-weight: 800; color: var(--accent-purple); font-size: 0.85rem;">🐾 Spirit Lineage</div>
+        <div style="display: flex; gap: 4px;">
+          <button onclick="zoomCard('familiars', 1.25)" style="background: rgba(157,78,221,0.2); border: 1px solid var(--accent-purple); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">+</button>
+          <button onclick="zoomCard('familiars', 0.8)" style="background: rgba(157,78,221,0.2); border: 1px solid var(--accent-purple); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">-</button>
+          <button onclick="resetCardZoom('familiars')" style="background: rgba(157,78,221,0.2); border: 1px solid var(--accent-purple); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">🔄</button>
+        </div>
+      </div>
+      <div id="wrapper-familiars" class="pan-zoom-container" style="position: relative; width: 100%; height: 320px; overflow: hidden; border-radius: 8px; background: #000; touch-action: none; cursor: default;">
+        <img id="img-familiars" src="assets/familiars-genealogy.jpg" alt="Ancient Familiars Spirit Lineage" style="position: absolute; top: 0; left: 0; max-width: 100%; max-height: 100%; object-fit: contain; transform-origin: 0 0; transition: transform 0.05s ease-out;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div style="display:none; padding: 20px; color: var(--accent-purple); font-size: 0.8rem; font-weight: bold;">📷 [assets/familiars-genealogy.jpg]</div>
+      </div>
+    </div>
+
+    <!-- Chart 4: Familiars Bestiary -->
+    <div style="background: #030108; border: 1px solid var(--accent-gold); border-radius: 12px; padding: 12px; text-align: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div style="font-weight: 800; color: var(--accent-gold); font-size: 0.85rem;">📜 Bestiary Showcase</div>
+        <div style="display: flex; gap: 4px;">
+          <button onclick="zoomCard('bestiary', 1.25)" style="background: rgba(255,209,102,0.2); border: 1px solid var(--accent-gold); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">+</button>
+          <button onclick="zoomCard('bestiary', 0.8)" style="background: rgba(255,209,102,0.2); border: 1px solid var(--accent-gold); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">-</button>
+          <button onclick="resetCardZoom('bestiary')" style="background: rgba(255,209,102,0.2); border: 1px solid var(--accent-gold); color: #fff; padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold;">🔄</button>
+        </div>
+      </div>
+      <div id="wrapper-bestiary" class="pan-zoom-container" style="position: relative; width: 100%; height: 320px; overflow: hidden; border-radius: 8px; background: #000; touch-action: none; cursor: default;">
+        <img id="img-bestiary" src="assets/familiars-bestiary.jpg" alt="Familiars Bestiary Showcase" style="position: absolute; top: 0; left: 0; max-width: 100%; max-height: 100%; object-fit: contain; transform-origin: 0 0; transition: transform 0.05s ease-out;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div style="display:none; padding: 20px; color: var(--accent-gold); font-size: 0.8rem; font-weight: bold;">📷 [assets/familiars-bestiary.jpg]</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- JAVASCRIPT PAN & ZOOM ENGINE -->
+<script>
+  const cardStates = {
+    matrix: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0 },
+    ancestry: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0 },
+    familiars: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0 },
+    bestiary: { scale: 1, x: 0, y: 0, isDragging: false, startX: 0, startY: 0 }
+  };
+
+  function updateTransform(key) {
+    const state = cardStates[key];
+    const img = document.getElementById(`img-${key}`);
+    const wrapper = document.getElementById(`wrapper-${key}`);
+    if (!img || !wrapper) return;
+
+    if (state.scale <= 1) {
+      state.scale = 1;
+      state.x = 0;
+      state.y = 0;
+      wrapper.style.cursor = 'default';
+    } else {
+      wrapper.style.cursor = state.isDragging ? 'grabbing' : 'grab';
+    }
+
+    img.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+  }
+
+  function zoomCard(key, factor) {
+    const state = cardStates[key];
+    state.scale = Math.min(Math.max(state.scale * factor, 1), 4);
+    updateTransform(key);
+  }
+
+  function resetCardZoom(key) {
+    const state = cardStates[key];
+    state.scale = 1;
+    state.x = 0;
+    state.y = 0;
+    state.isDragging = false;
+    updateTransform(key);
+  }
+
+  // Bind Mouse & Touch events for each chart container
+  Object.keys(cardStates).forEach(key => {
+    const wrapper = document.getElementById(`wrapper-${key}`);
+    if (!wrapper) return;
+
+    const getPos = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+      return { x: e.clientX, y: e.clientY };
+    };
+
+    const startDrag = (e) => {
+      const state = cardStates[key];
+      if (state.scale <= 1) return;
+      state.isDragging = true;
+      const pos = getPos(e);
+      state.startX = pos.x - state.x;
+      state.startY = pos.y - state.y;
+      updateTransform(key);
+    };
+
+    const doDrag = (e) => {
+      const state = cardStates[key];
+      if (!state.isDragging) return;
+      e.preventDefault();
+      const pos = getPos(e);
+      state.x = pos.x - state.startX;
+      state.y = pos.y - state.startY;
+      updateTransform(key);
+    };
+
+    const stopDrag = () => {
+      const state = cardStates[key];
+      if (state.isDragging) {
+        state.isDragging = false;
+        updateTransform(key);
+      }
+    };
+
+    // Event Listeners for Mouse
+    wrapper.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', doDrag);
+    window.addEventListener('mouseup', stopDrag);
+
+    // Event Listeners for Touch (Mobile)
+    wrapper.addEventListener('touchstart', startDrag, { passive: false });
+    window.addEventListener('touchmove', doDrag, { passive: false });
+    window.addEventListener('touchend', stopDrag);
+  });
+</script>
 
     <!-- SECTION A: CORE FOUR DOSSIERS & 3D FLIP CARDS -->
     <h3 class="sub-heading">🎸 The Core Four & Present Celestial Familiars</h3>
