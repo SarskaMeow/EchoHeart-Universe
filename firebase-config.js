@@ -44,11 +44,16 @@ const firebaseConfig = {
 // 3. Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 
-// 4. Enable Fraud Defense / reCAPTCHA Enterprise Bot Shield
-const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaEnterpriseProvider('6LfOse0tAAAAAIfKhHlTDRbxLaTqY3bH1FHznTTn'),
-  isTokenAutoRefreshEnabled: true
-});
+// 4. Enable Fraud Defense / reCAPTCHA Enterprise Bot Shield (Wrapped for Safety)
+let appCheck;
+try {
+  appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider('6LfOse0tAAAAAIfKhHlTDRbxLaTqY3bH1FHznTTn'),
+    isTokenAutoRefreshEnabled: true
+  });
+} catch (appCheckErr) {
+  console.warn("App Check initialization skipped/deferred:", appCheckErr.message);
+}
 
 // 5. Initialize Auth & Firestore Exports
 export const auth = getAuth(app);
@@ -75,9 +80,12 @@ window.userData = null;
 
 // Catch result from mobile redirect auth flows upon returning to page
 getRedirectResult(auth)
-  .then((result) => {
+  .then(async (result) => {
     if (result && result.user) {
       console.log("Redirect login successful:", result.user.displayName);
+      window.currentUser = result.user;
+      await loadOrCreateUserProfile(result.user);
+      if (typeof updatePageUI === "function") updatePageUI();
     }
   })
   .catch((error) => {
@@ -151,14 +159,18 @@ window.loginWithGoogle = async () => {
     return;
   }
 
-  // Desktop Popup Flow
+  // Desktop Popup Flow (Falls back gracefully if blocked)
   try {
     const result = await signInWithPopup(auth, provider);
     console.log("Google login successful:", result.user.displayName);
   } catch (error) {
     console.warn("Popup warning/error code:", error.code);
 
-    if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+    if (
+      error.code === 'auth/popup-blocked' || 
+      error.code === 'auth/cancelled-popup-request' ||
+      error.code === 'auth/web-storage-unsupported'
+    ) {
       try {
         await signInWithRedirect(auth, provider);
       } catch (redirectError) {
@@ -166,7 +178,7 @@ window.loginWithGoogle = async () => {
         alert("Sign-in failed: " + redirectError.message);
       }
     } else if (error.code === 'auth/unauthorized-domain') {
-      alert("Domain not authorized! Make sure your domain is added to Firebase Auth Settings > Authorized Domains.");
+      alert("Domain not authorized! Make sure your current domain is added to Firebase Auth Settings > Authorized Domains.");
     } else if (error.code !== 'auth/popup-closed-by-user') {
       alert("Login Error: " + error.message);
     }
