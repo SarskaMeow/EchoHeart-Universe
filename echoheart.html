@@ -856,64 +856,161 @@
           <p><strong>Setting:</strong> EchoHeart Senior Academy / Sakuraoka High School (Class 3-A, Music Division), Tokyo, Japan.</p>
         </div>
 
-        <!-- Interactive Quick Location Inspector Bar -->
-        <h3 class="sub-heading">🗺️ Key World Locations & Sector Map</h3>
-        <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.92rem;">Select a location card below to inspect environmental details, hidden acoustics, and active student rumors:</p>
-        
-        <div class="location-guide-grid">
+        <!-- ============================================================ -->
+        <!-- 🗺️ UPGRADED TACTICAL SECTOR MAP & RADAR INSPECTOR            -->
+        <!-- ============================================================ -->
+        <h3 class="sub-heading">🗺️ Tactical Sector Radar & Audio Frequency Map</h3>
+        <p style="margin-bottom: 1.2rem; color: var(--text-muted); font-size: 0.92rem;">
+          Select a sector node below to intercept live frequency readings, environmental Dissonance levels, and restricted field logs:
+        </p>
+
+        <!-- 8-Sector Interactive Grid -->
+        <div class="location-guide-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+          
+          <!-- Sector 01: Music Prep Room B -->
           <div class="location-card active" id="loc-card-preproom" onclick="inspectLocation('preproom')">
             <div class="location-card-header">
               <span class="location-icon-badge">🎻</span>
               <div>
                 <div class="location-title">Music Prep Room B</div>
-                <div class="location-sub">The Sanctuary • West Wing</div>
+                <div class="location-sub">SECTOR 01 • WEST WING</div>
               </div>
             </div>
-            <p class="location-preview-text">Abandoned practice space lined with acoustic foam, instrument cases, and green chalkboards.</p>
+            <div style="margin-bottom: 8px;">
+              <span style="font-size: 0.7rem; font-weight: 800; background: rgba(0, 240, 255, 0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); padding: 2px 8px; border-radius: 6px;">STATUS: SANCTUARY</span>
+            </div>
+            <p class="location-preview-text">Acoustic foam walls, evidence chalkboard, and the hidden seam behind Locker 102.</p>
           </div>
 
+          <!-- Sector 02: The Sub-Stage -->
           <div class="location-card" id="loc-card-substage" onclick="inspectLocation('substage')">
             <div class="location-card-header">
               <span class="location-icon-badge">🏟️</span>
               <div>
                 <div class="location-title">The Sub-Stage</div>
-                <div class="location-sub">Underground Arena • -40 Feet</div>
+                <div class="location-sub">SECTOR 02 • -40 FEET</div>
               </div>
             </div>
-            <p class="location-preview-text">Secret subterranean concrete amphitheater with vaulted stone arches and amber fairy lights.</p>
+            <div style="margin-bottom: 8px;">
+              <span style="font-size: 0.7rem; font-weight: 800; background: rgba(255, 0, 127, 0.2); color: var(--accent-pink); border: 1px solid var(--accent-pink); padding: 2px 8px; border-radius: 6px;">STATUS: HIGH RESONANCE</span>
+            </div>
+            <p class="location-preview-text">Subterranean stone cathedral, vintage tube stacks, and high-decibel acoustic barriers.</p>
           </div>
 
+          <!-- Sector 03: Class 3-A & Campus -->
           <div class="location-card" id="loc-card-academy" onclick="inspectLocation('academy')">
             <div class="location-card-header">
               <span class="location-icon-badge">🏫</span>
               <div>
                 <div class="location-title">Class 3-A & Campus</div>
-                <div class="location-sub">Sakuraoka High • Music Division</div>
+                <div class="location-sub">SECTOR 03 • ACADEMY GROUND</div>
               </div>
             </div>
-            <p class="location-preview-text">Chalkboard schedules, shoe lockers, and sunlight filtering through tall academy windows.</p>
+            <div style="margin-bottom: 8px;">
+              <span style="font-size: 0.7rem; font-weight: 800; background: rgba(0, 240, 255, 0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); padding: 2px 8px; border-radius: 6px;">STATUS: COVER ACTIVE</span>
+            </div>
+            <p class="location-preview-text">Sunlit windows, chalkboard schedules, and early morning ticket slip drops.</p>
           </div>
 
+          <!-- Sector 04: Shopping District -->
           <div class="location-card" id="loc-card-shopping" onclick="inspectLocation('shopping')">
             <div class="location-card-header">
               <span class="location-icon-badge">🍰</span>
               <div>
-                <div class="location-title">Sakuraoka Shopping District</div>
-                <div class="location-sub">After-School District & Cafes</div>
+                <div class="location-title">Shopping District</div>
+                <div class="location-sub">SECTOR 04 • AFTER-SCHOOL</div>
               </div>
             </div>
-            <p class="location-preview-text">Neon storefronts, crepe stands, and the cafeteria line where strawberry parfaits vanish in seconds.</p>
+            <div style="margin-bottom: 8px;">
+              <span style="font-size: 0.7rem; font-weight: 800; background: rgba(255, 209, 102, 0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 2px 8px; border-radius: 6px;">STATUS: MILD STATIC</span>
+            </div>
+            <p class="location-preview-text">Neon storefronts, crepe stands, guitar pick shops, and sweet parfait cafes.</p>
           </div>
+
+          <!-- Sector 05: Rooftop Deck -->
+          <div class="location-card" id="loc-card-rooftop" onclick="inspectLocation('rooftop')">
+            <div class="location-card-header">
+              <span class="location-icon-badge">🌇</span>
+              <div>
+                <div class="location-title">Rooftop Deck</div>
+                <div class="location-sub">SECTOR 05 • ACADEMY TOWER</div>
+              </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <span style="font-size: 0.7rem; font-weight: 800; background: rgba(157, 78, 221, 0.25); color: var(--accent-purple); border: 1px solid var(--accent-purple); padding: 2px 8px; border-radius: 6px;">STATUS: WIND MONITORING</span>
+            </div>
+            <p class="location-preview-text">Rusted chain-link fencing, sweeping sunset views, and familiar spirit roosts.</p>
+          </div>
+
+          <!-- Sector 06: Train Station & Crossing -->
+          <div class="location-card" id="loc-card-station" onclick="inspectLocation('station')">
+            <div class="location-card-header">
+              <span class="location-icon-badge">🚉</span>
+              <div>
+                <div class="location-title">Sakuraoka Station</div>
+                <div class="location-sub">SECTOR 06 • RAILWAY LINE</div>
+              </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <span style="font-size: 0.7rem; font-weight: 800; background: rgba(255, 209, 102, 0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 2px 8px; border-radius: 6px;">STATUS: STATIC SURGE</span>
+            </div>
+            <p class="location-preview-text">Chime alarms, flickering neon platforms, and heavy evening commuter stress.</p>
+          </div>
+
+          <!-- Sector 07: Old Shrine Grounds -->
+          <div class="location-card" id="loc-card-shrine" onclick="inspectLocation('shrine')">
+            <div class="location-card-header">
+              <span class="location-icon-badge">⛩️</span>
+              <div>
+                <div class="location-title">Old Shrine Grounds</div>
+                <div class="location-sub">SECTOR 07 • NORTH RIDGE</div>
+              </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <span style="font-size: 0.7rem; font-weight: 800; background: rgba(0, 240, 255, 0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); padding: 2px 8px; border-radius: 6px;">STATUS: ANCIENT NODE</span>
+            </div>
+            <p class="location-preview-text">Mossy stone steps, bronze acoustic bells, and centuries-old spirit wards.</p>
+          </div>
+
+          <!-- Sector 08: Shibuya Arcade Edge -->
+          <div class="location-card" id="loc-card-arcade" onclick="inspectLocation('arcade')">
+            <div class="location-card-header">
+              <span class="location-icon-badge">🕹️</span>
+              <div>
+                <div class="location-title">Shibuya Arcades</div>
+                <div class="location-sub">SECTOR 08 • URBAN EDGE</div>
+              </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+              <span style="font-size: 0.7rem; font-weight: 800; background: rgba(255, 0, 127, 0.3); color: var(--accent-pink); border: 1px solid var(--accent-pink); padding: 2px 8px; border-radius: 6px;">STATUS: DANGER ZONE</span>
+            </div>
+            <p class="location-preview-text">Multi-story game centers, digital billboard interference, and acute Dissonance spikes.</p>
+          </div>
+
         </div>
 
-        <!-- Location Inspector Panel -->
-        <div class="location-detail-inspector" id="location-inspector">
-          <div class="inspector-title" id="inspector-title">🎻 Music Prep Room B ("The Sanctuary")</div>
-          <div class="inspector-meta" id="inspector-meta">Primary Base of Operations • West Wing Second Floor</div>
-          <div class="inspector-body" id="inspector-body">
+        <!-- High-Glow Sector Inspector Display Panel -->
+        <div class="location-detail-inspector" id="location-inspector" style="margin-top: 1.5rem; background: rgba(6, 2, 14, 0.95); border: 1.5px solid var(--accent-cyan); border-radius: 18px; padding: 24px; box-shadow: 0 0 35px rgba(0, 240, 255, 0.25);">
+          
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <div class="inspector-title" id="inspector-title" style="font-size: 1.6rem; font-weight: 900; color: var(--accent-cyan);">
+                🎻 Music Prep Room B ("The Sanctuary")
+              </div>
+              <div class="inspector-meta" id="inspector-meta" style="font-size: 0.85rem; color: var(--accent-gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
+                Primary Base of Operations • West Wing Second Floor
+              </div>
+            </div>
+            <div id="inspector-telemetry" style="background: rgba(0, 240, 255, 0.1); border: 1px solid var(--accent-cyan); border-radius: 10px; padding: 6px 14px; font-family: 'Courier New', monospace; font-size: 0.8rem; color: var(--accent-cyan);">
+              FREQ: 440Hz // RISK: 02% (STABLE)
+            </div>
+          </div>
+
+          <div class="inspector-body" id="inspector-body" style="font-size: 1rem; line-height: 1.65; color: var(--text-main); margin-bottom: 1rem;">
             Prep Room B is the band's official haven. Smelling faintly of old wood varnish, polished keytar plastic, and warm tube amplifiers, this room holds the official evidence board where Aoi maps student Dissonance reports. Behind Locker 102 lies a hidden acoustic resonance seam that leads straight down into the subterranean caverns.
           </div>
-          <div class="field-log-box" id="inspector-log">
+
+          <div class="field-log-box" id="inspector-log" style="background: #030108; border: 1px solid var(--card-border); border-left: 4px solid var(--accent-pink); border-radius: 0 12px 12px 0; padding: 16px 20px; font-family: 'Courier New', Courier, monospace; font-size: 0.88rem; color: var(--accent-pink);">
             <strong>[SERA'S AUDIO MONITOR LOG #042]:</strong> "Nekomi was leaning against the window frame tuning her electric guitar... when the ambient humidity dropped 4 degrees. The familiar hum behind Locker 102 vibrated in G-minor."
           </div>
         </div>
@@ -1252,31 +1349,63 @@
       }
     }
 
-    /* LOCATION INSPECTOR INTERACTIVE LOGIC */
+    /* LOCATION INSPECTOR INTERACTIVE LOGIC & SECTOR DATA */
     const LOCATION_DATA = {
       preproom: {
         title: "🎻 Music Prep Room B (\"The Sanctuary\")",
-        meta: "Primary Base of Operations • West Wing Second Floor",
-        body: "Prep Room B is the band's official haven. Smelling faintly of old wood varnish, polished keytar plastic, and warm tube amplifiers, this room holds the official evidence board where Aoi maps student Dissonance reports. Behind Locker 102 lies a hidden acoustic resonance seam that leads straight down into the subterranean caverns.",
-        log: "<strong>[SERA'S AUDIO MONITOR LOG #042]:</strong> \"Nekomi was leaning against the window frame tuning her electric guitar... when the ambient humidity dropped 4 degrees. The familiar hum behind Locker 102 vibrated in G-minor.\""
+        meta: "SECTOR 01 • Primary Base • West Wing 2nd Floor",
+        telemetry: "FREQ: 440Hz // RISK: 02% (STABLE)",
+        body: "Prep Room B is the band's confidential operational base. Smelling faintly of old wood varnish, polished keytar plastic, and warm tube amplifiers, this room houses Aoi's evidence chalkboard mapping student emotional static. Behind Locker 102 lies a concealed acoustic resonance seam leading straight into subterranean tunnels.",
+        log: "<strong>[SERA'S AUDIO MONITOR LOG #042]:</strong> \"Nekomi was tuning her electric guitar near the window when the ambient humidity dropped 4 degrees. The hidden resonance seam behind Locker 102 hummed faintly in G-minor.\""
       },
       substage: {
-        title: "🏟️ The Sub-Stage (\"The Underground Arena\")",
-        meta: "Subterranean Amphitheater • -40 Feet Beneath Prep Room B",
-        body: "A forgotten stone cathedral built beneath the school decades ago. Features vaulted stone arches, acoustic damping panels, string fairy lights, and vintage stage monitors. Here, the band sheds their quiet academic personas to perform high-decibel 180 BPM J-Rock.",
-        log: "<strong>[AKARI'S DRUM LOG #019]:</strong> \"The acoustic echo in this cavern is insane! When I hit the crash cymbal, the resonance stays suspended in the air for five full seconds before shattering Dissonance static!\""
+        title: "🏟️ The Sub-Stage (\"Underground Arena\")",
+        meta: "SECTOR 02 • Subterranean Cathedral • -40 Feet Depth",
+        telemetry: "FREQ: 180 BPM // RISK: 12% (HIGH HARMONY)",
+        body: "A forgotten stone cathedral constructed beneath the school grounds decades ago. Lined with vaulted stone arches, heavy acoustic damping panels, string fairy lights, and vintage amplifier stacks. Here, the band plugs in weaponized gear to shatter real-world Dissonance static.",
+        log: "<strong>[AKARI'S DRUM LOG #019]:</strong> \"The acoustic echo down here is insane! When I slam the crash cymbal, the resonance stays suspended in the air for five full seconds before completely shattering the static!\""
       },
       academy: {
-        title: "🏫 Class 3-A & Sakuraoka High Campus",
-        meta: "Surface World • Music Division Grounds",
-        body: "On the surface, Sakuraoka High is a prestigious arts academy with cherry blossom courtyards and sunlit classrooms. Here, the four girls maintain their polite 'Light Music Research Group' cover, turning in acoustic homework arrangements to keep faculty off their trail.",
-        log: "<strong>[AOI'S LOGISTICS NOTEBOOK]:</strong> \"Classroom 3-A's afternoon sunlight is perfect for keeping up appearances. Faculty advisor confirmed our soft acoustic showcase for next Tuesday.\""
+        title: "🏫 Class 3-A & Academy Grounds",
+        meta: "SECTOR 03 • Surface Civilian Zone • Music Division",
+        telemetry: "FREQ: 528Hz // RISK: 18% (ECHO DETECTED)",
+        body: "On the surface, Sakuraoka High is a prestigious arts academy with cherry blossom courtyards and sunlit classrooms. Here, the four girls maintain their innocent civilian personas, turning in acoustic homework arrangements to keep faculty advisors completely off their scent.",
+        log: "<strong>[AOI'S LOGISTICS NOTEBOOK]:</strong> \"Classroom 3-A's afternoon sunlight provides ideal coverage. Our soft acoustic showcase is locked in for Tuesday—keeping faculty suspicion at absolute zero.\""
       },
       shopping: {
-        title: "🍰 Sakuraoka Shopping District & Cafes",
-        meta: "After-School Commercial District & Crepe Stands",
-        body: "The vibrant neon-lit shopping avenue just outside campus gates. The band gathers here after rehearsals to eat strawberry shortcake parfaits, buy replacement guitar picks, and keep an eye out for sudden emotional static corruption among fellow students.",
-        log: "<strong>[NEKOMIS NOTEBOOK]:</strong> \"Sera got strawberry cream on her cheek again while we were discussing the setlist. I looked away fast so she wouldn't see me panic.\""
+        title: "🍰 Sakuraoka Shopping District",
+        meta: "SECTOR 04 • After-School Pedestrian Hub & Cafes",
+        telemetry: "FREQ: 320Hz // RISK: 35% (MILD DISSONANCE)",
+        body: "A vibrant neon-lit pedestrian avenue right outside campus gates, lined with crepe stands, music shops, and outdoor cafes. The band gathers here after rehearsals to eat strawberry parfaits, buy replacement guitar picks, and intercept early student stress buildup.",
+        log: "<strong>[NEKOMI'S NOTEBOOK]:</strong> \"Sera got strawberry cream on her cheek while we were going over the setlist. I looked away fast toward the neon lights so she wouldn't see me completely lose my cool.\""
+      },
+      rooftop: {
+        title: "🌇 Academy Rooftop Observation Deck",
+        meta: "SECTOR 05 • High-Altitude Perimeter • Tower Roof",
+        telemetry: "FREQ: 610Hz // RISK: 22% (WIND TURBULENCE)",
+        body: "An isolated rooftop terrace surrounded by rusted chain-link fencing and heavy HVAC units. It offers an unobstructed view of the entire valley skyline. The girls retreat here when subterranean pressure gets too intense, and it serves as the primary roost for their familiars, Byakko and Yozora.",
+        log: "<strong>[SERA'S OBSERVATION NOTE]:</strong> \"Watching the sunset from up here with Nekomi... when the wind catches her hair, Yozora's eyes light up with blue fire. The whole town below looks so peaceful from this high up.\""
+      },
+      station: {
+        title: "🚉 Sakuraoka Station & Rail Crossing",
+        meta: "SECTOR 06 • Transit Arterial • Express Line",
+        telemetry: "FREQ: 210Hz // RISK: 58% (HIGH DISSONANCE)",
+        body: "The bustling railway hub where thousands of students transition daily. The rhythmic clatter of train tracks and mechanical signal chimes hide sudden drops in atmospheric pressure, making it a frequent spot for localized static breaches during rush hour.",
+        log: "<strong>[AOI'S TACTICAL RADAR]:</strong> \"Signal crossing gate #3 is displaying heavy electromagnetic distortion. Aoi and Akari dispatched for immediate ticket slip interception before the 5:15 PM train.\""
+      },
+      shrine: {
+        title: "⛩️ Old Shrine Grounds & Bell Tower",
+        meta: "SECTOR 07 • Spiritual Ridge • North Valley",
+        telemetry: "FREQ: 880Hz // RISK: 05% (ANCIENT BARRIER)",
+        body: "Ancient stone steps leading up into a dense cedar forest on the edge of town. Home to massive bronze acoustic bells and torii gates that held off emotional static for centuries before modern electric amplification took over.",
+        log: "<strong>[FAMILIAR SPECIES ARCHIVE]:</strong> \"Byakko and Komorebi favor resting near the bronze bell rim. The metal still hums with ancestral acoustic energy that charges their spirit cores.\""
+      },
+      arcade: {
+        title: "🕹️ Shibuya Commercial Edge & Arcades",
+        meta: "SECTOR 08 • High-Density District • Arcade Hall",
+        telemetry: "FREQ: 120Hz // RISK: 85% (CRITICAL BREACH ZONE)",
+        body: "A sprawling multi-story labyrinth of blazing neon signs, rhythm game cabinets, and rooftop walkways. Due to heavy youth crowds dealing with intense academic anxiety, Shibuya is a dangerous hotbed for explosive Dissonance anomalies.",
+        log: "<strong>[AKARI'S COMBAT REPORT]:</strong> \"Arcade floor 3 was completely frozen over in gray static! We cranked the amps to 11 and shattered the barrier right as the beat dropped!\""
       }
     };
 
@@ -1290,6 +1419,8 @@
 
       document.getElementById('inspector-title').innerHTML = data.title;
       document.getElementById('inspector-meta').innerText = data.meta;
+      const telElem = document.getElementById('inspector-telemetry');
+      if (telElem) telElem.innerText = data.telemetry;
       document.getElementById('inspector-body').innerText = data.body;
       document.getElementById('inspector-log').innerHTML = data.log;
     }
