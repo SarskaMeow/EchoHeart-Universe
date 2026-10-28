@@ -1084,7 +1084,7 @@
       </div>
 
       <div class="chatter-group-header">✦ Live Online Lounge</div>
-      <!-- Real-time Firestore online users list (Members & Guests) -->
+      <!-- Real-time presence list populated by Firestore -->
       <div id="online-users-list" style="display:flex; flex-direction:column; gap:6px;"></div>
 
       <div class="chatter-group-header">✦ Core Four (NPCs)</div>
@@ -1162,17 +1162,6 @@
         </div>
         <span class="status-dot-indicator active" title="Active"></span>
       </div>
-
-      <div class="chatter-group-header">✦ Real People & Members</div>
-
-      <div class="chatter-card" onclick="openReportModal('Guest_Otaku99')">
-        <div class="chatter-avatar" style="background: #332050;">G</div>
-        <div class="chatter-info">
-          <span class="chatter-name">Guest_Otaku99</span>
-          <span class="chatter-role">Anonymous Listener</span>
-        </div>
-        <span class="status-dot-indicator away" title="Away"></span>
-      </div>
     </aside>
 
   </div>
@@ -1225,7 +1214,7 @@
     import { auth, db } from './firebase-config.js?v=3';
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { 
-      doc, getDoc, collection, query, orderBy, limit, onSnapshot, addDoc, deleteDoc, serverTimestamp 
+      doc, getDoc, setDoc, collection, query, orderBy, limit, onSnapshot, addDoc, deleteDoc, serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     window.currentUser = null;
@@ -1253,59 +1242,79 @@
       'bots': '🤖 BOT-ROLEPLAY'
     };
 
-    // 🏫 PROCEDURAL TIME-OF-DAY WORLD GENERATOR DATA
-    const TIME_CONTEXT_POOLS = {
-      morning: [
-        { author: "Locker_104_Ren", text: "Morning rush! Who left their coffee cup on locker 104's door shelf again? ☕" },
-        { author: "Nekomi Aoyama", text: "Guilty... but it was matcha and I was running late for homeroom! 🍵" },
-        { author: "Akari Minase", text: "First period bell in 5 minutes! Sprint speed test starting NOW 🏃‍♀️💨" },
-        { author: "Locker_212_Mina", text: "Did anyone actually finish the page 44 math homework? Please tell me I'm not the only one..." },
-        { author: "Aoi Mizuhara", text: "Mina, math solutions were posted on the board yesterday. Make sure to review during morning homeroom." }
-      ],
-      class_hours: [
-        { author: "Locker_052_Taro", text: "Sensei is writing notes so fast my pencil is literally smoking ✍️🔥" },
-        { author: "Sera Hanibara", text: "Psst, listening to synth synth presets under my desk... 🎧✨" },
-        { author: "Locker_142_Rin", text: "Whoever has hallway pass for B-wing, please grab extra sticky notes from library drop!" },
-        { author: "Akari Minase", text: "Counting down the seconds until lunch period... 12 minutes left 🍱" },
-        { author: "Aoi Mizuhara", text: "Pay attention in class, Akari." }
-      ],
-      lunchtime: [
-        { author: "Akari Minase", text: "CAFETERIA PARFAIT LINE IS CLEAR! RUN RUN RUN 🍓✨" },
-        { author: "Nekomi Aoyama", text: "Acoustic jam session on the rooftop during lunch today! Bring your sandwiches~ 🎸" },
-        { author: "Locker_077_Kenji", text: "Trading half a tuna sando for matcha Pocky at locker 77 table!" },
-        { author: "Sera Hanibara", text: "The sunlight on the rooftop is so warm right now~ perfect volume testing weather ✨" },
-        { author: "Locker_188_Sora", text: "Who was playing synth melodies in the music room? Sounded super retro!" }
-      ],
-      afternoon: [
-        { author: "Locker_205_Daisuke", text: "Post-lunch 5th period fatigue is real... eyes getting so heavy 😴" },
-        { author: "Locker_115_Hana", text: "Lab period went well! No test tubes were broken today ✨" },
-        { author: "Aoi Mizuhara", text: "Reminder: Club activity forms due at the main office before final bell." },
-        { author: "Nekomi Aoyama", text: "Polishing chord progressions in my notebook until dismissal~ 🎶" }
-      ],
-      club_hours: [
-        { author: "Sera Hanibara", text: "Rooftop practice setup complete! Amplifiers powered and ready ⚡" },
-        { author: "Akari Minase", text: "DRUM ROLL TIME! Let's get this tempo up to 160 BPM today! 🥁🔥" },
-        { author: "Nekomi Aoyama", text: "Girls of Phantom bridge section sounds so clean with the new distortion pedal!" },
-        { author: "Locker_301_Yuki", text: "Echoes of the band practice sound amazing from down in the courtyard 🌅" },
-        { author: "Aoi Mizuhara", text: "Keep the bass end balanced so we don't shake the staff room windows." }
-      ],
-      night: [
-        { author: "Locker_188_Sora", text: "Anyone still up doing late homework? Locker 188 group chat is live 🌙" },
-        { author: "Nekomi Aoyama", text: "Stargazing from my desk window... writing acoustic lyrics for Nekomi & Sera duo ✨" },
-        { author: "Sera Hanibara", text: "Exporting audio stems for our demo! Check Neko FM deck in a bit~ 🎧" },
-        { author: "Locker_089_Kaito", text: "Night owl study grind session... caffeine level at 100% ☕" },
-        { author: "Akari Minase", text: "Goodnight everyone! Heavy drum training tomorrow morning!! 🥁💤" }
-      ]
-    };
+    // --- REAL-TIME PRESENCE & ONLINE USER LIST TRACKER ---
+    let myPresenceDocId = null;
 
-    function getCurrentTimeSlot() {
-      const hour = new Date().getHours();
-      if (hour >= 7 && hour < 9) return 'morning';
-      if (hour >= 9 && hour < 12) return 'class_hours';
-      if (hour >= 12 && hour < 14) return 'lunchtime';
-      if (hour >= 14 && hour < 16) return 'afternoon';
-      if (hour >= 16 && hour < 19) return 'club_hours';
-      return 'night';
+    async function registerUserPresence(user, userData) {
+      // Get or generate persistent Guest ID for unauthenticated visitors
+      let guestId = localStorage.getItem('otaku_guest_presence_id');
+      if (!guestId) {
+        guestId = 'guest_' + Math.random().toString(36).substring(2, 8);
+        localStorage.setItem('otaku_guest_presence_id', guestId);
+      }
+
+      myPresenceDocId = user ? user.uid : guestId;
+
+      const presenceRef = doc(db, 'presence', myPresenceDocId);
+      const isMod = userData && (userData.role === 'admin' || userData.role === 'moderator' || userData.isAdmin === true);
+      const displayName = user 
+        ? (isMod ? '🛡️ MODERATOR' : (userData?.displayName || user.displayName || 'Portal Member')) 
+        : `Guest_${guestId.replace('guest_', '').substring(0, 4)}`;
+
+      const role = user ? (isMod ? 'System Overwatch' : 'Portal Member') : 'Portal Visitor';
+      const status = user ? 'active' : 'away';
+
+      const updateData = {
+        displayName,
+        role,
+        status,
+        lastActive: serverTimestamp(),
+        isGuest: !user
+      };
+
+      try {
+        await setDoc(presenceRef, updateData, { merge: true });
+      } catch (e) {
+        console.warn('Presence registration failed:', e);
+      }
+    }
+
+    function initOnlineUsersListener() {
+      const container = document.getElementById('online-users-list');
+      if (!container) return;
+
+      const presenceCol = collection(db, 'presence');
+      onSnapshot(presenceCol, (snapshot) => {
+        container.innerHTML = '';
+        if (snapshot.empty) {
+          container.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:4px;">No active chatters</div>';
+          return;
+        }
+
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const name = data.displayName || 'Anonymous';
+          const role = data.role || 'Visitor';
+          const status = data.status || 'active';
+          const initial = name.replace(/[^a-zA-Z]/g, '').charAt(0).toUpperCase() || 'U';
+
+          const card = document.createElement('div');
+          card.className = 'chatter-card';
+          card.onclick = () => window.openReportModal && window.openReportModal(name);
+
+          card.innerHTML = `
+            <div class="chatter-avatar">${initial}</div>
+            <div class="chatter-info">
+              <span class="chatter-name">${name}</span>
+              <span class="chatter-role">${role}</span>
+            </div>
+            <span class="status-dot-indicator ${status}" title="${status}"></span>
+          `;
+          container.appendChild(card);
+        });
+      }, (err) => {
+        console.warn('Online list listener error:', err);
+      });
     }
 
     // Prompt login function for guests
@@ -1376,6 +1385,10 @@
         }
         if (sendBtn) sendBtn.disabled = true;
       }
+
+      // Register presence in Firestore & start online users list listener
+      await registerUserPresence(window.currentUser, window.userData);
+      initOnlineUsersListener();
 
       window.switchChannel(window.activeChannelKey);
     });
@@ -1470,17 +1483,7 @@
       } catch (e) {
         console.warn("Firestore collection unavailable, falling back to local channel stream.");
       }
-
-      if (channelKey === 'bots') {
-        // Local browser simulation disabled; handled by GitHub Actions cron.
-      }
     };
-
-    // 3. Continuous Time-of-Day Procedural Simulation (Disabled)
-    function startProceduralLiveWorldSimulation() {
-      // Local browser simulation disabled to prevent duplicate local spam.
-      // All NPC ticks are managed 24/7 by scripts/bot-tick.js via GitHub Actions.
-    }
 
     async function postNpcMessageToFirestore(author, role, text) {
       try {
@@ -1745,6 +1748,7 @@
       if (dot) dot.className = `status-dot-indicator ${newStatus}`;
     }
   </script>
+
   <!-- GLOBAL SITE FOOTER -->
 <footer class="site-footer">
   <div class="footer-container">
