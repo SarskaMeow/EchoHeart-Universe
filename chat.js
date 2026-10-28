@@ -1,4 +1,4 @@
-// chat.js — Live Firestore Chat Feed, 3-Tier Access, Admin Overdrive, Auto NPC Engine & Real-Time Presence Sync
+// chat.js — Live Firestore Chat Feed, Anonymous Guest Auth, 3-Tier Access, Admin Overdrive, Auto NPC Engine & Real-Time Presence Sync
 import { db } from './firebase-config.js';
 import { 
   collection, 
@@ -7,17 +7,104 @@ import {
   limit, 
   onSnapshot,
   doc,
-  setDoc
+  setDoc,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { 
+  getAuth, 
+  signInAnonymously, 
+  onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+const auth = getAuth();
 let chatUnsubscribe = null;
 let isSeeding = false;
+
+// ==========================================================================
+// 🔑 FIREBASE ANONYMOUS GUEST AUTO-LOGIN & PRESENCE TRACKER
+// ==========================================================================
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    // If no user is logged in, automatically sign them in as an Anonymous Guest
+    try {
+      const cred = await signInAnonymously(auth);
+      window.currentUser = cred.user;
+      console.log("⚡ Auto-signed in as Anonymous Guest:", cred.user.uid);
+    } catch (err) {
+      console.warn("Anonymous auth failed (Ensure Anonymous Sign-In is enabled in Firebase Console):", err);
+    }
+  } else {
+    window.currentUser = user;
+  }
+
+  // Register user or guest in the live online tracking list
+  updateUserPresenceStatus('active');
+});
+
+// Sync user / guest presence status to Firestore ('users' and 'onlineUsers')
+export async function updateUserPresenceStatus(status = 'active') {
+  if (!window.currentUser) return;
+
+  const uid = window.currentUser.uid;
+  const isAnon = window.currentUser.isAnonymous;
+  const displayName = isAnon 
+    ? `Guest (${uid.substring(0, 4)})` 
+    : (window.userData?.displayName || window.currentUser.displayName || 'Classmate');
+
+  try {
+    // 1. Sync profile document
+    const userRef = doc(db, 'users', uid);
+    await setDoc(userRef, {
+      uid: uid,
+      displayName: displayName,
+      isGuest: isAnon,
+      status: status,
+      lastActive: Date.now()
+    }, { merge: true });
+
+    // 2. Sync active online presence document
+    const presenceRef = doc(db, 'onlineUsers', uid);
+    if (status === 'offline') {
+      await deleteDoc(presenceRef);
+    } else {
+      await setDoc(presenceRef, {
+        uid: uid,
+        displayName: displayName,
+        isGuest: isAnon,
+        status: status,
+        lastSeen: Date.now()
+      }, { merge: true });
+    }
+  } catch (err) {
+    console.warn("User presence status sync warning:", err);
+  }
+}
+
+// Automatically remove presence or mark offline when tab closes
+window.addEventListener('beforeunload', () => {
+  if (window.currentUser) {
+    updateUserPresenceStatus('offline');
+  }
+});
+
+// Listen for custom status changes dispatched from chat.html or auto-away timer
+window.addEventListener('userStatusChanged', (e) => {
+  const newStatus = e.detail?.status || 'active';
+  updateUserPresenceStatus(newStatus);
+});
+
+// Helper to check if current user has Admin Overdrive privileges
+function isUserAdmin() {
+  if (localStorage.getItem('neko_admin_override') === 'true') return true;
+  return !!(window.userData && (window.userData.isAdmin || window.userData.role === 'admin' || window.userData.role === 'moderator'));
+}
 
 // ==========================================================================
 // 🛡️ SAFETY RESTRICTIONS & BOT MODERATOR ENGINE
 // ==========================================================================
 
-const PROFANITY_BLOCKLIST = ['badword1', 'badword2', 'slur1', 'toxicword']; // Add custom blocklist terms as needed
+const PROFANITY_BLOCKLIST = ['badword1', 'badword2', 'slur1', 'toxicword']; 
 
 const CRISIS_KEYWORDS = [
   'suicide', 'kill myself', 'want to die', 'end my life', 
@@ -34,7 +121,6 @@ function checkCrisisIntervention(text) {
   return CRISIS_KEYWORDS.some(phrase => lower.includes(phrase));
 }
 
-// Quiet Automated Moderator Bot (`NekoBot 🛡️`) Configuration
 const MOD_BOT_NAME = "🛡️ NekoBot (Mod)";
 const BOT_MESSAGES = [
   "🤖 [System Notice]: Welcome to Otaku Overload! Keep the vibes cyberpunk, stay respectful, and enjoy the 24/7 Neko FM stream 🌸",
@@ -80,41 +166,6 @@ setInterval(() => {
   triggerBotBroadcast();
 }, 5 * 60 * 1000);
 
-// ==========================================================================
-// ⚡ REAL-TIME USER PRESENCE & STATUS SYNC ENGINE
-// ==========================================================================
-
-// Sync user status to Firestore
-export async function updateUserPresenceStatus(status) {
-  const userStatus = status || localStorage.getItem('neko_user_status') || 'active';
-  
-  if (!window.currentUser) return;
-
-  try {
-    const userRef = doc(db, 'users', window.currentUser.uid);
-    await setDoc(userRef, {
-      uid: window.currentUser.uid,
-      displayName: window.userData?.displayName || window.currentUser.displayName || 'Portal Member',
-      status: userStatus,
-      lastActive: Date.now()
-    }, { merge: true });
-  } catch (err) {
-    console.warn("User presence status sync warning:", err);
-  }
-}
-
-// Listen for custom status changes dispatched from chat.html or auto-away timer
-window.addEventListener('userStatusChanged', (e) => {
-  const newStatus = e.detail?.status || 'active';
-  updateUserPresenceStatus(newStatus);
-});
-
-// Helper to check if current user has Admin Overdrive privileges
-function isUserAdmin() {
-  if (localStorage.getItem('neko_admin_override') === 'true') return true;
-  return !!(window.userData && (window.userData.isAdmin || window.userData.role === 'admin' || window.userData.role === 'moderator'));
-}
-
 // Determine active channel collection across all modes including backstage VIP
 function getActiveCollectionName() {
   const mode = localStorage.getItem('neko_active_mode') || 'twilight';
@@ -123,26 +174,18 @@ function getActiveCollectionName() {
   return 'chat_messages';
 }
 
-// Helper to safely convert any timestamp format to numeric milliseconds
 function parseTimestampToMillis(rawTimestamp) {
   if (!rawTimestamp) return Date.now();
-    
-  // Firestore Timestamp object (.toDate())
-  if (typeof rawTimestamp.toDate === 'function') {
-    return rawTimestamp.toDate().getTime();
-  }
-    
-  // Already a numeric timestamp
-  if (typeof rawTimestamp === 'number') {
-    return rawTimestamp;
-  }
-
-  // String or Date instance fallback
+  if (typeof rawTimestamp.toDate === 'function') return rawTimestamp.toDate().getTime();
+  if (typeof rawTimestamp === 'number') return rawTimestamp;
   const parsed = new Date(rawTimestamp).getTime();
   return isNaN(parsed) ? Date.now() : parsed;
 }
 
-// 1. Initialize Real-Time Chat Listener
+// ==========================================================================
+// 1. REAL-TIME CHAT FEED LISTENER
+// ==========================================================================
+
 export function initChatFeed() {
   if (chatUnsubscribe) {
     chatUnsubscribe();
@@ -151,8 +194,6 @@ export function initChatFeed() {
 
   const collectionName = getActiveCollectionName();
   const chatRef = collection(db, collectionName);
-    
-  // Fetch up to 75 latest messages without strict database-side data-type indexing
   const q = query(chatRef, limit(75));
 
   const messagesDisplay = document.getElementById('messages-display') || document.getElementById('chat-feed');
@@ -167,7 +208,6 @@ export function initChatFeed() {
       messages.push({ id: doc.id, ...data, _timeMs: timeMs });
     });
 
-    // Sort chronologically (oldest at top, newest at bottom)
     messages.sort((a, b) => a._timeMs - b._timeMs);
 
     if (messages.length === 0 && !isSeeding) {
@@ -184,8 +224,6 @@ export function initChatFeed() {
 
     if (messages.length > 0) {
       messagesDisplay.innerHTML = messages.map(msg => renderMessageHTML(msg)).join('');
-        
-      // Auto-scroll to the bottom of the feed for live chat behavior
       setTimeout(() => {
         messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
       }, 50);
@@ -199,6 +237,7 @@ function renderMessageHTML(msg) {
   const isCore4 = ['Nekomi 🎸', 'Sera 🎹', 'Akari Minase 🎤', 'Aoi 🥁'].includes(msg.senderName);
   const isVIPMsg = msg.isVIP;
   const isAdminMsg = msg.isAdmin;
+  const isGuestMsg = msg.isGuest;
 
   let badge = '';
   if (isCore4) {
@@ -207,6 +246,8 @@ function renderMessageHTML(msg) {
     badge = `<span style="background:rgba(255,77,109,0.25); border:1px solid #ff4d6d; color:#ff4d6d; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">MOD</span>`;
   } else if (isVIPMsg) {
     badge = `<span class="vip-badge" style="margin-left:6px;">👑 VIP</span>`;
+  } else if (isGuestMsg) {
+    badge = `<span style="background:rgba(160,146,192,0.2); border:1px solid #a092c0; color:#a092c0; font-size:0.7rem; padding:2px 6px; border-radius:10px; margin-left:6px; font-weight:800;">GUEST</span>`;
   }
 
   const borderAccent = isAdminMsg ? '#ff4d6d' : (isVIPMsg ? '#ffd166' : (msg.color || '#a88beb'));
@@ -220,7 +261,7 @@ function renderMessageHTML(msg) {
     <div class="chat-msg-item" style="background: rgba(15,10,30,0.6); padding: 12px 16px; border-radius: 12px; border-left: 4px solid ${borderAccent}; margin-bottom: 8px;">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
         <span class="${msg.nameGlow || ''}" style="font-weight: 800; color: ${borderAccent}; font-size: 0.9rem;">
-          ${msg.senderName} ${badge}
+          ${escapeHTML(msg.senderName)} ${badge}
         </span>
         <span style="font-size: 0.72rem; color: #a092c0;">
           ${formattedTime}
@@ -240,7 +281,10 @@ function escapeHTML(str) {
   );
 }
 
-// 2. Global Channel Switcher
+// ==========================================================================
+// 2. GLOBAL CHANNEL SWITCHER
+// ==========================================================================
+
 window.switchChatChannel = async function(mode) {
   if (mode === 'twilight' || mode === 'general') {
     setModeState('twilight');
@@ -253,46 +297,33 @@ window.switchChatChannel = async function(mode) {
   }
 
   if (mode === 'basement') {
-    if (!window.currentUser) {
-      alert("Sign in with Google to enter Basement Mode.");
-      revertModeSelectorUI();
-      return;
-    }
-
-    if (window.userData && window.userData.ageVerified17) {
-      setModeState('basement');
-      return;
-    }
-
-    if (typeof window.handleContentAccess === "function") {
-      const allowed = await window.handleContentAccess('basement');
-      if (allowed) {
+    if (window.currentUser && !window.currentUser.isAnonymous) {
+      if (window.userData && window.userData.ageVerified17) {
         setModeState('basement');
-      } else {
-        revertModeSelectorUI();
+        return;
       }
-    } else {
-      alert("17+ Age Verification required.");
-      revertModeSelectorUI();
+      if (typeof window.handleContentAccess === "function") {
+        const allowed = await window.handleContentAccess('basement');
+        if (allowed) {
+          setModeState('basement');
+          return;
+        }
+      }
     }
+    alert("17+ Age Verification and Google login required to view Basement channel.");
+    revertModeSelectorUI();
     return;
   }
 
   if (mode === 'backstage' || mode === 'vip') {
-    if (!window.currentUser) {
-      alert("Sign in with Google to view VIP Backstage status.");
-      revertModeSelectorUI();
-      return;
-    }
-
-    if (window.userData && window.userData.isVIP) {
+    if (window.currentUser && window.userData && window.userData.isVIP) {
       setModeState('backstage');
     } else {
       revertModeSelectorUI();
       if (typeof window.showVIPPromoModal === "function") {
         window.showVIPPromoModal();
       } else {
-        alert("👑 VIP Backstage Pass required to enter this channel!");
+        alert("👑 Active VIP Backstage Pass required to enter this channel!");
       }
     }
   }
@@ -321,7 +352,10 @@ function revertModeSelectorUI() {
   if (selector) selector.value = current;
 }
 
-// 3. User Message Sender with Profanity & Crisis Filtering + Secret Commands
+// ==========================================================================
+// 3. MESSAGE SENDER WITH SAFETY FILTERS & GUEST HANDLING
+// ==========================================================================
+
 window.handleSendChatMessage = async function(event) {
   if (event) event.preventDefault();
   const input = document.getElementById('chat-input') || document.getElementById('user-input-msg');
@@ -338,7 +372,7 @@ window.handleSendChatMessage = async function(event) {
     return;
   }
 
-  // 🛡️ Content Restriction & Safety Enforcement
+  // Content Restriction & Safety Enforcement
   if (containsProfanity(text)) {
     alert("🛡️ [Auto-Mod]: Please keep our community lounge clean and avoid prohibited language.");
     return;
@@ -350,16 +384,11 @@ window.handleSendChatMessage = async function(event) {
     return;
   }
 
-  if (!window.currentUser && !isUserAdmin()) {
-    alert("Please log in with Google to post messages!");
-    return;
-  }
-
   const currentMode = localStorage.getItem('neko_active_mode') || 'twilight';
 
   if (!isUserAdmin()) {
     if (currentMode === 'basement' && (!window.userData || !window.userData.ageVerified17)) {
-      alert("You must complete 17+ age verification to post in Basement Channel!");
+      alert("You must log in and complete 17+ age verification to post in Basement Channel!");
       return;
     }
     if (currentMode === 'backstage' && (!window.userData || !window.userData.isVIP)) {
@@ -371,27 +400,26 @@ window.handleSendChatMessage = async function(event) {
   try {
     const collectionName = getActiveCollectionName();
     const isAdmin = isUserAdmin();
-    const userStatus = localStorage.getItem('neko_user_status') || 'active';
+    const isAnon = window.currentUser ? window.currentUser.isAnonymous : true;
+    const uid = window.currentUser ? window.currentUser.uid : 'anon';
 
     const senderDisplayName = isAdmin 
       ? '🛡️ MODERATOR' 
-      : (window.userData?.displayName || window.currentUser?.displayName || 'Classmate');
+      : (window.userData?.displayName || window.currentUser?.displayName || `Guest (${uid.substring(0, 4)})`);
 
     await addDoc(collection(db, collectionName), {
       senderName: senderDisplayName,
       text: text,
-      color: isAdmin ? '#ff007f' : (window.userData?.nameColor || (window.userData?.isVIP ? '#ffd166' : '#a88beb')),
+      color: isAdmin ? '#ff007f' : (window.userData?.nameColor || (window.userData?.isVIP ? '#ffd166' : '#a092c0')),
       nameGlow: isAdmin ? 'glow-pink_glow' : (window.userData?.nameGlow || (window.userData?.isVIP ? 'glow-gold_glow' : '')),
       isVIP: !!window.userData?.isVIP || isAdmin,
       isAdmin: isAdmin,
+      isGuest: isAnon,
       isNPC: false,
-      senderStatus: userStatus,
       timestamp: Date.now()
     });
 
-    // Also update presence heartbeat on message post
-    updateUserPresenceStatus(userStatus);
-
+    updateUserPresenceStatus('active');
     input.value = '';
   } catch (err) {
     console.error("Failed to send chat message:", err);
@@ -544,11 +572,9 @@ async function seedInitialNPCChatter() {
   await postNPCMessage(seed2);
 }
 
-// Client-side fallback check (runs when users are actively on the page, throttled to prevent duplication bursts)
 let lastNpcPing = Date.now();
 setInterval(() => {
   const now = Date.now();
-  // Only trigger client-side filler if no message has been posted for at least 25 seconds
   if (now - lastNpcPing > 25000) {
     const isCore4Chance = Math.random() < 0.3;
     const character = isCore4Chance 
@@ -563,12 +589,6 @@ setInterval(() => {
 document.addEventListener('DOMContentLoaded', () => {
   initChatFeed();
   
-  // Sync user presence on initial load if logged in
-  if (window.currentUser) {
-    updateUserPresenceStatus();
-  }
-
-  // Trigger bot welcome broadcast after 2 seconds
   setTimeout(() => {
     triggerBotBroadcast("⚡ [NekoBot]: A new operative has entered the Sub-Stage relay. Welcome aboard!");
   }, 2000);
