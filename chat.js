@@ -18,6 +18,7 @@ import {
 
 const auth = getAuth();
 let chatUnsubscribe = null;
+let onlineUsersUnsubscribe = null;
 let isSeeding = false;
 
 // ==========================================================================
@@ -93,6 +94,37 @@ window.addEventListener('userStatusChanged', (e) => {
   const newStatus = e.detail?.status || 'active';
   updateUserPresenceStatus(newStatus);
 });
+
+// Real-time listener to render all active members and guest profiles live in the sidebar/box
+export function initOnlineUsersListener() {
+  if (onlineUsersUnsubscribe) {
+    onlineUsersUnsubscribe();
+    onlineUsersUnsubscribe = null;
+  }
+
+  const onlineBox = document.getElementById('online-users-list') || document.getElementById('user-list');
+  if (!onlineBox) return;
+
+  const onlineRef = collection(db, 'onlineUsers');
+
+  onlineUsersUnsubscribe = onSnapshot(onlineRef, (snapshot) => {
+    const users = [];
+    snapshot.forEach((doc) => {
+      users.push(doc.data());
+    });
+
+    onlineBox.innerHTML = users.map(u => `
+      <div class="user-presence-item" style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <span style="width:8px; height:8px; border-radius:50%; background:${u.isGuest ? '#a092c0' : '#00f0ff'}; display:inline-block;"></span>
+        <span style="font-size:0.88rem; color:${u.isGuest ? '#a092c0' : '#e2daf8'}; font-weight:${u.isGuest ? 'normal' : 'bold'};">
+          ${escapeHTML(u.displayName)} ${u.isGuest ? '<span style="font-size:0.7rem; opacity:0.7;">(Guest)</span>' : ''}
+        </span>
+      </div>
+    `).join('');
+  }, (err) => {
+    console.warn("Online users listener warning:", err);
+  });
+}
 
 // Helper to check if current user has Admin Overdrive privileges
 function isUserAdmin() {
@@ -588,6 +620,7 @@ setInterval(() => {
 
 document.addEventListener('DOMContentLoaded', () => {
   initChatFeed();
+  initOnlineUsersListener();
   
   setTimeout(() => {
     triggerBotBroadcast("⚡ [NekoBot]: A new operative has entered the Sub-Stage relay. Welcome aboard!");
