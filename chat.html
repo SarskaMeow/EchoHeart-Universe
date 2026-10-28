@@ -1083,6 +1083,10 @@
         </div>
       </div>
 
+      <div class="chatter-group-header">✦ Live Online Lounge</div>
+      <!-- Real-time Firestore online users list (Members & Guests) -->
+      <div id="online-users-list" style="display:flex; flex-direction:column; gap:6px;"></div>
+
       <div class="chatter-group-header">✦ Core Four (NPCs)</div>
       
       <div class="chatter-card" onclick="openReportModal('Nekomi Aoyama [NPC]')">
@@ -1467,16 +1471,16 @@
         console.warn("Firestore collection unavailable, falling back to local channel stream.");
       }
 
-if (channelKey === 'bots') {
-  // Local browser simulation disabled; handled by GitHub Actions cron.
-}
+      if (channelKey === 'bots') {
+        // Local browser simulation disabled; handled by GitHub Actions cron.
+      }
     };
 
-// 3. Continuous Time-of-Day Procedural Simulation (Disabled)
-function startProceduralLiveWorldSimulation() {
-  // Local browser simulation disabled to prevent duplicate local spam.
-  // All NPC ticks are managed 24/7 by scripts/bot-tick.js via GitHub Actions.
-}
+    // 3. Continuous Time-of-Day Procedural Simulation (Disabled)
+    function startProceduralLiveWorldSimulation() {
+      // Local browser simulation disabled to prevent duplicate local spam.
+      // All NPC ticks are managed 24/7 by scripts/bot-tick.js via GitHub Actions.
+    }
 
     async function postNpcMessageToFirestore(author, role, text) {
       try {
