@@ -318,9 +318,9 @@
     }
 
     .msg-author:hover { text-decoration: underline; }
-    .msg-author.npc { color: var(--accent-pink); text-shadow: 0 0 10px var(--accent-pink); }
-    .msg-author.mod { color: #ff007f; font-weight: 900; text-shadow: 0 0 12px #ff007f, 0 0 20px rgba(255, 0, 127, 0.8); letter-spacing: 0.5px; }
-    .msg-author.bot { color: var(--accent-gold); font-weight: 900; text-shadow: 0 0 12px var(--accent-gold); }
+    .msg-author.npc { color: var(--accent-pink); text-shadow: 0 0 10px var(--accent-pink); cursor: default; }
+    .msg-author.mod { color: #ff007f; font-weight: 900; text-shadow: 0 0 12px #ff007f, 0 0 20px rgba(255, 0, 127, 0.8); letter-spacing: 0.5px; cursor: default; }
+    .msg-author.bot { color: var(--accent-gold); font-weight: 900; text-shadow: 0 0 12px var(--accent-gold); cursor: default; }
 
     .msg-time { opacity: 0.6; }
 
@@ -1099,7 +1099,7 @@
 
       <div class="chatter-group-header">✦ Core Four (NPCs)</div>
       
-      <div class="chatter-card" onclick="openReportModal('Nekomi Aoyama [NPC]')">
+      <div class="chatter-card">
         <div class="chatter-avatar" style="background: linear-gradient(135deg, #ff007f, #9d4edd);">N</div>
         <div class="chatter-info">
           <span class="chatter-name">Nekomi Aoyama</span>
@@ -1108,7 +1108,7 @@
         <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
-      <div class="chatter-card" onclick="openReportModal('Akari Minase [NPC]')">
+      <div class="chatter-card">
         <div class="chatter-avatar" style="background: linear-gradient(135deg, #ff4500, #ff007f);">A</div>
         <div class="chatter-info">
           <span class="chatter-name">Akari Minase</span>
@@ -1117,7 +1117,7 @@
         <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
-      <div class="chatter-card" onclick="openReportModal('Sera Hanibara [NPC]')">
+      <div class="chatter-card">
         <div class="chatter-avatar" style="background: linear-gradient(135deg, #ffb7c5, #ff007f);">S</div>
         <div class="chatter-info">
           <span class="chatter-name">Sera Hanibara</span>
@@ -1126,7 +1126,7 @@
         <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
-      <div class="chatter-card" onclick="openReportModal('Aoi Mizuhara [NPC]')">
+      <div class="chatter-card">
         <div class="chatter-avatar" style="background: linear-gradient(135deg, #008080, #00f0ff);">A</div>
         <div class="chatter-info">
           <span class="chatter-name">Aoi Mizuhara</span>
@@ -1137,7 +1137,7 @@
 
       <div class="chatter-group-header">✦ Locker Room Students</div>
 
-      <div class="chatter-card" onclick="openReportModal('Locker_104_Ren')">
+      <div class="chatter-card">
         <div class="chatter-avatar" style="background: #2b1d3a;">R</div>
         <div class="chatter-info">
           <span class="chatter-name">Ren (Locker 104)</span>
@@ -1146,7 +1146,7 @@
         <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
-      <div class="chatter-card" onclick="openReportModal('Locker_212_Mina')">
+      <div class="chatter-card">
         <div class="chatter-avatar" style="background: #1b2e3b;">M</div>
         <div class="chatter-info">
           <span class="chatter-name">Mina (Locker 212)</span>
@@ -1155,7 +1155,7 @@
         <span class="status-dot-indicator active" title="Active"></span>
       </div>
 
-      <div class="chatter-card" onclick="openReportModal('Locker_142_Rin')">
+      <div class="chatter-card">
         <div class="chatter-avatar" style="background: #3d1c28;">R</div>
         <div class="chatter-info">
           <span class="chatter-name">Rin (Locker 142)</span>
@@ -1164,7 +1164,7 @@
         <span class="status-dot-indicator away" title="Away"></span>
       </div>
 
-      <div class="chatter-card" onclick="openReportModal('Locker_077_Kenji')">
+      <div class="chatter-card">
         <div class="chatter-avatar" style="background: #18332a;">K</div>
         <div class="chatter-info">
           <span class="chatter-name">Kenji (Locker 077)</span>
@@ -1239,7 +1239,6 @@
       'avatar_akari': 'images/avatars/akari.png',
       'avatar_nekomi': 'images/avatars/nekomi.png',
       'avatar_lily': 'images/avatars/lily.png',
-      'avatar_sloane': 'images/avatars/sloane.png',
       'avatar_sera': 'images/avatars/sera.png',
       'avatar_aoi': 'images/avatars/aoi.png',
       'avatar_cyberpunk': 'images/avatars/cyberpunk.png',
@@ -1336,7 +1335,7 @@ const PROFANITY_BLOCKLIST = [
         const messageText = SAFETY_MESSAGES[safetyMessageIndex];
         renderLocalBotMessage("🤖 SYSTEM_BOT", messageText);
         safetyMessageIndex = (safetyMessageIndex + 1) % SAFETY_MESSAGES.length;
-      }, 300000); // 5 Minutes
+      }, 900000); // 15 Minutes
     }
 
     // Run safety loop once on initialization
@@ -1612,7 +1611,9 @@ const PROFANITY_BLOCKLIST = [
             const deleteBtn = (isSelf || window.isUserAdmin)
               ? `<button class="delete-msg-btn" onclick="window.deleteMessage('${msg.docId}')">🗑️ Delete</button>` : '';
 
-            const reportBtn = (!isSelf && msg.role !== 'bot' && msg.role !== 'npc')
+            // Reports allowed ONLY for regular live user messages
+            const isNonReportableRole = (msg.role === 'bot' || msg.role === 'npc' || msg.role === 'mod');
+            const reportBtn = (!isSelf && !isNonReportableRole)
               ? `<button class="report-msg-btn" onclick="openReportModal('${msg.author}')">🚨 Report</button>` : '';
 
             const timeStr = msg.timestamp?.toDate 
@@ -1622,9 +1623,11 @@ const PROFANITY_BLOCKLIST = [
             // Filter message text on read as an extra layer of safety
             const safeText = filterProfanity(msg.text || '');
 
+            const authorOnClick = isNonReportableRole ? '' : `onclick="openReportModal('${msg.author}')"`;
+
             row.innerHTML = `
               <div class="msg-meta">
-                <span class="${authorClass}" onclick="openReportModal('${msg.author}')">${msg.author}</span>
+                <span class="${authorClass}" ${authorOnClick}>${msg.author}</span>
                 <span class="msg-time">${timeStr}</span>
                 ${deleteBtn}${reportBtn}
               </div>
@@ -1737,6 +1740,13 @@ const PROFANITY_BLOCKLIST = [
   <script>
     let activeReportTarget = '';
     function openReportModal(username) {
+      if (!window.isUserAdmin) {
+        const lowerName = username.toLowerCase();
+        if (lowerName.includes('[npc]') || lowerName.includes('locker_') || lowerName.includes('bot') || lowerName.includes('moderator') || lowerName.includes('overwatch')) {
+          alert("🤖 System Bots, NPCs, and Moderators cannot be reported.");
+          return;
+        }
+      }
       activeReportTarget = username;
       document.getElementById('report-target-username').innerText = username;
       document.getElementById('report-user-modal').style.display = 'flex';
