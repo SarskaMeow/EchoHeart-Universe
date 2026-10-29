@@ -53,17 +53,17 @@
 <body>
   <div class="container">
     <h1>Privacy Policy</h1>
-    <p>Last updated: October 25, 2026</p>
+    <p>Last updated: October 29, 2026</p>
     
     <p>Welcome to <strong>Otaku Overload</strong> and <strong>24/7 Neko FM</strong> ("we", "our", or "us"). We respect your privacy and are committed to protecting the personal data you share with us. This Privacy Policy explains how we collect, use, store, and protect your information when you visit <strong>otakuoverload.com</strong>, interact with our community chatrooms, comment on podcasts, vote in setlist polls, listen to radio streams, or generate custom tracks in our AI Studio.</p>
 
     <h2>1. Information We Collect</h2>
     <p>We collect minimal data required to deliver user accounts, community features, virtual currency balances, live radio streams, and browser-based audio tools:</p>
     <ul>
-      <li><strong>Account & Authentication Information:</strong> When you sign in using Google OAuth, Firebase Auth processes your Google Unique Identifier (UID), display name, email address, and profile picture URL.</li>
-      <li><strong>Live Community Chat & Podcast Comments:</strong> Messages sent in public chat rooms, comments left on podcast episodes, and song cover suggestions submitted to Prep Room B are stored in Google Cloud Firestore. These submissions are publicly viewable by other community members alongside your display name, avatar, and equipped cosmetic cosmetics (such as gold name glows or avatar frames).</li>
+      <li><strong>Account & Authentication Information:</strong> When you register or sign in via Email/Password or Google OAuth, Firebase Auth processes your email address, display name, password credentials (hashed securely by Firebase), authentication provider details, email verification status, and unique user identifier (UID).</li>
+      <li><strong>Live Community Chat & Podcast Comments:</strong> Messages sent in public chat rooms, comments left on podcast episodes, and song cover suggestions submitted to Prep Room B are stored in Google Cloud Firestore. These submissions are publicly viewable by other community members alongside your display name, avatar, and equipped cosmetics (such as gold name glows or avatar frames).</li>
       <li><strong>Setlist Poll Voting Data:</strong> We log votes cast in hourly setlist polls to determine upcoming broadcast premieres for Girls Dead Phantom.</li>
-      <li><strong>Virtual Economy & Cosmetics:</strong> We track your Orb virtual credit balance, earned/spent history, inventory items, and age-gate verification flags (13+ Twilight Mode / 17+ Basement Mode) in Firestore.</li>
+      <li><strong>Virtual Economy & Cosmetics:</strong> We track your Orb virtual credit balance, earned/spent history, inventory items, and age verification flags (13+ Twilight Mode) in Firestore.</li>
       <li><strong>24/7 Radio Streams & Track Identification:</strong> We ingest third-party audio streams (e.g., LISTEN.moe, Gensokyo Radio, Nightwave Plaza, Asia DREAM Radio) and process audio stream metadata via external identification APIs to display currently playing track titles and artists on the Neko-88 Synth Deck.</li>
       <li><strong>Local Studio Audio & Browser Storage (IndexedDB):</strong> Custom audio tracks generated via the AI Studio (Meta MusicGen / Suno models), equalizer DSP presets, and local playlist data are saved directly to your device via browser IndexedDB and LocalStorage. Generated audio files are not stored on our permanent cloud servers.</li>
       <li><strong>Security & Bot Defense:</strong> We use Google reCAPTCHA Enterprise to detect automated bots and protect server endpoints. This service evaluates device and browser interactions.</li>
@@ -85,12 +85,12 @@
     <h2>4. How We Use Your Information</h2>
     <p>We use the collected information exclusively to maintain and protect the platform:</p>
     <ul>
-      <li>To authenticate identity and maintain persistent user sessions.</li>
+      <li>To authenticate identity, manage password reset requests, and maintain persistent user sessions.</li>
       <li>To display public usernames, cosmetic frames, live chat messages, and podcast comments.</li>
       <li>To calculate setlist poll totals and queue broadcast premieres.</li>
       <li>To track virtual Orb balances and validate audio generation permissions.</li>
       <li>To provide local audio playback, DSP equalizer processing, and stem exports for game engines (GDevelop, RPG Maker MZ/Bakin, Roblox Studio).</li>
-      <li>To enforce age boundaries (13+ Twilight Mode and 17+ Basement Mode).</li>
+      <li>To enforce age boundaries (13+ Twilight Mode).</li>
     </ul>
 
     <h2>5. Third-Party Services & Infrastructure</h2>
@@ -105,8 +105,8 @@
     <h2>6. Children's Privacy & COPPA Compliance</h2>
     <p>Otaku Overload is strictly intended for individuals aged <strong>13 and older</strong>. We do not knowingly collect personal information from children under 13 in compliance with the Children's Online Privacy Protection Act (COPPA). If we discover an account belongs to a child under 13, we will immediately terminate the account and purge their stored data.</p>
 
-    <h2>7. Data Retention & Account Deletion</h2>
-    <p>Your profile data remains stored while your account is active. You can clear your locally generated audio tracks at any time via the "Clear Library" button in the AI Studio. To request complete deletion of your account, Firestore profile, and chat history, contact us at <strong>support@otakuoverload.com</strong>.</p>
+    <h2>7. Data Retention & Self-Service Account Deletion</h2>
+    <p>Your profile data remains stored while your account is active. You can clear your locally generated audio tracks at any time via the "Clear Library" button in the AI Studio. Users can permanently delete their account, Firestore user profile, and authentication records at any time directly through the <strong>Account & Safety</strong> tab on the <a href="account.html">Account Hub</a>, or by contacting us at <strong>support@otakuoverload.com</strong>.</p>
 
     <h2>8. Contact Us</h2>
     <p>If you have any questions regarding this Privacy Policy, please reach out:</p>
