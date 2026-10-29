@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3237546726752178"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3237546726752178"
+       crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile & Account Hub — Otaku Overload</title>
@@ -201,12 +201,6 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-    }
-
-    .tier-pill.vip-tier {
-      border-color: var(--accent-gold);
-      background: rgba(255, 209, 102, 0.15);
-      color: var(--accent-gold);
     }
 
     /* Nav Side Tabs */
@@ -496,123 +490,6 @@
       padding: 40px 20px;
       color: var(--text-muted);
     }
-
-    /* VIP PAYMENT MODAL STYLES */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(5, 3, 12, 0.85);
-      backdrop-filter: blur(12px);
-      z-index: 2000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-card {
-      background: rgba(22, 12, 38, 0.98);
-      border: 1.5px solid var(--accent-neon-pink);
-      box-shadow: 0 0 30px rgba(255, 0, 127, 0.4), inset 0 0 15px rgba(255, 0, 127, 0.2);
-      border-radius: 20px;
-      width: 100%;
-      max-width: 480px;
-      padding: 24px;
-      position: relative;
-      animation: modalSlideUp 0.3s ease-out;
-    }
-
-    @keyframes modalSlideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 0, 127, 0.3);
-      padding-bottom: 12px;
-    }
-
-    .modal-header h3 {
-      color: #ffffff;
-      font-size: 1.25rem;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-      text-shadow: 0 0 10px rgba(255, 0, 127, 0.6);
-    }
-
-    .close-modal-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 4px;
-      transition: color 0.2s ease;
-    }
-
-    .close-modal-btn:hover {
-      color: var(--accent-neon-pink);
-    }
-
-    .payment-options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .payment-option-item {
-      background: rgba(12, 6, 24, 0.8);
-      border: 1px solid rgba(168, 139, 235, 0.3);
-      border-radius: 12px;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .payment-option-item:hover {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
-      transform: translateX(4px);
-    }
-
-    .payment-icon {
-      font-size: 1.5rem;
-    }
-
-    .payment-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      flex: 1;
-    }
-
-    .payment-info strong {
-      color: #ffffff;
-      font-size: 0.95rem;
-    }
-
-    .coming-soon-tag {
-      display: inline-block;
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: var(--accent-gold);
-      background: rgba(255, 209, 102, 0.15);
-      border: 1px solid rgba(255, 209, 102, 0.4);
-      padding: 2px 6px;
-      border-radius: 6px;
-      width: fit-content;
-      margin-top: 2px;
-    }
   </style>
 </head>
 <body>
@@ -647,7 +524,7 @@
     <aside class="account-sidebar">
       <div class="sidebar-user-card">
         <div class="avatar-wrapper">
-          <img id="user-avatar-img" src="images/avatars/akari.png" alt="Avatar">
+          <img id="user-avatar-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100' height='100' fill='%239d4edd'/></svg>" alt="Avatar">
           <div id="user-avatar-frame-overlay" class="avatar-frame-overlay"></div>
         </div>
         <div id="user-display-name" class="user-name">Syncing Profile...</div>
@@ -657,7 +534,7 @@
         <!-- Access Tier Status -->
         <div id="user-tier-pill" class="tier-pill">
           <span id="user-tier-icon">🌸</span>
-          <span id="user-tier-name">Twilight Member</span>
+          <span id="user-tier-name">Lounge Member</span>
         </div>
       </div>
 
@@ -665,7 +542,6 @@
         <button class="tab-btn active" onclick="switchDashboardTab('profile', event)">👤 Profile & Bio</button>
         <button class="tab-btn" onclick="switchDashboardTab('wardrobe', event)">🎭 Wardrobe & Avatars</button>
         <button class="tab-btn" onclick="switchDashboardTab('badges', event)">🏆 Badges & Achievements</button>
-        <button class="tab-btn" onclick="switchDashboardTab('tiers', event)">🎟️ VIP Pass & Tiers</button>
         <button class="tab-btn" onclick="switchDashboardTab('settings', event)">⚙️ App & Audio Settings</button>
         <button class="tab-btn" onclick="switchDashboardTab('safety', event)">🛡️ Account & Safety</button>
       </nav>
@@ -685,7 +561,7 @@
 
         <div class="content-card">
           <div class="form-group">
-            <label>Display Name</label>
+            <label>Display Username</label>
             <input type="text" id="edit-display-name-input" class="form-control" placeholder="Enter username...">
           </div>
 
@@ -767,8 +643,8 @@
               <option value="listener">[Prep Room Listener] (Free)</option>
               <option value="otaku">[Otaku Lounge Member] (Free)</option>
               <option value="rocker">[J-Rock Specialist] (Free)</option>
-              <option value="producer">[Prep Room B Producer] (VIP 🎟️)</option>
-              <option value="crew">[Phantom Crew] (VIP 🎟️)</option>
+              <option value="producer">[Prep Room B Producer]</option>
+              <option value="crew">[Phantom Crew]</option>
             </select>
           </div>
         </div>
@@ -788,42 +664,7 @@
         </div>
       </section>
 
-      <!-- PANEL 4: VIP PASS & TIERS -->
-      <section id="panel-tiers" class="tab-panel">
-        <div class="panel-header">
-          <h2>Membership Tiers & Perks</h2>
-          <p>Review your active lounge access tier or upgrade to unlock Backstage Pass features.</p>
-        </div>
-
-        <div class="grid-2col">
-          <div class="content-card">
-            <h3 style="color: var(--accent-purple); margin-bottom: 8px;">🌸 Public & After-Hours Tiers</h3>
-            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">Standard access for all lounge members.</p>
-            <ul style="font-size: 0.85rem; color: var(--text-light); padding-left: 20px; line-height: 1.8;">
-              <li>128kbps Standard Radio Streams</li>
-              <li>1 Vote per Hourly Setlist Poll</li>
-              <li>Standard Chat & Free Kaomojis</li>
-              <li>20s Discography Track Previews</li>
-            </ul>
-          </div>
-
-          <div class="content-card" style="border-color: var(--accent-gold); background: rgba(25, 18, 48, 0.95);">
-            <h3 style="color: var(--accent-gold); margin-bottom: 8px;">🎟️ Backstage Pass VIP ($4.99/mo)</h3>
-            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">Full unlocked potential across every tab.</p>
-            <ul style="font-size: 0.85rem; color: var(--text-light); padding-left: 20px; line-height: 1.8; margin-bottom: 20px;">
-              <li><strong>2x Weighted Voting Power</strong> in Polls</li>
-              <li>Full Playback on GDP Discography Tracks</li>
-              <li>Exclusive Gold Avatar Borders & Name Glows</li>
-              <li>Slow-Mode Bypass in Live Chat</li>
-            </ul>
-            <button id="toggle-vip-btn" onclick="window.openPaymentModal()" class="btn-action" style="background: linear-gradient(135deg, #ffd166, #ff007f); color: #000; width: 100%;">
-              Unlock Backstage Pass VIP
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- PANEL 5: APP & AUDIO SETTINGS -->
+      <!-- PANEL 4: APP & AUDIO SETTINGS -->
       <section id="panel-settings" class="tab-panel">
         <div class="panel-header">
           <h2>App & Audio Preferences</h2>
@@ -854,18 +695,10 @@
             </div>
             <input type="checkbox" id="setting-notifications" class="switch-checkbox" onchange="window.saveAppSetting('notifications', this.checked)">
           </div>
-
-          <div class="toggle-setting-row">
-            <div class="toggle-setting-label">
-              <h4>Show Broadcast Join Alerts</h4>
-              <p>Display live banner announcements when VIP members enter the room.</p>
-            </div>
-            <input type="checkbox" id="setting-join-alerts" class="switch-checkbox" onchange="window.saveAppSetting('joinAlerts', this.checked)">
-          </div>
         </div>
       </section>
 
-      <!-- PANEL 6: ACCOUNT & SAFETY -->
+      <!-- PANEL 5: ACCOUNT & SAFETY -->
       <section id="panel-safety" class="tab-panel">
         <div class="panel-header">
           <h2>Account Security & Verification</h2>
@@ -882,49 +715,6 @@
     </main>
   </div>
 
-  <!-- VIP PAYMENT OPTIONS MODAL -->
-  <div id="payment-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>👑 Select VIP Payment Method</h3>
-        <button class="close-modal-btn" onclick="window.closePaymentModal()">✕</button>
-      </div>
-
-      <div class="payment-options-grid">
-        <div class="payment-option-item" onclick="window.showPaymentNotice('Stripe Credit / Debit Card')">
-          <div class="payment-icon">💳</div>
-          <div class="payment-info">
-            <strong>Credit / Debit Card</strong>
-            <span class="coming-soon-tag">COMING SOON</span>
-          </div>
-        </div>
-
-        <div class="payment-option-item" onclick="window.showPaymentNotice('PayPal / Venmo')">
-          <div class="payment-icon">🅿️</div>
-          <div class="payment-info">
-            <strong>PayPal / Venmo</strong>
-            <span class="coming-soon-tag">COMING SOON</span>
-          </div>
-        </div>
-
-        <div class="payment-option-item" onclick="window.showPaymentNotice('Apple Pay & Google Pay')">
-          <div class="payment-icon">🍎</div>
-          <div class="payment-info">
-            <strong>Apple Pay / Google Pay</strong>
-            <span class="coming-soon-tag">COMING SOON</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-dev-bypass" style="margin-top: 18px; padding-top: 14px; border-top: 1px dashed rgba(255,0,127,0.3); text-align: center;">
-        <p style="font-size: 0.75rem; color: #a092c0; margin-bottom: 8px;">Dev / Testing Mode Override:</p>
-        <button class="dev-unlock-btn" onclick="window.simulateVIPUnlock()" style="background: rgba(255,0,127,0.2); border: 1px solid #ff007f; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 800;">
-          ⚡ Instantly Unlock VIP (Test Mode)
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Single Unified Script for Account Page -->
   <script type="module">
     import { auth, db } from './firebase-config.js?v=3';
@@ -936,12 +726,11 @@
       displayName: "Lounge Member",
       email: "",
       photoURL: "",
-      equipped_avatar: "avatar_akari",
+      equipped_avatar: "generated",
       equippedFrame: "none",
       equippedGlow: "none",
       equippedTitle: "listener",
-      unlocked_items: [],
-      isVIP: false
+      unlocked_items: []
     };
 
     const STORE_AVATARS = [
@@ -950,12 +739,9 @@
       { id: 'avatar_lily', name: 'Lily Blossom', src: 'images/avatars/lily.png', fallback: '🌸' },
       { id: 'avatar_sloane', name: 'Sloane Vance', src: 'images/avatars/sloane.png', fallback: '⚡' },
       { id: 'avatar_sera', name: 'Sera Starlight', src: 'images/avatars/sera.png', fallback: '✨' },
-      { id: 'avatar_aoi', name: 'Aoi Bassist', src: 'images/avatars/aoi.png', fallback: '🎸' },
-      { id: 'avatar_cyberpunk', name: 'Cyber Runner', src: 'images/avatars/cyberpunk.png', fallback: '🤖' },
-      { id: 'avatar_golden', name: 'Void Sovereign', src: 'images/avatars/sovereign.png', fallback: '👑' }
+      { id: 'avatar_aoi', name: 'Aoi Bassist', src: 'images/avatars/aoi.png', fallback: '🎸' }
     ];
 
-    // Helper: Update Avatar Frame Preview safely
     function updateAvatarFramePreview(frame) {
       const frameOverlay = document.getElementById('user-avatar-frame-overlay');
       if (!frameOverlay) return;
@@ -991,31 +777,28 @@
       if (el && val !== undefined) el.value = val;
     }
 
-    // Update Page UI
     window.updatePageUI = function() {
-      const isVIP = window.userData.isVIP || localStorage.getItem('neko_is_vip') === 'true';
-
       setSafeText('user-display-name', window.userData.displayName || "Lounge Member");
       setSafeText('user-email-text', window.userData.email || window.currentUser?.email || "");
 
       const avatarImg = document.getElementById('user-avatar-img');
-      const equippedAvatarId = window.userData.equipped_avatar || 'avatar_akari';
-      const matchedAvatar = STORE_AVATARS.find(a => a.id === equippedAvatarId);
-
       if (avatarImg) {
-        if (window.userData.photoURL) {
-          avatarImg.src = window.userData.photoURL;
-        } else if (matchedAvatar) {
-          avatarImg.src = matchedAvatar.src;
-        }
+        const seed = window.currentUser?.uid || window.currentUser?.email || "default";
+        const fallbackUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(seed)}&backgroundColor=0f071c,040209`;
+        avatarImg.src = window.userData.photoURL || fallbackUrl;
+        
+        avatarImg.onerror = function() {
+          this.onerror = null;
+          this.src = fallbackUrl;
+        };
       }
 
       const titleMap = {
         listener: '[Prep Room Listener]',
         otaku: '[Otaku Lounge Member]',
         rocker: '[J-Rock Specialist]',
-        producer: '[Prep Room B Producer] 🎟️',
-        crew: '[Phantom Crew] 🎟️'
+        producer: '[Prep Room B Producer]',
+        crew: '[Phantom Crew]'
       };
       setSafeText('user-title-badge-text', titleMap[window.userData.equippedTitle] || '[Prep Room Listener]');
 
@@ -1027,20 +810,6 @@
       setSafeText('safety-email-display', window.userData.email || window.currentUser?.email || "");
       setSafeText('safety-13-status', window.userData.ageVerified13 ? "✅ Verified (13+)" : "❌ Not Verified");
       setSafeText('safety-17-status', window.userData.ageVerified17 ? "✅ Verified (17+)" : "❌ Not Verified");
-
-      const tierPill = document.getElementById('user-tier-pill');
-
-      if (isVIP) {
-        if (tierPill) tierPill.className = "tier-pill vip-tier";
-        setSafeText('user-tier-icon', "🎟️");
-        setSafeText('user-tier-name', "Backstage Pass VIP");
-        setSafeText('toggle-vip-btn', "Manage / Cancel VIP Subscription");
-      } else {
-        if (tierPill) tierPill.className = "tier-pill";
-        setSafeText('user-tier-icon', "🌸");
-        setSafeText('user-tier-name', "Twilight Member");
-        setSafeText('toggle-vip-btn', "Unlock Backstage Pass VIP");
-      }
 
       setSafeValue('equip-frame-select', window.userData.equippedFrame || 'none');
       setSafeValue('equip-glow-select', window.userData.equippedGlow || 'none');
@@ -1054,30 +823,26 @@
       const notifCb = document.getElementById('setting-notifications');
       if (notifCb) notifCb.checked = localStorage.getItem('neko_setting_notifications') === 'true';
 
-      const joinAlertsCb = document.getElementById('setting-join-alerts');
-      if (joinAlertsCb) joinAlertsCb.checked = localStorage.getItem('neko_setting_joinAlerts') === 'true';
-
       updateAvatarFramePreview(window.userData.equippedFrame);
       window.renderAvatarUnlocksGrid();
     };
 
-    // Render Avatar Selection Grid in Wardrobe
     window.renderAvatarUnlocksGrid = function() {
       const grid = document.getElementById('avatar-unlocks-grid');
       if (!grid) return;
 
       const unlocked = window.userData.unlocked_items || [];
-      const equippedId = window.userData.equipped_avatar || 'avatar_akari';
+      const equippedId = window.userData.equipped_avatar || 'generated';
 
       let html = '';
       STORE_AVATARS.forEach(item => {
-        const isOwned = unlocked.includes(item.id) || item.id === 'avatar_akari';
+        const isOwned = unlocked.includes(item.id);
         const isEquipped = equippedId === item.id;
 
         html += `
           <div class="cosmetic-card-item ${isEquipped ? 'active' : ''}" 
                onclick="${isOwned ? `equipAvatarFromWardrobe('${item.id}')` : `alert('🔒 Unlock this avatar in the Orb Store!')`}">
-            <img src="${item.src}" class="cosmetic-img-thumb" alt="${item.name}" onerror="this.onerror=null; this.replaceWith('${item.fallback}');">
+            <img src="${item.src}" class="cosmetic-img-thumb" alt="${item.name}" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/identicon/svg?seed=${item.id}';">
             <span class="cosmetic-item-title">${item.name}</span>
             <span style="font-size: 0.68rem; font-weight: 800; color: ${isEquipped ? 'var(--accent-pink)' : (isOwned ? 'var(--accent-cyan)' : 'var(--text-muted)')};">
               ${isEquipped ? 'Equipped ✨' : (isOwned ? 'Equip' : '🔒 Store')}
@@ -1092,21 +857,25 @@
       if (!window.currentUser) return;
       try {
         const userRef = doc(db, "users", window.currentUser.uid);
-        await updateDoc(userRef, { equipped_avatar: avatarId });
+        const selected = STORE_AVATARS.find(a => a.id === avatarId);
+        
+        await updateDoc(userRef, { 
+          equipped_avatar: avatarId,
+          photoURL: selected ? selected.src : window.userData.photoURL 
+        });
+        
         window.userData.equipped_avatar = avatarId;
+        if (selected) window.userData.photoURL = selected.src;
         window.updatePageUI();
       } catch (err) {
         console.error("Failed to equip avatar:", err);
       }
     };
 
-    // 1. Check for Redirect Result First to prevent Google Auth Loop
     getRedirectResult(auth).catch((err) => {
       console.warn("Redirect auth check complete or skipped:", err);
     });
 
-    // 2. Auth Listener & Firestore Sync (With Graceful Redirect Loop Guard)
-    let authCheckCompleted = false;
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         window.currentUser = user;
@@ -1117,40 +886,34 @@
 
           if (snap.exists()) {
             window.userData = Object.assign({}, window.userData, snap.data());
-            if (window.userData.isVIP !== undefined) {
-              localStorage.setItem('neko_is_vip', window.userData.isVIP ? 'true' : 'false');
-            }
           } else {
+            const seed = user.uid || user.email;
             window.userData = {
-              displayName: user.displayName || "Lounge Member",
+              displayName: user.displayName || user.email.split('@')[0] || "Lounge Member",
               email: user.email,
-              photoURL: user.photoURL || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.uid}`,
-              equipped_avatar: 'avatar_akari',
+              photoURL: user.photoURL || `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(seed)}&backgroundColor=0f071c,040209`,
+              equipped_avatar: 'generated',
               equippedFrame: 'none',
               equippedGlow: 'none',
               equippedTitle: 'listener',
-              unlocked_items: [],
-              isVIP: false
+              unlocked_items: []
             };
             await setDoc(userRef, window.userData, { merge: true });
           }
         } catch (e) {
           console.error("Firestore sync error:", e);
-          window.userData.displayName = user.displayName || "Lounge Member";
+          window.userData.displayName = user.displayName || user.email.split('@')[0] || "Lounge Member";
           window.userData.email = user.email || "";
         }
         window.updatePageUI();
         window.renderProfileBadges();
       } else {
-        // Only redirect if session is genuinely unauthenticated after initial check
         if (localStorage.getItem('neko_logged_in') !== 'true') {
           window.location.href = "index.html";
         }
       }
-      authCheckCompleted = true;
     });
 
-    // 3. Tab Switcher
     window.switchDashboardTab = function(tabName, evt) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1174,7 +937,6 @@
       }
     };
 
-    // 4. Render Badges from LocalStorage
     window.renderProfileBadges = function() {
       const container = document.getElementById('account-badges-container');
       if (!container) return;
@@ -1208,13 +970,6 @@
       `).join('');
     };
 
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'user_profile_badges') {
-        window.renderProfileBadges();
-      }
-    });
-
-    // 5. Save Profile Details
     window.saveProfileDetails = async function() {
       if (!window.currentUser) return;
 
@@ -1254,7 +1009,6 @@
       }
     };
 
-    // 6. Equip Cosmetic Item
     window.equipSelectedItem = async function(type, value) {
       if (!window.currentUser) return;
 
@@ -1274,44 +1028,12 @@
       }
     };
 
-    // Live Avatar Preview Listener
     document.getElementById('edit-avatar-url-input')?.addEventListener('input', (e) => {
       const previewImg = document.getElementById('user-avatar-img');
       if (previewImg && e.target.value.trim()) {
         previewImg.src = e.target.value.trim();
       }
     });
-
-    // Modal Helpers
-    window.openPaymentModal = () => {
-      const modal = document.getElementById('payment-modal');
-      if (modal) modal.style.display = 'flex';
-    };
-
-    window.closePaymentModal = () => {
-      const modal = document.getElementById('payment-modal');
-      if (modal) modal.style.display = 'none';
-    };
-
-    window.showPaymentNotice = (gateway) => alert(`⚡ ${gateway} payments coming soon! Use Dev Override below.`);
-
-    window.simulateVIPUnlock = async function() {
-      if (!window.currentUser) return;
-      const isVIP = window.userData.isVIP || localStorage.getItem('neko_is_vip') === 'true';
-      const newStatus = !isVIP;
-
-      try {
-        const userRef = doc(db, "users", window.currentUser.uid);
-        await setDoc(userRef, { isVIP: newStatus }, { merge: true });
-        window.userData.isVIP = newStatus;
-        localStorage.setItem('neko_is_vip', newStatus ? 'true' : 'false');
-        alert(newStatus ? "🎟️ Backstage Pass VIP Unlocked!" : "Reverted to Twilight Member.");
-        window.closePaymentModal();
-        window.updatePageUI();
-      } catch (err) {
-        console.error("VIP Toggle Error:", err);
-      }
-    };
 
     window.saveAppSetting = (key, val) => localStorage.setItem(`neko_setting_${key}`, val);
 
