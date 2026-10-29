@@ -678,5 +678,73 @@
       </div>
     </div>
   </footer>
+
+  <!-- VISUAL AUTH MODAL FOR GUESTS -->
+  <div id="neko-auth-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: #0f071c; border: 1.5px solid #ff007f; padding: 28px; border-radius: 16px; width: 320px; color: #fff; text-align: center; box-shadow: 0 0 30px rgba(255,0,127,0.4);">
+      <h3 id="auth-modal-title" style="color: #00f0ff; margin-bottom: 16px; font-size: 1.4rem;">Sign In</h3>
+      
+      <!-- Username Field (Shown during Sign Up) -->
+      <input type="text" id="modal-username-input" placeholder="Display Username" style="display: none; width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid rgba(157,78,221,0.5); background: #040209; color: #fff; box-sizing: border-box;">
+      
+      <input type="email" id="modal-email-input" placeholder="Email Address" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid rgba(157,78,221,0.5); background: #040209; color: #fff; box-sizing: border-box;">
+      <input type="password" id="modal-password-input" placeholder="Password" style="width: 100%; padding: 10px; margin-bottom: 14px; border-radius: 8px; border: 1px solid rgba(157,78,221,0.5); background: #040209; color: #fff; box-sizing: border-box;">
+      
+      <button onclick="submitModalAuth()" id="modal-submit-btn" style="width: 100%; padding: 11px; border-radius: 20px; border: none; background: linear-gradient(135deg, #9d4edd, #ff007f); color: #fff; font-weight: bold; cursor: pointer; margin-bottom: 12px;">Log In</button>
+      
+      <div style="font-size: 0.75rem; color: #b8a7d4; margin-bottom: 12px;">— OR —</div>
+      
+      <button onclick="window.loginWithGoogle()" style="width: 100%; padding: 10px; border-radius: 20px; border: 1px solid #444; background: #fff; color: #000; font-weight: bold; cursor: pointer; margin-bottom: 16px;">Sign in with Google</button>
+      
+      <p style="font-size: 0.8rem; color: #b8a7d4; margin-bottom: 12px;">
+        <span id="modal-switch-text">Need an account?</span> 
+        <a href="#" onclick="toggleModalAuthMode()" id="modal-switch-link" style="color: #00f0ff; font-weight: bold; text-decoration: underline;">Sign Up</a>
+      </p>
+      
+      <button onclick="document.getElementById('neko-auth-modal').style.display='none'" style="background: transparent; border: none; color: #888; cursor: pointer; font-size: 0.8rem;">Close</button>
+    </div>
+  </div>
+
+  <script>
+    let isSignUpMode = false;
+
+    window.showAuthModal = function() {
+      document.getElementById('neko-auth-modal').style.display = 'flex';
+    };
+
+    function toggleModalAuthMode() {
+      isSignUpMode = !isSignUpMode;
+      document.getElementById('auth-modal-title').innerText = isSignUpMode ? 'Create Account' : 'Sign In';
+      document.getElementById('modal-submit-btn').innerText = isSignUpMode ? 'Sign Up' : 'Log In';
+      document.getElementById('modal-switch-text').innerText = isSignUpMode ? 'Already have an account?' : 'Need an account?';
+      document.getElementById('modal-switch-link').innerText = isSignUpMode ? 'Log In' : 'Sign Up';
+      
+      // Toggle display username field
+      document.getElementById('modal-username-input').style.display = isSignUpMode ? 'block' : 'none';
+    }
+
+    async function submitModalAuth() {
+      const email = document.getElementById('modal-email-input').value.trim();
+      const password = document.getElementById('modal-password-input').value;
+      const username = document.getElementById('modal-username-input').value.trim();
+
+      if (!email || !password) {
+        alert('Please fill in both email and password.');
+        return;
+      }
+
+      if (isSignUpMode) {
+        if (!username) {
+          alert('Please choose a display username.');
+          return;
+        }
+        const res = await window.signUpWithEmail(email, password, username);
+        if (res.success) document.getElementById('neko-auth-modal').style.display = 'none';
+      } else {
+        const res = await window.loginWithEmail(email, password);
+        if (res.success) document.getElementById('neko-auth-modal').style.display = 'none';
+      }
+    }
+  </script>
 </body>
 </html>
