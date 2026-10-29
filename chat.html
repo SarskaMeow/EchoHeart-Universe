@@ -1084,7 +1084,7 @@
       </div>
 
       <div class="chatter-group-header">✦ Live Online Lounge</div>
-      <!-- Real-time presence list populated by Firestore -->
+      <!-- Real-time presence list populated by Firestore users collection -->
       <div id="online-users-list" style="display:flex; flex-direction:column; gap:6px;"></div>
 
       <div class="chatter-group-header">✦ Core Four (NPCs)</div>
@@ -1242,11 +1242,10 @@
       'bots': '🤖 BOT-ROLEPLAY'
     };
 
-    // --- REAL-TIME PRESENCE & ONLINE USER LIST TRACKER ---
+    // --- REAL-TIME PRESENCE & ALL USERS LIST TRACKER ---
     let myPresenceDocId = null;
 
     async function registerUserPresence(user, userData) {
-      // Get or generate persistent Guest ID for unauthenticated visitors
       let guestId = localStorage.getItem('otaku_guest_presence_id');
       if (!guestId) {
         guestId = 'guest_' + Math.random().toString(36).substring(2, 8);
@@ -1283,27 +1282,38 @@
       const container = document.getElementById('online-users-list');
       if (!container) return;
 
-      const presenceCol = collection(db, 'presence');
-      onSnapshot(presenceCol, (snapshot) => {
+      // Listen directly to the entire users collection to show ALL registered users
+      const usersCol = collection(db, 'users');
+      onSnapshot(usersCol, (snapshot) => {
         container.innerHTML = '';
         if (snapshot.empty) {
-          container.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:4px;">No active chatters</div>';
+          container.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:4px;">No registered users found</div>';
           return;
         }
 
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          const name = data.displayName || 'Anonymous';
-          const role = data.role || 'Visitor';
-          const status = data.status || 'active';
-          const initial = name.replace(/[^a-zA-Z]/g, '').charAt(0).toUpperCase() || 'U';
+          const name = data.displayName || (data.email ? data.email.split('@')[0] : 'Lounge Member');
+          const isMod = data.role === 'admin' || data.role === 'moderator' || data.isAdmin === true;
+          const role = isMod ? 'System Overwatch' : (data.equippedTitle ? `[${data.equippedTitle}]` : 'Portal Member');
+          const status = 'active';
+          
+          let avatarStyle = '';
+          let initial = name.replace(/[^a-zA-Z]/g, '').charAt(0).toUpperCase() || 'U';
+          if (data.equipped_avatar && AVATAR_PRESETS[data.equipped_avatar]) {
+            avatarStyle = `background-image: url('${AVATAR_PRESETS[data.equipped_avatar]}');`;
+            initial = '';
+          } else if (data.photoURL) {
+            avatarStyle = `background-image: url('${data.photoURL}');`;
+            initial = '';
+          }
 
           const card = document.createElement('div');
           card.className = 'chatter-card';
           card.onclick = () => window.openReportModal && window.openReportModal(name);
 
           card.innerHTML = `
-            <div class="chatter-avatar">${initial}</div>
+            <div class="chatter-avatar" style="${avatarStyle}">${initial}</div>
             <div class="chatter-info">
               <span class="chatter-name">${name}</span>
               <span class="chatter-role">${role}</span>
@@ -1313,7 +1323,7 @@
           container.appendChild(card);
         });
       }, (err) => {
-        console.warn('Online list listener error:', err);
+        console.warn('Users list listener error:', err);
       });
     }
 
@@ -1386,7 +1396,7 @@
         if (sendBtn) sendBtn.disabled = true;
       }
 
-      // Register presence in Firestore & start online users list listener
+      // Register presence in Firestore & start all users list listener
       await registerUserPresence(window.currentUser, window.userData);
       initOnlineUsersListener();
 
