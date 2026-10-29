@@ -44,18 +44,18 @@ const firebaseConfig = {
 // 3. Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 
-// 4. App Check Shield (Bypassed in local/unregistered domains to prevent blocking auth)
+// 4. App Check Shield (Disabled during dev/testing to prevent 400 bad request console warnings)
 let appCheck;
-if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
-  try {
-    appCheck = initializeAppCheck(app, {
-      provider: new ReCaptchaEnterpriseProvider('6LfOse0tAAAAAIfKhHlTDRbxLaTqY3bH1FHznTTn'),
-      isTokenAutoRefreshEnabled: true
-    });
-  } catch (appCheckErr) {
-    console.warn("App Check deferred:", appCheckErr.message);
-  }
+/* 
+try {
+  appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider('6LfOse0tAAAAAIfKhHlTDRbxLaTqY3bH1FHznTTn'),
+    isTokenAutoRefreshEnabled: true
+  });
+} catch (appCheckErr) {
+  console.warn("App Check deferred:", appCheckErr.message);
 }
+*/
 
 // 5. Initialize Auth & Firestore Exports
 export const auth = getAuth(app);
@@ -249,24 +249,28 @@ async function loadOrCreateUserProfile(user, customDisplayName = null) {
 
       console.log("User profile loaded:", window.userData);
     } else {
+      // Generate a dynamic procedural avatar seed using UID/email
+      const avatarSeed = user.uid || user.email;
+      const generatedAvatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(avatarSeed)}&backgroundColor=0f071c,040209`;
+
       const defaultData = {
         uid: user.uid,
         displayName: customDisplayName || user.displayName || user.email.split('@')[0] || "Lounge Member",
         email: user.email,
-        photoURL: user.photoURL || "",
+        photoURL: user.photoURL || generatedAvatarUrl,
         ageVerified13: true,
         ageVerified17: false,
         isVIP: false,
         vipExpiresAt: null,
         activityPoints: 0,
-        equippedAvatar: "default",
+        equippedAvatar: "generated",
         equippedFrame: "none",
         equippedGlow: "none",
-        inventory: ["default_avatar"]
+        inventory: ["generated_avatar"]
       };
       await setDoc(userRef, defaultData);
       window.userData = defaultData;
-      console.log("New profile created in Firestore.");
+      console.log("New profile created in Firestore with dynamic avatar.");
     }
   } catch (err) {
     console.error("Firestore user profile error:", err);
