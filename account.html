@@ -362,6 +362,22 @@
       color: #000;
     }
 
+    .btn-danger-action {
+      background: rgba(255, 77, 109, 0.15);
+      border: 1px solid var(--accent-red);
+      color: var(--accent-red);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-danger-action:hover {
+      background: var(--accent-red);
+      color: #fff;
+    }
+
     .grid-2col {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -745,6 +761,17 @@
             </p>
             <button onclick="window.requestPasswordReset()" class="btn-secondary-action">
               🔑 Send Password Reset Email
+            </button>
+          </div>
+
+          <!-- Permanent Account Deletion -->
+          <div class="form-group" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(255, 77, 109, 0.25);">
+            <label style="color: var(--accent-red);">Danger Zone — Delete Account</label>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+              Permanently remove your profile data, chat records, unlocked cosmetics, and authentication record from Otaku Overload. This action cannot be undone.
+            </p>
+            <button onclick="window.deleteAccountPermanently()" class="btn-danger-action">
+              🗑️ Permanently Delete Account
             </button>
           </div>
         </div>
