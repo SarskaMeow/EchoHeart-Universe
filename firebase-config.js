@@ -8,6 +8,7 @@ import {
   getRedirectResult,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
   GoogleAuthProvider, 
   FacebookAuthProvider,
   signOut, 
@@ -156,6 +157,19 @@ window.loginWithEmail = async (email, password) => {
   } catch (error) {
     console.error("Email Login Error:", error.code, error.message);
     alert("Login Failed: " + error.message);
+    return { success: false, error: error.message };
+  }
+};
+
+// PASSWORD RESET FUNCTION
+window.resetPasswordWithEmail = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("Password reset email sent! Please check your inbox and spam folder.");
+    return { success: true };
+  } catch (error) {
+    console.error("Password Reset Error:", error.code, error.message);
+    alert("Password Reset Failed: " + error.message);
     return { success: false, error: error.message };
   }
 };
