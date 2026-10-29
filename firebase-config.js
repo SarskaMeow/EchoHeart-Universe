@@ -1,5 +1,3 @@
-// firebase-config.js
-
 // 1. Group all ES6 Imports at the top
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app-check.js";
@@ -8,6 +6,8 @@ import {
   signInWithPopup, 
   signInWithRedirect, 
   getRedirectResult,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   GoogleAuthProvider, 
   FacebookAuthProvider,
   signOut, 
@@ -44,15 +44,17 @@ const firebaseConfig = {
 // 3. Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 
-// 4. Enable Fraud Defense / reCAPTCHA Enterprise Bot Shield (Wrapped for Safety)
+// 4. App Check Shield (Bypassed in local/unregistered domains to prevent blocking auth)
 let appCheck;
-try {
-  appCheck = initializeAppCheck(app, {
-    provider: new ReCaptchaEnterpriseProvider('6LfOse0tAAAAAIfKhHlTDRbxLaTqY3bH1FHznTTn'),
-    isTokenAutoRefreshEnabled: true
-  });
-} catch (appCheckErr) {
-  console.warn("App Check initialization skipped/deferred:", appCheckErr.message);
+if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
+  try {
+    appCheck = initializeAppCheck(app, {
+      provider: new ReCaptchaEnterpriseProvider('6LfOse0tAAAAAIfKhHlTDRbxLaTqY3bH1FHznTTn'),
+      isTokenAutoRefreshEnabled: true
+    });
+  } catch (appCheckErr) {
+    console.warn("App Check deferred:", appCheckErr.message);
+  }
 }
 
 // 5. Initialize Auth & Firestore Exports
@@ -82,7 +84,7 @@ window.userData = null;
 getRedirectResult(auth)
   .then(async (result) => {
     if (result && result.user) {
-      console.log("Redirect login successful:", result.user.displayName);
+      console.log("Redirect login successful:", result.user.displayName || result.user.email);
       window.currentUser = result.user;
       await loadOrCreateUserProfile(result.user);
       if (typeof updatePageUI === "function") updatePageUI();
@@ -115,7 +117,7 @@ onAuthStateChanged(auth, async (user) => {
     window.userData = null;
 
     localStorage.removeItem('neko_logged_in');
-    localStorage.setItem('neko_active_mode', 'twilight'); // Default to Twilight Mode
+    localStorage.setItem('neko_active_mode', 'twilight');
 
     if (typeof userState !== 'undefined') {
       userState.isLoggedIn = false;
@@ -129,28 +131,54 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Google Login Function (Mobile & WebView Optimized)
+// EMAIL & PASSWORD SIGN UP FUNCTION
+window.signUpWithEmail = async (email, password, displayName) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    console.log("Email account created successfully:", userCredential.user.email);
+    
+    // Create profile with optional display name
+    await loadOrCreateUserProfile(userCredential.user, displayName);
+    return { success: true, user: userCredential.user };
+  } catch (error) {
+    console.error("Sign Up Error:", error.code, error.message);
+    alert("Sign Up Failed: " + error.message);
+    return { success: false, error: error.message };
+  }
+};
+
+// EMAIL & PASSWORD LOGIN FUNCTION
+window.loginWithEmail = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    console.log("Email sign-in successful:", userCredential.user.email);
+    return { success: true, user: userCredential.user };
+  } catch (error) {
+    console.error("Email Login Error:", error.code, error.message);
+    alert("Login Failed: " + error.message);
+    return { success: false, error: error.message };
+  }
+};
+
+// GOOGLE LOGIN FUNCTION
 window.loginWithGoogle = async () => {
   console.log("Attempting Google Sign-In...");
 
-  // Detect social in-app WebViews (Messenger, Instagram, FB)
   const ua = navigator.userAgent || navigator.vendor || window.opera;
   const isInApp = /FBAN|FBAV|Instagram|Line|Messenger/i.test(ua);
   
   if (isInApp) {
-    alert("Google Sign-In isn't supported inside social app browsers. Please tap the top right menu (⋮ or ...) and choose 'Open in Chrome' or 'Open in Browser'.");
+    alert("Google Sign-In isn't supported inside social app browsers. Please open this page in Chrome or Safari.");
     return;
   }
 
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
 
-  // Detect if user is on mobile browser
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   if (isMobile) {
     try {
-      console.log("Mobile browser detected. Initiating redirect flow...");
       await signInWithRedirect(auth, provider);
     } catch (redirectError) {
       console.error("Redirect Login Error:", redirectError);
@@ -159,7 +187,6 @@ window.loginWithGoogle = async () => {
     return;
   }
 
-  // Desktop Popup Flow (Falls back gracefully if blocked)
   try {
     const result = await signInWithPopup(auth, provider);
     console.log("Google login successful:", result.user.displayName);
@@ -178,7 +205,7 @@ window.loginWithGoogle = async () => {
         alert("Sign-in failed: " + redirectError.message);
       }
     } else if (error.code === 'auth/unauthorized-domain') {
-      alert("Domain not authorized! Make sure your current domain is added to Firebase Auth Settings > Authorized Domains.");
+      alert("Domain not authorized! Add this domain in Firebase Console > Auth Settings > Authorized Domains.");
     } else if (error.code !== 'auth/popup-closed-by-user') {
       alert("Login Error: " + error.message);
     }
@@ -199,8 +226,8 @@ window.logoutUser = async () => {
   }
 };
 
-// Firestore User Profile Handler (Revamped VIP + Dual Age Verification)
-async function loadOrCreateUserProfile(user) {
+// Firestore User Profile Handler
+async function loadOrCreateUserProfile(user, customDisplayName = null) {
   try {
     const userRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(userRef);
@@ -208,7 +235,6 @@ async function loadOrCreateUserProfile(user) {
     if (docSnap.exists()) {
       window.userData = docSnap.data();
 
-      // Automatically check and handle VIP pass expiration
       if (window.userData.isVIP && window.userData.vipExpiresAt) {
         const now = new Date();
         const expiresAt = window.userData.vipExpiresAt.toDate 
@@ -217,22 +243,22 @@ async function loadOrCreateUserProfile(user) {
           
         if (now > expiresAt) {
           window.userData.isVIP = false;
-          console.log("VIP Backstage pass has expired.");
+          console.log("VIP pass has expired.");
         }
       }
 
-      console.log("User profile loaded from Firestore:", window.userData);
+      console.log("User profile loaded:", window.userData);
     } else {
       const defaultData = {
         uid: user.uid,
-        displayName: user.displayName || "Lounge Member",
+        displayName: customDisplayName || user.displayName || user.email.split('@')[0] || "Lounge Member",
         email: user.email,
         photoURL: user.photoURL || "",
-        ageVerified13: true,   // Core Chat (Twilight Mode)
-        ageVerified17: false,  // Basement Mode / Cavern Chat
-        isVIP: false,          // Revamped Backstage VIP Pass
-        vipExpiresAt: null,    // 30-Day expiration tracker
-        activityPoints: 0,     // Earned points from polls/events
+        ageVerified13: true,
+        ageVerified17: false,
+        isVIP: false,
+        vipExpiresAt: null,
+        activityPoints: 0,
         equippedAvatar: "default",
         equippedFrame: "none",
         equippedGlow: "none",
@@ -240,7 +266,7 @@ async function loadOrCreateUserProfile(user) {
       };
       await setDoc(userRef, defaultData);
       window.userData = defaultData;
-      console.log("New profile created in Firestore with VIP tracking.");
+      console.log("New profile created in Firestore.");
     }
   } catch (err) {
     console.error("Firestore user profile error:", err);
@@ -253,7 +279,7 @@ window.openAuthOrAccount = function() {
     window.location.href = "account.html";
   } else {
     if (typeof showAuthModal === "function") {
-      showAuthModal("Welcome to Otaku Lounge", "Sign in with Google to earn VIP Backstage passes, participate in polls, and chat live!");
+      showAuthModal("Welcome to Otaku Lounge", "Sign in to earn VIP Backstage passes, participate in polls, and chat live!");
     } else {
       window.loginWithGoogle();
     }
