@@ -9,6 +9,10 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  deleteUser,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
   GoogleAuthProvider, 
   FacebookAuthProvider,
   signOut, 
@@ -149,8 +153,11 @@ window.signUpWithEmail = async (email, password, displayName) => {
 };
 
 // EMAIL & PASSWORD LOGIN FUNCTION
-window.loginWithEmail = async (email, password) => {
+window.loginWithEmail = async (email, password, rememberMe = true) => {
   try {
+    const persistenceMode = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+    await setPersistence(auth, persistenceMode);
+
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     console.log("Email sign-in successful:", userCredential.user.email);
     return { success: true, user: userCredential.user };
@@ -163,13 +170,50 @@ window.loginWithEmail = async (email, password) => {
 
 // PASSWORD RESET FUNCTION
 window.resetPasswordWithEmail = async (email) => {
+  const actionCodeSettings = {
+    url: window.location.origin + '/index.html',
+    handleCodeInApp: true
+  };
+
   try {
-    await sendPasswordResetEmail(auth, email);
+    await sendPasswordResetEmail(auth, email, actionCodeSettings);
     alert("Password reset email sent! Please check your inbox and spam folder.");
     return { success: true };
   } catch (error) {
     console.error("Password Reset Error:", error.code, error.message);
     alert("Password Reset Failed: " + error.message);
+    return { success: false, error: error.message };
+  }
+};
+
+// ACCOUNT DELETION FUNCTION
+window.deleteAccountPermanently = async () => {
+  if (!window.currentUser) {
+    alert("No active user session found.");
+    return { success: false };
+  }
+
+  const confirmDelete = confirm("⚠️ Are you sure you want to permanently delete your account? This action cannot be undone.");
+  if (!confirmDelete) return { success: false };
+
+  try {
+    // 1. Remove Firestore user document
+    await deleteDoc(doc(db, "users", window.currentUser.uid));
+
+    // 2. Delete Auth User Record
+    await deleteUser(window.currentUser);
+
+    localStorage.removeItem('neko_logged_in');
+    alert("Your account has been permanently deleted.");
+    window.location.href = "index.html";
+    return { success: true };
+  } catch (error) {
+    console.error("Account Deletion Error:", error.code, error.message);
+    if (error.code === 'auth/requires-recent-login') {
+      alert("For security reasons, please log out and log back in before deleting your account.");
+    } else {
+      alert("Account Deletion Failed: " + error.message);
+    }
     return { success: false, error: error.message };
   }
 };
