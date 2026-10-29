@@ -1233,6 +1233,7 @@
     window.activeChannelKey = 'general';
     let unsubscribeListener = null;
     let botTimerId = null;
+    let safetyTimerId = null;
 
     const AVATAR_PRESETS = {
       'avatar_akari': 'images/avatars/akari.png',
@@ -1251,6 +1252,46 @@
       'music': '📻 MUSIC-PRODUCTION',
       'bots': '🤖 BOT-ROLEPLAY'
     };
+
+    // Twitch-Style Safety Bot Loop
+    const SAFETY_MESSAGES = [
+      "🛡️ [SYSTEM SAFETY]: Welcome! Please keep the lounge respectful. No hate speech, harassment, or spamming.",
+      "🔒 [SYSTEM SAFETY]: Protect your personal info! Never share passwords, phone numbers, or private details in live chat.",
+      "✨ [SYSTEM SAFETY]: Be supportive of all creators and artists! Keep constructive feedback friendly and positive.",
+      "🚨 [SYSTEM SAFETY]: See someone breaking the rules? Use the 🚨 Report button next to their name for mod review."
+    ];
+    let safetyMessageIndex = 0;
+
+    function renderLocalBotMessage(author, text) {
+      const feed = document.getElementById('chat-feed');
+      if (!feed) return;
+
+      const row = document.createElement('div');
+      row.className = 'msg-row incoming bot-msg';
+
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      row.innerHTML = `
+        <div class="msg-meta">
+          <span class="msg-author bot">${author}</span>
+          <span class="msg-time">${timeStr}</span>
+        </div>
+        <div class="msg-bubble">${text}</div>
+      `;
+      feed.appendChild(row);
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function startSafetyReminderLoop() {
+      if (safetyTimerId) clearInterval(safetyTimerId);
+
+      // Triggers every 5 minutes (300,000 ms)
+      safetyTimerId = setInterval(() => {
+        const messageText = SAFETY_MESSAGES[safetyMessageIndex];
+        renderLocalBotMessage("🤖 SYSTEM_BOT", messageText);
+        safetyMessageIndex = (safetyMessageIndex + 1) % SAFETY_MESSAGES.length;
+      }, 300000);
+    }
 
     // --- REAL-TIME PRESENCE & REGISTERED USERS / MODS TRACKER ---
     let myPresenceDocId = null;
@@ -1305,7 +1346,6 @@
           const data = docSnap.data();
           const name = data.displayName || (data.email ? data.email.split('@')[0] : '');
 
-          // Skip test accounts, guests, or placeholder names
           const lowerName = name.toLowerCase();
           if (
             !name || 
@@ -1454,18 +1494,17 @@
         if (sendBtn) sendBtn.disabled = true;
       }
 
-      // Register presence in Firestore & start all users list listener
       await registerUserPresence(window.currentUser, window.userData);
       initOnlineUsersListener();
 
       window.switchChannel(window.activeChannelKey);
+      startSafetyReminderLoop();
     });
 
-    // 2. Real-Time Channel Switcher (Unified Firestore Listener for ALL channels including #bots)
+    // 2. Real-Time Channel Switcher
     window.switchChannel = async function(channelKey, customTitle, e) {
       if (!CHANNELS[channelKey]) channelKey = 'general';
 
-      // Age Gate / Content Access Check
       if (typeof window.handleContentAccess === 'function') {
         const allowed = await window.handleContentAccess(channelKey);
         if (!allowed) return;
@@ -1494,11 +1533,9 @@
         inputEl.placeholder = `Transmit to #${channelKey}...`;
       }
 
-      // Unsubscribe previous feed & clear bot timer
       if (unsubscribeListener) unsubscribeListener();
       if (botTimerId) clearTimeout(botTimerId);
 
-      // Real-Time Firestore Query for all channels (including persistent #bots)
       try {
         const q = query(
           collection(db, "channels", channelKey, "messages"),
@@ -1534,301 +1571,4 @@
               ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
               : 'Just now';
 
-            row.innerHTML = `
-              <div class="msg-meta">
-                <span class="${authorClass}" onclick="openReportModal('${msg.author}')">${msg.author}</span>
-                <span class="msg-time">${timeStr}</span>
-                ${deleteBtn}${reportBtn}
-              </div>
-              <div class="msg-bubble">${msg.text}</div>
-            `;
-            feed.appendChild(row);
-          });
-          feed.scrollTop = feed.scrollHeight;
-        }, (err) => {
-          console.error(`Live channel error for #${channelKey}:`, err);
-        });
-      } catch (e) {
-        console.warn("Firestore collection unavailable, falling back to local channel stream.");
-      }
-    };
-
-    async function postNpcMessageToFirestore(author, role, text) {
-      try {
-        await addDoc(collection(db, "channels", "bots", "messages"), {
-          author: author,
-          role: role || 'npc',
-          text: text,
-          uid: 'npc_system',
-          timestamp: serverTimestamp()
-        });
-      } catch (e) {
-        console.error("Failed to persist NPC message:", e);
-      }
-    }
-
-    // 4. Transmit Message to Firestore
-    window.sendChatMessage = async function() {
-      const input = document.getElementById('user-input-msg');
-      const rawText = input ? input.value.trim() : '';
-      if (!rawText || !window.currentUser) return;
-
-      if (window.isUserMuted) {
-        alert("🔇 You are currently muted by a moderator.");
-        return;
-      }
-
-      if (containsProfanity(rawText)) {
-        alert("🛡️ [Auto-Mod]: Please keep our community lounge clean and avoid prohibited language.");
-        return;
-      }
-
-      if (checkCrisisIntervention(rawText)) {
-        alert("❤️ [Support Notice]: Support is available 24/7 at 988 (Suicide & Crisis Lifeline). You are not alone.");
-        input.value = '';
-        return;
-      }
-
-      const unlocked = window.userData?.unlocked_items || JSON.parse(localStorage.getItem('unlocked_cosmetics') || '[]');
-      let formattedContent = escapeHtml(rawText);
-
-      const hasHacker = window.isUserAdmin || unlocked.includes('pack_hacker');
-      const hasChibi = window.isUserAdmin || unlocked.includes('pack_chibi') || unlocked.includes('pack_chibi_emotes');
-
-      if (rawText.startsWith('/glitch ')) {
-        if (!hasHacker) { alert('❌ Requires Sub-Stage Hacker Pack!'); return; }
-        formattedContent = `<span class="fx-glitch">${escapeHtml(rawText.replace('/glitch ', ''))}</span>`;
-      } else if (rawText === '/tableflip') {
-        if (!hasChibi) { alert('❌ Requires Chibi Pack!'); return; }
-        formattedContent = `(╯°□°)╯︵ ┻━┻`;
-      }
-
-      try {
-        await addDoc(collection(db, "channels", window.activeChannelKey, "messages"), {
-          author: window.isUserAdmin ? '🛡️ MODERATOR' : (window.userData?.displayName || window.currentUser.displayName || "Lounge Member"),
-          role: window.isUserAdmin ? 'mod' : 'user',
-          text: formattedContent,
-          uid: window.currentUser.uid,
-          timestamp: serverTimestamp()
-        });
-        input.value = '';
-
-        // Context-aware dynamic reply engine for #bots
-        if (window.activeChannelKey === 'bots') {
-          setTimeout(async () => {
-            const lower = rawText.toLowerCase();
-            let response = { author: "Akari Minase", text: "Awesome! Don't forget band practice at 4:30 PM sharp!" };
-
-            if (lower.includes('pick') || lower.includes('guitar') || lower.includes('104')) {
-              response = { author: "Locker_104_Ren", text: "Wait, are you talking about the purple pick in locker 104?! Did you find it?" };
-            } else if (lower.includes('notebook') || lower.includes('pink') || lower.includes('lyric')) {
-              response = { author: "Locker_142_Rin", text: "OMG did you see my lyric notebook near the library drop box?!" };
-            } else if (lower.includes('synth') || lower.includes('music') || lower.includes('audio')) {
-              response = { author: "Sera Hanibara", text: "Checking synth frequencies right now... everything sounds super clean!" };
-            } else if (lower.includes('vending') || lower.includes('coffee') || lower.includes('coin')) {
-              response = { author: "Locker_077_Kenji", text: "Tap the lower panel! It dropped three coffees for me earlier!" };
-            }
-
-            await postNpcMessageToFirestore(response.author, "npc", response.text);
-          }, 1200);
-        }
-      } catch (e) {
-        console.error("Failed to post message:", e);
-      }
-    };
-
-    // 5. Delete Message Document
-    window.deleteMessage = async function(docId) {
-      if (!window.isUserAdmin && !confirm("Delete this message?")) return;
-      try {
-        await deleteDoc(doc(db, "channels", window.activeChannelKey, "messages", docId));
-      } catch (e) {
-        console.error("Error deleting document:", e);
-      }
-    };
-  </script>
-
-  <!-- AUXILIARY SCRIPTS -->
-  <script>
-    let activeReportTarget = '';
-    function openReportModal(username) {
-      activeReportTarget = username;
-      document.getElementById('report-target-username').innerText = username;
-      document.getElementById('report-user-modal').style.display = 'flex';
-    }
-
-    function closeReportModal() {
-      document.getElementById('report-user-modal').style.display = 'none';
-      document.getElementById('report-reason-input').value = '';
-    }
-
-    function submitUserReport() {
-      const reason = document.getElementById('report-reason-input').value.trim();
-      if (!reason) { alert("Please state a reason for reporting."); return; }
-      alert(`🚨 Report submitted for ${activeReportTarget}. System Moderators will review the incident.`);
-      closeReportModal();
-    }
-
-    function openModActionPrompt(action) {
-      if (!window.isUserAdmin) return;
-      const target = prompt(`Enter chatter display name to ${action}:`);
-      if (!target) return;
-      if (action === 'mute') alert(`🔇 Chatter '${target}' has been muted.`);
-      else if (action === 'boot') alert(`🥾 Chatter '${target}' has been kicked/booted.`);
-    }
-
-    function clearRoomFeed() {
-      if (!window.isUserAdmin) return;
-      alert("🛡️ Purge commands are managed directly in Firestore Overwatch.");
-    }
-
-    /* EMOTES TRAY */
-    const EVERYDAY_PHONE_EMOJIS = ['❤️', '💖', '💜', '🩵', '💙', '💚', '💛', '🧡', '🖤', '🤍', '💕', '💞', '💓', '💗', '😊', '😃', '🤣', '😂', '🥺', '😍', '🤩', '😎', '👍', '🔥', '✨', '⚡'];
-    const MASTER_EMOTE_CATALOG = [
-      { symbol: '(๑•̀ㅂ•́)و', name: 'Determined' },
-      { symbol: '(◕‿◕✿)', name: 'Kawaii Smile' },
-      { symbol: 'ヽ(´▽`)/', name: 'Joy Hurrah' },
-      { symbol: '(づ｡◕‿‿◕｡)づ', name: 'Gimme Hug' },
-      { symbol: '¯\\_(ツ)_/¯', name: 'Shrug' }
-    ];
-
-    function toggleEmotePicker() {
-      const tray = document.getElementById('emote-picker-tray');
-      tray.style.display = tray.style.display === 'block' ? 'none' : 'block';
-      if (tray.style.display === 'block') loadTrayTab('everyday');
-    }
-
-    function switchEmoteTab(event, tabName) {
-      document.querySelectorAll('.tray-tab').forEach(t => t.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-      loadTrayTab(tabName);
-    }
-
-    function loadTrayTab(category) {
-      const grid = document.getElementById('emote-tray-content');
-      let html = '';
-      if (category === 'everyday') {
-        EVERYDAY_PHONE_EMOJIS.forEach(emoji => {
-          html += `<button type="button" class="tray-item-btn" onclick="insertIntoChatInput('${emoji}')">${emoji}</button>`;
-        });
-      } else if (category === 'kaomoji') {
-        MASTER_EMOTE_CATALOG.forEach(item => {
-          html += `<button type="button" class="tray-item-btn" title="${item.name}" onclick="insertIntoChatInput('${item.symbol}')">${item.symbol}</button>`;
-        });
-      } else if (category === 'commands') {
-        ['/glitch ', '/tableflip'].forEach(cmd => {
-          html += `<button type="button" class="tray-item-btn" onclick="insertIntoChatInput('${cmd}')">${cmd}</button>`;
-        });
-      }
-      grid.innerHTML = html;
-    }
-
-    function insertIntoChatInput(symbol) {
-      const inputField = document.getElementById('user-input-msg');
-      if (inputField) {
-        inputField.value += symbol + ' ';
-        inputField.focus();
-      }
-      document.getElementById('emote-picker-tray').style.display = 'none';
-    }
-
-    function handleKeyPress(e) {
-      if (e.key === 'Enter') sendChatMessage();
-    }
-
-    /* MUSIC PLAYER WITH CROSS-PAGE LOCALSTORAGE PERSISTENCE */
-    const dockedAudio = document.getElementById('docked-radio-audio');
-    let isDockedMusicPlaying = false;
-    const defaultStreamUrl = "https://kathy.torontocast.com:3060/stream";
-
-    // Save audio state before page unload
-    window.addEventListener('beforeunload', () => {
-      if (dockedAudio && !dockedAudio.paused) {
-        localStorage.setItem('neko_fm_active', 'true');
-        localStorage.setItem('neko_fm_volume', dockedAudio.volume.toString());
-      }
-    });
-
-    // Sync audio state automatically on load
-    document.addEventListener('DOMContentLoaded', () => {
-      const isPlaying = localStorage.getItem('neko_fm_active') === 'true';
-      const savedVol = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
-
-      if (isPlaying && dockedAudio) {
-        dockedAudio.src = defaultStreamUrl;
-        dockedAudio.volume = savedVol;
-        dockedAudio.play().then(() => {
-          isDockedMusicPlaying = true;
-          const playBtn = document.getElementById('docked-play-btn');
-          if (playBtn) playBtn.innerText = "⏸ PAUSE MUSIC";
-        }).catch(() => {
-          console.log("Autoplay paused: User interaction required to resume stream.");
-        });
-      }
-    });
-
-    function toggleDockedMusic() {
-      const playBtn = document.getElementById('docked-play-btn');
-      if (isDockedMusicPlaying) {
-        dockedAudio.pause();
-        isDockedMusicPlaying = false;
-        localStorage.setItem('neko_fm_active', 'false');
-        playBtn.innerText = "▶ PLAY MUSIC";
-      } else {
-        if (!dockedAudio.src) dockedAudio.src = defaultStreamUrl;
-        dockedAudio.play().then(() => {
-          isDockedMusicPlaying = true;
-          localStorage.setItem('neko_fm_active', 'true');
-          playBtn.innerText = "⏸ PAUSE MUSIC";
-        }).catch(err => console.error("Playback error:", err));
-      }
-    }
-
-    function setDockedVolume(val) {
-      if (dockedAudio) {
-        dockedAudio.volume = val / 100;
-        localStorage.setItem('neko_fm_volume', dockedAudio.volume.toString());
-      }
-    }
-
-    function toggleDockedCollapse() {
-      document.getElementById('docked-player').classList.toggle('collapsed');
-    }
-
-    /* SAFETY & SANITIZATION */
-    const PROFANITY_BLOCKLIST = ['badword1', 'badword2'];
-    const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'want to die'];
-
-    function containsProfanity(text) {
-      return PROFANITY_BLOCKLIST.some(word => text.toLowerCase().includes(word));
-    }
-
-    function checkCrisisIntervention(text) {
-      return CRISIS_KEYWORDS.some(phrase => text.toLowerCase().includes(phrase));
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-
-    function changeUserStatus(newStatus) {
-      const dot = document.getElementById('user-status-dot');
-      if (dot) dot.className = `status-dot-indicator ${newStatus}`;
-    }
-  </script>
-
-  <!-- GLOBAL SITE FOOTER -->
-<footer class="site-footer">
-  <div class="footer-container">
-    <p class="copyright-text">&copy; 2026 Otaku Overload & 24/7 Neko FM. All rights reserved.</p>
-    <div class="footer-links">
-      <a href="about.html">About Us</a>
-      <span class="footer-divider">•</span>
-      <a href="contact.html">Contact Us</a>
-      <span class="footer-divider">•</span>
-      <a href="privacy.html">Privacy Policy</a>
-    </div>
-  </div>
-</footer>
-</body>
-</html>
+            row.innerHTML =
