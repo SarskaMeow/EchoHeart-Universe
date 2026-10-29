@@ -1254,18 +1254,40 @@
     };
 
     // --- MODULE-SCOPED SAFETY & MODERATION FILTERS ---
-    const PROFANITY_BLOCKLIST = ['badword1', 'badword2'];
+const PROFANITY_BLOCKLIST = [
+  // Direct Profanity
+  'fuck', 'shit', 'bitch', 'asshole', 'bastard', 'cunt', 'dick', 'pussy',
+  'whore', 'slut', 'dammit', 'cock', 'prick', 'twat',
+  
+  // Hate Speech & Slurs
+  'nigger', 'fag', 'faggot', 'retard', 'kike', 'spic', 'chink',
+  
+  // Negative / Harassing Phrases
+  'you suck', 'trash player', 'kys', 'loser', 'nobody likes you', 'shut up'
+];
     const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'want to die'];
 
+    function generateGargle(length) {
+      const symbols = ['@', '#', '$', '%', '&', '!', '*'];
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += symbols[Math.floor(Math.random() * symbols.length)];
+      }
+      return result;
+    }
+
     function containsProfanity(text) {
-      return PROFANITY_BLOCKLIST.some(word => text.toLowerCase().includes(word));
+      return PROFANITY_BLOCKLIST.some(word => {
+        const regex = new RegExp(`\\b${word}\\b`, 'i');
+        return regex.test(text);
+      });
     }
 
     function filterProfanity(text) {
       let cleaned = text;
       PROFANITY_BLOCKLIST.forEach(word => {
-        const regex = new RegExp(word, 'gi');
-        cleaned = cleaned.replace(regex, '***');
+        const regex = new RegExp(`\\b${word}\\b`, 'gi');
+        cleaned = cleaned.replace(regex, (match) => generateGargle(match.length));
       });
       return cleaned;
     }
@@ -1597,7 +1619,7 @@
               ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
               : 'Just now';
 
-            // Filter message text on read as a extra layer of safety
+            // Filter message text on read as an extra layer of safety
             const safeText = filterProfanity(msg.text || '');
 
             row.innerHTML = `
@@ -1624,7 +1646,7 @@
         await addDoc(collection(db, "channels", "bots", "messages"), {
           author: author,
           role: role || 'npc',
-          text: text,
+          text: filterProfanity(text),
           uid: 'npc_system',
           timestamp: serverTimestamp()
         });
@@ -1644,11 +1666,6 @@
         return;
       }
 
-      if (containsProfanity(rawText)) {
-        alert("🛡️ [Auto-Mod]: Please keep our community lounge clean and avoid prohibited language.");
-        return;
-      }
-
       if (checkCrisisIntervention(rawText)) {
         alert("❤️ [Support Notice]: Support is available 24/7 at 988 (Suicide & Crisis Lifeline). You are not alone.");
         input.value = '';
@@ -1656,14 +1673,17 @@
       }
 
       const unlocked = window.userData?.unlocked_items || JSON.parse(localStorage.getItem('unlocked_cosmetics') || '[]');
-      let formattedContent = escapeHtml(rawText);
+      
+      // Filter out profanity and convert bad words into random gargle symbols (@#$%!)
+      const sanitizedText = filterProfanity(rawText);
+      let formattedContent = escapeHtml(sanitizedText);
 
       const hasHacker = window.isUserAdmin || unlocked.includes('pack_hacker');
       const hasChibi = window.isUserAdmin || unlocked.includes('pack_chibi') || unlocked.includes('pack_chibi_emotes');
 
       if (rawText.startsWith('/glitch ')) {
         if (!hasHacker) { alert('❌ Requires Sub-Stage Hacker Pack!'); return; }
-        formattedContent = `<span class="fx-glitch">${escapeHtml(rawText.replace('/glitch ', ''))}</span>`;
+        formattedContent = `<span class="fx-glitch">${escapeHtml(filterProfanity(rawText.replace('/glitch ', '')))}</span>`;
       } else if (rawText === '/tableflip') {
         if (!hasChibi) { alert('❌ Requires Chibi Pack!'); return; }
         formattedContent = `(╯°□°)╯︵ ┻━┻`;
