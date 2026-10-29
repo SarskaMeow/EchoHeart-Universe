@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3237546726752178"
-     crossorigin="anonymous"></script>
+      crossorigin="anonymous"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Otaku Overload — Sub-Stage Landing Portal</title>
@@ -73,7 +73,7 @@
     }
 
     /* ============================================================ */
-    /* ⚡ TOP LEFT PROMINENT LOGIN BUTTON                            */
+    /* ⚡ TOP LEFT PROMINENT LOGIN BUTTON                           */
     /* ============================================================ */
     .top-header-bar {
       position: absolute;
@@ -111,7 +111,7 @@
     }
 
     /* ============================================================ */
-    /* ⚡ LANDING HERO & CENTER BRANDING                             */
+    /* ⚡ LANDING HERO & CENTER BRANDING                            */
     /* ============================================================ */
     .container {
       max-width: 1200px;
@@ -358,22 +358,18 @@
     /* MOBILE SPECIFIC RESPONSIVE ADJUSTMENTS */
     @media (max-width: 600px) {
       .top-header-bar {
-        position: relative;
-        top: 0;
-        left: 0;
-        padding: 16px 16px 0 16px;
-        justify-content: center;
+        position: absolute;
+        top: 16px;
+        left: 16px;
       }
       
       .top-left-login-btn {
-        width: 100%;
-        justify-content: center;
-        padding: 12px 20px;
-        font-size: 1rem;
+        padding: 8px 16px;
+        font-size: 0.85rem;
       }
 
       .container {
-        margin-top: 20px;
+        margin-top: 65px;
         padding: 0 1rem;
       }
 
@@ -399,6 +395,7 @@
       94% { transform: translate(2px, -1px); text-shadow: 2px 0 var(--accent-cyan), -2px 0 var(--accent-pink); }
       95% { transform: translate(0, 0); text-shadow: none; }
     }
+
     /* Footer Styling */
     .site-footer {
       width: 100%;
@@ -456,7 +453,7 @@
 
   <!-- TOP LEFT PROMINENT LOGIN BAR -->
   <div class="top-header-bar">
-    <button class="top-left-login-btn" onclick="executeMobileSafeAuth()">
+    <button class="top-left-login-btn" id="nav-auth-btn" onclick="executeMobileSafeAuth()">
       🔑 Account Login
     </button>
   </div>
@@ -587,7 +584,6 @@
   <script>
     /* MOBILE-SAFE LOGIN DISPATCHER */
     function executeMobileSafeAuth() {
-      // Check if inside social media WebView (Messenger/Instagram/Facebook/Line)
       const ua = navigator.userAgent || navigator.vendor || window.opera;
       const isInApp = /FBAN|FBAV|Instagram|Line|Messenger/i.test(ua);
 
@@ -668,18 +664,19 @@
     }
   </script>
   <script src="music-player.js"></script>
+
   <!-- GLOBAL SITE FOOTER -->
-<footer class="site-footer">
-  <div class="footer-container">
-    <p class="copyright-text">&copy; 2026 Otaku Overload & 24/7 Neko FM. All rights reserved.</p>
-    <div class="footer-links">
-      <a href="about.html">About Us</a>
-      <span class="footer-divider">•</span>
-      <a href="contact.html">Contact Us</a>
-      <span class="footer-divider">•</span>
-      <a href="privacy.html">Privacy Policy</a>
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p class="copyright-text">&copy; 2026 Otaku Overload & 24/7 Neko FM. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="about.html">About Us</a>
+        <span class="footer-divider">•</span>
+        <a href="contact.html">Contact Us</a>
+        <span class="footer-divider">•</span>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 </body>
 </html>
