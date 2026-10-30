@@ -1,10 +1,10 @@
 import { auth, db } from './firebase-config.js?v=3';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { 
-  doc, setDoc, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp 
+  doc, getDoc, setDoc, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Inject Cyberpunk DM Dock Styles
+// Inject Cyberpunk DM Dock & Real-Time Banner Notification Styles
 const dmDockStyles = `
   .cyber-dm-dock {
     position: fixed;
@@ -139,13 +139,96 @@ const dmDockStyles = `
     font-size: 0.78rem;
     cursor: pointer;
   }
+
+  /* ⚡ FLOATING REQUEST NOTIFICATION BANNER */
+  .cyber-request-toast {
+    position: fixed;
+    top: 70px;
+    right: 24px;
+    z-index: 7000;
+    background: rgba(15, 7, 28, 0.96);
+    border: 1.5px solid var(--accent-pink, #ff007f);
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: 0 0 20px rgba(255, 0, 127, 0.5), inset 0 0 10px rgba(0, 240, 255, 0.2);
+    display: none;
+    align-items: center;
+    gap: 12px;
+    backdrop-filter: blur(12px);
+    animation: toastSlideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  @keyframes toastSlideIn {
+    from { opacity: 0; transform: translateY(-15px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .toast-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .toast-title {
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: var(--accent-cyan, #00f0ff);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .toast-desc {
+    font-size: 0.78rem;
+    color: #e8dff5;
+  }
+
+  .toast-btn-group {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+  }
+
+  .toast-accept-btn {
+    background: linear-gradient(135deg, #00f0ff, #9d4edd);
+    border: none;
+    color: #000;
+    font-weight: 900;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+  }
+
+  .toast-account-btn {
+    background: rgba(22, 10, 42, 0.9);
+    border: 1px solid rgba(255, 0, 127, 0.6);
+    color: #fff;
+    font-weight: 800;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .toast-decline-btn {
+    background: transparent;
+    border: 1px solid rgba(184, 167, 212, 0.4);
+    color: #b8a7d4;
+    font-weight: 800;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
 `;
 
 const styleSheet = document.createElement("style");
 styleSheet.innerText = dmDockStyles;
 document.head.appendChild(styleSheet);
 
-// Build Dock HTML Elements Dynamically
+// Dynamic DM Dock Element Creation
 let targetDmUid = null;
 let targetDmName = '';
 let dmUnsubscribe = null;
@@ -169,25 +252,34 @@ dockElement.innerHTML = `
 `;
 document.body.appendChild(dockElement);
 
-// Event Listeners for Dock Controls
-document.getElementById('dm-dock-min-btn').onclick = () => {
-  dockElement.classList.toggle('collapsed');
-};
+// Dynamic Toast Element Creation
+const toastElement = document.createElement('div');
+toastElement.className = 'cyber-request-toast';
+toastElement.id = 'cyber-request-toast';
+toastElement.innerHTML = `
+  <div class="toast-content">
+    <span class="toast-title" id="toast-title-text">⚡ INCOMING REQUEST</span>
+    <span class="toast-desc" id="toast-desc-text">User requested a direct connection!</span>
+  </div>
+  <div class="toast-btn-group">
+    <button class="toast-accept-btn" id="toast-accept-btn">Accept</button>
+    <a href="account.html" class="toast-account-btn">Account</a>
+    <button class="toast-decline-btn" id="toast-decline-btn">✕</button>
+  </div>
+`;
+document.body.appendChild(toastElement);
 
+// Listeners
+document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
 document.getElementById('dm-dock-close-btn').onclick = () => {
   dockElement.style.display = 'none';
   if (dmUnsubscribe) dmUnsubscribe();
 };
-
 document.getElementById('dm-dock-send-btn').onclick = sendDirectMessage;
-document.getElementById('dm-dock-input-field').onkeydown = (e) => {
-  if (e.key === 'Enter') sendDirectMessage();
-};
+document.getElementById('dm-dock-input-field').onkeydown = (e) => { if (e.key === 'Enter') sendDirectMessage(); };
 
-// Global Function to Open Direct Message Seamlessly (No Popups!)
 window.openDirectMessage = function(targetUid, targetName) {
-  if (!auth.currentUser) return;
-  if (!targetUid || targetUid === auth.currentUser.uid) return;
+  if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
 
   targetDmUid = targetUid;
   targetDmName = targetName;
@@ -251,3 +343,52 @@ async function sendDirectMessage() {
     console.error("Failed to send direct message:", err);
   }
 }
+
+// REAL-TIME INCOMING REQUEST MONITOR
+onAuthStateChanged(auth, (user) => {
+  if (!user) return;
+
+  onSnapshot(doc(db, "users", user.uid), (snap) => {
+    if (!snap.exists()) return;
+
+    const userData = snap.data();
+    const pending = userData.pendingRequests || [];
+
+    if (pending.length > 0) {
+      const activeReq = pending[0];
+      const toast = document.getElementById('cyber-request-toast');
+      const desc = document.getElementById('toast-desc-text');
+      const btnAccept = document.getElementById('toast-accept-btn');
+      const btnDecline = document.getElementById('toast-decline-btn');
+
+      if (desc) desc.innerText = `🤝 ${activeReq.name} sent you a connection request!`;
+      if (toast) toast.style.display = 'flex';
+
+      if (btnAccept) {
+        btnAccept.onclick = async () => {
+          const updatedPending = pending.filter(r => r.uid !== activeReq.uid);
+          const updatedFriends = [...(userData.friendsList || []), { uid: activeReq.uid, name: activeReq.name }];
+          
+          await setDoc(doc(db, "users", user.uid), { 
+            pendingRequests: updatedPending, 
+            friendsList: updatedFriends 
+          }, { merge: true });
+
+          toast.style.display = 'none';
+          window.openDirectMessage(activeReq.uid, activeReq.name);
+        };
+      }
+
+      if (btnDecline) {
+        btnDecline.onclick = async () => {
+          const updatedPending = pending.filter(r => r.uid !== activeReq.uid);
+          await setDoc(doc(db, "users", user.uid), { pendingRequests: updatedPending }, { merge: true });
+          toast.style.display = 'none';
+        };
+      }
+    } else {
+      const toast = document.getElementById('cyber-request-toast');
+      if (toast) toast.style.display = 'none';
+    }
+  });
+});
