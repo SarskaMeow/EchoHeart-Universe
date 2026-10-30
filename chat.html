@@ -1219,7 +1219,7 @@
     </div>
   </div>
 
-  <!-- REAL-TIME FIREBASE FIRESTORE MODULE & BOT CHAT SIMULATION -->
+  <!-- REAL-TIME FIREBASE FIRESTORE MODULE & PRESENCE ENGINE -->
   <script type="module">
     import { auth, db } from './firebase-config.js?v=3';
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -1232,8 +1232,8 @@
     window.isUserAdmin = false;
     window.activeChannelKey = 'general';
     let unsubscribeListener = null;
-    let botTimerId = null;
     let safetyTimerId = null;
+    let heartbeatInterval = null;
 
     const AVATAR_PRESETS = {
       'avatar_akari': 'images/avatars/akari.png',
@@ -1252,18 +1252,13 @@
       'bots': '🤖 BOT-ROLEPLAY'
     };
 
-    // --- MODULE-SCOPED SAFETY & MODERATION FILTERS ---
-const PROFANITY_BLOCKLIST = [
-  // Direct Profanity
-  'fuck', 'shit', 'bitch', 'asshole', 'bastard', 'cunt', 'dick', 'pussy',
-  'whore', 'slut', 'dammit', 'cock', 'prick', 'twat',
-  
-  // Hate Speech & Slurs
-  'nigger', 'fag', 'faggot', 'retard', 'kike', 'spic', 'chink',
-  
-  // Negative / Harassing Phrases
-  'you suck', 'trash player', 'kys', 'loser', 'nobody likes you', 'shut up'
-];
+    // --- SAFETY & MODERATION FILTERS ---
+    const PROFANITY_BLOCKLIST = [
+      'fuck', 'shit', 'bitch', 'asshole', 'bastard', 'cunt', 'dick', 'pussy',
+      'whore', 'slut', 'dammit', 'cock', 'prick', 'twat',
+      'nigger', 'fag', 'faggot', 'retard', 'kike', 'spic', 'chink',
+      'you suck', 'trash player', 'kys', 'loser', 'nobody likes you', 'shut up'
+    ];
     const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'want to die'];
 
     function generateGargle(length) {
@@ -1275,14 +1270,8 @@ const PROFANITY_BLOCKLIST = [
       return result;
     }
 
-    function containsProfanity(text) {
-      return PROFANITY_BLOCKLIST.some(word => {
-        const regex = new RegExp(`\\b${word}\\b`, 'i');
-        return regex.test(text);
-      });
-    }
-
     function filterProfanity(text) {
+      if (!text) return '';
       let cleaned = text;
       PROFANITY_BLOCKLIST.forEach(word => {
         const regex = new RegExp(`\\b${word}\\b`, 'gi');
@@ -1299,49 +1288,7 @@ const PROFANITY_BLOCKLIST = [
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
-    // --- TWITCH-STYLE SAFETY BOT LOOP ---
-    const SAFETY_MESSAGES = [
-      "🛡️ [SYSTEM SAFETY]: Welcome! Please keep the lounge respectful. No hate speech, harassment, or spamming.",
-      "🔒 [SYSTEM SAFETY]: Protect your personal info! Never share passwords, phone numbers, or private details in live chat.",
-      "✨ [SYSTEM SAFETY]: Be supportive of all creators and artists! Keep constructive feedback friendly and positive.",
-      "🚨 [SYSTEM SAFETY]: See someone breaking the rules? Use the 🚨 Report button next to their name for mod review."
-    ];
-    let safetyMessageIndex = 0;
-
-    function renderLocalBotMessage(author, text) {
-      const feed = document.getElementById('chat-feed');
-      if (!feed) return;
-
-      const row = document.createElement('div');
-      row.className = 'msg-row incoming bot-msg';
-
-      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      row.innerHTML = `
-        <div class="msg-meta">
-          <span class="msg-author bot">${author}</span>
-          <span class="msg-time">${timeStr}</span>
-        </div>
-        <div class="msg-bubble">${text}</div>
-      `;
-      feed.appendChild(row);
-      feed.scrollTop = feed.scrollHeight;
-    }
-
-    function startSafetyReminderLoop() {
-      if (safetyTimerId) clearInterval(safetyTimerId);
-
-      safetyTimerId = setInterval(() => {
-        const messageText = SAFETY_MESSAGES[safetyMessageIndex];
-        renderLocalBotMessage("🤖 SYSTEM_BOT", messageText);
-        safetyMessageIndex = (safetyMessageIndex + 1) % SAFETY_MESSAGES.length;
-      }, 900000); // 15 Minutes
-    }
-
-    // Run safety loop once on initialization
-    startSafetyReminderLoop();
-
-    // --- REAL-TIME PRESENCE & REGISTERED USERS / MODS TRACKER ---
+    // --- ACCURATE PRESENCE SYSTEM ---
     let myPresenceDocId = null;
 
     async function registerUserPresence(user, userData) {
@@ -1352,29 +1299,51 @@ const PROFANITY_BLOCKLIST = [
       }
 
       myPresenceDocId = user ? user.uid : guestId;
-
       const presenceRef = doc(db, 'presence', myPresenceDocId);
+
       const isMod = userData && (userData.role === 'admin' || userData.role === 'moderator' || userData.isAdmin === true);
       const displayName = user 
         ? (isMod ? '🛡️ MODERATOR' : (userData?.displayName || user.displayName || 'Portal Member')) 
         : `Guest_${guestId.replace('guest_', '').substring(0, 4)}`;
 
       const role = user ? (isMod ? 'System Overwatch' : 'Portal Member') : 'Portal Visitor';
-      const status = user ? 'active' : 'away';
+      const statusSelect = document.getElementById('user-status-select');
+      const status = statusSelect ? statusSelect.value : (user ? 'active' : 'away');
 
-      const updateData = {
-        displayName,
-        role,
-        status,
-        lastActive: serverTimestamp(),
-        isGuest: !user
+      const sendHeartbeat = async () => {
+        try {
+          await setDoc(presenceRef, {
+            displayName,
+            role,
+            status,
+            lastActive: serverTimestamp(),
+            isGuest: !user,
+            isMod: !!isMod,
+            equipped_avatar: userData?.equipped_avatar || '',
+            photoURL: user?.photoURL || '',
+            equippedTitle: userData?.equippedTitle || ''
+          }, { merge: true });
+        } catch (e) {
+          console.warn('Presence update failed:', e);
+        }
       };
 
-      try {
-        await setDoc(presenceRef, updateData, { merge: true });
-      } catch (e) {
-        console.warn('Presence registration failed:', e);
-      }
+      // 1. Initial heartbeat when entering
+      await sendHeartbeat();
+
+      // 2. Pulse every 20 seconds to prove the user is active
+      if (heartbeatInterval) clearInterval(heartbeatInterval);
+      heartbeatInterval = setInterval(sendHeartbeat, 20000);
+
+      // 3. Immediately delete document on browser unload or navigation away
+      const removePresence = () => {
+        if (myPresenceDocId) {
+          deleteDoc(presenceRef).catch(() => {});
+        }
+      };
+
+      window.addEventListener('beforeunload', removePresence);
+      window.addEventListener('pagehide', removePresence);
     }
 
     function initOnlineUsersListener() {
@@ -1382,37 +1351,39 @@ const PROFANITY_BLOCKLIST = [
       const modsContainer = document.getElementById('moderators-users-list');
       if (!loungeContainer || !modsContainer) return;
 
-      const usersCol = collection(db, 'users');
-      onSnapshot(usersCol, (snapshot) => {
+      // FIXED: Querying 'presence' collection rather than static 'users'
+      const presenceCol = collection(db, 'presence');
+
+      onSnapshot(presenceCol, { includeMetadataChanges: true }, (snapshot) => {
         loungeContainer.innerHTML = '';
         modsContainer.innerHTML = '';
 
         let memberCount = 0;
         let modCount = 0;
+        const nowMs = Date.now();
 
         snapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          const name = data.displayName || (data.email ? data.email.split('@')[0] : '');
+          const data = docSnap.data({ serverTimestamps: 'estimate' });
+          const name = data.displayName || 'Portal Member';
 
-          const lowerName = name.toLowerCase();
-          if (
-            !name || 
-            data.isTest === true || 
-            lowerName.includes('test') || 
-            lowerName.includes('guest') || 
-            lowerName.includes('demo')
-          ) {
+          // Safe Timestamp Verification
+          let lastActiveMs = nowMs;
+          if (data.lastActive && typeof data.lastActive.toDate === 'function') {
+            lastActiveMs = data.lastActive.toDate().getTime();
+          }
+
+          // EXPIRE CHECK: If no heartbeat in 45 seconds, treat user as disconnected
+          if (nowMs - lastActiveMs > 45000) {
             return;
           }
 
-          const isMod = data.role === 'admin' || data.role === 'moderator' || data.isAdmin === true;
-          const status = 'active';
+          const isMod = data.isMod === true || data.role === 'System Overwatch';
+          const status = data.status || 'active';
 
           if (isMod) {
             modCount++;
             const modCard = document.createElement('div');
             modCard.className = 'chatter-card';
-            modCard.onclick = () => window.openReportModal && window.openReportModal(name || 'Moderator');
 
             modCard.innerHTML = `
               <div class="chatter-avatar mod-special-avatar">🛡️</div>
@@ -1436,7 +1407,7 @@ const PROFANITY_BLOCKLIST = [
               initial = '';
             }
 
-            const role = data.equippedTitle ? `[${data.equippedTitle}]` : 'Portal Member';
+            const role = data.equippedTitle ? `[${data.equippedTitle}]` : (data.role || 'Portal Member');
 
             const userCard = document.createElement('div');
             userCard.className = 'chatter-card';
@@ -1462,7 +1433,7 @@ const PROFANITY_BLOCKLIST = [
           loungeContainer.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:4px;">No members active</div>';
         }
       }, (err) => {
-        console.warn('Users list listener error:', err);
+        console.warn('Presence list error:', err);
       });
     }
 
@@ -1475,7 +1446,6 @@ const PROFANITY_BLOCKLIST = [
       }
     };
 
-    // Attach click prompt listener on locked input bar
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('user-input-msg')?.addEventListener('click', () => {
         if (!window.currentUser) {
@@ -1484,7 +1454,7 @@ const PROFANITY_BLOCKLIST = [
       });
     });
 
-    // 1. Auth Listener & Input Locking
+    // 1. Auth Listener
     onAuthStateChanged(auth, async (user) => {
       const inputEl = document.getElementById('user-input-msg');
       const sendBtn = document.querySelector('.send-msg-btn');
@@ -1552,11 +1522,6 @@ const PROFANITY_BLOCKLIST = [
     window.switchChannel = async function(channelKey, customTitle, e) {
       if (!CHANNELS[channelKey]) channelKey = 'general';
 
-      if (typeof window.handleContentAccess === 'function') {
-        const allowed = await window.handleContentAccess(channelKey);
-        if (!allowed) return;
-      }
-
       window.activeChannelKey = channelKey;
 
       const mainWindow = document.getElementById('main-chat-window-box');
@@ -1581,7 +1546,6 @@ const PROFANITY_BLOCKLIST = [
       }
 
       if (unsubscribeListener) unsubscribeListener();
-      if (botTimerId) clearTimeout(botTimerId);
 
       try {
         const q = query(
@@ -1590,13 +1554,13 @@ const PROFANITY_BLOCKLIST = [
           limit(100)
         );
 
-        unsubscribeListener = onSnapshot(q, (snapshot) => {
+        unsubscribeListener = onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
           const feed = document.getElementById('chat-feed');
           if (!feed) return;
           feed.innerHTML = '';
 
           snapshot.forEach((docSnap) => {
-            const msg = { docId: docSnap.id, ...docSnap.data() };
+            const msg = { docId: docSnap.id, ...docSnap.data({ serverTimestamps: 'estimate' }) };
             const isSelf = window.currentUser && msg.uid === window.currentUser.uid;
 
             const row = document.createElement('div');
@@ -1611,7 +1575,6 @@ const PROFANITY_BLOCKLIST = [
             const deleteBtn = (isSelf || window.isUserAdmin)
               ? `<button class="delete-msg-btn" onclick="window.deleteMessage('${msg.docId}')">🗑️ Delete</button>` : '';
 
-            // Reports allowed ONLY for regular live user messages
             const isNonReportableRole = (msg.role === 'bot' || msg.role === 'npc' || msg.role === 'mod');
             const reportBtn = (!isSelf && !isNonReportableRole)
               ? `<button class="report-msg-btn" onclick="openReportModal('${msg.author}')">🚨 Report</button>` : '';
@@ -1620,9 +1583,7 @@ const PROFANITY_BLOCKLIST = [
               ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
               : 'Just now';
 
-            // Filter message text on read as an extra layer of safety
             const safeText = filterProfanity(msg.text || '');
-
             const authorOnClick = isNonReportableRole ? '' : `onclick="openReportModal('${msg.author}')"`;
 
             row.innerHTML = `
@@ -1636,38 +1597,17 @@ const PROFANITY_BLOCKLIST = [
             feed.appendChild(row);
           });
           feed.scrollTop = feed.scrollHeight;
-        }, (err) => {
-          console.error(`Live channel error for #${channelKey}:`, err);
         });
       } catch (e) {
-        console.warn("Firestore collection unavailable, falling back to local channel stream.");
+        console.warn("Firestore collection error:", e);
       }
     };
 
-    async function postNpcMessageToFirestore(author, role, text) {
-      try {
-        await addDoc(collection(db, "channels", "bots", "messages"), {
-          author: author,
-          role: role || 'npc',
-          text: filterProfanity(text),
-          uid: 'npc_system',
-          timestamp: serverTimestamp()
-        });
-      } catch (e) {
-        console.error("Failed to persist NPC message:", e);
-      }
-    }
-
-    // 4. Transmit Message to Firestore
+    // 3. Transmit Message
     window.sendChatMessage = async function() {
       const input = document.getElementById('user-input-msg');
       const rawText = input ? input.value.trim() : '';
       if (!rawText || !window.currentUser) return;
-
-      if (window.isUserMuted) {
-        alert("🔇 You are currently muted by a moderator.");
-        return;
-      }
 
       if (checkCrisisIntervention(rawText)) {
         alert("❤️ [Support Notice]: Support is available 24/7 at 988 (Suicide & Crisis Lifeline). You are not alone.");
@@ -1675,22 +1615,8 @@ const PROFANITY_BLOCKLIST = [
         return;
       }
 
-      const unlocked = window.userData?.unlocked_items || JSON.parse(localStorage.getItem('unlocked_cosmetics') || '[]');
-      
-      // Filter out profanity and convert bad words into random gargle symbols (@#$%!)
       const sanitizedText = filterProfanity(rawText);
       let formattedContent = escapeHtml(sanitizedText);
-
-      const hasHacker = window.isUserAdmin || unlocked.includes('pack_hacker');
-      const hasChibi = window.isUserAdmin || unlocked.includes('pack_chibi') || unlocked.includes('pack_chibi_emotes');
-
-      if (rawText.startsWith('/glitch ')) {
-        if (!hasHacker) { alert('❌ Requires Sub-Stage Hacker Pack!'); return; }
-        formattedContent = `<span class="fx-glitch">${escapeHtml(filterProfanity(rawText.replace('/glitch ', '')))}</span>`;
-      } else if (rawText === '/tableflip') {
-        if (!hasChibi) { alert('❌ Requires Chibi Pack!'); return; }
-        formattedContent = `(╯°□°)╯︵ ┻━┻`;
-      }
 
       try {
         await addDoc(collection(db, "channels", window.activeChannelKey, "messages"), {
@@ -1701,31 +1627,12 @@ const PROFANITY_BLOCKLIST = [
           timestamp: serverTimestamp()
         });
         input.value = '';
-
-        if (window.activeChannelKey === 'bots') {
-          setTimeout(async () => {
-            const lower = rawText.toLowerCase();
-            let response = { author: "Akari Minase", text: "Awesome! Don't forget band practice at 4:30 PM sharp!" };
-
-            if (lower.includes('pick') || lower.includes('guitar') || lower.includes('104')) {
-              response = { author: "Locker_104_Ren", text: "Wait, are you talking about the purple pick in locker 104?! Did you find it?" };
-            } else if (lower.includes('notebook') || lower.includes('pink') || lower.includes('lyric')) {
-              response = { author: "Locker_142_Rin", text: "OMG did you see my lyric notebook near the library drop box?!" };
-            } else if (lower.includes('synth') || lower.includes('music') || lower.includes('audio')) {
-              response = { author: "Sera Hanibara", text: "Checking synth frequencies right now... everything sounds super clean!" };
-            } else if (lower.includes('vending') || lower.includes('coffee') || lower.includes('coin')) {
-              response = { author: "Locker_077_Kenji", text: "Tap the lower panel! It dropped three coffees for me earlier!" };
-            }
-
-            await postNpcMessageToFirestore(response.author, "npc", response.text);
-          }, 1200);
-        }
       } catch (e) {
         console.error("Failed to post message:", e);
       }
     };
 
-    // 5. Delete Message Document
+    // 4. Delete Message Document
     window.deleteMessage = async function(docId) {
       if (!window.isUserAdmin && !confirm("Delete this message?")) return;
       try {
