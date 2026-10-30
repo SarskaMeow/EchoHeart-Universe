@@ -210,6 +210,7 @@
       animation: neonHudPulse 3.5s infinite ease-in-out;
       transition: all 0.4s ease;
       min-height: 0;
+      position: relative;
     }
 
     .chat-window-header {
@@ -231,6 +232,58 @@
       text-transform: uppercase;
       text-shadow: 0 0 12px rgba(0, 240, 255, 0.85);
       animation: textGlitchRGB 3.5s infinite alternate;
+    }
+
+    /* REAL-TIME INCOMING REQUEST BANNER HUD */
+    .incoming-request-hud {
+      display: none;
+      background: linear-gradient(135deg, rgba(157, 78, 221, 0.95), rgba(255, 0, 127, 0.95));
+      border-bottom: 1.5px solid var(--accent-cyan);
+      padding: 10px 18px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.5);
+      z-index: 200;
+      animation: slideDownHud 0.3s ease-out;
+    }
+
+    @keyframes slideDownHud {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+
+    .hud-text {
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    .hud-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .hud-btn-accept {
+      background: var(--accent-cyan);
+      border: none;
+      color: #000;
+      font-weight: 900;
+      padding: 5px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    .hud-btn-decline {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #fff;
+      color: #fff;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.78rem;
     }
 
     .mod-overwatch-bar {
@@ -315,6 +368,7 @@
       color: var(--accent-cyan);
       text-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
       cursor: pointer;
+      position: relative;
     }
 
     .msg-author:hover { text-decoration: underline; }
@@ -324,7 +378,7 @@
 
     .msg-time { opacity: 0.6; }
 
-    .delete-msg-btn, .report-msg-btn, .dm-msg-btn {
+    .delete-msg-btn, .report-msg-btn {
       display: none;
       background: transparent;
       border: none;
@@ -337,15 +391,12 @@
 
     .delete-msg-btn { color: var(--accent-red); }
     .report-msg-btn { color: var(--accent-amber); }
-    .dm-msg-btn { color: var(--accent-cyan); }
 
     .delete-msg-btn:hover { color: #ffffff; text-shadow: 0 0 8px var(--accent-red); }
     .report-msg-btn:hover { color: #ffffff; text-shadow: 0 0 8px var(--accent-amber); }
-    .dm-msg-btn:hover { color: #ffffff; text-shadow: 0 0 8px var(--accent-cyan); }
 
     .msg-row:hover .delete-msg-btn,
-    .msg-row:hover .report-msg-btn,
-    .msg-row:hover .dm-msg-btn {
+    .msg-row:hover .report-msg-btn {
       display: inline-block;
     }
 
@@ -374,42 +425,60 @@
       box-shadow: 0 0 18px rgba(255, 0, 127, 0.45);
     }
 
-    .fx-glitch {
-      display: inline-block;
-      color: var(--accent-cyan);
-      font-weight: 800;
-      animation: chatGlitch 0.4s infinite alternate;
-      text-shadow: 2px 0 var(--accent-pink), -2px 0 var(--accent-cyan);
+    /* CYBERPUNK USER CONTEXT MENU POPUP */
+    .cyber-context-popup {
+      position: fixed;
+      z-index: 5000;
+      background: rgba(14, 6, 28, 0.98);
+      border: 1.5px solid var(--accent-cyan);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 240, 255, 0.4);
+      border-radius: 12px;
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 170px;
+      backdrop-filter: blur(12px);
+      animation: popFadeIn 0.15s ease-out;
     }
 
-    @keyframes chatGlitch {
-      0% { transform: translate(0, 0); }
-      50% { transform: translate(-1.5px, 1px); }
-      100% { transform: translate(1.5px, -1px); }
+    @keyframes popFadeIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
     }
 
-    .fx-shout {
-      background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 8px;
+    .context-header {
+      font-size: 0.72rem;
       font-weight: 900;
-      font-size: 1.05rem;
+      color: var(--accent-pink);
+      padding: 4px 8px;
+      border-bottom: 1px solid rgba(157, 78, 221, 0.3);
       text-transform: uppercase;
-      letter-spacing: 1.5px;
-      box-shadow: 0 0 15px var(--accent-pink);
+      letter-spacing: 0.8px;
     }
 
-    .mod-msg .msg-bubble {
-      border-color: #ff007f;
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+    .context-item-btn {
+      background: rgba(22, 10, 42, 0.8);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      color: #fff;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      text-align: left;
     }
 
-    .bot-msg .msg-bubble {
-      background: rgba(30, 20, 10, 0.9);
-      border: 1px solid var(--accent-gold);
-      color: var(--accent-gold);
-      box-shadow: 0 0 15px rgba(255, 209, 102, 0.3);
+    .context-item-btn:hover {
+      background: var(--accent-pink);
+      border-color: #fff;
+      color: #fff;
+      box-shadow: 0 0 12px var(--accent-pink);
+      transform: translateX(2px);
     }
 
     .chat-input-bar {
@@ -1030,6 +1099,15 @@
         <span style="font-size: 0.75rem; color: var(--accent-pink); font-weight: bold;" id="chat-sub-status">SUB-STAGE ENCRYPTION ACTIVE</span>
       </div>
 
+      <!-- INCOMING REQUEST HUD BANNER -->
+      <div class="incoming-request-hud" id="incoming-request-hud">
+        <span class="hud-text" id="hud-request-message">🤝 User requested a friend connection!</span>
+        <div class="hud-actions">
+          <button class="hud-btn-accept" id="hud-btn-accept">Accept</button>
+          <button class="hud-btn-decline" id="hud-btn-decline">Decline</button>
+        </div>
+      </div>
+
       <!-- MOD OVERWATCH BANNER -->
       <div class="mod-overwatch-bar" id="mod-overwatch-banner">
         <span>🛡️ MODERATOR OVERWATCH MODE ACTIVE</span>
@@ -1179,6 +1257,14 @@
 
   </div>
 
+  <!-- CYBERPUNK USER CONTEXT MENU POPUP -->
+  <div class="cyber-context-popup" id="cyber-context-popup">
+    <div class="context-header" id="context-username-title">@User</div>
+    <button class="context-item-btn" onclick="executeContextAction('dm')">💬 Send Direct Message</button>
+    <button class="context-item-btn" onclick="executeContextAction('friend')">🤝 Add Friend / Request</button>
+    <button class="context-item-btn" style="color: var(--accent-red);" onclick="executeContextAction('report')">🚨 Report Chatter</button>
+  </div>
+
   <!-- DOCKED MUSIC PLAYER -->
   <div class="docked-music-player" id="docked-player">
     <div class="docked-player-header">
@@ -1236,6 +1322,9 @@
     window.activeChannelKey = 'general';
     let unsubscribeListener = null;
     let heartbeatInterval = null;
+
+    let targetContextUid = '';
+    let targetContextName = '';
 
     const AVATAR_PRESETS = {
       'avatar_akari': 'images/avatars/akari.png',
@@ -1349,28 +1438,52 @@
       window.addEventListener('pagehide', removePresence);
     }
 
-    // --- INTERACTIVE CHATTER OPTIONS (DM & ADD FRIEND) ---
-    window.handleChatterClick = function(targetUid, targetName) {
+    // --- CYBERPUNK CONTEXT POPUP HANDLER ---
+    window.handleChatterClick = function(event, targetUid, targetName) {
+      if (event) event.stopPropagation();
       if (!window.currentUser) {
         window.promptLogin();
         return;
       }
       if (targetUid === window.currentUser.uid) return;
 
-      const choice = prompt(
-        `✦ Interact with ${targetName}\n\n1: Send Direct Message (DM)\n2: Send Friend Request\n3: Report Chatter\n\nEnter number (1-3):`
-      );
+      targetContextUid = targetUid;
+      targetContextName = targetName;
 
-      if (choice === '1') {
+      const popup = document.getElementById('cyber-context-popup');
+      const title = document.getElementById('context-username-title');
+      if (title) title.innerText = `✦ @${targetName}`;
+
+      let x = event ? event.clientX : 100;
+      let y = event ? event.clientY : 100;
+
+      // Keep inside screen bounds
+      if (x + 180 > window.innerWidth) x = window.innerWidth - 190;
+      if (y + 120 > window.innerHeight) y = window.innerHeight - 130;
+
+      popup.style.left = `${x}px`;
+      popup.style.top = `${y}px`;
+      popup.style.display = 'flex';
+    };
+
+    document.addEventListener('click', () => {
+      const popup = document.getElementById('cyber-context-popup');
+      if (popup) popup.style.display = 'none';
+    });
+
+    window.executeContextAction = function(action) {
+      document.getElementById('cyber-context-popup').style.display = 'none';
+
+      if (action === 'dm') {
         if (window.openDirectMessage) {
-          window.openDirectMessage(targetUid, targetName);
+          window.openDirectMessage(targetContextUid, targetContextName);
         } else {
-          alert(`💬 Opening direct message stream with ${targetName}...`);
+          alert(`💬 Direct message relay opened for ${targetContextName}!`);
         }
-      } else if (choice === '2') {
-        window.sendFriendRequest(targetUid, targetName);
-      } else if (choice === '3') {
-        window.openReportModal(targetName);
+      } else if (action === 'friend') {
+        window.sendFriendRequest(targetContextUid, targetContextName);
+      } else if (action === 'report') {
+        window.openReportModal(targetContextName);
       }
     };
 
@@ -1385,7 +1498,7 @@
           const existingPending = targetData.pendingRequests || [];
 
           if (existingPending.some(r => r.uid === window.currentUser.uid)) {
-            alert(`🤝 Friend request already sent to ${targetName}!`);
+            alert(`🤝 Friend request already active with ${targetName}!`);
             return;
           }
 
@@ -1403,6 +1516,47 @@
         alert("Unable to send request right now.");
       }
     };
+
+    // REAL-TIME LISTENER FOR INCOMING FRIEND REQUESTS HUD BANNER
+    function listenForIncomingRequests(user) {
+      if (!user) return;
+      const hud = document.getElementById('incoming-request-hud');
+      const hudText = document.getElementById('hud-request-message');
+      const btnAccept = document.getElementById('hud-btn-accept');
+      const btnDecline = document.getElementById('hud-btn-decline');
+
+      onSnapshot(doc(db, "users", user.uid), (snap) => {
+        if (snap.exists()) {
+          const data = snap.data();
+          const pending = data.pendingRequests || [];
+
+          if (pending.length > 0) {
+            const firstReq = pending[0];
+            if (hudText) hudText.innerText = `🤝 ${firstReq.name} sent you a companion request!`;
+            if (hud) hud.style.display = 'flex';
+
+            if (btnAccept) {
+              btnAccept.onclick = async () => {
+                const updatedPending = pending.filter(r => r.uid !== firstReq.uid);
+                const updatedFriends = [...(data.friendsList || []), { uid: firstReq.uid, name: firstReq.name }];
+                await setDoc(doc(db, "users", user.uid), { pendingRequests: updatedPending, friendsList: updatedFriends }, { merge: true });
+                hud.style.display = 'none';
+              };
+            }
+
+            if (btnDecline) {
+              btnDecline.onclick = async () => {
+                const updatedPending = pending.filter(r => r.uid !== firstReq.uid);
+                await setDoc(doc(db, "users", user.uid), { pendingRequests: updatedPending }, { merge: true });
+                hud.style.display = 'none';
+              };
+            }
+          } else {
+            if (hud) hud.style.display = 'none';
+          }
+        }
+      });
+    }
 
     function initOnlineUsersListener() {
       const loungeContainer = document.getElementById('online-users-list');
@@ -1423,13 +1577,11 @@
           const data = docSnap.data({ serverTimestamps: 'estimate' });
           const name = data.displayName || 'Portal Member';
 
-          // Safe Timestamp Verification
           let lastActiveMs = nowMs;
           if (data.lastActive && typeof data.lastActive.toDate === 'function') {
             lastActiveMs = data.lastActive.toDate().getTime();
           }
 
-          // Disconnects after 2 minutes of no ping
           if (nowMs - lastActiveMs > 120000) {
             return;
           }
@@ -1469,7 +1621,7 @@
 
             const userCard = document.createElement('div');
             userCard.className = 'chatter-card';
-            userCard.onclick = () => window.handleChatterClick(uid, name);
+            userCard.onclick = (evt) => window.handleChatterClick(evt, uid, name);
 
             userCard.innerHTML = `
               <div class="chatter-avatar" style="${avatarStyle}">${initial}</div>
@@ -1560,6 +1712,8 @@
           inputEl.placeholder = `Transmit to #${window.activeChannelKey}...`;
         }
         if (sendBtn) sendBtn.disabled = false;
+
+        listenForIncomingRequests(user);
       } else {
         window.currentUser = null;
         window.userData = null;
@@ -1637,21 +1791,18 @@
             const reportBtn = (!isSelf && !isNonReportableRole)
               ? `<button class="report-msg-btn" onclick="openReportModal('${msg.author}')">🚨 Report</button>` : '';
 
-            const dmBtn = (!isSelf && !isNonReportableRole && msg.uid)
-              ? `<button class="dm-msg-btn" onclick="window.handleChatterClick('${msg.uid}', '${msg.author}')">💬 DM / Friend</button>` : '';
-
             const timeStr = msg.timestamp?.toDate 
               ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
               : 'Just now';
 
             const safeText = filterProfanity(msg.text || '');
-            const authorOnClick = isNonReportableRole ? '' : `onclick="window.handleChatterClick('${msg.uid || ''}', '${msg.author}')"`;
+            const authorOnClick = isNonReportableRole ? '' : `onclick="window.handleChatterClick(event, '${msg.uid || ''}', '${msg.author}')"`;
 
             row.innerHTML = `
               <div class="msg-meta">
                 <span class="${authorClass}" ${authorOnClick}>${msg.author}</span>
                 <span class="msg-time">${timeStr}</span>
-                ${dmBtn}${deleteBtn}${reportBtn}
+                ${deleteBtn}${reportBtn}
               </div>
               <div class="msg-bubble">${safeText}</div>
             `;
