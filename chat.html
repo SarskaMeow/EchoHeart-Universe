@@ -324,7 +324,7 @@
 
     .msg-time { opacity: 0.6; }
 
-    .delete-msg-btn, .report-msg-btn {
+    .delete-msg-btn, .report-msg-btn, .dm-msg-btn {
       display: none;
       background: transparent;
       border: none;
@@ -337,12 +337,15 @@
 
     .delete-msg-btn { color: var(--accent-red); }
     .report-msg-btn { color: var(--accent-amber); }
+    .dm-msg-btn { color: var(--accent-cyan); }
 
     .delete-msg-btn:hover { color: #ffffff; text-shadow: 0 0 8px var(--accent-red); }
     .report-msg-btn:hover { color: #ffffff; text-shadow: 0 0 8px var(--accent-amber); }
+    .dm-msg-btn:hover { color: #ffffff; text-shadow: 0 0 8px var(--accent-cyan); }
 
     .msg-row:hover .delete-msg-btn,
-    .msg-row:hover .report-msg-btn {
+    .msg-row:hover .report-msg-btn,
+    .msg-row:hover .dm-msg-btn {
       display: inline-block;
     }
 
@@ -919,7 +922,7 @@
       from { box-shadow: 0 0 10px rgba(255, 0, 127, 0.4); }
       to { box-shadow: 0 0 22px rgba(255, 0, 127, 0.85); }
     }
-    /* Footer Styling */
+
     .site-footer {
       width: 100%;
       background: rgba(8, 3, 16, 0.95);
@@ -1232,7 +1235,6 @@
     window.isUserAdmin = false;
     window.activeChannelKey = 'general';
     let unsubscribeListener = null;
-    let safetyTimerId = null;
     let heartbeatInterval = null;
 
     const AVATAR_PRESETS = {
@@ -1321,7 +1323,8 @@
             isMod: !!isMod,
             equipped_avatar: userData?.equipped_avatar || '',
             photoURL: user?.photoURL || '',
-            equippedTitle: userData?.equippedTitle || ''
+            equippedTitle: userData?.equippedTitle || '',
+            uid: user ? user.uid : ''
           }, { merge: true });
         } catch (e) {
           console.warn('Presence update failed:', e);
@@ -1331,9 +1334,9 @@
       // 1. Initial heartbeat when entering
       await sendHeartbeat();
 
-      // 2. Pulse every 20 seconds to prove the user is active
+      // 2. Pulse every 30 seconds to prove the user is active
       if (heartbeatInterval) clearInterval(heartbeatInterval);
-      heartbeatInterval = setInterval(sendHeartbeat, 20000);
+      heartbeatInterval = setInterval(sendHeartbeat, 30000);
 
       // 3. Immediately delete document on browser unload or navigation away
       const removePresence = () => {
@@ -1346,12 +1349,66 @@
       window.addEventListener('pagehide', removePresence);
     }
 
+    // --- INTERACTIVE CHATTER OPTIONS (DM & ADD FRIEND) ---
+    window.handleChatterClick = function(targetUid, targetName) {
+      if (!window.currentUser) {
+        window.promptLogin();
+        return;
+      }
+      if (targetUid === window.currentUser.uid) return;
+
+      const choice = prompt(
+        `✦ Interact with ${targetName}\n\n1: Send Direct Message (DM)\n2: Send Friend Request\n3: Report Chatter\n\nEnter number (1-3):`
+      );
+
+      if (choice === '1') {
+        if (window.openDirectMessage) {
+          window.openDirectMessage(targetUid, targetName);
+        } else {
+          alert(`💬 Opening direct message stream with ${targetName}...`);
+        }
+      } else if (choice === '2') {
+        window.sendFriendRequest(targetUid, targetName);
+      } else if (choice === '3') {
+        window.openReportModal(targetName);
+      }
+    };
+
+    window.sendFriendRequest = async function(targetUid, targetName) {
+      if (!window.currentUser) return;
+      try {
+        const targetRef = doc(db, "users", targetUid);
+        const targetSnap = await getDoc(targetRef);
+
+        if (targetSnap.exists()) {
+          const targetData = targetSnap.data();
+          const existingPending = targetData.pendingRequests || [];
+
+          if (existingPending.some(r => r.uid === window.currentUser.uid)) {
+            alert(`🤝 Friend request already sent to ${targetName}!`);
+            return;
+          }
+
+          const newReq = {
+            uid: window.currentUser.uid,
+            name: window.userData?.displayName || window.currentUser.displayName || "Lounge Member",
+            photoURL: window.userData?.photoURL || ''
+          };
+
+          await setDoc(targetRef, { pendingRequests: [...existingPending, newReq] }, { merge: true });
+          alert(`🌸 Friend request transmitted to ${targetName}!`);
+        }
+      } catch (err) {
+        console.error("Failed to send friend request:", err);
+        alert("Unable to send request right now.");
+      }
+    };
+
     function initOnlineUsersListener() {
       const loungeContainer = document.getElementById('online-users-list');
       const modsContainer = document.getElementById('moderators-users-list');
       if (!loungeContainer || !modsContainer) return;
 
-      // FIXED: Querying 'presence' collection rather than static 'users'
       const presenceCol = collection(db, 'presence');
 
       onSnapshot(presenceCol, { includeMetadataChanges: true }, (snapshot) => {
@@ -1372,19 +1429,14 @@
             lastActiveMs = data.lastActive.toDate().getTime();
           }
 
-
-
-// And keep the interval heartbeat at 30 seconds:
-heartbeatInterval = setInterval(sendHeartbeat, 30000);// Change heartbeat check threshold in initOnlineUsersListener():
-if (nowMs - lastActiveMs > 120000) {
-  return; // Disconnects after 2 minutes of no ping instead of 45s
-}
-
-// And keep the interval heartbeat at 30 seconds:
-heartbeatInterval = setInterval(sendHeartbeat, 30000);
+          // Disconnects after 2 minutes of no ping
+          if (nowMs - lastActiveMs > 120000) {
+            return;
+          }
 
           const isMod = data.isMod === true || data.role === 'System Overwatch';
           const status = data.status || 'active';
+          const uid = data.uid || docSnap.id;
 
           if (isMod) {
             modCount++;
@@ -1417,7 +1469,7 @@ heartbeatInterval = setInterval(sendHeartbeat, 30000);
 
             const userCard = document.createElement('div');
             userCard.className = 'chatter-card';
-            userCard.onclick = () => window.openReportModal && window.openReportModal(name);
+            userCard.onclick = () => window.handleChatterClick(uid, name);
 
             userCard.innerHTML = `
               <div class="chatter-avatar" style="${avatarStyle}">${initial}</div>
@@ -1585,18 +1637,21 @@ heartbeatInterval = setInterval(sendHeartbeat, 30000);
             const reportBtn = (!isSelf && !isNonReportableRole)
               ? `<button class="report-msg-btn" onclick="openReportModal('${msg.author}')">🚨 Report</button>` : '';
 
+            const dmBtn = (!isSelf && !isNonReportableRole && msg.uid)
+              ? `<button class="dm-msg-btn" onclick="window.handleChatterClick('${msg.uid}', '${msg.author}')">💬 DM / Friend</button>` : '';
+
             const timeStr = msg.timestamp?.toDate 
               ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
               : 'Just now';
 
             const safeText = filterProfanity(msg.text || '');
-            const authorOnClick = isNonReportableRole ? '' : `onclick="openReportModal('${msg.author}')"`;
+            const authorOnClick = isNonReportableRole ? '' : `onclick="window.handleChatterClick('${msg.uid || ''}', '${msg.author}')"`;
 
             row.innerHTML = `
               <div class="msg-meta">
                 <span class="${authorClass}" ${authorOnClick}>${msg.author}</span>
                 <span class="msg-time">${timeStr}</span>
-                ${deleteBtn}${reportBtn}
+                ${dmBtn}${deleteBtn}${reportBtn}
               </div>
               <div class="msg-bubble">${safeText}</div>
             `;
@@ -1810,19 +1865,20 @@ heartbeatInterval = setInterval(sendHeartbeat, 30000);
   </script>
 
   <!-- GLOBAL SITE FOOTER -->
-<footer class="site-footer">
-  <div class="footer-container">
-    <p class="copyright-text">&copy; 2026 Otaku Overload & 24/7 Neko FM. All rights reserved.</p>
-    <div class="footer-links">
-      <a href="about.html">About Us</a>
-      <span class="footer-divider">•</span>
-      <a href="contact.html">Contact Us</a>
-      <span class="footer-divider">•</span>
-      <a href="privacy.html">Privacy Policy</a>
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p class="copyright-text">&copy; 2026 Otaku Overload & 24/7 Neko FM. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="about.html">About Us</a>
+        <span class="footer-divider">•</span>
+        <a href="contact.html">Contact Us</a>
+        <span class="footer-divider">•</span>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
     </div>
-  </div>
-</footer>
-     <!-- Site-Wide Direct Messaging Engine -->
-<script type="module" src="site-dm-dock.js"></script>
+  </footer>
+
+  <!-- Site-Wide Direct Messaging Engine -->
+  <script type="module" src="site-dm-dock.js"></script>
 </body>
 </html>
