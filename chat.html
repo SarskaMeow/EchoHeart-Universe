@@ -1580,19 +1580,20 @@
       if (popup) popup.style.display = 'none';
     });
 
-    window.executeContextAction = function(action) {
-      document.getElementById('cyber-context-popup').style.display = 'none';
+// Find this inside chat.html around line 629-633:
+window.executeContextAction = function(action) {
+  document.getElementById('cyber-context-popup').style.display = 'none';
 
-      if (action === 'dm') {
-        if (window.openDirectMessage) {
-          window.openDirectMessage(targetContextUid, targetContextName);
-        }
-      } else if (action === 'friend') {
-        window.sendFriendRequest(targetContextUid, targetContextName);
-      } else if (action === 'report') {
-        window.openReportModal(targetContextName);
-      }
-    };
+  if (action === 'dm') {
+    if (window.requestOrOpenDM) {
+      window.requestOrOpenDM(targetContextUid, targetContextName);
+    }
+  } else if (action === 'friend') {
+    window.sendFriendRequest(targetContextUid, targetContextName);
+  } else if (action === 'report') {
+    window.openReportModal(targetContextName);
+  }
+};
 
     window.sendFriendRequest = async function(targetUid, targetName) {
       if (!window.currentUser) return;
