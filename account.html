@@ -522,6 +522,83 @@
       padding: 40px 20px;
       color: var(--text-muted);
     }
+
+    /* FRIENDS & DMS TAB STYLES */
+    .friends-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .friend-card {
+      background: rgba(18, 9, 36, 0.85);
+      border: 1px solid var(--nav-border-twilight);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .friend-user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .friend-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--accent-purple);
+      object-fit: cover;
+    }
+
+    .friend-name {
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    .friend-status-text {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .friend-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mini-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .mini-btn-accept {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      color: #000;
+    }
+
+    .mini-btn-remove {
+      background: rgba(255, 77, 109, 0.2);
+      border: 1px solid var(--accent-red);
+      color: var(--accent-red);
+    }
+
+    .mini-btn-block {
+      background: rgba(160, 146, 192, 0.2);
+      border: 1px solid var(--text-muted);
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
@@ -573,6 +650,7 @@
       <nav class="side-tabs-menu">
         <button class="tab-btn active" onclick="switchDashboardTab('profile', event)">👤 Profile & Bio</button>
         <button class="tab-btn" onclick="switchDashboardTab('wardrobe', event)">🎭 Wardrobe & Avatars</button>
+        <button class="tab-btn" onclick="switchDashboardTab('friends', event)">🤝 Friends & Direct Messages</button>
         <button class="tab-btn" onclick="switchDashboardTab('badges', event)">🏆 Badges & Achievements</button>
         <button class="tab-btn" onclick="switchDashboardTab('settings', event)">⚙️ App & Audio Settings</button>
         <button class="tab-btn" onclick="switchDashboardTab('safety', event)">🛡️ Account & Safety</button>
@@ -682,7 +760,51 @@
         </div>
       </section>
 
-      <!-- PANEL 3: BADGES & ACHIEVEMENTS -->
+      <!-- PANEL 3: FRIENDS & DIRECT MESSAGES (NEW) -->
+      <section id="panel-friends" class="tab-panel">
+        <div class="panel-header">
+          <h2>Friends & Direct Messaging Safety</h2>
+          <p>Control who can message you, accept companion pings, and manage your blocked list.</p>
+        </div>
+
+        <!-- Privacy & Safety Options -->
+        <div class="content-card">
+          <div class="form-group">
+            <label>Direct Messaging (DM) Privacy Level</label>
+            <select id="dm-privacy-select" class="form-control" onchange="window.updateDmPrivacySetting(this.value)">
+              <option value="everyone">🌐 Everyone (Allow DMs from all verified members)</option>
+              <option value="friends">🤝 Friends Only (Only accepted friends can send DMs)</option>
+              <option value="nobody">🔒 Nobody (Disable all direct messages)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Pending Requests -->
+        <div class="content-card">
+          <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 12px;">📩 Pending Friend & Chat Requests</h3>
+          <div id="pending-requests-container" class="friends-list-container">
+            <p style="color: var(--text-muted); font-size: 0.85rem;">No pending requests at this time.</p>
+          </div>
+        </div>
+
+        <!-- Friends List -->
+        <div class="content-card">
+          <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 12px;">🤝 Friends List</h3>
+          <div id="friends-list-container" class="friends-list-container">
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Your friends list is empty. Connect with users in live chat!</p>
+          </div>
+        </div>
+
+        <!-- Blocked List -->
+        <div class="content-card">
+          <h3 style="color: var(--accent-red); font-size: 1.1rem; margin-bottom: 12px;">🚫 Blocked Users</h3>
+          <div id="blocked-users-container" class="friends-list-container">
+            <p style="color: var(--text-muted); font-size: 0.85rem;">No users currently blocked.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 4: BADGES & ACHIEVEMENTS -->
       <section id="panel-badges" class="tab-panel">
         <div class="panel-header">
           <h2>Unlocked Badges</h2>
@@ -696,7 +818,7 @@
         </div>
       </section>
 
-      <!-- PANEL 4: APP & AUDIO SETTINGS -->
+      <!-- PANEL 5: APP & AUDIO SETTINGS -->
       <section id="panel-settings" class="tab-panel">
         <div class="panel-header">
           <h2>App & Audio Preferences</h2>
@@ -722,7 +844,7 @@
         </div>
       </section>
 
-      <!-- PANEL 5: ACCOUNT & SAFETY -->
+      <!-- PANEL 6: ACCOUNT & SAFETY -->
       <section id="panel-safety" class="tab-panel">
         <div class="panel-header">
           <h2>Account Security & Verification</h2>
@@ -795,6 +917,10 @@
       equippedFrame: "none",
       equippedGlow: "none",
       equippedTitle: "listener",
+      dmPrivacy: "everyone",
+      friendsList: [],
+      pendingRequests: [],
+      blockedUsers: [],
       unlocked_items: []
     };
 
@@ -872,6 +998,9 @@
       setSafeValue('fav-member-select', window.userData.favMember || "none");
       setSafeValue('edit-avatar-url-input', window.userData.photoURL || "");
 
+      // DM & Friends UI
+      setSafeValue('dm-privacy-select', window.userData.dmPrivacy || 'everyone');
+
       // Security Tab Fields
       const user = window.currentUser;
       setSafeText('safety-email-display', user?.email || "No email on file");
@@ -915,6 +1044,134 @@
 
       updateAvatarFramePreview(window.userData.equippedFrame);
       window.renderAvatarUnlocksGrid();
+      window.renderFriendsAndRequestsUI();
+    };
+
+    window.updateDmPrivacySetting = async function(newSetting) {
+      if (!window.currentUser) return;
+      try {
+        const userRef = doc(db, "users", window.currentUser.uid);
+        await setDoc(userRef, { dmPrivacy: newSetting }, { merge: true });
+        window.userData.dmPrivacy = newSetting;
+        alert("🔒 DM Privacy preference updated successfully!");
+      } catch (err) {
+        console.error("Failed to update DM privacy:", err);
+      }
+    };
+
+    window.renderFriendsAndRequestsUI = function() {
+      const friendsContainer = document.getElementById('friends-list-container');
+      const requestsContainer = document.getElementById('pending-requests-container');
+      const blockedContainer = document.getElementById('blocked-users-container');
+
+      const friends = window.userData.friendsList || [];
+      const requests = window.userData.pendingRequests || [];
+      const blocked = window.userData.blockedUsers || [];
+
+      // Render Friends
+      if (friendsContainer) {
+        if (friends.length === 0) {
+          friendsContainer.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">Your friends list is empty. Connect with users in live chat!</p>`;
+        } else {
+          friendsContainer.innerHTML = friends.map(f => `
+            <div class="friend-card">
+              <div class="friend-user-info">
+                <img src="${f.photoURL || 'images/avatars/akari.png'}" class="friend-avatar" alt="${f.name}">
+                <div>
+                  <div class="friend-name">${f.name}</div>
+                  <div class="friend-status-text">Companion</div>
+                </div>
+              </div>
+              <div class="friend-actions">
+                <button class="mini-btn mini-btn-remove" onclick="window.removeFriend('${f.uid}')">Remove</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Render Requests
+      if (requestsContainer) {
+        if (requests.length === 0) {
+          requestsContainer.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No pending requests at this time.</p>`;
+        } else {
+          requestsContainer.innerHTML = requests.map(r => `
+            <div class="friend-card">
+              <div class="friend-user-info">
+                <img src="${r.photoURL || 'images/avatars/akari.png'}" class="friend-avatar" alt="${r.name}">
+                <div>
+                  <div class="friend-name">${r.name}</div>
+                  <div class="friend-status-text">Wants to connect</div>
+                </div>
+              </div>
+              <div class="friend-actions">
+                <button class="mini-btn mini-btn-accept" onclick="window.acceptFriendRequest('${r.uid}', '${r.name}')">Accept</button>
+                <button class="mini-btn mini-btn-remove" onclick="window.declineFriendRequest('${r.uid}')">Decline</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Render Blocked
+      if (blockedContainer) {
+        if (blocked.length === 0) {
+          blockedContainer.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">No users currently blocked.</p>`;
+        } else {
+          blockedContainer.innerHTML = blocked.map(b => `
+            <div class="friend-card">
+              <div class="friend-user-info">
+                <div class="friend-name">${b.name}</div>
+              </div>
+              <div class="friend-actions">
+                <button class="mini-btn mini-btn-accept" onclick="window.unblockUser('${b.uid}')">Unblock</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+    };
+
+    window.removeFriend = async function(uid) {
+      if (!window.currentUser) return;
+      try {
+        const updated = (window.userData.friendsList || []).filter(f => f.uid !== uid);
+        await setDoc(doc(db, "users", window.currentUser.uid), { friendsList: updated }, { merge: true });
+        window.userData.friendsList = updated;
+        window.renderFriendsAndRequestsUI();
+      } catch (e) { console.error("Error removing friend:", e); }
+    };
+
+    window.acceptFriendRequest = async function(uid, name) {
+      if (!window.currentUser) return;
+      try {
+        const pending = (window.userData.pendingRequests || []).filter(r => r.uid !== uid);
+        const friends = [...(window.userData.friendsList || []), { uid, name }];
+        await setDoc(doc(db, "users", window.currentUser.uid), { pendingRequests: pending, friendsList: friends }, { merge: true });
+        window.userData.pendingRequests = pending;
+        window.userData.friendsList = friends;
+        window.renderFriendsAndRequestsUI();
+      } catch (e) { console.error("Error accepting request:", e); }
+    };
+
+    window.declineFriendRequest = async function(uid) {
+      if (!window.currentUser) return;
+      try {
+        const pending = (window.userData.pendingRequests || []).filter(r => r.uid !== uid);
+        await setDoc(doc(db, "users", window.currentUser.uid), { pendingRequests: pending }, { merge: true });
+        window.userData.pendingRequests = pending;
+        window.renderFriendsAndRequestsUI();
+      } catch (e) { console.error("Error declining request:", e); }
+    };
+
+    window.unblockUser = async function(uid) {
+      if (!window.currentUser) return;
+      try {
+        const blocked = (window.userData.blockedUsers || []).filter(b => b.uid !== uid);
+        await setDoc(doc(db, "users", window.currentUser.uid), { blockedUsers: blocked }, { merge: true });
+        window.userData.blockedUsers = blocked;
+        window.renderFriendsAndRequestsUI();
+      } catch (e) { console.error("Error unblocking user:", e); }
     };
 
     window.requestEmailVerification = async function() {
@@ -1010,6 +1267,10 @@
               equippedFrame: 'none',
               equippedGlow: 'none',
               equippedTitle: 'listener',
+              dmPrivacy: 'everyone',
+              friendsList: [],
+              pendingRequests: [],
+              blockedUsers: [],
               unlocked_items: []
             };
             await setDoc(userRef, window.userData, { merge: true });
