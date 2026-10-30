@@ -237,25 +237,27 @@
     /* REAL-TIME INCOMING REQUEST BANNER HUD */
     .incoming-request-hud {
       display: none;
-      background: linear-gradient(135deg, rgba(157, 78, 221, 0.95), rgba(255, 0, 127, 0.95));
-      border-bottom: 1.5px solid var(--accent-cyan);
+      background: rgba(15, 7, 28, 0.96);
+      border-bottom: 1.5px solid var(--accent-pink);
       padding: 10px 18px;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 4px 15px rgba(255, 0, 127, 0.5);
+      box-shadow: 0 4px 20px rgba(255, 0, 127, 0.5), inset 0 0 10px rgba(0, 240, 255, 0.2);
       z-index: 200;
-      animation: slideDownHud 0.3s ease-out;
+      animation: slideDownHud 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      backdrop-filter: blur(12px);
     }
 
     @keyframes slideDownHud {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(0); }
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     .hud-text {
       color: #fff;
       font-size: 0.85rem;
       font-weight: 800;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
     }
 
     .hud-actions {
@@ -264,26 +266,57 @@
     }
 
     .hud-btn-accept {
-      background: var(--accent-cyan);
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
       border: none;
       color: #000;
       font-weight: 900;
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 0.78rem;
-      box-shadow: 0 0 8px var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+      transition: transform 0.2s ease;
+    }
+
+    .hud-btn-accept:hover {
+      transform: scale(1.04);
+    }
+
+    .hud-btn-account {
+      background: rgba(22, 10, 42, 0.9);
+      border: 1px solid rgba(255, 0, 127, 0.6);
+      color: #fff;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .hud-btn-account:hover {
+      background: var(--accent-pink);
+      box-shadow: 0 0 10px var(--accent-pink);
     }
 
     .hud-btn-decline {
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid #fff;
-      color: #fff;
+      background: transparent;
+      border: 1px solid rgba(184, 167, 212, 0.4);
+      color: #b8a7d4;
       font-weight: 800;
-      padding: 5px 12px;
+      padding: 6px 12px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 0.78rem;
+      transition: all 0.2s ease;
+    }
+
+    .hud-btn-decline:hover {
+      color: #fff;
+      border-color: #fff;
     }
 
     .mod-overwatch-bar {
@@ -425,60 +458,135 @@
       box-shadow: 0 0 18px rgba(255, 0, 127, 0.45);
     }
 
-    /* CYBERPUNK USER CONTEXT MENU POPUP */
+    /* ⚡ CYBERPUNK USER CONTEXT MENU POPUP ENHANCED */
     .cyber-context-popup {
       position: fixed;
       z-index: 5000;
-      background: rgba(14, 6, 28, 0.98);
+      background: rgba(10, 4, 22, 0.96);
       border: 1.5px solid var(--accent-cyan);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 240, 255, 0.4);
+      box-shadow: 
+        0 0 15px rgba(0, 240, 255, 0.4),
+        0 0 30px rgba(255, 0, 127, 0.25),
+        inset 0 0 12px rgba(0, 240, 255, 0.15);
       border-radius: 12px;
-      padding: 8px;
+      padding: 10px;
       display: none;
       flex-direction: column;
-      gap: 6px;
-      min-width: 170px;
-      backdrop-filter: blur(12px);
-      animation: popFadeIn 0.15s ease-out;
+      gap: 8px;
+      min-width: 190px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transform-origin: top left;
+      animation: cyberPopIn 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      overflow: hidden;
     }
 
-    @keyframes popFadeIn {
-      from { opacity: 0; transform: scale(0.92); }
-      to { opacity: 1; transform: scale(1); }
+    /* Subtle Animated Scanline Overlay */
+    .cyber-context-popup::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(0, 240, 255, 0.05) 50%,
+        rgba(0, 240, 255, 0.05)
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+      opacity: 0.6;
     }
 
+    /* Header with Neon Pulsing Underline */
     .context-header {
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       font-weight: 900;
       color: var(--accent-pink);
-      padding: 4px 8px;
-      border-bottom: 1px solid rgba(157, 78, 221, 0.3);
+      padding: 4px 8px 8px;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.3);
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px var(--accent-pink);
+      position: relative;
     }
 
+    .context-header::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 40%;
+      height: 2px;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+      animation: scanlineMove 2s infinite ease-in-out alternate;
+    }
+
+    /* Menu Button Base */
     .context-item-btn {
-      background: rgba(22, 10, 42, 0.8);
-      border: 1px solid rgba(0, 240, 255, 0.25);
-      color: #fff;
-      padding: 8px 10px;
+      position: relative;
+      background: rgba(22, 10, 42, 0.85);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: #ffffff;
+      padding: 9px 12px;
       border-radius: 8px;
-      font-size: 0.82rem;
+      font-size: 0.84rem;
       font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
+      gap: 10px;
+      transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
       text-align: left;
+      outline: none;
+      z-index: 1;
     }
 
+    /* Neon Hover & Active States */
     .context-item-btn:hover {
-      background: var(--accent-pink);
-      border-color: #fff;
-      color: #fff;
-      box-shadow: 0 0 12px var(--accent-pink);
-      transform: translateX(2px);
+      background: linear-gradient(135deg, rgba(255, 0, 127, 0.8), rgba(157, 78, 221, 0.8));
+      border-color: var(--accent-cyan);
+      color: #ffffff;
+      box-shadow: 
+        0 0 16px rgba(255, 0, 127, 0.7),
+        0 0 8px rgba(0, 240, 255, 0.5);
+      transform: translateX(4px) scale(1.02);
+      text-shadow: 0 0 6px #ffffff;
+    }
+
+    .context-item-btn:active {
+      transform: translateX(2px) scale(0.98);
+    }
+
+    /* Special Danger State for Report Button */
+    .context-item-btn.danger-action {
+      color: #ff3366;
+      border-color: rgba(255, 0, 85, 0.4);
+    }
+
+    .context-item-btn.danger-action:hover {
+      background: linear-gradient(135deg, rgba(255, 0, 85, 0.85), rgba(180, 0, 60, 0.85));
+      border-color: #ff0055;
+      box-shadow: 0 0 18px rgba(255, 0, 85, 0.8);
+    }
+
+    @keyframes cyberPopIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.85) translateY(-8px);
+        filter: blur(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes scanlineMove {
+      0% { left: 0%; width: 30%; }
+      100% { left: 70%; width: 30%; }
     }
 
     .chat-input-bar {
@@ -1104,6 +1212,7 @@
         <span class="hud-text" id="hud-request-message">🤝 User requested a friend connection!</span>
         <div class="hud-actions">
           <button class="hud-btn-accept" id="hud-btn-accept">Accept</button>
+          <a href="account.html" class="hud-btn-account">Account</a>
           <button class="hud-btn-decline" id="hud-btn-decline">Decline</button>
         </div>
       </div>
@@ -1259,10 +1368,10 @@
 
   <!-- CYBERPUNK USER CONTEXT MENU POPUP -->
   <div class="cyber-context-popup" id="cyber-context-popup">
-    <div class="context-header" id="context-username-title">@User</div>
+    <div class="context-header" id="context-username-title">✦ @User</div>
     <button class="context-item-btn" onclick="executeContextAction('dm')">💬 Send Direct Message</button>
     <button class="context-item-btn" onclick="executeContextAction('friend')">🤝 Add Friend / Request</button>
-    <button class="context-item-btn" style="color: var(--accent-red);" onclick="executeContextAction('report')">🚨 Report Chatter</button>
+    <button class="context-item-btn danger-action" onclick="executeContextAction('report')">🚨 Report Chatter</button>
   </div>
 
   <!-- DOCKED MUSIC PLAYER -->
@@ -1458,8 +1567,8 @@
       let y = event ? event.clientY : 100;
 
       // Keep inside screen bounds
-      if (x + 180 > window.innerWidth) x = window.innerWidth - 190;
-      if (y + 120 > window.innerHeight) y = window.innerHeight - 130;
+      if (x + 200 > window.innerWidth) x = window.innerWidth - 210;
+      if (y + 140 > window.innerHeight) y = window.innerHeight - 150;
 
       popup.style.left = `${x}px`;
       popup.style.top = `${y}px`;
@@ -1477,8 +1586,6 @@
       if (action === 'dm') {
         if (window.openDirectMessage) {
           window.openDirectMessage(targetContextUid, targetContextName);
-        } else {
-          alert(`💬 Direct message relay opened for ${targetContextName}!`);
         }
       } else if (action === 'friend') {
         window.sendFriendRequest(targetContextUid, targetContextName);
@@ -1498,7 +1605,6 @@
           const existingPending = targetData.pendingRequests || [];
 
           if (existingPending.some(r => r.uid === window.currentUser.uid)) {
-            alert(`🤝 Friend request already active with ${targetName}!`);
             return;
           }
 
@@ -1509,11 +1615,9 @@
           };
 
           await setDoc(targetRef, { pendingRequests: [...existingPending, newReq] }, { merge: true });
-          alert(`🌸 Friend request transmitted to ${targetName}!`);
         }
       } catch (err) {
         console.error("Failed to send friend request:", err);
-        alert("Unable to send request right now.");
       }
     };
 
@@ -1532,7 +1636,7 @@
 
           if (pending.length > 0) {
             const firstReq = pending[0];
-            if (hudText) hudText.innerText = `🤝 ${firstReq.name} sent you a companion request!`;
+            if (hudText) hudText.innerText = `🤝 ${firstReq.name} sent you a connection request!`;
             if (hud) hud.style.display = 'flex';
 
             if (btnAccept) {
@@ -1541,6 +1645,9 @@
                 const updatedFriends = [...(data.friendsList || []), { uid: firstReq.uid, name: firstReq.name }];
                 await setDoc(doc(db, "users", user.uid), { pendingRequests: updatedPending, friendsList: updatedFriends }, { merge: true });
                 hud.style.display = 'none';
+                if (window.openDirectMessage) {
+                  window.openDirectMessage(firstReq.uid, firstReq.name);
+                }
               };
             }
 
@@ -1822,7 +1929,6 @@
       if (!rawText || !window.currentUser) return;
 
       if (checkCrisisIntervention(rawText)) {
-        alert("❤️ [Support Notice]: Support is available 24/7 at 988 (Suicide & Crisis Lifeline). You are not alone.");
         input.value = '';
         return;
       }
@@ -1862,7 +1968,6 @@
       if (!window.isUserAdmin) {
         const lowerName = username.toLowerCase();
         if (lowerName.includes('[npc]') || lowerName.includes('locker_') || lowerName.includes('bot') || lowerName.includes('moderator') || lowerName.includes('overwatch')) {
-          alert("🤖 System Bots, NPCs, and Moderators cannot be reported.");
           return;
         }
       }
@@ -1878,8 +1983,7 @@
 
     function submitUserReport() {
       const reason = document.getElementById('report-reason-input').value.trim();
-      if (!reason) { alert("Please state a reason for reporting."); return; }
-      alert(`🚨 Report submitted for ${activeReportTarget}. System Moderators will review the incident.`);
+      if (!reason) { return; }
       closeReportModal();
     }
 
@@ -1887,13 +1991,10 @@
       if (!window.isUserAdmin) return;
       const target = prompt(`Enter chatter display name to ${action}:`);
       if (!target) return;
-      if (action === 'mute') alert(`🔇 Chatter '${target}' has been muted.`);
-      else if (action === 'boot') alert(`🥾 Chatter '${target}' has been kicked/booted.`);
     }
 
     function clearRoomFeed() {
       if (!window.isUserAdmin) return;
-      alert("🛡️ Purge commands are managed directly in Firestore Overwatch.");
     }
 
     /* EMOTES TRAY */
