@@ -163,6 +163,7 @@ document.head.appendChild(styleSheet);
 let targetDmUid = null;
 let targetDmName = '';
 let dmUnsubscribe = null;
+let knownFriendUids = new Set();
 
 // Construct Dock Element
 const dockElement = document.createElement('div');
@@ -193,6 +194,7 @@ document.getElementById('dm-dock-hdr').onclick = (e) => {
 document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
 document.getElementById('dm-dock-close-btn').onclick = () => {
   dockElement.style.display = 'none';
+  targetDmUid = null;
   if (dmUnsubscribe) dmUnsubscribe();
 };
 
@@ -205,7 +207,7 @@ function getChatDocId(uid1, uid2) {
   return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
 }
 
-// Check if users are friends before opening DM
+// Check if users are friends before opening DM (Facebook Style)
 window.requestOrOpenDM = async function(targetUid, targetName) {
   if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
 
@@ -242,6 +244,7 @@ window.openDirectMessage = function(targetUid, targetName) {
   document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
   document.getElementById('dm-dock-close-btn').onclick = () => {
     dockElement.style.display = 'none';
+    targetDmUid = null;
     if (dmUnsubscribe) dmUnsubscribe();
   };
 
@@ -300,7 +303,7 @@ async function sendDirectMessage() {
   }
 }
 
-// REAL-TIME LISTENER FOR INCOMING REQUESTS (STARTS MINIMIZED IN BOTTOM RIGHT)
+// REAL-TIME LISTENER FOR INCOMING REQUESTS & ACCEPTANCE SYNC
 onAuthStateChanged(auth, (user) => {
   if (!user) return;
 
@@ -309,7 +312,19 @@ onAuthStateChanged(auth, (user) => {
 
     const userData = snap.data();
     const pending = userData.pendingRequests || [];
+    const currentFriends = userData.friendsList || [];
 
+    // Auto-open chat dock for requester once the request is accepted
+    currentFriends.forEach(f => {
+      if (!knownFriendUids.has(f.uid)) {
+        knownFriendUids.add(f.uid);
+        if (targetDmUid === null) {
+          window.openDirectMessage(f.uid, f.name);
+        }
+      }
+    });
+
+    // Display minimized request tab on receiver's screen
     if (pending.length > 0 && dockElement.classList.contains('collapsed') && targetDmUid === null) {
       const currentPendingRequest = pending[0];
 
@@ -328,12 +343,24 @@ onAuthStateChanged(auth, (user) => {
       document.getElementById('dock-accept-req-btn').onclick = async (e) => {
         e.stopPropagation();
         const updatedPending = pending.filter(r => r.uid !== currentPendingRequest.uid);
-        const updatedFriends = [...(userData.friendsList || []), { uid: currentPendingRequest.uid, name: currentPendingRequest.name }];
+        const myName = userData.displayName || user.displayName || "Lounge Member";
+        const updatedFriends = [...currentFriends, { uid: currentPendingRequest.uid, name: currentPendingRequest.name }];
 
+        // 1. Update receiver's friends list
         await setDoc(doc(db, "users", user.uid), { 
           pendingRequests: updatedPending, 
           friendsList: updatedFriends 
         }, { merge: true });
+
+        // 2. Update sender's friends list for mutual real-time sync
+        const senderRef = doc(db, "users", currentPendingRequest.uid);
+        const senderSnap = await getDoc(senderRef);
+        if (senderSnap.exists()) {
+          const senderFriends = senderSnap.data().friendsList || [];
+          await setDoc(senderRef, {
+            friendsList: [...senderFriends, { uid: user.uid, name: myName }]
+          }, { merge: true });
+        }
 
         window.openDirectMessage(currentPendingRequest.uid, currentPendingRequest.name);
       };
