@@ -4,7 +4,7 @@ import {
   doc, getDoc, setDoc, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Inject Cyberpunk DM Dock & Real-Time Banner Notification Styles
+// Inject Cyberpunk DM Dock & Request Bar Styles
 const dmDockStyles = `
   .cyber-dm-dock {
     position: fixed;
@@ -21,22 +21,25 @@ const dmDockStyles = `
     flex-direction: column;
     z-index: 6000;
     backdrop-filter: blur(16px);
-    transition: transform 0.25s ease;
+    transition: height 0.25s ease;
   }
 
   .cyber-dm-dock.collapsed {
-    height: 42px;
+    height: 44px;
+    overflow: hidden;
   }
 
   .dm-dock-header {
     background: rgba(18, 9, 36, 0.95);
     border-bottom: 1px solid var(--accent-cyan, #00f0ff);
-    padding: 10px 14px;
+    padding: 10px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
     border-radius: 12px 12px 0 0;
+    height: 44px;
+    box-sizing: border-box;
   }
 
   .dm-dock-title {
@@ -47,13 +50,18 @@ const dmDockStyles = `
     letter-spacing: 0.8px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     text-shadow: 0 0 8px var(--accent-cyan, #00f0ff);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .dm-dock-actions {
     display: flex;
+    align-items: center;
     gap: 6px;
+    flex-shrink: 0;
   }
 
   .dm-dock-btn {
@@ -63,11 +71,22 @@ const dmDockStyles = `
     font-size: 0.85rem;
     cursor: pointer;
     font-weight: 800;
-    padding: 0 4px;
+    padding: 2px 4px;
+    border-radius: 4px;
   }
 
-  .dm-dock-btn:hover {
-    color: #ffffff;
+  .dm-dock-btn:hover { color: #ffffff; }
+
+  .dm-dock-accept-btn {
+    background: linear-gradient(135deg, #00f0ff, #9d4edd);
+    border: none;
+    color: #000000;
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
   }
 
   .dm-dock-body {
@@ -125,10 +144,6 @@ const dmDockStyles = `
     outline: none;
   }
 
-  .dm-dock-input:focus {
-    border-color: var(--accent-cyan, #00f0ff);
-  }
-
   .dm-dock-send-btn {
     background: var(--accent-pink, #ff007f);
     border: none;
@@ -139,161 +154,102 @@ const dmDockStyles = `
     font-size: 0.78rem;
     cursor: pointer;
   }
-
-  /* ⚡ FLOATING REQUEST NOTIFICATION BANNER */
-  .cyber-request-toast {
-    position: fixed;
-    top: 70px;
-    right: 24px;
-    z-index: 7000;
-    background: rgba(15, 7, 28, 0.96);
-    border: 1.5px solid var(--accent-pink, #ff007f);
-    border-radius: 12px;
-    padding: 12px 16px;
-    box-shadow: 0 0 20px rgba(255, 0, 127, 0.5), inset 0 0 10px rgba(0, 240, 255, 0.2);
-    display: none;
-    align-items: center;
-    gap: 12px;
-    backdrop-filter: blur(12px);
-    animation: toastSlideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  }
-
-  @keyframes toastSlideIn {
-    from { opacity: 0; transform: translateY(-15px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  .toast-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .toast-title {
-    font-size: 0.85rem;
-    font-weight: 900;
-    color: var(--accent-cyan, #00f0ff);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-  }
-
-  .toast-desc {
-    font-size: 0.78rem;
-    color: #e8dff5;
-  }
-
-  .toast-btn-group {
-    display: flex;
-    gap: 6px;
-    margin-left: auto;
-  }
-
-  .toast-accept-btn {
-    background: linear-gradient(135deg, #00f0ff, #9d4edd);
-    border: none;
-    color: #000;
-    font-weight: 900;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
-  }
-
-  .toast-account-btn {
-    background: rgba(22, 10, 42, 0.9);
-    border: 1px solid rgba(255, 0, 127, 0.6);
-    color: #fff;
-    font-weight: 800;
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .toast-decline-btn {
-    background: transparent;
-    border: 1px solid rgba(184, 167, 212, 0.4);
-    color: #b8a7d4;
-    font-weight: 800;
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    cursor: pointer;
-  }
 `;
 
 const styleSheet = document.createElement("style");
 styleSheet.innerText = dmDockStyles;
 document.head.appendChild(styleSheet);
 
-// Dynamic DM Dock Element Creation
 let targetDmUid = null;
 let targetDmName = '';
 let dmUnsubscribe = null;
 
+// Construct Dock Element
 const dockElement = document.createElement('div');
-dockElement.className = 'cyber-dm-dock';
+dockElement.className = 'cyber-dm-dock collapsed';
 dockElement.id = 'cyber-dm-dock';
 dockElement.innerHTML = `
   <div class="dm-dock-header" id="dm-dock-hdr">
     <span class="dm-dock-title" id="dm-dock-title">💬 Direct Message</span>
-    <div class="dm-dock-actions">
-      <button class="dm-dock-btn" id="dm-dock-min-btn">➖</button>
-      <button class="dm-dock-btn" id="dm-dock-close-btn">✕</button>
+    <div class="dm-dock-actions" id="dm-dock-actions-box">
+      <button class="dm-dock-btn" id="dm-dock-min-btn" title="Toggle Minimize">➖</button>
+      <button class="dm-dock-btn" id="dm-dock-close-btn" title="Dismiss">✕</button>
     </div>
   </div>
   <div class="dm-dock-body" id="dm-dock-messages"></div>
-  <div class="dm-dock-input-bar">
+  <div class="dm-dock-input-bar" id="dm-dock-input-bar">
     <input type="text" class="dm-dock-input" id="dm-dock-input-field" placeholder="Transmit direct message..." />
     <button class="dm-dock-send-btn" id="dm-dock-send-btn">SEND</button>
   </div>
 `;
 document.body.appendChild(dockElement);
 
-// Dynamic Toast Element Creation
-const toastElement = document.createElement('div');
-toastElement.className = 'cyber-request-toast';
-toastElement.id = 'cyber-request-toast';
-toastElement.innerHTML = `
-  <div class="toast-content">
-    <span class="toast-title" id="toast-title-text">⚡ INCOMING REQUEST</span>
-    <span class="toast-desc" id="toast-desc-text">User requested a direct connection!</span>
-  </div>
-  <div class="toast-btn-group">
-    <button class="toast-accept-btn" id="toast-accept-btn">Accept</button>
-    <a href="account.html" class="toast-account-btn">Account</a>
-    <button class="toast-decline-btn" id="toast-decline-btn">✕</button>
-  </div>
-`;
-document.body.appendChild(toastElement);
+// Controls
+document.getElementById('dm-dock-hdr').onclick = (e) => {
+  if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
+  dockElement.classList.toggle('collapsed');
+};
 
-// Listeners
 document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
 document.getElementById('dm-dock-close-btn').onclick = () => {
   dockElement.style.display = 'none';
   if (dmUnsubscribe) dmUnsubscribe();
 };
+
 document.getElementById('dm-dock-send-btn').onclick = sendDirectMessage;
-document.getElementById('dm-dock-input-field').onkeydown = (e) => { if (e.key === 'Enter') sendDirectMessage(); };
-
-window.openDirectMessage = function(targetUid, targetName) {
-  if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
-
-  targetDmUid = targetUid;
-  targetDmName = targetName;
-
-  document.getElementById('dm-dock-title').innerText = `💬 @${targetName}`;
-  dockElement.style.display = 'flex';
-  dockElement.classList.remove('collapsed');
-
-  listenForDmMessages();
+document.getElementById('dm-dock-input-field').onkeydown = (e) => {
+  if (e.key === 'Enter') sendDirectMessage();
 };
 
 function getChatDocId(uid1, uid2) {
   return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
 }
+
+// Check if users are friends before opening DM
+window.requestOrOpenDM = async function(targetUid, targetName) {
+  if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
+
+  try {
+    const myDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+    const myData = myDoc.exists() ? myDoc.data() : {};
+    const friendsList = myData.friendsList || [];
+
+    const isFriend = friendsList.some(f => f.uid === targetUid);
+
+    if (isFriend) {
+      window.openDirectMessage(targetUid, targetName);
+    } else {
+      await window.sendFriendRequest(targetUid, targetName);
+      alert(`🤝 Connection request sent to @${targetName}! Waiting for them to accept.`);
+    }
+  } catch (e) {
+    console.error("Error opening DM/Request:", e);
+  }
+};
+
+window.openDirectMessage = function(targetUid, targetName) {
+  if (!auth.currentUser || !targetUid) return;
+
+  targetDmUid = targetUid;
+  targetDmName = targetName;
+
+  document.getElementById('dm-dock-title').innerText = `💬 @${targetName}`;
+  document.getElementById('dm-dock-actions-box').innerHTML = `
+    <button class="dm-dock-btn" id="dm-dock-min-btn">➖</button>
+    <button class="dm-dock-btn" id="dm-dock-close-btn">✕</button>
+  `;
+
+  document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
+  document.getElementById('dm-dock-close-btn').onclick = () => {
+    dockElement.style.display = 'none';
+    if (dmUnsubscribe) dmUnsubscribe();
+  };
+
+  dockElement.style.display = 'flex';
+  dockElement.classList.remove('collapsed');
+
+  listenForDmMessages();
+};
 
 function listenForDmMessages() {
   if (dmUnsubscribe) dmUnsubscribe();
@@ -344,7 +300,7 @@ async function sendDirectMessage() {
   }
 }
 
-// REAL-TIME INCOMING REQUEST MONITOR
+// REAL-TIME LISTENER FOR INCOMING REQUESTS (STARTS MINIMIZED IN BOTTOM RIGHT)
 onAuthStateChanged(auth, (user) => {
   if (!user) return;
 
@@ -354,41 +310,38 @@ onAuthStateChanged(auth, (user) => {
     const userData = snap.data();
     const pending = userData.pendingRequests || [];
 
-    if (pending.length > 0) {
-      const activeReq = pending[0];
-      const toast = document.getElementById('cyber-request-toast');
-      const desc = document.getElementById('toast-desc-text');
-      const btnAccept = document.getElementById('toast-accept-btn');
-      const btnDecline = document.getElementById('toast-decline-btn');
+    if (pending.length > 0 && dockElement.classList.contains('collapsed') && targetDmUid === null) {
+      const currentPendingRequest = pending[0];
 
-      if (desc) desc.innerText = `🤝 ${activeReq.name} sent you a connection request!`;
-      if (toast) toast.style.display = 'flex';
+      document.getElementById('dm-dock-title').innerText = `🤝 Request: @${currentPendingRequest.name}`;
+      
+      const actionsBox = document.getElementById('dm-dock-actions-box');
+      actionsBox.innerHTML = `
+        <button class="dm-dock-accept-btn" id="dock-accept-req-btn">Accept</button>
+        <a href="account.html" class="dm-dock-btn" title="View in Account">👤</a>
+        <button class="dm-dock-btn" id="dock-dismiss-req-btn" title="Dismiss">✕</button>
+      `;
 
-      if (btnAccept) {
-        btnAccept.onclick = async () => {
-          const updatedPending = pending.filter(r => r.uid !== activeReq.uid);
-          const updatedFriends = [...(userData.friendsList || []), { uid: activeReq.uid, name: activeReq.name }];
-          
-          await setDoc(doc(db, "users", user.uid), { 
-            pendingRequests: updatedPending, 
-            friendsList: updatedFriends 
-          }, { merge: true });
+      dockElement.style.display = 'flex';
+      dockElement.classList.add('collapsed');
 
-          toast.style.display = 'none';
-          window.openDirectMessage(activeReq.uid, activeReq.name);
-        };
-      }
+      document.getElementById('dock-accept-req-btn').onclick = async (e) => {
+        e.stopPropagation();
+        const updatedPending = pending.filter(r => r.uid !== currentPendingRequest.uid);
+        const updatedFriends = [...(userData.friendsList || []), { uid: currentPendingRequest.uid, name: currentPendingRequest.name }];
 
-      if (btnDecline) {
-        btnDecline.onclick = async () => {
-          const updatedPending = pending.filter(r => r.uid !== activeReq.uid);
-          await setDoc(doc(db, "users", user.uid), { pendingRequests: updatedPending }, { merge: true });
-          toast.style.display = 'none';
-        };
-      }
-    } else {
-      const toast = document.getElementById('cyber-request-toast');
-      if (toast) toast.style.display = 'none';
+        await setDoc(doc(db, "users", user.uid), { 
+          pendingRequests: updatedPending, 
+          friendsList: updatedFriends 
+        }, { merge: true });
+
+        window.openDirectMessage(currentPendingRequest.uid, currentPendingRequest.name);
+      };
+
+      document.getElementById('dock-dismiss-req-btn').onclick = (e) => {
+        e.stopPropagation();
+        dockElement.style.display = 'none';
+      };
     }
   });
 });
