@@ -1372,10 +1372,16 @@
             lastActiveMs = data.lastActive.toDate().getTime();
           }
 
-          // EXPIRE CHECK: If no heartbeat in 45 seconds, treat user as disconnected
-          if (nowMs - lastActiveMs > 45000) {
-            return;
-          }
+
+
+// And keep the interval heartbeat at 30 seconds:
+heartbeatInterval = setInterval(sendHeartbeat, 30000);// Change heartbeat check threshold in initOnlineUsersListener():
+if (nowMs - lastActiveMs > 120000) {
+  return; // Disconnects after 2 minutes of no ping instead of 45s
+}
+
+// And keep the interval heartbeat at 30 seconds:
+heartbeatInterval = setInterval(sendHeartbeat, 30000);
 
           const isMod = data.isMod === true || data.role === 'System Overwatch';
           const status = data.status || 'active';
