@@ -163,7 +163,9 @@ document.head.appendChild(styleSheet);
 let targetDmUid = null;
 let targetDmName = '';
 let dmUnsubscribe = null;
+let isInitialFriendLoad = true;
 let knownFriendUids = new Set();
+let activeMessageListeners = {};
 
 // Construct Dock Element
 const dockElement = document.createElement('div');
@@ -207,7 +209,7 @@ function getChatDocId(uid1, uid2) {
   return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
 }
 
-// Check if users are friends before opening DM (Facebook Style)
+// FB-Style Check: If friends -> open chat directly. If not friends -> send request first.
 window.requestOrOpenDM = async function(targetUid, targetName) {
   if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
 
@@ -303,6 +305,38 @@ async function sendDirectMessage() {
   }
 }
 
+// Function to listen for incoming messages from existing friends
+function setupFriendMessageListeners(user, friendsList) {
+  friendsList.forEach(friend => {
+    const chatId = getChatDocId(user.uid, friend.uid);
+    if (activeMessageListeners[chatId]) return; // Already listening
+
+    let isInitialMsgSnapshot = true;
+    const q = query(
+      collection(db, "direct_messages", chatId, "messages"),
+      orderBy("timestamp", "desc"),
+      limit(1)
+    );
+
+    activeMessageListeners[chatId] = onSnapshot(q, (snapshot) => {
+      if (isInitialMsgSnapshot) {
+        isInitialMsgSnapshot = false;
+        return;
+      }
+
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          const msg = change.doc.data();
+          // If message is from the friend and chat isn't currently open to them
+          if (msg.senderUid !== user.uid) {
+            window.openDirectMessage(friend.uid, friend.name);
+          }
+        }
+      });
+    });
+  });
+}
+
 // REAL-TIME LISTENER FOR INCOMING REQUESTS & ACCEPTANCE SYNC
 onAuthStateChanged(auth, (user) => {
   if (!user) return;
@@ -314,15 +348,22 @@ onAuthStateChanged(auth, (user) => {
     const pending = userData.pendingRequests || [];
     const currentFriends = userData.friendsList || [];
 
-    // Auto-open chat dock for requester once the request is accepted
-    currentFriends.forEach(f => {
-      if (!knownFriendUids.has(f.uid)) {
-        knownFriendUids.add(f.uid);
-        if (targetDmUid === null) {
+    // Setup background message listeners for all friends
+    setupFriendMessageListeners(user, currentFriends);
+
+    // Populate set on initial load without popping up all existing friends
+    if (isInitialFriendLoad) {
+      currentFriends.forEach(f => knownFriendUids.add(f.uid));
+      isInitialFriendLoad = false;
+    } else {
+      // Auto-open chat dock when a NEW friend is added live
+      currentFriends.forEach(f => {
+        if (!knownFriendUids.has(f.uid)) {
+          knownFriendUids.add(f.uid);
           window.openDirectMessage(f.uid, f.name);
         }
-      }
-    });
+      });
+    }
 
     // Display minimized request tab on receiver's screen
     if (pending.length > 0 && dockElement.classList.contains('collapsed') && targetDmUid === null) {
@@ -344,21 +385,33 @@ onAuthStateChanged(auth, (user) => {
         e.stopPropagation();
         const updatedPending = pending.filter(r => r.uid !== currentPendingRequest.uid);
         const myName = userData.displayName || user.displayName || "Lounge Member";
-        const updatedFriends = [...currentFriends, { uid: currentPendingRequest.uid, name: currentPendingRequest.name }];
 
-        // 1. Update receiver's friends list
+        // Prevent Duplicate Friends Bug: Deduplicate by UID
+        const existingFriendsMap = new Map();
+        currentFriends.forEach(f => existingFriendsMap.set(f.uid, f.name));
+        existingFriendsMap.set(currentPendingRequest.uid, currentPendingRequest.name);
+
+        const updatedFriends = Array.from(existingFriendsMap.entries()).map(([uid, name]) => ({ uid, name }));
+
+        // 1. Update receiver's profile
         await setDoc(doc(db, "users", user.uid), { 
           pendingRequests: updatedPending, 
           friendsList: updatedFriends 
         }, { merge: true });
 
-        // 2. Update sender's friends list for mutual real-time sync
+        // 2. Update sender's profile with deduplication
         const senderRef = doc(db, "users", currentPendingRequest.uid);
         const senderSnap = await getDoc(senderRef);
         if (senderSnap.exists()) {
           const senderFriends = senderSnap.data().friendsList || [];
+          const senderFriendsMap = new Map();
+          senderFriends.forEach(f => senderFriendsMap.set(f.uid, f.name));
+          senderFriendsMap.set(user.uid, myName);
+
+          const updatedSenderFriends = Array.from(senderFriendsMap.entries()).map(([uid, name]) => ({ uid, name }));
+
           await setDoc(senderRef, {
-            friendsList: [...senderFriends, { uid: user.uid, name: myName }]
+            friendsList: updatedSenderFriends
           }, { merge: true });
         }
 
