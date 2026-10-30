@@ -209,7 +209,41 @@ function getChatDocId(uid1, uid2) {
   return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
 }
 
-// FB-Style Check: If friends -> open chat directly. If not friends -> send request first.
+// Global Friend Request Dispatcher (Strict Single Request Check)
+window.sendFriendRequest = async function(targetUid, targetName) {
+  if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
+
+  try {
+    const targetRef = doc(db, "users", targetUid);
+    const targetSnap = await getDoc(targetRef);
+
+    if (targetSnap.exists()) {
+      const targetData = targetSnap.data();
+      const existingPending = targetData.pendingRequests || [];
+      const existingFriends = targetData.friendsList || [];
+
+      // Check if already friends or if request already exists
+      if (existingFriends.some(f => f.uid === auth.currentUser.uid) || existingPending.some(r => r.uid === auth.currentUser.uid)) {
+        return;
+      }
+
+      const myDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+      const myData = myDoc.exists() ? myDoc.data() : {};
+
+      const newReq = {
+        uid: auth.currentUser.uid,
+        name: myData.displayName || auth.currentUser.displayName || "Lounge Member",
+        photoURL: myData.photoURL || ''
+      };
+
+      await setDoc(targetRef, { pendingRequests: [...existingPending, newReq] }, { merge: true });
+    }
+  } catch (err) {
+    console.error("Failed to send friend request:", err);
+  }
+};
+
+// Request or Open Direct Message Engine
 window.requestOrOpenDM = async function(targetUid, targetName) {
   if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
 
@@ -224,7 +258,19 @@ window.requestOrOpenDM = async function(targetUid, targetName) {
       window.openDirectMessage(targetUid, targetName);
     } else {
       await window.sendFriendRequest(targetUid, targetName);
-      alert(`🤝 Connection request sent to @${targetName}! Waiting for them to accept.`);
+      
+      // Discrete dock indicator update (no central alerts)
+      document.getElementById('dm-dock-title').innerText = `🤝 Request Sent: @${targetName}`;
+      document.getElementById('dm-dock-actions-box').innerHTML = `
+        <button class="dm-dock-btn" id="dm-dock-close-btn" title="Dismiss">✕</button>
+      `;
+      document.getElementById('dm-dock-close-btn').onclick = () => {
+        dockElement.style.display = 'none';
+        targetDmUid = null;
+      };
+      
+      dockElement.style.display = 'flex';
+      dockElement.classList.add('collapsed');
     }
   } catch (e) {
     console.error("Error opening DM/Request:", e);
@@ -305,11 +351,11 @@ async function sendDirectMessage() {
   }
 }
 
-// Function to listen for incoming messages from existing friends
+// Function to listen for incoming messages from existing friends (Dual-Sided Auto Open)
 function setupFriendMessageListeners(user, friendsList) {
   friendsList.forEach(friend => {
     const chatId = getChatDocId(user.uid, friend.uid);
-    if (activeMessageListeners[chatId]) return; // Already listening
+    if (activeMessageListeners[chatId]) return;
 
     let isInitialMsgSnapshot = true;
     const q = query(
@@ -327,7 +373,7 @@ function setupFriendMessageListeners(user, friendsList) {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
           const msg = change.doc.data();
-          // If message is from the friend and chat isn't currently open to them
+          // Auto-open chat for receiver when a new message arrives
           if (msg.senderUid !== user.uid) {
             window.openDirectMessage(friend.uid, friend.name);
           }
@@ -337,7 +383,7 @@ function setupFriendMessageListeners(user, friendsList) {
   });
 }
 
-// REAL-TIME LISTENER FOR INCOMING REQUESTS & ACCEPTANCE SYNC
+// Real-Time Auth & Request Manager Engine
 onAuthStateChanged(auth, (user) => {
   if (!user) return;
 
@@ -348,15 +394,13 @@ onAuthStateChanged(auth, (user) => {
     const pending = userData.pendingRequests || [];
     const currentFriends = userData.friendsList || [];
 
-    // Setup background message listeners for all friends
+    // Background listeners for incoming messages
     setupFriendMessageListeners(user, currentFriends);
 
-    // Populate set on initial load without popping up all existing friends
     if (isInitialFriendLoad) {
       currentFriends.forEach(f => knownFriendUids.add(f.uid));
       isInitialFriendLoad = false;
     } else {
-      // Auto-open chat dock when a NEW friend is added live
       currentFriends.forEach(f => {
         if (!knownFriendUids.has(f.uid)) {
           knownFriendUids.add(f.uid);
@@ -365,8 +409,8 @@ onAuthStateChanged(auth, (user) => {
       });
     }
 
-    // Display minimized request tab on receiver's screen
-    if (pending.length > 0 && dockElement.classList.contains('collapsed') && targetDmUid === null) {
+    // Display discrete request indicator in bottom-right dock if pending requests exist
+    if (pending.length > 0 && targetDmUid === null) {
       const currentPendingRequest = pending[0];
 
       document.getElementById('dm-dock-title').innerText = `🤝 Request: @${currentPendingRequest.name}`;
@@ -386,7 +430,6 @@ onAuthStateChanged(auth, (user) => {
         const updatedPending = pending.filter(r => r.uid !== currentPendingRequest.uid);
         const myName = userData.displayName || user.displayName || "Lounge Member";
 
-        // Prevent Duplicate Friends Bug: Deduplicate by UID
         const existingFriendsMap = new Map();
         currentFriends.forEach(f => existingFriendsMap.set(f.uid, f.name));
         existingFriendsMap.set(currentPendingRequest.uid, currentPendingRequest.name);
