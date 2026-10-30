@@ -1234,6 +1234,7 @@
     let unsubscribeListener = null;
     let botTimerId = null;
     let safetyTimerId = null;
+    let presenceHeartbeatId = null;
 
     const AVATAR_PRESETS = {
       'avatar_akari': 'images/avatars/akari.png',
@@ -1360,21 +1361,50 @@ const PROFANITY_BLOCKLIST = [
         : `Guest_${guestId.replace('guest_', '').substring(0, 4)}`;
 
       const role = user ? (isMod ? 'System Overwatch' : 'Portal Member') : 'Portal Visitor';
-      const status = user ? 'active' : 'away';
+      const userStatusSelect = document.getElementById('user-status-select');
+      const status = userStatusSelect ? userStatusSelect.value : (user ? 'active' : 'away');
 
-      const updateData = {
-        displayName,
-        role,
-        status,
-        lastActive: serverTimestamp(),
-        isGuest: !user
+      const updatePresence = async (isOnlineState = true) => {
+        try {
+          if (!isOnlineState) {
+            await deleteDoc(presenceRef);
+          } else {
+            await setDoc(presenceRef, {
+              displayName,
+              role,
+              status,
+              lastActive: serverTimestamp(),
+              isGuest: !user,
+              isMod: !!isMod,
+              equipped_avatar: userData?.equipped_avatar || '',
+              photoURL: user?.photoURL || '',
+              equippedTitle: userData?.equippedTitle || ''
+            }, { merge: true });
+          }
+        } catch (e) {
+          console.warn('Presence registration failed:', e);
+        }
       };
 
-      try {
-        await setDoc(presenceRef, updateData, { merge: true });
-      } catch (e) {
-        console.warn('Presence registration failed:', e);
-      }
+      await updatePresence(true);
+
+      // Heartbeat every 30 seconds to keep lastActive fresh
+      if (presenceHeartbeatId) clearInterval(presenceHeartbeatId);
+      presenceHeartbeatId = setInterval(() => {
+        updatePresence(true);
+      }, 30000);
+
+      // Clean up presence immediately when tab or browser is closed
+      const cleanUpPresence = () => {
+        if (myPresenceDocId) {
+          deleteDoc(doc(db, 'presence', myPresenceDocId)).catch(() => {});
+        }
+      };
+
+      window.removeEventListener('beforeunload', cleanUpPresence);
+      window.removeEventListener('pagehide', cleanUpPresence);
+      window.addEventListener('beforeunload', cleanUpPresence);
+      window.addEventListener('pagehide', cleanUpPresence);
     }
 
     function initOnlineUsersListener() {
@@ -1382,37 +1412,41 @@ const PROFANITY_BLOCKLIST = [
       const modsContainer = document.getElementById('moderators-users-list');
       if (!loungeContainer || !modsContainer) return;
 
-      const usersCol = collection(db, 'users');
-      onSnapshot(usersCol, (snapshot) => {
+      const presenceCol = collection(db, 'presence');
+      onSnapshot(presenceCol, (snapshot) => {
         loungeContainer.innerHTML = '';
         modsContainer.innerHTML = '';
 
         let memberCount = 0;
         let modCount = 0;
+        const nowMs = Date.now();
 
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          const name = data.displayName || (data.email ? data.email.split('@')[0] : '');
+          const name = data.displayName || 'Portal Member';
+
+          // Prune stale documents (inactive for more than 60 seconds)
+          if (data.lastActive?.toDate) {
+            const lastActiveMs = data.lastActive.toDate().getTime();
+            if (nowMs - lastActiveMs > 60000) return;
+          }
 
           const lowerName = name.toLowerCase();
           if (
             !name || 
-            data.isTest === true || 
             lowerName.includes('test') || 
-            lowerName.includes('guest') || 
             lowerName.includes('demo')
           ) {
             return;
           }
 
-          const isMod = data.role === 'admin' || data.role === 'moderator' || data.isAdmin === true;
-          const status = 'active';
+          const isMod = data.isMod === true || data.role === 'System Overwatch';
+          const status = data.status || 'active';
 
           if (isMod) {
             modCount++;
             const modCard = document.createElement('div');
             modCard.className = 'chatter-card';
-            modCard.onclick = () => window.openReportModal && window.openReportModal(name || 'Moderator');
 
             modCard.innerHTML = `
               <div class="chatter-avatar mod-special-avatar">🛡️</div>
@@ -1436,7 +1470,7 @@ const PROFANITY_BLOCKLIST = [
               initial = '';
             }
 
-            const role = data.equippedTitle ? `[${data.equippedTitle}]` : 'Portal Member';
+            const role = data.equippedTitle ? `[${data.equippedTitle}]` : (data.role || 'Portal Member');
 
             const userCard = document.createElement('div');
             userCard.className = 'chatter-card';
@@ -1462,7 +1496,7 @@ const PROFANITY_BLOCKLIST = [
           loungeContainer.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); padding:4px;">No members active</div>';
         }
       }, (err) => {
-        console.warn('Users list listener error:', err);
+        console.warn('Presence list listener error:', err);
       });
     }
 
