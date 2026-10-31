@@ -4,7 +4,7 @@ import {
   doc, getDoc, setDoc, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Inject Cyberpunk DM Dock & Request Bar Styles
+// Inject Cyberpunk DM Dock Styles
 const dmDockStyles = `
   .cyber-dm-dock {
     position: fixed;
@@ -163,8 +163,6 @@ document.head.appendChild(styleSheet);
 let targetDmUid = null;
 let targetDmName = '';
 let dmUnsubscribe = null;
-let isInitialFriendLoad = true;
-let knownFriendUids = new Set();
 let activeMessageListeners = {};
 
 // Construct Dock Element
@@ -187,16 +185,24 @@ dockElement.innerHTML = `
 `;
 document.body.appendChild(dockElement);
 
-// Controls
+// Header Click Controls with Clean Event Propagation
 document.getElementById('dm-dock-hdr').onclick = (e) => {
-  if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
+  if (e.target.closest('button') || e.target.closest('a')) return;
   dockElement.classList.toggle('collapsed');
 };
 
-document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
-document.getElementById('dm-dock-close-btn').onclick = () => {
+document.getElementById('dm-dock-min-btn').onclick = (e) => {
+  e.stopPropagation();
+  dockElement.classList.toggle('collapsed');
+};
+
+document.getElementById('dm-dock-close-btn').onclick = (e) => {
+  e.stopPropagation();
   dockElement.style.display = 'none';
   targetDmUid = null;
+  targetDmName = '';
+  sessionStorage.removeItem('active_dm_uid');
+  sessionStorage.removeItem('active_dm_name');
   if (dmUnsubscribe) dmUnsubscribe();
 };
 
@@ -222,7 +228,7 @@ window.sendFriendRequest = async function(targetUid, targetName) {
       const existingPending = targetData.pendingRequests || [];
       const existingFriends = targetData.friendsList || [];
 
-      // Check if already friends or if request already exists
+      // DO NOT add if already pending or already friends
       if (existingFriends.some(f => f.uid === auth.currentUser.uid) || existingPending.some(r => r.uid === auth.currentUser.uid)) {
         return;
       }
@@ -243,7 +249,7 @@ window.sendFriendRequest = async function(targetUid, targetName) {
   }
 };
 
-// Request or Open Direct Message Engine
+// Request or Open Direct Message Engine (Saves Active Session Across Pages)
 window.requestOrOpenDM = async function(targetUid, targetName) {
   if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
 
@@ -254,31 +260,21 @@ window.requestOrOpenDM = async function(targetUid, targetName) {
 
     const isFriend = friendsList.some(f => f.uid === targetUid);
 
-    // Explicitly lock target variables
+    // Lock session variables across tab/page navigation
     targetDmUid = targetUid;
     targetDmName = targetName;
+    sessionStorage.setItem('active_dm_uid', targetUid);
+    sessionStorage.setItem('active_dm_name', targetName);
 
+    // ONLY send friend request if NOT friends yet (Without auto-adding to friendsList!)
     if (!isFriend) {
       await window.sendFriendRequest(targetUid, targetName);
     }
 
     document.getElementById('dm-dock-title').innerText = `💬 @${targetName}`;
-    document.getElementById('dm-dock-actions-box').innerHTML = `
-      <button class="dm-dock-btn" id="dm-dock-min-btn">➖</button>
-      <button class="dm-dock-btn" id="dm-dock-close-btn" title="Dismiss">✕</button>
-    `;
-
-    document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
-    document.getElementById('dm-dock-close-btn').onclick = () => {
-      dockElement.style.display = 'none';
-      targetDmUid = null;
-      if (dmUnsubscribe) dmUnsubscribe();
-    };
-
     dockElement.style.display = 'flex';
     dockElement.classList.remove('collapsed');
 
-    // Attach real-time message listener for the shared channel ID
     listenForDmMessages();
   } catch (e) {
     console.error("Error opening DM/Request:", e);
@@ -290,20 +286,10 @@ window.openDirectMessage = function(targetUid, targetName) {
 
   targetDmUid = targetUid;
   targetDmName = targetName;
+  sessionStorage.setItem('active_dm_uid', targetUid);
+  sessionStorage.setItem('active_dm_name', targetName);
 
   document.getElementById('dm-dock-title').innerText = `💬 @${targetName}`;
-  document.getElementById('dm-dock-actions-box').innerHTML = `
-    <button class="dm-dock-btn" id="dm-dock-min-btn">➖</button>
-    <button class="dm-dock-btn" id="dm-dock-close-btn">✕</button>
-  `;
-
-  document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
-  document.getElementById('dm-dock-close-btn').onclick = () => {
-    dockElement.style.display = 'none';
-    targetDmUid = null;
-    if (dmUnsubscribe) dmUnsubscribe();
-  };
-
   dockElement.style.display = 'flex';
   dockElement.classList.remove('collapsed');
 
@@ -359,10 +345,13 @@ async function sendDirectMessage() {
   }
 }
 
-// Function to listen for incoming messages from existing friends (Dual-Sided Auto Open)
-function setupFriendMessageListeners(user, friendsList) {
-  friendsList.forEach(friend => {
-    const chatId = getChatDocId(user.uid, friend.uid);
+// Background Listener for Incoming Messages
+function setupMessageListenersForList(user, userList) {
+  userList.forEach(item => {
+    const targetUid = item.uid;
+    if (!targetUid) return;
+
+    const chatId = getChatDocId(user.uid, targetUid);
     if (activeMessageListeners[chatId]) return;
 
     let isInitialMsgSnapshot = true;
@@ -382,7 +371,7 @@ function setupFriendMessageListeners(user, friendsList) {
         if (change.type === "added") {
           const msg = change.doc.data();
           if (msg.senderUid !== user.uid) {
-            window.openDirectMessage(friend.uid, friend.name);
+            window.openDirectMessage(item.uid, item.name || 'Lounge Member');
           }
         }
       });
@@ -390,9 +379,16 @@ function setupFriendMessageListeners(user, friendsList) {
   });
 }
 
-// Real-Time Auth & Request Manager Engine
+// Real-Time Auth & Session Restoration Engine
 onAuthStateChanged(auth, (user) => {
   if (!user) return;
+
+  // Restore Active DM Dock on Page Load across all tabs
+  const savedUid = sessionStorage.getItem('active_dm_uid');
+  const savedName = sessionStorage.getItem('active_dm_name');
+  if (savedUid && savedName) {
+    window.openDirectMessage(savedUid, savedName);
+  }
 
   onSnapshot(doc(db, "users", user.uid), (snap) => {
     if (!snap.exists()) return;
@@ -401,21 +397,11 @@ onAuthStateChanged(auth, (user) => {
     const pending = userData.pendingRequests || [];
     const currentFriends = userData.friendsList || [];
 
-    setupFriendMessageListeners(user, currentFriends);
+    // Listen to incoming messages for friends & pending contacts
+    setupMessageListenersForList(user, currentFriends);
+    setupMessageListenersForList(user, pending);
 
-    if (isInitialFriendLoad) {
-      currentFriends.forEach(f => knownFriendUids.add(f.uid));
-      isInitialFriendLoad = false;
-    } else {
-      currentFriends.forEach(f => {
-        if (!knownFriendUids.has(f.uid)) {
-          knownFriendUids.add(f.uid);
-          window.openDirectMessage(f.uid, f.name);
-        }
-      });
-    }
-
-    // Display discrete request indicator in bottom-right dock if pending requests exist
+    // Display pending request bar if receiving a connection request
     if (pending.length > 0 && targetDmUid === null) {
       const currentPendingRequest = pending[0];
 
@@ -442,13 +428,13 @@ onAuthStateChanged(auth, (user) => {
 
         const updatedFriends = Array.from(existingFriendsMap.entries()).map(([uid, name]) => ({ uid, name }));
 
-        // Update receiver's profile
+        // Update receiver's profile (Explicit Accept Phase)
         await setDoc(doc(db, "users", user.uid), { 
           pendingRequests: updatedPending, 
           friendsList: updatedFriends 
         }, { merge: true });
 
-        // Update sender's profile with deduplication
+        // Update sender's profile
         const senderRef = doc(db, "users", currentPendingRequest.uid);
         const senderSnap = await getDoc(senderRef);
         if (senderSnap.exists()) {
