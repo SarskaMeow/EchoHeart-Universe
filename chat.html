@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3237546726752178"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3237546726752178"
+       crossorigin="anonymous"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Community Live Chat — Otaku Overload</title>
@@ -100,6 +100,97 @@
       border-color: var(--accent-pink);
       box-shadow: 0 0 18px var(--accent-glow), inset 0 0 8px rgba(255, 0, 127, 0.4);
       animation: navPulseGlow 2.5s infinite alternate;
+    }
+
+    /* 👥 NAVBAR FRIENDS DROPDOWN STYLES */
+    .nav-friends-menu {
+      display: inline-block;
+    }
+
+    .friends-toggle-btn {
+      background: rgba(0, 240, 255, 0.12) !important;
+      border-color: rgba(0, 240, 255, 0.4) !important;
+      color: #00f0ff !important;
+      cursor: pointer;
+    }
+
+    .friends-toggle-btn:hover {
+      background: rgba(0, 240, 255, 0.25) !important;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.5) !important;
+    }
+
+    .friends-count-badge {
+      background: #ff007f;
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 1px 6px;
+      border-radius: 10px;
+      margin-left: 4px;
+    }
+
+    .friends-dropdown-box {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      width: 220px;
+      background: rgba(10, 4, 22, 0.98);
+      border: 1.5px solid #00f0ff;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 240, 255, 0.3);
+      backdrop-filter: blur(16px);
+      z-index: 7000;
+      overflow: hidden;
+    }
+
+    .friends-dropdown-box.open {
+      display: block;
+    }
+
+    .friends-dropdown-header {
+      background: rgba(22, 10, 42, 0.95);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      color: #00f0ff;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .friends-dropdown-list {
+      max-height: 240px;
+      overflow-y: auto;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .friends-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: rgba(22, 10, 36, 0.6);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .friends-item-row:hover {
+      background: rgba(255, 0, 127, 0.25);
+      border-color: #ff007f;
+    }
+
+    .friends-empty-msg {
+      padding: 12px;
+      font-size: 0.78rem;
+      color: #b8a7d4;
+      text-align: center;
     }
 
     .chat-status-indicator {
@@ -481,7 +572,6 @@
       overflow: hidden;
     }
 
-    /* Subtle Animated Scanline Overlay */
     .cyber-context-popup::before {
       content: "";
       position: absolute;
@@ -498,7 +588,6 @@
       opacity: 0.6;
     }
 
-    /* Header with Neon Pulsing Underline */
     .context-header {
       font-size: 0.74rem;
       font-weight: 900;
@@ -523,7 +612,6 @@
       animation: scanlineMove 2s infinite ease-in-out alternate;
     }
 
-    /* Menu Button Base */
     .context-item-btn {
       position: relative;
       background: rgba(22, 10, 42, 0.85);
@@ -543,7 +631,6 @@
       z-index: 1;
     }
 
-    /* Neon Hover & Active States */
     .context-item-btn:hover {
       background: linear-gradient(135deg, rgba(255, 0, 127, 0.8), rgba(157, 78, 221, 0.8));
       border-color: var(--accent-cyan);
@@ -559,7 +646,6 @@
       transform: translateX(2px) scale(0.98);
     }
 
-    /* Special Danger State for Report Button */
     .context-item-btn.danger-action {
       color: #ff3366;
       border-color: rgba(255, 0, 85, 0.4);
@@ -1159,36 +1245,29 @@
 
   <!-- TOP NAVIGATION BAR -->
   <header class="chat-navbar">
-  <div class="nav-inner">
-    <nav class="nav-portal-links">
-      <a href="index.html" class="nav-pill">🏠 Home</a>
-      <a href="echoheart.html" class="nav-pill">📚 girls of phantom</a>
-      <a href="neko-fm.html" class="nav-pill">📻 24/7 Neko FM</a>
-      <a href="chat.html" class="nav-pill">💬 Live Chat</a>
-      <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
-      <a href="cosmetics.html" class="nav-pill">🔮 Orb Store</a>
-      <a href="account.html" class="nav-pill">👤 Account</a> 
+    <div class="nav-inner">
+      <nav class="nav-portal-links">
+        <a href="index.html" class="nav-pill">🏠 Home</a>
+        <a href="echoheart.html" class="nav-pill">📚 girls of phantom</a>
+        <a href="neko-fm.html" class="nav-pill">📻 24/7 Neko FM</a>
+        <a href="chat.html" class="nav-pill active">💬 Live Chat</a>
+        <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
+        <a href="cosmetics.html" class="nav-pill">🔮 Orb Store</a>
+        <a href="account.html" class="nav-pill">👤 Account</a> 
 
-      <!-- 👥 Logged-In Friends Quick Menu -->
-      <div class="nav-friends-menu" id="nav-friends-menu" style="display: none; position: relative;">
-        <button class="nav-pill friends-toggle-btn" id="nav-friends-btn">
-          👥 Friends <span class="friends-count-badge" id="nav-friends-count">0</span>
-        </button>
-        <div class="friends-dropdown-box" id="nav-friends-dropdown">
-          <div class="friends-dropdown-header">⚡ Online Companions</div>
-          <div class="friends-dropdown-list" id="nav-friends-list">
-            <div class="friends-empty-msg">No friends connected yet.</div>
+        <!-- 👥 Logged-In Friends Quick Menu -->
+        <div class="nav-friends-menu" id="nav-friends-menu" style="display: none; position: relative;">
+          <button class="nav-pill friends-toggle-btn" id="nav-friends-btn">
+            👥 Friends <span class="friends-count-badge" id="nav-friends-count">0</span>
+          </button>
+          <div class="friends-dropdown-box" id="nav-friends-dropdown">
+            <div class="friends-dropdown-header">⚡ Online Companions</div>
+            <div class="friends-dropdown-list" id="nav-friends-list">
+              <div class="friends-empty-msg">No friends connected yet.</div>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
-
-    <div class="chat-status-indicator">
-      <span class="status-pulse"></span>
-      <span>Sub-Stage Relay: Active</span>
-    </div>
-  </div>
-</header>
+      </nav>
 
       <div class="chat-status-indicator">
         <span class="status-pulse"></span>
@@ -1549,14 +1628,11 @@
         }
       };
 
-      // 1. Initial heartbeat when entering
       await sendHeartbeat();
 
-      // 2. Pulse every 30 seconds to prove the user is active
       if (heartbeatInterval) clearInterval(heartbeatInterval);
       heartbeatInterval = setInterval(sendHeartbeat, 30000);
 
-      // 3. Immediately delete document on browser unload or navigation away
       const removePresence = () => {
         if (myPresenceDocId) {
           deleteDoc(presenceRef).catch(() => {});
@@ -1586,7 +1662,6 @@
       let x = event ? event.clientX : 100;
       let y = event ? event.clientY : 100;
 
-      // Keep inside screen bounds
       if (x + 200 > window.innerWidth) x = window.innerWidth - 210;
       if (y + 140 > window.innerHeight) y = window.innerHeight - 150;
 
@@ -1608,82 +1683,13 @@
           window.requestOrOpenDM(targetContextUid, targetContextName);
         }
       } else if (action === 'friend') {
-        window.sendFriendRequest(targetContextUid, targetContextName);
+        if (window.sendFriendRequest) {
+          window.sendFriendRequest(targetContextUid, targetContextName);
+        }
       } else if (action === 'report') {
         window.openReportModal(targetContextName);
       }
     };
-
-    window.sendFriendRequest = async function(targetUid, targetName) {
-      if (!window.currentUser) return;
-      try {
-        const targetRef = doc(db, "users", targetUid);
-        const targetSnap = await getDoc(targetRef);
-
-        if (targetSnap.exists()) {
-          const targetData = targetSnap.data();
-          const existingPending = targetData.pendingRequests || [];
-
-          if (existingPending.some(r => r.uid === window.currentUser.uid)) {
-            return;
-          }
-
-          const newReq = {
-            uid: window.currentUser.uid,
-            name: window.userData?.displayName || window.currentUser.displayName || "Lounge Member",
-            photoURL: window.userData?.photoURL || ''
-          };
-
-          await setDoc(targetRef, { pendingRequests: [...existingPending, newReq] }, { merge: true });
-        }
-      } catch (err) {
-        console.error("Failed to send friend request:", err);
-      }
-    };
-
-    // REAL-TIME LISTENER FOR INCOMING FRIEND REQUESTS HUD BANNER
-    function listenForIncomingRequests(user) {
-      if (!user) return;
-      const hud = document.getElementById('incoming-request-hud');
-      const hudText = document.getElementById('hud-request-message');
-      const btnAccept = document.getElementById('hud-btn-accept');
-      const btnDecline = document.getElementById('hud-btn-decline');
-
-      onSnapshot(doc(db, "users", user.uid), (snap) => {
-        if (snap.exists()) {
-          const data = snap.data();
-          const pending = data.pendingRequests || [];
-
-          if (pending.length > 0) {
-            const firstReq = pending[0];
-            if (hudText) hudText.innerText = `🤝 ${firstReq.name} sent you a connection request!`;
-            if (hud) hud.style.display = 'flex';
-
-            if (btnAccept) {
-              btnAccept.onclick = async () => {
-                const updatedPending = pending.filter(r => r.uid !== firstReq.uid);
-                const updatedFriends = [...(data.friendsList || []), { uid: firstReq.uid, name: firstReq.name }];
-                await setDoc(doc(db, "users", user.uid), { pendingRequests: updatedPending, friendsList: updatedFriends }, { merge: true });
-                hud.style.display = 'none';
-                if (window.openDirectMessage) {
-                  window.openDirectMessage(firstReq.uid, firstReq.name);
-                }
-              };
-            }
-
-            if (btnDecline) {
-              btnDecline.onclick = async () => {
-                const updatedPending = pending.filter(r => r.uid !== firstReq.uid);
-                await setDoc(doc(db, "users", user.uid), { pendingRequests: updatedPending }, { merge: true });
-                hud.style.display = 'none';
-              };
-            }
-          } else {
-            if (hud) hud.style.display = 'none';
-          }
-        }
-      });
-    }
 
     function initOnlineUsersListener() {
       const loungeContainer = document.getElementById('online-users-list');
@@ -1774,7 +1780,6 @@
       });
     }
 
-    // Prompt login function for guests
     window.promptLogin = function() {
       if (!window.currentUser) {
         if (confirm("🔒 You must be logged in with Email or Google to post in live chat. Would you like to go to the login page now?")) {
@@ -1839,8 +1844,6 @@
           inputEl.placeholder = `Transmit to #${window.activeChannelKey}...`;
         }
         if (sendBtn) sendBtn.disabled = false;
-
-        listenForIncomingRequests(user);
       } else {
         window.currentUser = null;
         window.userData = null;
@@ -2076,7 +2079,6 @@
     let isDockedMusicPlaying = false;
     const defaultStreamUrl = "https://kathy.torontocast.com:3060/stream";
 
-    // Save audio state before page unload
     window.addEventListener('beforeunload', () => {
       if (dockedAudio && !dockedAudio.paused) {
         localStorage.setItem('neko_fm_active', 'true');
@@ -2084,7 +2086,6 @@
       }
     });
 
-    // Sync audio state automatically on load
     document.addEventListener('DOMContentLoaded', () => {
       const isPlaying = localStorage.getItem('neko_fm_active') === 'true';
       const savedVol = parseFloat(localStorage.getItem('neko_fm_volume') || '0.7');
