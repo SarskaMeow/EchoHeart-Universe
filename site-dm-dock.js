@@ -164,6 +164,8 @@ let targetDmUid = null;
 let targetDmName = '';
 let dmUnsubscribe = null;
 let activeMessageListeners = {};
+let presenceUnsubscribe = null;
+let activePresenceData = new Map();
 
 // Construct Dock Element
 const dockElement = document.createElement('div');
@@ -210,6 +212,25 @@ document.getElementById('dm-dock-send-btn').onclick = sendDirectMessage;
 document.getElementById('dm-dock-input-field').onkeydown = (e) => {
   if (e.key === 'Enter') sendDirectMessage();
 };
+
+// Navbar Friends Dropdown Menu Click Toggle & Click-Outside Setup
+document.addEventListener('DOMContentLoaded', () => {
+  const friendsBtn = document.getElementById('nav-friends-btn');
+  const friendsDropdown = document.getElementById('nav-friends-dropdown');
+
+  if (friendsBtn && friendsDropdown) {
+    friendsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      friendsDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!friendsDropdown.contains(e.target) && e.target !== friendsBtn) {
+        friendsDropdown.classList.remove('open');
+      }
+    });
+  }
+});
 
 function getChatDocId(uid1, uid2) {
   return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
@@ -379,9 +400,93 @@ function setupMessageListenersForList(user, userList) {
   });
 }
 
+// Global Presence Tracker Engine for Friends Dropdown Status
+function initFriendsPresenceTracker(friendsList) {
+  if (presenceUnsubscribe) presenceUnsubscribe();
+
+  const presenceCol = collection(db, 'presence');
+  presenceUnsubscribe = onSnapshot(presenceCol, (snapshot) => {
+    const nowMs = Date.now();
+    activePresenceData.clear();
+
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data({ serverTimestamps: 'estimate' });
+      const uid = data.uid || docSnap.id;
+
+      let lastActiveMs = nowMs;
+      if (data.lastActive && typeof data.lastActive.toDate === 'function') {
+        lastActiveMs = data.lastActive.toDate().getTime();
+      }
+
+      // Check if active within 2 minutes
+      if (nowMs - lastActiveMs <= 120000) {
+        activePresenceData.set(uid, data.status || 'active');
+      }
+    });
+
+    renderNavbarFriendsList(friendsList);
+  }, (err) => {
+    console.warn("Friends presence listener warning:", err);
+  });
+}
+
+// Render Header Friends Dropdown List & Badge Count
+function renderNavbarFriendsList(friendsList = []) {
+  const menuContainer = document.getElementById('nav-friends-menu');
+  const countBadge = document.getElementById('nav-friends-count');
+  const listContainer = document.getElementById('nav-friends-list');
+
+  if (!menuContainer || !countBadge || !listContainer) return;
+
+  // Reveal menu container in header
+  menuContainer.style.display = 'inline-block';
+  countBadge.innerText = friendsList.length;
+
+  if (friendsList.length === 0) {
+    listContainer.innerHTML = '<div class="friends-empty-msg">No friends connected yet.</div>';
+    return;
+  }
+
+  listContainer.innerHTML = '';
+  friendsList.forEach(friend => {
+    const isOnline = activePresenceData.has(friend.uid);
+    const status = activePresenceData.get(friend.uid) || 'offline';
+
+    let statusDot = '🔴';
+    if (isOnline) {
+      if (status === 'active') statusDot = '🟢';
+      else if (status === 'away') statusDot = '🟡';
+      else if (status === 'busy') statusDot = '🔴';
+    } else {
+      statusDot = '⚪';
+    }
+
+    const row = document.createElement('div');
+    row.className = 'friends-item-row';
+    row.title = `Click to chat with @${friend.name}`;
+    row.onclick = () => {
+      const dropdown = document.getElementById('nav-friends-dropdown');
+      if (dropdown) dropdown.classList.remove('open');
+      window.openDirectMessage(friend.uid, friend.name);
+    };
+
+    row.innerHTML = `
+      <span>${friend.name}</span>
+      <span style="font-size:0.75rem;">${statusDot}</span>
+    `;
+
+    listContainer.appendChild(row);
+  });
+}
+
 // Real-Time Auth & Session Restoration Engine
 onAuthStateChanged(auth, (user) => {
-  if (!user) return;
+  if (!user) {
+    const menuContainer = document.getElementById('nav-friends-menu');
+    if (menuContainer) menuContainer.style.display = 'none';
+    if (presenceUnsubscribe) presenceUnsubscribe();
+    return;
+  }
 
   // Restore Active DM Dock on Page Load across all tabs
   const savedUid = sessionStorage.getItem('active_dm_uid');
@@ -396,6 +501,9 @@ onAuthStateChanged(auth, (user) => {
     const userData = snap.data();
     const pending = userData.pendingRequests || [];
     const currentFriends = userData.friendsList || [];
+
+    // Initialize friends list rendering and real-time status tracking
+    initFriendsPresenceTracker(currentFriends);
 
     // Listen to incoming messages for friends & pending contacts
     setupMessageListenersForList(user, currentFriends);
