@@ -1,7 +1,7 @@
 import { auth, db } from './firebase-config.js?v=3';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { 
-  doc, getDoc, updateDoc, arrayUnion, arrayRemove, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp 
+  doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Inject Cyberpunk DM Dock Styles
@@ -236,7 +236,7 @@ function getChatDocId(uid1, uid2) {
   return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
 }
 
-// Global Friend Request Dispatcher using arrayUnion
+// Global Friend Request Dispatcher
 window.sendFriendRequest = async function(targetUid, targetName) {
   if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
 
@@ -263,9 +263,9 @@ window.sendFriendRequest = async function(targetUid, targetName) {
         photoURL: myData.photoURL || ''
       };
 
-      await updateDoc(targetRef, {
-        pendingRequests: arrayUnion(reqObj)
-      });
+      await setDoc(targetRef, {
+        pendingRequests: [...existingPending.filter(r => r.uid !== auth.currentUser.uid), reqObj]
+      }, { merge: true });
     }
   } catch (err) {
     console.error("Failed to send friend request:", err);
@@ -433,7 +433,6 @@ function renderNavbarFriendsList(friendsList = []) {
 
   if (!menuContainer || !countBadge || !listContainer) return;
 
-  // Make sure the menu element is always visible when logged in
   menuContainer.style.display = 'inline-block';
   countBadge.innerText = friendsList.length;
 
@@ -522,21 +521,28 @@ onAuthStateChanged(auth, (user) => {
         const myRef = doc(db, "users", user.uid);
         const senderRef = doc(db, "users", currentPendingRequest.uid);
 
-        // Build objects for array operations
-        const friendObjForMe = { uid: currentPendingRequest.uid, name: currentPendingRequest.name };
-        const friendObjForSender = { uid: user.uid, name: myName };
+        const updatedPending = pending.filter(r => r.uid !== currentPendingRequest.uid);
+        const myFriends = userData.friendsList || [];
+        const myUpdatedFriends = [...myFriends.filter(f => f.uid !== currentPendingRequest.uid), { uid: currentPendingRequest.uid, name: currentPendingRequest.name }];
 
         try {
-          // 1. Remove request & Add friend to Receiver (2nd account)
-          await updateDoc(myRef, {
-            pendingRequests: arrayRemove(currentPendingRequest),
-            friendsList: arrayUnion(friendObjForMe)
-          });
+          // 1. Update receiver's document with strict keys
+          await setDoc(myRef, {
+            pendingRequests: updatedPending,
+            friendsList: myUpdatedFriends
+          }, { merge: true });
 
-          // 2. Add friend directly to Sender (Mod account)
-          await updateDoc(senderRef, {
-            friendsList: arrayUnion(friendObjForSender)
-          });
+          // 2. Fetch sender's current friends & update sender's document strictly touching ONLY 'friendsList'
+          const senderSnap = await getDoc(senderRef);
+          if (senderSnap.exists()) {
+            const senderData = senderSnap.data();
+            const senderFriends = senderData.friendsList || [];
+            const senderUpdatedFriends = [...senderFriends.filter(f => f.uid !== user.uid), { uid: user.uid, name: myName }];
+
+            await setDoc(senderRef, {
+              friendsList: senderUpdatedFriends
+            }, { merge: true });
+          }
 
           window.openDirectMessage(currentPendingRequest.uid, currentPendingRequest.name);
         } catch (err) {
