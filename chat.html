@@ -1159,16 +1159,36 @@
 
   <!-- TOP NAVIGATION BAR -->
   <header class="chat-navbar">
-    <div class="nav-inner">
-      <nav class="nav-portal-links">
-        <a href="index.html" class="nav-pill">🏠 Home</a>
-        <a href="echoheart.html" class="nav-pill">📚 girls of phantom</a>
-        <a href="neko-fm.html" class="nav-pill">📻 24/7 Neko FM</a>
-        <a href="chat.html" class="nav-pill active">💬 Live Chat</a>
-        <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
-        <a href="cosmetics.html" class="nav-pill">🔮 Orb Store</a>
-        <a href="account.html" class="nav-pill">👤 Account</a>
-      </nav>
+  <div class="nav-inner">
+    <nav class="nav-portal-links">
+      <a href="index.html" class="nav-pill">🏠 Home</a>
+      <a href="echoheart.html" class="nav-pill">📚 girls of phantom</a>
+      <a href="neko-fm.html" class="nav-pill">📻 24/7 Neko FM</a>
+      <a href="chat.html" class="nav-pill">💬 Live Chat</a>
+      <a href="podcast.html" class="nav-pill">🎙️ Podcast</a>
+      <a href="cosmetics.html" class="nav-pill">🔮 Orb Store</a>
+      <a href="account.html" class="nav-pill">👤 Account</a>
+
+      <!-- 👥 Logged-In Friends Quick Menu -->
+      <div class="nav-friends-menu" id="nav-friends-menu" style="display: none; position: relative;">
+        <button class="nav-pill friends-toggle-btn" id="nav-friends-btn">
+          👥 Friends <span class="friends-count-badge" id="nav-friends-count">0</span>
+        </button>
+        <div class="friends-dropdown-box" id="nav-friends-dropdown">
+          <div class="friends-dropdown-header">⚡ Online Companions</div>
+          <div class="friends-dropdown-list" id="nav-friends-list">
+            <div class="friends-empty-msg">No friends connected yet.</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="chat-status-indicator">
+      <span class="status-pulse"></span>
+      <span>Sub-Stage Relay: Active</span>
+    </div>
+  </div>
+</header>
 
       <div class="chat-status-indicator">
         <span class="status-pulse"></span>
