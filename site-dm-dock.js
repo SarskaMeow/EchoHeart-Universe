@@ -1,7 +1,7 @@
 import { auth, db } from './firebase-config.js?v=3';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { 
-  doc, getDoc, setDoc, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp 
+  doc, getDoc, updateDoc, arrayUnion, arrayRemove, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Inject Cyberpunk DM Dock Styles
@@ -187,7 +187,7 @@ dockElement.innerHTML = `
 `;
 document.body.appendChild(dockElement);
 
-// Header Click Controls with Clean Event Propagation
+// Header Controls
 document.getElementById('dm-dock-hdr').onclick = (e) => {
   if (e.target.closest('button') || e.target.closest('a')) return;
   dockElement.classList.toggle('collapsed');
@@ -213,7 +213,7 @@ document.getElementById('dm-dock-input-field').onkeydown = (e) => {
   if (e.key === 'Enter') sendDirectMessage();
 };
 
-// Navbar Friends Dropdown Menu Click Toggle & Click-Outside Setup
+// Navbar Friends Dropdown Toggle setup
 document.addEventListener('DOMContentLoaded', () => {
   const friendsBtn = document.getElementById('nav-friends-btn');
   const friendsDropdown = document.getElementById('nav-friends-dropdown');
@@ -236,7 +236,7 @@ function getChatDocId(uid1, uid2) {
   return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
 }
 
-// Global Friend Request Dispatcher (Strict Single Request Check)
+// Global Friend Request Dispatcher using arrayUnion
 window.sendFriendRequest = async function(targetUid, targetName) {
   if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
 
@@ -249,7 +249,7 @@ window.sendFriendRequest = async function(targetUid, targetName) {
       const existingPending = targetData.pendingRequests || [];
       const existingFriends = targetData.friendsList || [];
 
-      // DO NOT add if already pending or already friends
+      // Don't duplicate if already pending or friends
       if (existingFriends.some(f => f.uid === auth.currentUser.uid) || existingPending.some(r => r.uid === auth.currentUser.uid)) {
         return;
       }
@@ -257,20 +257,21 @@ window.sendFriendRequest = async function(targetUid, targetName) {
       const myDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
       const myData = myDoc.exists() ? myDoc.data() : {};
 
-      const newReq = {
+      const reqObj = {
         uid: auth.currentUser.uid,
         name: myData.displayName || auth.currentUser.displayName || "Lounge Member",
         photoURL: myData.photoURL || ''
       };
 
-      await setDoc(targetRef, { pendingRequests: [...existingPending, newReq] }, { merge: true });
+      await updateDoc(targetRef, {
+        pendingRequests: arrayUnion(reqObj)
+      });
     }
   } catch (err) {
     console.error("Failed to send friend request:", err);
   }
 };
 
-// Request or Open Direct Message Engine (Saves Active Session Across Pages)
 window.requestOrOpenDM = async function(targetUid, targetName) {
   if (!auth.currentUser || !targetUid || targetUid === auth.currentUser.uid) return;
 
@@ -281,13 +282,11 @@ window.requestOrOpenDM = async function(targetUid, targetName) {
 
     const isFriend = friendsList.some(f => f.uid === targetUid);
 
-    // Lock session variables across tab/page navigation
     targetDmUid = targetUid;
     targetDmName = targetName;
     sessionStorage.setItem('active_dm_uid', targetUid);
     sessionStorage.setItem('active_dm_name', targetName);
 
-    // ONLY send friend request if NOT friends yet (Without auto-adding to friendsList!)
     if (!isFriend) {
       await window.sendFriendRequest(targetUid, targetName);
     }
@@ -366,7 +365,6 @@ async function sendDirectMessage() {
   }
 }
 
-// Background Listener for Incoming Messages
 function setupMessageListenersForList(user, userList) {
   userList.forEach(item => {
     const targetUid = item.uid;
@@ -400,7 +398,6 @@ function setupMessageListenersForList(user, userList) {
   });
 }
 
-// Global Presence Tracker Engine for Friends Dropdown Status
 function initFriendsPresenceTracker(friendsList) {
   if (presenceUnsubscribe) presenceUnsubscribe();
 
@@ -418,7 +415,6 @@ function initFriendsPresenceTracker(friendsList) {
         lastActiveMs = data.lastActive.toDate().getTime();
       }
 
-      // Check if active within 2 minutes
       if (nowMs - lastActiveMs <= 120000) {
         activePresenceData.set(uid, data.status || 'active');
       }
@@ -430,7 +426,6 @@ function initFriendsPresenceTracker(friendsList) {
   });
 }
 
-// Render Header Friends Dropdown List & Badge Count
 function renderNavbarFriendsList(friendsList = []) {
   const menuContainer = document.getElementById('nav-friends-menu');
   const countBadge = document.getElementById('nav-friends-count');
@@ -438,7 +433,7 @@ function renderNavbarFriendsList(friendsList = []) {
 
   if (!menuContainer || !countBadge || !listContainer) return;
 
-  // Reveal menu container in header
+  // Make sure the menu element is always visible when logged in
   menuContainer.style.display = 'inline-block';
   countBadge.innerText = friendsList.length;
 
@@ -479,7 +474,7 @@ function renderNavbarFriendsList(friendsList = []) {
   });
 }
 
-// Real-Time Auth & Session Restoration Engine
+// Real-Time Auth Engine
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     const menuContainer = document.getElementById('nav-friends-menu');
@@ -488,7 +483,6 @@ onAuthStateChanged(auth, (user) => {
     return;
   }
 
-  // Restore Active DM Dock on Page Load across all tabs
   const savedUid = sessionStorage.getItem('active_dm_uid');
   const savedName = sessionStorage.getItem('active_dm_name');
   if (savedUid && savedName) {
@@ -502,14 +496,10 @@ onAuthStateChanged(auth, (user) => {
     const pending = userData.pendingRequests || [];
     const currentFriends = userData.friendsList || [];
 
-    // Initialize friends list rendering and real-time status tracking
     initFriendsPresenceTracker(currentFriends);
-
-    // Listen to incoming messages for friends & pending contacts
     setupMessageListenersForList(user, currentFriends);
     setupMessageListenersForList(user, pending);
 
-    // Display pending request bar if receiving a connection request
     if (pending.length > 0 && targetDmUid === null) {
       const currentPendingRequest = pending[0];
 
@@ -527,38 +517,31 @@ onAuthStateChanged(auth, (user) => {
 
       document.getElementById('dock-accept-req-btn').onclick = async (e) => {
         e.stopPropagation();
-        const updatedPending = pending.filter(r => r.uid !== currentPendingRequest.uid);
+
         const myName = userData.displayName || user.displayName || "Lounge Member";
-
-        const existingFriendsMap = new Map();
-        currentFriends.forEach(f => existingFriendsMap.set(f.uid, f.name));
-        existingFriendsMap.set(currentPendingRequest.uid, currentPendingRequest.name);
-
-        const updatedFriends = Array.from(existingFriendsMap.entries()).map(([uid, name]) => ({ uid, name }));
-
-        // Update receiver's profile (Explicit Accept Phase)
-        await setDoc(doc(db, "users", user.uid), { 
-          pendingRequests: updatedPending, 
-          friendsList: updatedFriends 
-        }, { merge: true });
-
-        // Update sender's profile
+        const myRef = doc(db, "users", user.uid);
         const senderRef = doc(db, "users", currentPendingRequest.uid);
-        const senderSnap = await getDoc(senderRef);
-        if (senderSnap.exists()) {
-          const senderFriends = senderSnap.data().friendsList || [];
-          const senderFriendsMap = new Map();
-          senderFriends.forEach(f => senderFriendsMap.set(f.uid, f.name));
-          senderFriendsMap.set(user.uid, myName);
 
-          const updatedSenderFriends = Array.from(senderFriendsMap.entries()).map(([uid, name]) => ({ uid, name }));
+        // Build objects for array operations
+        const friendObjForMe = { uid: currentPendingRequest.uid, name: currentPendingRequest.name };
+        const friendObjForSender = { uid: user.uid, name: myName };
 
-          await setDoc(senderRef, {
-            friendsList: updatedSenderFriends
-          }, { merge: true });
+        try {
+          // 1. Remove request & Add friend to Receiver (2nd account)
+          await updateDoc(myRef, {
+            pendingRequests: arrayRemove(currentPendingRequest),
+            friendsList: arrayUnion(friendObjForMe)
+          });
+
+          // 2. Add friend directly to Sender (Mod account)
+          await updateDoc(senderRef, {
+            friendsList: arrayUnion(friendObjForSender)
+          });
+
+          window.openDirectMessage(currentPendingRequest.uid, currentPendingRequest.name);
+        } catch (err) {
+          console.error("Error accepting friend request:", err);
         }
-
-        window.openDirectMessage(currentPendingRequest.uid, currentPendingRequest.name);
       };
 
       document.getElementById('dock-dismiss-req-btn').onclick = (e) => {
