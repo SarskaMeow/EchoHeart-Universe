@@ -254,34 +254,32 @@ window.requestOrOpenDM = async function(targetUid, targetName) {
 
     const isFriend = friendsList.some(f => f.uid === targetUid);
 
-    // ALWAYS assign targetDmUid & targetDmName so sending messages works!
+    // Explicitly lock target variables
     targetDmUid = targetUid;
     targetDmName = targetName;
 
-    if (isFriend) {
-      window.openDirectMessage(targetUid, targetName);
-    } else {
+    if (!isFriend) {
       await window.sendFriendRequest(targetUid, targetName);
-
-      // Discrete dock indicator update
-      document.getElementById('dm-dock-title').innerText = `💬 @${targetName}`;
-      document.getElementById('dm-dock-actions-box').innerHTML = `
-        <button class="dm-dock-btn" id="dm-dock-min-btn">➖</button>
-        <button class="dm-dock-btn" id="dm-dock-close-btn" title="Dismiss">✕</button>
-      `;
-
-      document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
-      document.getElementById('dm-dock-close-btn').onclick = () => {
-        dockElement.style.display = 'none';
-        targetDmUid = null;
-        if (dmUnsubscribe) dmUnsubscribe();
-      };
-
-      dockElement.style.display = 'flex';
-      dockElement.classList.remove('collapsed');
-
-      listenForDmMessages();
     }
+
+    document.getElementById('dm-dock-title').innerText = `💬 @${targetName}`;
+    document.getElementById('dm-dock-actions-box').innerHTML = `
+      <button class="dm-dock-btn" id="dm-dock-min-btn">➖</button>
+      <button class="dm-dock-btn" id="dm-dock-close-btn" title="Dismiss">✕</button>
+    `;
+
+    document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
+    document.getElementById('dm-dock-close-btn').onclick = () => {
+      dockElement.style.display = 'none';
+      targetDmUid = null;
+      if (dmUnsubscribe) dmUnsubscribe();
+    };
+
+    dockElement.style.display = 'flex';
+    dockElement.classList.remove('collapsed');
+
+    // Attach real-time message listener for the shared channel ID
+    listenForDmMessages();
   } catch (e) {
     console.error("Error opening DM/Request:", e);
   }
@@ -383,7 +381,6 @@ function setupFriendMessageListeners(user, friendsList) {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
           const msg = change.doc.data();
-          // Auto-open chat for receiver when a new message arrives
           if (msg.senderUid !== user.uid) {
             window.openDirectMessage(friend.uid, friend.name);
           }
@@ -404,7 +401,6 @@ onAuthStateChanged(auth, (user) => {
     const pending = userData.pendingRequests || [];
     const currentFriends = userData.friendsList || [];
 
-    // Background listeners for incoming messages
     setupFriendMessageListeners(user, currentFriends);
 
     if (isInitialFriendLoad) {
@@ -446,13 +442,13 @@ onAuthStateChanged(auth, (user) => {
 
         const updatedFriends = Array.from(existingFriendsMap.entries()).map(([uid, name]) => ({ uid, name }));
 
-        // 1. Update receiver's profile
+        // Update receiver's profile
         await setDoc(doc(db, "users", user.uid), { 
           pendingRequests: updatedPending, 
           friendsList: updatedFriends 
         }, { merge: true });
 
-        // 2. Update sender's profile with deduplication
+        // Update sender's profile with deduplication
         const senderRef = doc(db, "users", currentPendingRequest.uid);
         const senderSnap = await getDoc(senderRef);
         if (senderSnap.exists()) {
