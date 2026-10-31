@@ -254,23 +254,33 @@ window.requestOrOpenDM = async function(targetUid, targetName) {
 
     const isFriend = friendsList.some(f => f.uid === targetUid);
 
+    // ALWAYS assign targetDmUid & targetDmName so sending messages works!
+    targetDmUid = targetUid;
+    targetDmName = targetName;
+
     if (isFriend) {
       window.openDirectMessage(targetUid, targetName);
     } else {
       await window.sendFriendRequest(targetUid, targetName);
-      
-      // Discrete dock indicator update (no central alerts)
-      document.getElementById('dm-dock-title').innerText = `🤝 Request Sent: @${targetName}`;
+
+      // Discrete dock indicator update
+      document.getElementById('dm-dock-title').innerText = `💬 @${targetName}`;
       document.getElementById('dm-dock-actions-box').innerHTML = `
+        <button class="dm-dock-btn" id="dm-dock-min-btn">➖</button>
         <button class="dm-dock-btn" id="dm-dock-close-btn" title="Dismiss">✕</button>
       `;
+
+      document.getElementById('dm-dock-min-btn').onclick = () => dockElement.classList.toggle('collapsed');
       document.getElementById('dm-dock-close-btn').onclick = () => {
         dockElement.style.display = 'none';
         targetDmUid = null;
+        if (dmUnsubscribe) dmUnsubscribe();
       };
-      
+
       dockElement.style.display = 'flex';
-      dockElement.classList.add('collapsed');
+      dockElement.classList.remove('collapsed');
+
+      listenForDmMessages();
     }
   } catch (e) {
     console.error("Error opening DM/Request:", e);
@@ -414,7 +424,7 @@ onAuthStateChanged(auth, (user) => {
       const currentPendingRequest = pending[0];
 
       document.getElementById('dm-dock-title').innerText = `🤝 Request: @${currentPendingRequest.name}`;
-      
+
       const actionsBox = document.getElementById('dm-dock-actions-box');
       actionsBox.innerHTML = `
         <button class="dm-dock-accept-btn" id="dock-accept-req-btn">Accept</button>
