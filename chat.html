@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3237546726752178"
-       crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Community Live Chat — Otaku Overload</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="firebase-config.js?v=3"></script>
@@ -44,6 +44,7 @@
       background-color: var(--bg-dark);
       color: var(--text-main);
       height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -1148,16 +1149,129 @@
       cursor: pointer;
     }
 
+    /* 📱 MOBILE RESPONSIVE ADAPTATIONS */
     @media (max-width: 1100px) {
       .chat-container { grid-template-columns: 200px 1fr; }
       .chatters-panel { display: none; }
     }
 
     @media (max-width: 768px) {
-      .chat-container { grid-template-columns: 1fr; height: calc(100vh - 120px); }
-      .sidebar-panel { display: none; }
-      .chat-main-window { height: 100%; }
-      .docked-music-player { left: 8px; bottom: 8px; width: 200px; }
+      body {
+        overflow: auto;
+      }
+
+      .chat-navbar {
+        padding: 8px 12px;
+      }
+
+      .nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .nav-portal-links {
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .chat-status-indicator {
+        font-size: 0.72rem;
+        padding: 3px 8px;
+      }
+
+      .chat-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        flex: 1;
+        margin: 8px 0;
+        padding: 0 8px;
+        gap: 8px;
+      }
+
+      /* Horizontal Scrolling Channels on Mobile */
+      .sidebar-panel {
+        display: flex;
+        padding: 8px;
+        border-radius: 12px;
+      }
+
+      .sidebar-panel .panel-title {
+        display: none;
+      }
+
+      .channel-list {
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        width: 100%;
+        gap: 6px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .channel-btn {
+        padding: 6px 12px;
+        font-size: 0.78rem;
+        flex-shrink: 0;
+      }
+
+      .chat-main-window {
+        height: calc(100vh - 200px);
+        height: calc(100dvh - 200px);
+        border-radius: 12px;
+      }
+
+      .chat-window-header {
+        padding: 8px 12px;
+      }
+
+      .active-room-name {
+        font-size: 0.95rem;
+      }
+
+      .msg-row {
+        max-width: 90%;
+      }
+
+      .msg-bubble {
+        padding: 8px 12px;
+        font-size: 0.88rem;
+      }
+
+      .chat-input-bar {
+        padding: 8px;
+        gap: 6px;
+      }
+
+      .chat-input-field {
+        padding: 10px;
+        font-size: 0.9rem; /* Prevents auto-zoom on mobile safari */
+      }
+
+      .send-msg-btn {
+        padding: 10px 14px;
+        font-size: 0.8rem;
+      }
+
+      .chat-tool-btn {
+        padding: 8px 10px;
+        font-size: 0.78rem;
+      }
+
+      .emote-tray-popup {
+        width: 90vw;
+        left: 5vw;
+        bottom: 60px;
+      }
+
+      .docked-music-player {
+        left: 8px;
+        bottom: 8px;
+        width: 200px;
+      }
     }
 
     @keyframes neonHudPulse {
@@ -1642,6 +1756,23 @@
       window.addEventListener('beforeunload', removePresence);
       window.addEventListener('pagehide', removePresence);
     }
+
+    // --- REALTIME STATUS CHANGER & FIRESTORE COMMITTER ---
+    window.changeUserStatus = async function(newStatus) {
+      const dot = document.getElementById('user-status-dot');
+      if (dot) dot.className = `status-dot-indicator ${newStatus}`;
+
+      if (myPresenceDocId) {
+        try {
+          await setDoc(doc(db, 'presence', myPresenceDocId), {
+            status: newStatus,
+            lastActive: serverTimestamp()
+          }, { merge: true });
+        } catch (err) {
+          console.error("Failed to commit status change to Firestore:", err);
+        }
+      }
+    };
 
     // --- CYBERPUNK CONTEXT POPUP HANDLER ---
     window.handleChatterClick = function(event, targetUid, targetName) {
@@ -2129,11 +2260,6 @@
 
     function toggleDockedCollapse() {
       document.getElementById('docked-player').classList.toggle('collapsed');
-    }
-
-    function changeUserStatus(newStatus) {
-      const dot = document.getElementById('user-status-dot');
-      if (dot) dot.className = `status-dot-indicator ${newStatus}`;
     }
   </script>
 
