@@ -4,7 +4,7 @@ import {
   doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Inject Cyberpunk DM Dock Styles
+// Inject Cyberpunk DM Dock & Mobile Responsive Styles
 const dmDockStyles = `
   .cyber-dm-dock {
     position: fixed;
@@ -12,6 +12,7 @@ const dmDockStyles = `
     right: 24px;
     width: 320px;
     height: 420px;
+    max-height: 80vh;
     background: rgba(10, 4, 22, 0.98);
     border: 1.5px solid var(--accent-cyan, #00f0ff);
     border-bottom: none;
@@ -21,11 +22,11 @@ const dmDockStyles = `
     flex-direction: column;
     z-index: 6000;
     backdrop-filter: blur(16px);
-    transition: height 0.25s ease;
+    transition: height 0.25s ease, width 0.25s ease, right 0.25s ease;
   }
 
   .cyber-dm-dock.collapsed {
-    height: 44px;
+    height: 44px !important;
     overflow: hidden;
   }
 
@@ -71,8 +72,9 @@ const dmDockStyles = `
     font-size: 0.85rem;
     cursor: pointer;
     font-weight: 800;
-    padding: 2px 4px;
+    padding: 4px 6px;
     border-radius: 4px;
+    touch-action: manipulation;
   }
 
   .dm-dock-btn:hover { color: #ffffff; }
@@ -98,6 +100,7 @@ const dmDockStyles = `
     gap: 8px;
     min-height: 0;
     background: rgba(4, 2, 9, 0.8);
+    -webkit-overflow-scrolling: touch;
   }
 
   .dm-msg-bubble {
@@ -153,6 +156,51 @@ const dmDockStyles = `
     font-weight: 900;
     font-size: 0.78rem;
     cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  /* 📱 MOBILE RESPONSIVE ADAPTATIONS */
+  @media (max-width: 600px) {
+    .cyber-dm-dock {
+      right: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 60vh !important;
+      height: 60dvh !important;
+      max-height: 85vh !important;
+      border-radius: 12px 12px 0 0 !important;
+      border-right: none !important;
+      border-left: none !important;
+    }
+
+    .dm-dock-header {
+      padding: 12px 14px;
+      height: 48px;
+    }
+
+    .dm-dock-title {
+      font-size: 0.9rem;
+    }
+
+    .dm-dock-input-bar {
+      padding: 10px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .dm-dock-input {
+      font-size: 0.95rem; /* Prevents auto-zoom on iOS */
+      padding: 10px 12px;
+    }
+
+    .dm-dock-send-btn {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+    }
+
+    .dm-msg-bubble {
+      font-size: 0.9rem;
+      max-width: 90%;
+    }
   }
 `;
 
@@ -166,6 +214,30 @@ let dmUnsubscribe = null;
 let activeMessageListeners = {};
 let presenceUnsubscribe = null;
 let activePresenceData = new Map();
+
+// Global Presence Status Updater for HTML Dropdowns
+window.changeUserStatus = async function(newStatus) {
+  if (!auth.currentUser) {
+    const guestPresenceId = localStorage.getItem('otaku_guest_presence_id');
+    if (guestPresenceId) {
+      try {
+        await setDoc(doc(db, "presence", guestPresenceId), { status: newStatus }, { merge: true });
+      } catch (err) {
+        console.error("Failed guest status update:", err);
+      }
+    }
+    return;
+  }
+
+  try {
+    await setDoc(doc(db, "presence", auth.currentUser.uid), {
+      status: newStatus,
+      lastActive: serverTimestamp()
+    }, { merge: true });
+  } catch (err) {
+    console.error("Failed user status update:", err);
+  }
+};
 
 // Construct Dock Element
 const dockElement = document.createElement('div');
