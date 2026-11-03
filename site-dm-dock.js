@@ -215,13 +215,25 @@ let activeMessageListeners = {};
 let presenceUnsubscribe = null;
 let activePresenceData = new Map();
 
-// Global Presence Status Updater for HTML Dropdowns
-window.changeUserStatus = async function(newStatus) {
+// --- STATUS & IDLE MANAGEMENT ---
+let userManualStatus = 'active'; // Stores status explicitly chosen by user
+let isAutoAway = false;         // Distinguishes automatic 5-min idle from manual away
+let idleTimer = null;
+const IDLE_TIMEOUT_MS = 5 * 60 * 1000; // 5 Minutes
+
+// Internal function to sync UI dropdowns & Firestore
+async function commitStatusUpdate(status) {
+  const selectDropdown = document.getElementById('user-status-select');
+  if (selectDropdown) selectDropdown.value = status;
+
+  const dot = document.getElementById('user-status-dot');
+  if (dot) dot.className = `status-dot-indicator ${status}`;
+
   if (!auth.currentUser) {
     const guestPresenceId = localStorage.getItem('otaku_guest_presence_id');
     if (guestPresenceId) {
       try {
-        await setDoc(doc(db, "presence", guestPresenceId), { status: newStatus }, { merge: true });
+        await setDoc(doc(db, "presence", guestPresenceId), { status: status }, { merge: true });
       } catch (err) {
         console.error("Failed guest status update:", err);
       }
@@ -231,13 +243,48 @@ window.changeUserStatus = async function(newStatus) {
 
   try {
     await setDoc(doc(db, "presence", auth.currentUser.uid), {
-      status: newStatus,
+      status: status,
       lastActive: serverTimestamp()
     }, { merge: true });
   } catch (err) {
     console.error("Failed user status update:", err);
   }
+}
+
+// Global Presence Status Updater triggered manually via UI dropdown
+window.changeUserStatus = function(newStatus, isManualAction = true) {
+  if (isManualAction) {
+    userManualStatus = newStatus;
+    isAutoAway = false; // Reset auto-away lock on explicit user action
+  }
+  commitStatusUpdate(newStatus);
 };
+
+// Activity Handler: Auto-reverts status if user was put on Auto-Away
+function handleUserActivity() {
+  if (isAutoAway) {
+    isAutoAway = false;
+    commitStatusUpdate(userManualStatus); // Revert to manual preference (e.g. 'active')
+  }
+  resetIdleTimer();
+}
+
+function resetIdleTimer() {
+  if (idleTimer) clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    // Only switch to auto-away if current manual selection is 'active'
+    if (userManualStatus === 'active') {
+      isAutoAway = true;
+      commitStatusUpdate('away');
+    }
+  }, IDLE_TIMEOUT_MS);
+}
+
+// Attach User Activity Listeners for Mouse/Keyboard Interaction
+['mousemove', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evtType => {
+  window.addEventListener(evtType, handleUserActivity, { passive: true });
+});
+resetIdleTimer();
 
 // Construct Dock Element
 const dockElement = document.createElement('div');
