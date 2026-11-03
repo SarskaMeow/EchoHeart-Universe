@@ -569,7 +569,7 @@
           <div class="modal-pack-title">Byakko's Ember</div>
           <div class="modal-pack-orbs">🔮 +250 Orbs</div>
           <div class="modal-pack-desc">A modest burst of spirit energy to start tuning your domain profile.</div>
-          <a href="https://buy.stripe.com/test_6oU14n6U84rL7tPaDt2sM00" target="_blank" class="stripe-modal-btn">
+          <a href="https://buy.stripe.com/test_6oU14n6U84rL7tPaDt2sM00" class="stripe-modal-btn">
             Buy for $1.99 CAD
           </a>
         </div>
@@ -581,7 +581,7 @@
           <div class="modal-pack-title" style="color: var(--accent-gold);">Crescent Moon Cache</div>
           <div class="modal-pack-orbs" style="color: var(--accent-gold);">🔮 +750 Orbs</div>
           <div class="modal-pack-desc">A solid reservoir of moon-lit frequency for unlocks and cosmetics.</div>
-          <a href="https://buy.stripe.com/test_6oU14n92gaQ9eWhh1R2sM01" target="_blank" class="stripe-modal-btn" style="background: var(--gold-grad);">
+          <a href="https://buy.stripe.com/test_6oU14n92gaQ9eWhh1R2sM01" class="stripe-modal-btn" style="background: var(--gold-grad);">
             Buy for $4.99 CAD
           </a>
         </div>
@@ -592,7 +592,7 @@
           <div class="modal-pack-title">Celestial Vault</div>
           <div class="modal-pack-orbs">🔮 +2,000 Orbs</div>
           <div class="modal-pack-desc">A massive vault filled with pure Sanctuary Domain energy.</div>
-          <a href="https://buy.stripe.com/test_bJe9ATbao4rL6pLbHx2sM02" target="_blank" class="stripe-modal-btn">
+          <a href="https://buy.stripe.com/test_bJe9ATbao4rL6pLbHx2sM02" class="stripe-modal-btn">
             Buy for $9.99 CAD
           </a>
         </div>
@@ -676,8 +676,13 @@
       }
     });
 
+    function getUserOrbs() {
+      if (!window.userData) return 0;
+      return Number(window.userData.orb_balance ?? window.userData.orbs ?? 0);
+    }
+
     function updateUI() {
-      const orbs = window.userData?.orb_balance || 0;
+      const orbs = getUserOrbs();
       document.getElementById('user-orb-display').innerText = `Your Balance: 🔮 ${orbs.toLocaleString()} Orbs`;
 
       // Update equipped preview avatar
@@ -722,7 +727,7 @@
 
     function renderGrid(category) {
       const grid = document.getElementById('store-grid-content');
-      const userOrbs = window.userData?.orb_balance || 0;
+      const userOrbs = getUserOrbs();
       const unlocked = window.userData?.unlocked_items || [];
       const equippedAvatar = window.userData?.equipped_avatar || '';
       let html = '';
@@ -907,7 +912,7 @@
 
     // Smart Click Handler: Purchases item if enough Orbs, opens Modal if short on Orbs!
     window.handleCosmeticClick = function(itemId, cost) {
-      const userOrbs = window.userData?.orb_balance || 0;
+      const userOrbs = getUserOrbs();
       if (userOrbs < cost) {
         openOrbModal();
       } else {
@@ -930,7 +935,7 @@
           if (!sfDoc.exists()) throw new Error("User profile not found!");
 
           const data = sfDoc.data();
-          const currentOrbs = data.orb_balance || 0;
+          const currentOrbs = Number(data.orb_balance ?? data.orbs ?? 0);
           const unlocked = data.unlocked_items || [];
 
           if (currentOrbs < cost) throw new Error("Insufficient Orbs!");
