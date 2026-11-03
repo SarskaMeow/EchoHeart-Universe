@@ -1642,6 +1642,7 @@
     window.userData = null;
     window.isUserAdmin = false;
     window.activeChannelKey = 'general';
+    window.userSelectedStatus = 'active'; // Global variable tracking current status
     let unsubscribeListener = null;
     let heartbeatInterval = null;
 
@@ -1720,15 +1721,18 @@
         : `Guest_${guestId.replace('guest_', '').substring(0, 4)}`;
 
       const role = user ? (isMod ? 'System Overwatch' : 'Portal Member') : 'Portal Visitor';
+      
       const statusSelect = document.getElementById('user-status-select');
-      const status = statusSelect ? statusSelect.value : (user ? 'active' : 'away');
+      if (statusSelect) {
+        window.userSelectedStatus = statusSelect.value;
+      }
 
       const sendHeartbeat = async () => {
         try {
           await setDoc(presenceRef, {
             displayName,
             role,
-            status,
+            status: window.userSelectedStatus, // Dynamically sends active selection
             lastActive: serverTimestamp(),
             isGuest: !user,
             isMod: !!isMod,
@@ -1759,8 +1763,13 @@
 
     // --- REALTIME STATUS CHANGER & FIRESTORE COMMITTER ---
     window.changeUserStatus = async function(newStatus) {
+      window.userSelectedStatus = newStatus;
+
       const dot = document.getElementById('user-status-dot');
       if (dot) dot.className = `status-dot-indicator ${newStatus}`;
+
+      const selectDropdown = document.getElementById('user-status-select');
+      if (selectDropdown) selectDropdown.value = newStatus;
 
       if (myPresenceDocId) {
         try {
