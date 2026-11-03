@@ -1630,7 +1630,7 @@
     </div>
   </div>
 
-  <!-- REAL-TIME FIREBASE FIRESTORE MODULE & PRESENCE ENGINE -->
+ <!-- REAL-TIME FIREBASE FIRESTORE MODULE & PRESENCE ENGINE -->
   <script type="module">
     import { auth, db } from './firebase-config.js?v=3';
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -1642,7 +1642,6 @@
     window.userData = null;
     window.isUserAdmin = false;
     window.activeChannelKey = 'general';
-    window.userSelectedStatus = 'active'; // Global variable tracking current status
     let unsubscribeListener = null;
     let heartbeatInterval = null;
 
@@ -1721,18 +1720,16 @@
         : `Guest_${guestId.replace('guest_', '').substring(0, 4)}`;
 
       const role = user ? (isMod ? 'System Overwatch' : 'Portal Member') : 'Portal Visitor';
-      
-      const statusSelect = document.getElementById('user-status-select');
-      if (statusSelect) {
-        window.userSelectedStatus = statusSelect.value;
-      }
 
       const sendHeartbeat = async () => {
         try {
+          // Read current status directly from DOM so heartbeat never resets user selection
+          const currentStatus = document.getElementById('user-status-select')?.value || 'active';
+
           await setDoc(presenceRef, {
             displayName,
             role,
-            status: window.userSelectedStatus, // Dynamically sends active selection
+            status: currentStatus,
             lastActive: serverTimestamp(),
             isGuest: !user,
             isMod: !!isMod,
@@ -1760,28 +1757,6 @@
       window.addEventListener('beforeunload', removePresence);
       window.addEventListener('pagehide', removePresence);
     }
-
-    // --- REALTIME STATUS CHANGER & FIRESTORE COMMITTER ---
-    window.changeUserStatus = async function(newStatus) {
-      window.userSelectedStatus = newStatus;
-
-      const dot = document.getElementById('user-status-dot');
-      if (dot) dot.className = `status-dot-indicator ${newStatus}`;
-
-      const selectDropdown = document.getElementById('user-status-select');
-      if (selectDropdown) selectDropdown.value = newStatus;
-
-      if (myPresenceDocId) {
-        try {
-          await setDoc(doc(db, 'presence', myPresenceDocId), {
-            status: newStatus,
-            lastActive: serverTimestamp()
-          }, { merge: true });
-        } catch (err) {
-          console.error("Failed to commit status change to Firestore:", err);
-        }
-      }
-    };
 
     // --- CYBERPUNK CONTEXT POPUP HANDLER ---
     window.handleChatterClick = function(event, targetUid, targetName) {
