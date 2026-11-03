@@ -691,7 +691,7 @@
       if (equippedAvatar && avatarBox) {
         const item = getAvatarById(equippedAvatar);
         if (item) {
-          avatarBox.style.backgroundImage = `url('${item.src}')`;
+          avatarBox.style.backgroundImage = `url('${encodeURI(item.src)}')`;
           avatarBox.innerText = '';
         }
       }
@@ -708,8 +708,6 @@
       const defaultAvatars = [
         { id: 'avatar_akari', name: 'Akari Minase', src: 'images/avatars/akari.png', fallback: '🔥' },
         { id: 'avatar_nekomi', name: 'Nekomi Idol', src: 'images/avatars/nekomi.png', fallback: '🐱' },
-        { id: 'avatar_lily', name: 'Lily Blossom', src: 'images/avatars/lily.png', fallback: '🌸' },
-        { id: 'avatar_sloane', name: 'Sloane Vance', src: 'images/avatars/sloane.png', fallback: '⚡' },
         { id: 'avatar_sera', name: 'Sera Starlight', src: 'images/avatars/sera.png', fallback: '✨' },
         { id: 'avatar_aoi', name: 'Aoi Bassist', src: 'images/avatars/aoi.png', fallback: '🎸' },
         { id: 'avatar_cyberpunk', name: 'Cyber Runner', src: 'images/avatars/cyberpunk.png', fallback: '🤖' },
@@ -802,20 +800,38 @@
         const defaultAvatars = [
           { id: 'avatar_akari', name: 'Akari Minase Avatar', cost: 500, src: 'images/avatars/akari.png', fallback: '🔥' },
           { id: 'avatar_nekomi', name: 'Nekomi Idol Avatar', cost: 500, src: 'images/avatars/nekomi.png', fallback: '🐱' },
-          { id: 'avatar_lily', name: 'Lily Blossom Avatar', cost: 500, src: 'images/avatars/lily.png', fallback: '🌸' },
-          { id: 'avatar_sloane', name: 'Sloane Vance Avatar', cost: 500, src: 'images/avatars/sloane.png', fallback: '⚡' },
           { id: 'avatar_sera', name: 'Sera Starlight Avatar', cost: 500, src: 'images/avatars/sera.png', fallback: '✨' },
           { id: 'avatar_aoi', name: 'Aoi Bassist Avatar', cost: 500, src: 'images/avatars/aoi.png', fallback: '🎸' },
           { id: 'avatar_cyberpunk', name: 'Cyber Runner Avatar', cost: 500, src: 'images/avatars/cyberpunk.png', fallback: '🤖' },
           { id: 'avatar_golden', name: 'Void Sovereign Avatar', cost: 500, src: 'images/avatars/sovereign.png', fallback: '👑' }
         ];
 
-        // Format custom asset avatars from ORB_STORE_AVATARS (Flat price of 500 Orbs across the board)
-        const assetAvatars = (ORB_STORE_AVATARS || []).map(item => ({
+        // Asset images matching your exact asset filenames from your screenshot
+        const assetImageFiles = [
+          { key: 'asset_1', name: 'Phantom Starlight', file: 'splitimage.im-1.png' },
+          { key: 'asset_2', name: 'Cyber Pulse 1', file: 'splitimage.im-2 (1).png' },
+          { key: 'asset_3', name: 'Cyber Pulse 2', file: 'splitimage.im-2.png' },
+          { key: 'asset_4', name: 'Sub-Stage Rebel 1', file: 'splitimage.im-3 (1).png' },
+          { key: 'asset_5', name: 'Sub-Stage Rebel 2', file: 'splitimage.im-3.png' },
+          { key: 'asset_6', name: 'Midnight Synth 1', file: 'splitimage.im-4 (1).png' },
+          { key: 'asset_7', name: 'Midnight Synth 2', file: 'splitimage.im-4.png' },
+          { key: 'asset_8', name: 'Neon Kitsune 1', file: 'splitimage.im-5 (1).png' },
+          { key: 'asset_9', name: 'Neon Kitsune 2', file: 'splitimage.im-5.png' },
+          { key: 'asset_10', name: 'Acoustic Horizon 1', file: 'splitimage.im-6 (1).png' },
+          { key: 'asset_11', name: 'Acoustic Horizon 2', file: 'splitimage.im-6.png' },
+          { key: 'asset_12', name: 'Flame Beat 1', file: 'splitimage.im-7 (1).png' },
+          { key: 'asset_13', name: 'Flame Beat 2', file: 'splitimage.im-7.png' },
+          { key: 'asset_14', name: 'Lunar Echo 1', file: 'splitimage.im-8 (1).png' },
+          { key: 'asset_15', name: 'Lunar Echo 2', file: 'splitimage.im-8.png' },
+          { key: 'asset_16', name: 'Void Sentinel 1', file: 'splitimage.im-9 (1).png' },
+          { key: 'asset_17', name: 'Void Sentinel 2', file: 'splitimage.im-9.png' }
+        ];
+
+        const assetAvatars = assetImageFiles.map(item => ({
           id: item.key,
           name: item.name,
           cost: 500,
-          src: AVATAR_PRESETS[item.key] || '',
+          src: `assets/${item.file}`,
           fallback: '🎭'
         }));
 
@@ -824,13 +840,14 @@
         allAvatars.forEach(item => {
           const owned = unlocked.includes(item.id);
           const isEquipped = equippedAvatar === item.id;
+          const encodedPath = encodeURI(item.src);
 
           html += `
             <div class="store-item-card">
               <div>
                 <div style="font-weight: 800; color: var(--text-light);">${item.name}</div>
                 <div class="store-item-preview">
-                  <img src="${item.src}" class="avatar-img-preview" alt="${item.name}" onerror="this.onerror=null; this.replaceWith('${item.fallback}');">
+                  <img src="${encodedPath}" class="avatar-img-preview" alt="${item.name}" onerror="this.onerror=null; this.replaceWith('${item.fallback}');">
                 </div>
               </div>
               <button class="buy-orb-btn" ${isEquipped ? 'disabled' : ''} onclick="${owned ? `equipAvatar('${item.id}')` : `handleCosmeticClick('${item.id}', ${item.cost})`}">
