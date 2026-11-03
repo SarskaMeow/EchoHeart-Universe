@@ -35,6 +35,59 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// Central Avatar File Registry (Maps keys to your 18 asset files)
+export const AVATAR_PRESETS = {
+  'avatar_akari': 'images/avatars/akari.png',
+  'avatar_nekomi': 'images/avatars/nekomi.png',
+  'avatar_lily': 'images/avatars/lily.png',
+  'avatar_sera': 'images/avatars/sera.png',
+  'avatar_aoi': 'images/avatars/aoi.png',
+  'avatar_cyberpunk': 'images/avatars/cyberpunk.png',
+  'avatar_golden': 'images/avatars/sovereign.png',
+
+  // 🌟 NEW UNLOCKED / PURCHASABLE ASSETS (1 through 18)
+  'avatar_1': 'assets/splitimage.im-1 (1).png',
+  'avatar_2': 'assets/splitimage.im-1 (2).png',
+  'avatar_3': 'assets/splitimage.im-1 (3).png',
+  'avatar_4': 'assets/splitimage.im-1 (4).png',
+  'avatar_5': 'assets/splitimage.im-1 (5).png',
+  'avatar_6': 'assets/splitimage.im-1 (6).png',
+  'avatar_7': 'assets/splitimage.im-1 (7).png',
+  'avatar_8': 'assets/splitimage.im-1 (8).png',
+  'avatar_9': 'assets/splitimage.im-1 (9).png',
+  'avatar_10': 'assets/splitimage.im-1 (10).png',
+  'avatar_11': 'assets/splitimage.im-1 (11).png',
+  'avatar_12': 'assets/splitimage.im-1 (12).png',
+  'avatar_13': 'assets/splitimage.im-1 (13).png',
+  'avatar_14': 'assets/splitimage.im-1 (14).png',
+  'avatar_15': 'assets/splitimage.im-1 (15).png',
+  'avatar_16': 'assets/splitimage.im-1 (16).png',
+  'avatar_17': 'assets/splitimage.im-1 (17).png',
+  'avatar_18': 'assets/splitimage.im-1 (18).png'
+};
+
+// Store Catalog Metadata for Orb Store Display
+export const ORB_STORE_AVATARS = [
+  { key: 'avatar_1', name: 'Starlight Stargazer', price: 150, rarity: 'Rare', description: 'Messy bun, hair clips, and moon necklace under starry skies.' },
+  { key: 'avatar_2', name: 'Cyber Neon Pulse', price: 150, rarity: 'Rare', description: 'Futuristic avatar with neon accents.' },
+  { key: 'avatar_3', name: 'Sub-Stage Rebel', price: 200, rarity: 'Rare', description: 'Edgy cyberpunk aesthetic for underground chatters.' },
+  { key: 'avatar_4', name: 'Midnight Synth', price: 200, rarity: 'Rare', description: 'Tuned into 24/7 Neko FM frequencies.' },
+  { key: 'avatar_5', name: 'Phantom Blade', price: 250, rarity: 'Epic', description: 'Shadowy blade master of the sub-stage.' },
+  { key: 'avatar_6', name: 'Mecha Kitsune', price: 250, rarity: 'Epic', description: 'High-tech fox spirit with cyberware.' },
+  { key: 'avatar_7', name: 'Acoustic Horizon', price: 250, rarity: 'Epic', description: 'Chill lo-fi energy for late night broadcasts.' },
+  { key: 'avatar_8', name: 'Flame Beat', price: 300, rarity: 'Epic', description: 'High energy drummer spirit.' },
+  { key: 'avatar_9', name: 'Solaris Echo', price: 300, rarity: 'Epic', description: 'Bright synthwave aesthetic.' },
+  { key: 'avatar_10', name: 'Lunar Valkyrie', price: 350, rarity: 'Epic', description: 'Moonlit guardian of the portal.' },
+  { key: 'avatar_11', name: 'Neon Ronin', price: 350, rarity: 'Epic', description: 'Wandering cyber samurai.' },
+  { key: 'avatar_12', name: 'Cosmic Melody', price: 400, rarity: 'Legendary', description: 'Surrounded by starry constellation energy.' },
+  { key: 'avatar_13', name: 'Glitch Empress', price: 400, rarity: 'Legendary', description: 'RGB distorted cyberpunk sovereign.' },
+  { key: 'avatar_14', name: 'Sub-Zero Resonance', price: 450, rarity: 'Legendary', description: 'Cool cyan ice aesthetic.' },
+  { key: 'avatar_15', name: 'Vaporwave Dream', price: 450, rarity: 'Legendary', description: 'Retro 80s aesthetic with pastel tones.' },
+  { key: 'avatar_16', name: 'Overwatch General', price: 500, rarity: 'Legendary', description: 'High rank system authority badge.' },
+  { key: 'avatar_17', name: 'Eternal Phantom', price: 500, rarity: 'Legendary', description: 'Rare spectral cosmetic.' },
+  { key: 'avatar_18', name: 'Sovereign Crown', price: 600, rarity: 'Legendary', description: 'Gold-tier prestige icon for top supporters.' }
+];
+
 // 2. Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCnJX6OKFrDA2PB-qYywbuv14UBc-1Vfu8",
