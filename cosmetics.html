@@ -601,7 +601,7 @@
   </div>
 
   <script type="module">
-    import { auth, db } from './firebase-config.js?v=3';
+    import { auth, db, AVATAR_PRESETS, ORB_STORE_AVATARS } from './firebase-config.js?v=3';
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { doc, getDoc, runTransaction, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -695,7 +695,12 @@
     }
 
     function getAvatarById(id) {
-      const avatars = [
+      // Check central registry first
+      if (AVATAR_PRESETS && AVATAR_PRESETS[id]) {
+        return { id: id, name: id, src: AVATAR_PRESETS[id], fallback: '👤' };
+      }
+
+      const defaultAvatars = [
         { id: 'avatar_akari', name: 'Akari Minase', src: 'images/avatars/akari.png', fallback: '🔥' },
         { id: 'avatar_nekomi', name: 'Nekomi Idol', src: 'images/avatars/nekomi.png', fallback: '🐱' },
         { id: 'avatar_lily', name: 'Lily Blossom', src: 'images/avatars/lily.png', fallback: '🌸' },
@@ -705,7 +710,7 @@
         { id: 'avatar_cyberpunk', name: 'Cyber Runner', src: 'images/avatars/cyberpunk.png', fallback: '🤖' },
         { id: 'avatar_golden', name: 'Void Sovereign', src: 'images/avatars/sovereign.png', fallback: '👑' }
       ];
-      return avatars.find(a => a.id === id);
+      return defaultAvatars.find(a => a.id === id);
     }
 
     window.switchTab = function(category) {
@@ -789,7 +794,7 @@
           `;
         });
       } else if (category === 'avatars') {
-        const avatars = [
+        const defaultAvatars = [
           { id: 'avatar_akari', name: 'Akari Minase Avatar', cost: 500, src: 'images/avatars/akari.png', fallback: '🔥' },
           { id: 'avatar_nekomi', name: 'Nekomi Idol Avatar', cost: 500, src: 'images/avatars/nekomi.png', fallback: '🐱' },
           { id: 'avatar_lily', name: 'Lily Blossom Avatar', cost: 500, src: 'images/avatars/lily.png', fallback: '🌸' },
@@ -800,7 +805,18 @@
           { id: 'avatar_golden', name: 'Void Sovereign Avatar', cost: 500, src: 'images/avatars/sovereign.png', fallback: '👑' }
         ];
 
-        avatars.forEach(item => {
+        // Format custom asset avatars from ORB_STORE_AVATARS (Flat price of 500 Orbs across the board)
+        const assetAvatars = (ORB_STORE_AVATARS || []).map(item => ({
+          id: item.key,
+          name: item.name,
+          cost: 500,
+          src: AVATAR_PRESETS[item.key] || '',
+          fallback: '🎭'
+        }));
+
+        const allAvatars = [...defaultAvatars, ...assetAvatars];
+
+        allAvatars.forEach(item => {
           const owned = unlocked.includes(item.id);
           const isEquipped = equippedAvatar === item.id;
 
